@@ -1,0 +1,70 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.Security;
+
+
+public partial class Pages_Security_PaymentPopUp : SecurePage 
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+        Title = "Payment Information";
+
+        Content theContent;
+        if (!IsPostBack)
+        {
+            theContent = SystemData.Content_Details_ByKey(Cryptography.Decrypt(Request.QueryString["PaymentInfo"].ToString()));
+            if (theContent != null)
+            {
+                lblHeading.Text = theContent.Heading;
+                lblContent.Text = theContent.ContentP;
+
+                switch (theContent.ContentKey)
+                {
+                    case "Payment_Grace":
+                        tdExit.Visible = false;
+                        break;
+                        
+                    case "Payment_LiveExpired":
+                        tdPayLater.Visible = false;
+                        break;
+
+                    case "Payment_TrialExpired":
+                        tdPayLater.Visible = false;
+                        break;
+
+                    case "Payment_TrialLastWeek":
+                        tdExit.Visible = false;
+                        break;
+
+                    case "Payment_Ok":
+                        tdExit.Visible = false;
+                        break;
+                }
+
+            }
+            else
+            {
+                Response.Redirect("~/Login.aspx", false);
+            }
+        }
+    }
+    protected void lnkExit_Click(object sender, EventArgs e)
+    {
+        Session.Clear();
+        FormsAuthentication.SignOut();
+
+        if (Request.Cookies["UserInformation"] != null)
+        {
+            HttpCookie oUseInfor = new HttpCookie("UserInformation", "");
+            //oUseInfor.Path = "/";
+            oUseInfor.Expires = DateTime.Now.AddDays(-1);
+            Response.Cookies.Add(oUseInfor);
+        }
+
+        Response.Redirect("~/Login.aspx", false);
+    }
+}

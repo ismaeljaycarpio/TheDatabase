@@ -1,0 +1,206 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="DocGen.DragAndDrop.REST.SectionREST"  %>
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.ServiceModel;
+using System.ServiceModel.Activation;
+using System.Text;
+using System.ServiceModel.Web;
+using DocGen.DAL;
+namespace DocGen.DragAndDrop.REST
+{
+
+    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the interface name "ISectionREST" in both code and config file together.
+    [ServiceContract]
+    public interface ISectionREST
+    {
+        [WebInvoke(UriTemplate = "/section/delete/{sectionId}", Method = "POST", ResponseFormat = WebMessageFormat.Json)]
+        [OperationContract]
+        bool DeleteSection(string sectionId);
+
+        [WebInvoke(UriTemplate = "/sections/displayorder/{sectionIds}", Method = "POST", ResponseFormat = WebMessageFormat.Json)]
+        [OperationContract]
+        bool SortSections(string sectionIds);
+
+        [WebInvoke(UriTemplate = "/wfsections/displayorder/{sectionIds}", Method = "POST", ResponseFormat = WebMessageFormat.Json)]
+        [OperationContract]
+        bool WFSortSections(string sectionIds);
+
+        [WebGet(UriTemplate = "/ping", ResponseFormat = WebMessageFormat.Json)]
+        [OperationContract]
+        string Ping();
+
+        [WebInvoke(UriTemplate = "/wfsection/delete/{sectionId}", Method = "POST", ResponseFormat = WebMessageFormat.Json)]
+        [OperationContract]
+        bool WFDeleteSection(string sectionId);
+    }
+
+
+    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "SectionREST" in code, svc and config file together.
+    [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
+    public class SectionREST : ISectionREST
+    {
+        public bool DeleteSection(string sectionId)
+        {
+            bool success = true;
+            try
+            {
+                int ID = 0;
+                if (Int32.TryParse(sectionId, out ID))
+                {
+                    using (DocGenDataContext ctx = new DocGenDataContext())
+                    {
+                        ctx.ExecuteCommand("DELETE FROM DocumentSection WHERE DocumentSectionID = {0}", ID);
+                    }
+                }
+                else
+                {
+                    success = false;
+                }
+            }
+            catch
+            {
+                success = false;
+            }
+            return success;
+        }
+
+
+
+        public bool WFDeleteSection(string sectionId)
+        {
+            bool success = true;
+            try
+            {
+                int ID = 0;
+                if (Int32.TryParse(sectionId, out ID))
+                {
+                    using (DocGenDataContext ctx = new DocGenDataContext())
+                    {
+                        ctx.ExecuteCommand("DELETE FROM WorkFlowSection WHERE WorkFlowSectionID = {0}", ID);
+                        ctx.ExecuteCommand("DELETE FROM WorkFlowSection WHERE ParentSectionID = {0}", ID);
+                    }
+                }
+                else
+                {
+                    success = false;
+                }
+            }
+            catch
+            {
+                success = false;
+            }
+            return success;
+        }
+
+        public bool WFSortSections(string sectionIds)
+        {
+            bool success = true;
+            try
+            {
+                int ID = 0;
+                int Counter = 1;
+                bool validID = true;
+                StringBuilder updateScript = new StringBuilder();
+                foreach (string strId in sectionIds.Split(','))
+                {
+                    if (validID)
+                    {
+                        string[] arrTemp = strId.Split('-');
+                        if (arrTemp.Length == 3)
+                        {
+                            if (Int32.TryParse(arrTemp[0], out ID))
+                            {
+                                if (arrTemp[1] == "")
+                                {
+                                    updateScript.AppendLine(String.Format("UPDATE WorkFlowSection SET Position = {0}, ParentSectionID = NULL  WHERE WorkFlowSectionID = {1};", Counter++, ID));
+                                }
+                                else
+                                {
+                                    updateScript.AppendLine(String.Format("UPDATE WorkFlowSection SET Position = {0}, ParentSectionID = {1}, ColumnIndex = {2} WHERE WorkFlowSectionID = {3};", Counter++, arrTemp[1], arrTemp[2], ID));
+                                }
+                            }
+                            else
+                                validID = false;
+                        }
+                    }
+                }
+                if (validID)
+                {
+                    using (DocGenDataContext ctx = new DocGenDataContext())
+                    {
+                        ctx.ExecuteCommand(updateScript.ToString());
+                    }
+                }
+                else
+                {
+                    success = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                success = false;
+            }
+            return success;
+        }
+
+        public bool SortSections(string sectionIds)
+        {
+            bool success = true;
+            try
+            {
+                int ID = 0;
+                int Counter = 1;
+                bool validID = true;
+                StringBuilder updateScript = new StringBuilder();
+                foreach (string strId in sectionIds.Split(','))
+                {
+                    if (validID)
+                    {
+                        string[] arrTemp = strId.Split('-');
+                        if (arrTemp.Length == 3)
+                        {
+                            if (Int32.TryParse(arrTemp[0], out ID))
+                            {
+                                if (arrTemp[1] == "")
+                                {
+                                    updateScript.AppendLine(String.Format("UPDATE DocumentSection SET Position = {0}, ParentSectionID = NULL  WHERE DocumentSectionID = {1};", Counter++, ID));
+                                }
+                                else
+                                {
+                                    updateScript.AppendLine(String.Format("UPDATE DocumentSection SET Position = {0}, ParentSectionID = {1}, ColumnIndex = {2} WHERE DocumentSectionID = {3};", Counter++, arrTemp[1], arrTemp[2], ID));
+                                }
+                            }
+                            else
+                                validID = false;
+                        }
+                    }
+                }
+                if (validID)
+                {
+                    using (DocGenDataContext ctx = new DocGenDataContext())
+                    {
+                        ctx.ExecuteCommand(updateScript.ToString());
+                    }
+                }
+                else
+                {
+                    success = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                success = false;
+            }
+            return success;
+        }
+
+        public string Ping()
+        {
+            return "Pong";
+        }
+    }
+}
+

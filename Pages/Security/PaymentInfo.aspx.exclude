@@ -1,0 +1,86 @@
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Home/Marketing.master" AutoEventWireup="true" CodeFile="PaymentInfo.aspx.cs" Inherits="Pages_Security_PaymentPopUp" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="HomeContentPlaceHolder" Runat="Server">
+
+ <div class="ContentMain" style="width: 900px; min-height: 500px; background-color: #ffffff; padding-left:77px;">
+        <table>
+            <tr>
+                <td width="28">
+                </td>
+                <td>
+                    <h1>
+                        <asp:Label runat="server" ID="lblHeading" Width="910"></asp:Label>
+                    </h1>
+                </td>
+                <td width="28">
+                </td>
+            </tr>
+            <tr>
+                <td width="28">
+                </td>
+                <td>
+                    <div>
+                        <div style="text-align: right; width: 100%;">
+                            <table style="text-align: right; width: 100%;">
+                                <tr>
+                                    <td align="left">
+                                        <asp:Label runat="server" ID="lblContent"></asp:Label>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </td>
+                <td width="28">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                </td>
+                <td align="left">
+                    <table>
+                        <tr>
+                            <td>
+                                <div>
+                                   
+                                                <asp:HyperLink runat="server" ID="hlPayNow" 
+                                                 CssClass="btn" NavigateUrl="~/Pages/Security/MakePayment.aspx">  <strong>Pay Now</strong> </asp:HyperLink>
+                                            
+                                </div>
+                            </td>
+                            <td runat="server" id="tdPayLater">
+                                 <div>
+                                   
+                                                <asp:HyperLink runat="server" ID="hlPayLater"
+                                                  CssClass="btn" NavigateUrl="~/Default.aspx"> <strong>Pay Later</strong>  </asp:HyperLink>
+                                           
+                                </div>
+                            </td>
+                            <td runat="server" id="tdExit">
+                                 <div>
+                                   
+                                                <asp:LinkButton runat="server" ID="lnkExit"  CssClass="btn" 
+                                                    onclick="lnkExit_Click"> <strong>Exit</strong> </asp:LinkButton>
+                                          
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td>
+                </td>
+            </tr>
+            <tr>
+                <td width="28">
+                </td>
+                <td align="center" height="40px">
+                </td>
+                <td width="28">
+                </td>
+            </tr>
+        </table>
+    </div>
+
+
+</asp:Content>
+

@@ -1,0 +1,126 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="RRP_Public.master.cs" Inherits="RRP_Public" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <title>TheDatabase.net - Your database on the web</title>
+    
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <%--<meta http-equiv="X-UA-Compatible" content="IE=10,chrome=1" />--%>
+
+
+    <meta name="Description" content="TheDatabase.net is an online database development platform to make getting your database on the web quick and easy with no upfront costs." />
+    <meta name="Keywords" content="Database, online, web, data, development, platform" />
+    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="all" />
+    <meta name="revisit-after" content="7 days" />
+      <meta name="google" content="notranslate">
+    <meta http-equiv="Content-Language" content="en">
+
+    <link rel="shortcut icon" href="../Images/favicon.ico" />
+    <link href="~/App_Themes/Default/StyleSheetRRP.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/RRP/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/RRP/style.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/RRP/responsive.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .divrenew
+        {
+            z-index: 100;
+            position: absolute;
+            top: 40px;
+            left: 600px;
+            background: #ffffff;
+        }
+        .ui-widget
+        {
+            font-size: 12px !important;
+            line-height: 1.25 !important;
+            font-family: Verdana,Arial,Helvetica,sans-serif !important;
+        }
+    </style>
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <script type="text/javascript" src="<%=ResolveUrl("~/script/jquery.js")%>"></script>
+    <%--<script type="text/javascript" src="<%=ResolveUrl("~/JS/RRP/jquery-1.10.2.min.js")%>"></script>--%>
+    <script type="text/javascript" src="<%=ResolveUrl("~/JS/Common.js")%>"></script>
+    <link href="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.css")%>" rel="stylesheet"
+        type="text/css" />
+    <script type="text/javascript" src="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.pack.js")%>"></script>
+    <script type="text/javascript" src="<%=ResolveUrl("~/JS/RRP/bootstrap.min.js")%>"></script>
+    <script type="text/javascript" src="<%=ResolveUrl("~/JS/RRP/holder.js")%>"></script>
+
+
+
+    <form id="form1" runat="server" enctype="multipart/form-data">
+    <input id="Hidden1" type="hidden" />
+    <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true" AsyncPostBackTimeout="36000">
+    </asp:ScriptManager>
+    <%--<ajaxToolkit:ToolkitScriptManager  ID="ScriptManager1" runat="server" EnablePageMethods="true"></ajaxToolkit:ToolkitScriptManager>--%>
+    
+    
+    <div class="top-area">
+    
+        <div class="container">
+            <div class="pull-left logo">
+                
+            </div>
+            <div class="top-link pull-right">
+                <ul>
+                    
+                    <li><a href="RRPOnline_Help.html"><i class="fa fa-question-circle"></i>Help<i class="fa fa-caret-down"></i></a>
+                        <ul>
+                            <li><a href="#">Item 1</a></li>
+                            <li><a href="#">Item 2</a></li>
+                            <li><a href="#">Item 3</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container sub-header">
+        <div>
+              <a href="#">
+                   
+                    <asp:Image ID="Image1" runat="server" ImageUrl="~/css/RRP/img/logo_login.png" />
+                </a>
+         </div>
+    </div>
+    <div class="menu-wrap">
+        <div class="container">
+        <div style="font-size:12pt;">
+            <div class="navbar navbar-inverse col-md-7 col-sm-7">
+                <div class="navbar-header">
+                   
+                </div>
+                <div class="navbar-collapse collapse">
+                    
+                </div>
+               
+            </div>
+            </div>
+            <div class="sub-menu pull-right col-md-5 col-sm-5">
+               
+            </div>
+        </div>
+    </div>
+    <div class="main-wrap subpage">
+       
+        <div class="container content">
+            <asp:ContentPlaceHolder ID="HomeContentPlaceHolder" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </div>
+
+          <br />     <br />  <br />  <br />
+
+<footer>
+	<p class="align-center">© Recovery Partners 2014  &nbsp;|&nbsp;  <a href="http://www.RRPOnline.com.au">www.RRPOnline.com.au</a>  </p>
+</footer>
+     
+     
+    </form>
+</body>
+</html>

@@ -1,0 +1,211 @@
+﻿
+
+USE [ETS2]
+GO
+/****** Object:  StoredProcedure [dbo].[ets_SampleSite_Select]    Script Date: 02/23/2011 17:45:11 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+ALTER PROCEDURE [dbo].[ets_SampleSite_Select]
+(
+	@nSampleTypeGroupID int=null,
+	@nSampleTypeID int=null,
+	@nSampleSiteID int  = NULL,
+	@sSampleSiteName nvarchar(50)  = NULL,
+	@nWorkSiteID int  = NULL,
+	@sWorkSiteName nvarchar(50)  = NULL,
+	@sNameOnImport nvarchar(50)  = NULL,
+	@bIsActive bit  = NULL,
+	@nLatitude decimal  = NULL,
+	@nLongitude decimal  = NULL,
+	@dDateAdded datetime  = NULL,
+	@dDateUpdated datetime  = NULL,
+	@nAccountID int  = NULL,
+	@sOrder nvarchar(200) = SampleSiteName, 
+	@nStartRow int = 1, 
+	@nMaxRows int = 2147483647
+)
+	/*----------------------------------------------------------------
+	EXEC ets_SampleSite_Select @sSampleSiteName='test'
+	
+	EXEC ets_SampleSite_Select @sOrder='SS.SampleSiteID DESC'
+	
+	EXEC ets_SampleSite_Select @nSampleTypeGroupID=2
+	EXEC ets_SampleSite_Select @nSampleTypeID=1
+	---------------------------------------------------------------*/
+ 
+AS
+ 
+SET NOCOUNT ON
+SET CONCAT_NULL_YIELDS_NULL OFF
+SET ROWCOUNT @nMaxRows
+-- Declare local variables
+DECLARE @sSelect nvarchar(MAX)
+DECLARE @sSelectCount nvarchar(MAX)
+DECLARE @sWhere nvarchar(MAX)
+-- Build WHERE clause
+SET @sWhere = ' WHERE 1=1'
+IF @nSampleTypeGroupID IS NOT NULL 
+	SET @sWhere = @sWhere + ' AND ST.SampleTypeGroupID = '+CAST(@nSampleTypeGroupID AS NVARCHAR)
+
+IF @nSampleTypeID IS NOT NULL 
+	SET @sWhere = @sWhere + ' AND SSST.SampleTypeID= '+CAST(@nSampleTypeID AS NVARCHAR)
+
+
+IF @nSampleSiteID IS NOT NULL 
+	SET @sWhere = @sWhere + ' AND SS.SampleSiteID = '+CAST(@nSampleSiteID AS NVARCHAR)
+IF @sSampleSiteName IS NOT NULL 
+	SET @sWhere = @sWhere + ' AND SS.SampleSiteName LIKE '+'''%' + @sSampleSiteName + '%'''
+IF @sWorkSiteName IS NOT NULL 
+	SET @sWhere = @sWhere + ' AND WS.WorkSiteName LIKE '+'''%' + @sWorkSiteName + '%'''
+IF @nWorkSiteID IS NOT NULL 
+	SET @sWhere = @sWhere + ' AND WS.WorkSiteID = '+CAST(@nWorkSiteID AS NVARCHAR)
+IF @sNameOnImport IS NOT NULL 
+	SET @sWhere = @sWhere + ' AND SS.NameOnImport LIKE '+'''%' + @sNameOnImport + '%'''
+IF @bIsActive IS NOT NULL 
+	SET @sWhere = @sWhere + ' AND SS.IsActive = '+CAST(@bIsActive AS NVARCHAR)
+IF @dDateAdded IS NOT NULL 
+	SET @sWhere = @sWhere + ' AND SS.DateAdded = '+CAST(@dDateAdded AS NVARCHAR)
+IF @dDateUpdated IS NOT NULL 
+	SET @sWhere = @sWhere + ' AND SS.DateUpdated = '+CAST(@dDateUpdated AS NVARCHAR)
+IF @nLatitude IS NOT NULL 
+	SET @sWhere = @sWhere + ' AND SS.Latitude = '+CAST(@nLatitude AS NVARCHAR)
+IF @nLongitude IS NOT NULL 
+	SET @sWhere = @sWhere + ' AND SS.Longitude = '+CAST(@nLongitude AS NVARCHAR)
+IF @nAccountID IS NOT NULL 
+	SET @sWhere = @sWhere + ' AND SS.AccountID = '+CAST(@nAccountID AS NVARCHAR)
+SET @sSelect = 'SELECT * FROM (SELECT DISTINCT SS.SampleSiteID, SS.SampleSiteName, 
+    SS.NameOnImport, SS.Latitude,SS.Longitude,SS.WorkSiteID,WS.WorkSiteName,  
+    SS.IsActive, SS.DateUpdated, SS.DateAdded, SS.AccountID,
+    ROW_NUMBER() OVER(ORDER BY '+ @sOrder +' ) as RowNum 
+FROM         SampleTypeGroup AS STG INNER JOIN
+                      SampleType AS ST ON STG.SampleTypeGroupID = ST.SampleTypeGroupID RIGHT OUTER JOIN
+                      SampleSite AS SS LEFT OUTER JOIN
+                      WorkSite AS WS ON SS.WorkSiteID = WS.WorkSiteID LEFT OUTER JOIN
+                      SampleSiteSampleType AS SSST ON SS.SampleSiteID = SSST.SampleSiteID ON ST.SampleTypeID = SSST.SampleTypeID
+' + @sWhere + ') as SampleSiteInfo'
+SET @sSelectCount=REPLACE(@sSelect, 'SELECT * FROM', 'SELECT COUNT(*) AS TotalRows FROM')
+SET @sSelect = @sSelect + ' WHERE RowNum >= ' + CONVERT(nvarchar(10), @nStartRow)
+
+ 
+EXEC (@sSelect)
+SET ROWCOUNT 0
+ 
+PRINT @sSelectCount
+EXEC (@sSelectCount)
+
+
+
+
+#
+
+SET @sSelect = 'SELECT * FROM (SELECT  SS.SampleSiteID, SS.SampleSiteName, WS.WorkSiteID, SSST.SampleSiteSampleTypeID, 
+    STG.SampleTypeGroup, ST.SampleTypeName, WS.WorkSiteName, ST.SampleTypeID, 
+    STG.SampleTypeGroupID, SS.NameOnImport, SS.Latitude,SS.Longitude,
+    SS.IsActive, SS.DateUpdated, SS.DateAdded, SS.AccountID,
+    ROW_NUMBER() OVER(ORDER BY '+ @sOrder +' ) as RowNum 
+FROM         SampleTypeGroup AS STG INNER JOIN
+                      SampleType AS ST ON STG.SampleTypeGroupID = ST.SampleTypeGroupID RIGHT OUTER JOIN
+                      SampleSite AS SS LEFT OUTER JOIN
+                      WorkSite AS WS ON SS.WorkSiteID = WS.WorkSiteID LEFT OUTER JOIN
+                      SampleSiteSampleType AS SSST ON SS.SampleSiteID = SSST.SampleSiteID ON ST.SampleTypeID = SSST.SampleTypeID
+' + @sWhere + ') as SampleSiteInfo'
++ ' WHERE RowNum >= ' + CONVERT(nvarchar(10), @nStartRow)
+
+
+
+#
+
+SELECT * FROM(SELECT  SS.SampleSiteID, SS.SampleSiteName, WS.WorkSiteID, SSST.SampleSiteSampleTypeID, 
+                      STG.SampleTypeGroup, ST.SampleTypeName, WS.WorkSiteName, ST.SampleTypeID, 
+                      STG.SampleTypeGroupID, SS.NameOnImport, 
+                      SS.IsActive, SS.DateUpdated, SS.DateAdded, SS.AccountID,
+                      ROW_NUMBER() OVER(ORDER BY SS.SampleSiteName DESC) as RowNum 
+FROM         SampleSite SS LEFT OUTER JOIN
+                      SampleSiteSampleType SSST ON SS.SampleSiteID = SSST.SampleSiteID LEFT OUTER JOIN
+                      WorkSite WS ON SS.WorkSiteID = WS.WorkSiteID INNER JOIN
+                      SampleType ST ON SSST.SampleTypeID = ST.SampleTypeID INNER JOIN
+                      SampleTypeGroup STG ON ST.SampleTypeGroupID = STG.SampleTypeGroupID) AS SampleSiteInfo
+                      
+
+
+#
+
+SELECT     SS.SampleSiteID, SS.SampleSiteName, WS.WorkSiteID, SSST.SampleSiteSampleTypeID, 
+                      STG.SampleTypeGroup, ST.SampleTypeName, WS.WorkSiteName, ST.SampleTypeID, 
+                      STG.SampleTypeGroupID, SS.NameOnImport, 
+                      SS.IsActive, SS.DateUpdated, SS.DateAdded, 
+                      SS.AccountID
+FROM         SampleSite SS LEFT OUTER JOIN
+                      SampleSiteSampleType SSST ON SS.SampleSiteID = SSST.SampleSiteID LEFT OUTER JOIN
+                      WorkSite WS ON SS.WorkSiteID = WS.WorkSiteID INNER JOIN
+                      SampleType ST ON SSST.SampleTypeID = ST.SampleTypeID INNER JOIN
+                      SampleTypeGroup STG ON ST.SampleTypeGroupID = STG.SampleTypeGroupID
+                      
+       
+
+#
+
+
+
+SELECT     SampleSite.SampleSiteID, SampleSite.SampleSiteName, WorkSite.WorkSiteID, SampleSiteSampleType.SampleSiteSampleTypeID, 
+                      SampleTypeGroup.SampleTypeGroup, SampleType.SampleTypeName, WorkSite.WorkSiteName, SampleType.SampleTypeID, 
+                      SampleTypeGroup.SampleTypeGroupID, SampleSite.NameOnImport, SampleSite.IsActive, SampleSite.DateUpdated, SampleSite.DateAdded, 
+                      SampleSite.AccountID
+FROM         SampleSite LEFT OUTER JOIN
+                      SampleSiteSampleType ON SampleSite.SampleSiteID = SampleSiteSampleType.SampleSiteID LEFT OUTER JOIN
+                      WorkSite ON SampleSite.WorkSiteID = WorkSite.WorkSiteID INNER JOIN
+                      SampleType ON SampleSiteSampleType.SampleTypeID = SampleType.SampleTypeID INNER JOIN
+                      SampleTypeGroup ON SampleType.SampleTypeGroupID = SampleTypeGroup.SampleTypeGroupID
+                      
+                      
+                      
+                      
+
+
+
+#
+
+SELECT * FROM (SELECT SampleSite.SampleSiteName AS [Sample Site], Sample.SampleID AS [Sample ID], 
+Sample.V001 AS [Original Site Name], Sample.V002 AS [Date Sampled], 
+Sample.DateTimeSampled AS [Date / Time Sampled], SampleType.SampleTypeName AS [Sample Type], 
+Sample.V003 AS [Time Sampled], Sample.V004 AS [Burn Time], [User].FullName AS [EnteredBy], 
+Sample.IsActive AS [Is Active], Sample.V005 AS [Average Methane], Sample.V006 AS [Total Flow], 
+Sample.Notes AS [Notes], Sample.V008 AS [TestingSummaryText],
+ROW_NUMBER() OVER(ORDER BY SampleSiteName ASC) as RowNum FROM [Sample] JOIN [User] ON Sample.EnteredBy = [User].UserID JOIN SampleType ON Sample.SampleTypeID = SampleType.SampleTypeID JOIN SampleSite ON Sample.SampleSiteID = SampleSite.SampleSiteID WHERE Sample.SampleTypeID = 1) as SampleInfo WHERE RowNum >= 1
+
+#
+
+
+
+SELECT * FROM 
+(SELECT SampleInfo.*,ROW_NUMBER() OVER(ORDER BY [Sample ID] DESC) as RowNum  
+FROM (SELECT SampleSite.SampleSiteName AS [Sample Site], Sample.SampleID AS [Sample ID], 
+Sample.V001 AS [Original Site Name], Sample.V002 AS [Date Sampled], 
+Sample.DateTimeSampled AS [Date / Time Sampled], SampleType.SampleTypeName AS [Sample Type], 
+Sample.V003 AS [Time Sampled], Sample.V004 AS [Burn Time], [User].FullName AS [EnteredBy], 
+Sample.IsActive AS [Is Active], Sample.V005 AS [Average Methane], Sample.V006 AS [Total Flow], 
+Sample.Notes AS [Notes], Sample.V008 AS [TestingSummaryText]
+FROM [Sample] JOIN [User] ON Sample.EnteredBy = [User].UserID 
+JOIN SampleType ON Sample.SampleTypeID = SampleType.SampleTypeID 
+JOIN SampleSite ON Sample.SampleSiteID = SampleSite.SampleSiteID WHERE Sample.SampleTypeID = 1) 
+as SampleInfo) as SampleFinalInfo WHERE RowNum >= 1
+
+#
+
+
+
+SELECT * FROM (SELECT SampleInfo.*,ROW_NUMBER() OVER(ORDER BY [SampleID] DESC) as RowNum  
+FROM (SELECT Sample.SampleID,SampleSite.SampleSiteName AS [Sample Site], Sample.SampleID AS [Sample ID], 
+Sample.V001 AS [Original Site Name], Sample.V002 AS [Date Sampled], 
+Sample.DateTimeSampled AS [Date / Time Sampled], SampleType.SampleTypeName AS [Sample Type], 
+Sample.V003 AS [Time Sampled], Sample.V004 AS [Burn Time], [User].FullName AS [EnteredBy], 
+Sample.IsActive AS [Is Active], Sample.V005 AS [Average Methane], Sample.V006 AS [Total Flow], 
+Sample.Notes AS [Notes], Sample.V008 AS [TestingSummaryText]
+FROM [Sample] JOIN [User] ON Sample.EnteredBy = [User].UserID 
+JOIN SampleType ON Sample.SampleTypeID = SampleType.SampleTypeID 
+JOIN SampleSite ON Sample.SampleSiteID = SampleSite.SampleSiteID WHERE Sample.SampleTypeID = 1) 
+as SampleInfo) as SampleFinalInfo WHERE RowNum >= 5

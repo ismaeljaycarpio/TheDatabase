@@ -1,0 +1,1121 @@
+﻿
+using System;
+using System.Collections.Generic;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+//using System.Xml.Linq;
+//using System.Web.DynamicData;
+//using System.Data.Linq;
+//using System.Linq;
+using System.IO;
+
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using iTextSharp.text.html;
+using System.Web.UI.HtmlControls;
+using iTextSharp.text.html.simpleparser;
+using DBGServerControl;
+
+public partial class Common_Pager : System.Web.UI.UserControl
+{
+    public dbgGridView _gridView;
+    private ScriptManager _scriptManager;
+    int _PageIndexBU = 1;
+    //private MetaTable _table;
+    private string _strTable = "User";
+    private int _iAccontID = -1;
+    private string _strFullName = "";
+    //private static ASPTemplateDataContext db = new ASPTemplateDataContext();
+    
+    
+    public int AccountID
+    {
+        get
+        {
+            return _iAccontID;
+        }
+        set
+        {
+            _iAccontID = value;
+        }
+    }
+
+    public string  FullName
+    {
+        get
+        {
+            return _strFullName ;
+        }
+        set
+        {
+            _strFullName = value;
+        }
+    }
+
+
+    public int PageIndex
+    {
+        get
+        {
+            return Convert.ToInt32(txtPageIndex.Text);
+        }
+        set
+        {
+            txtPageIndex.Text = value.ToString();
+        }
+    }
+
+  
+
+    public int PageSize
+    {
+        get
+        {
+            return Convert.ToInt32(txtPageSize.Text);
+        }
+        set
+        {
+            txtPageSize.Text = value.ToString();
+        }
+    }
+
+    public int TotalRows
+    {
+        get
+        {
+            return Convert.ToInt32(lblTotalRows.Text);
+        }
+        set
+        {
+            lblTotalRows.Text = value.ToString();
+        }
+    }
+
+    public int TotalPages
+    {
+        get
+        {
+            return Convert.ToInt32(lblPageCount.Text);
+        }
+        set
+        {
+            lblPageCount.Text = value.ToString();
+        }
+    }
+
+    public int StartIndex
+    {
+        get
+        {
+            int startIndex = 0;
+            if (this.PageIndex == 1)
+                startIndex = 0;
+            else
+                startIndex = (this.PageIndex - 1) * this.PageSize;
+            return startIndex;
+        }
+    }
+
+    protected void Page_Init(object sender, EventArgs e)
+    {
+        if (_gridView != null)
+        {
+            _gridView.PageIndexChanged += GridViewPageIndexChanged;
+            //var GridDataSource = _gridView.FindDataSourceControl();
+            var GridDataSource = _gridView.DataSource;
+            //_table = GridDataSource.GetTable();
+            _scriptManager = ScriptManager.GetCurrent(Page);
+            if (_scriptManager != null)
+                _scriptManager.Navigate += ScriptManagerOnNavigate;
+        }
+    }
+
+    protected void GridViewPageIndexChanged(object sender, EventArgs e)
+    {
+        if (_scriptManager != null)
+            _scriptManager.AddHistoryPoint("PageIndex", _gridView.PageIndex.ToString());
+    }
+
+    protected void ScriptManagerOnNavigate(object sender, HistoryEventArgs e)
+    {
+        if (!String.IsNullOrEmpty(e.State["PageIndex"]))
+            _gridView.PageIndex = int.Parse(e.State["PageIndex"]);
+    }
+
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+       
+        BindData();
+        //var table = DynamicDataRouteHandler.GetRequestMetaTable(Context);
+        HyperAdd.NavigateUrl = "../User/Detail.aspx?mode=add"; 
+    }
+
+    private void BindData()
+    {
+        Control c = Parent;
+        
+        while (c != null)
+        {
+            if (c is GridView)
+            {
+                _gridView = (dbgGridView)c;
+                
+                TotalRows = _gridView.VirtualItemCount ;
+                _gridView.TopPagerRow.Visible = true;
+
+              
+                break;
+            }
+            c = c.Parent;
+        }
+        this.TotalPages = Get_LastPage();
+    }
+
+
+    
+  
+    protected void cmdFirst_Click(object sender, ImageClickEventArgs e)
+    {
+        this.PageIndex = 1;
+        //this.PageIndexBU = 1;
+        //_gridView.PageIndex = 0;
+        PageIndexChanged();
+    }
+
+    protected void cmdPrev_Click(object sender, ImageClickEventArgs e)
+    {
+        //if (this.PageIndexBU > 1) this.PageIndexBU = this.PageIndexBU - 1;
+
+        if (_gridView.PageIndex > 0) _gridView.PageIndex = _gridView.PageIndex - 1;
+
+        if (this.PageIndex > 1) this.PageIndex = this.PageIndex - 1;
+        PageIndexChanged();
+    }
+
+    protected void cmdGo_Click(object sender, ImageClickEventArgs e)
+    {
+        if (int.Parse(txtPageIndex.Text) > this.Get_LastPage())
+        {
+            txtPageIndex.Text = this.Get_LastPage().ToString();
+        }
+        PageIndexChanged();
+    }
+
+    protected void cmdNext_Click(object sender, ImageClickEventArgs e)
+    {
+        //if (this.PageIndexBU < Get_LastPage())
+        //{
+        //    this.PageIndexBU = this.PageIndexBU + 1;
+        //} _gridView.PageIndex 
+
+        if (_gridView.PageIndex +1< Get_LastPage())
+        {
+            _gridView.PageIndex = _gridView.PageIndex + 1;
+        } 
+
+        if (this.PageIndex < Get_LastPage())
+        {
+            this.PageIndex = this.PageIndex + 1;
+        }
+        PageIndexChanged();
+        //_gridView.PageIndex = this.PageIndex - 1;
+    }
+
+    protected void cmdLast_Click(object sender, ImageClickEventArgs e)
+    {
+        this.PageIndex = Get_LastPage();
+        //this.PageIndexBU = Get_LastPage();
+        //_gridView.PageIndex = Get_LastPage() - 1;
+        PageIndexChanged();
+    }
+
+    private int Get_LastPage()
+    {
+        int LastPage = 0;
+        if (this.TotalRows > _gridView.PageSize)
+            LastPage = Convert.ToInt32(this.TotalRows / _gridView.PageSize) + 1;
+        else
+            LastPage = Convert.ToInt32(this.TotalRows / _gridView.PageSize);
+        if (LastPage == 0) LastPage = 1;
+        return LastPage;
+    }
+
+    protected void cmdUp_Click(object sender, ImageClickEventArgs e)
+    {
+        int nPageIndex = Convert.ToInt32(txtPageIndex.Text);
+        if (nPageIndex >= Get_LastPage())
+            return;
+        else
+        {
+            this.PageIndex = nPageIndex + 1;
+            PageIndexChanged();
+        }
+    }
+
+    protected void cmdDown_Click(object sender, ImageClickEventArgs e)
+    {
+        int nPageIndex = Convert.ToInt32(txtPageIndex.Text);
+        if (nPageIndex <= 1)
+            return;
+        else
+        {
+            this.PageIndex = nPageIndex - 1;
+            PageIndexChanged();
+        }
+    }
+
+    protected void txtPageIndex_TextChanged(object sender, EventArgs e)
+    {
+        if (string.IsNullOrEmpty(txtPageIndex.Text))
+            txtPageIndex.Text = "1";
+        this.PageIndex = Convert.ToInt32(txtPageIndex.Text);
+        //this.PageIndexBU = Convert.ToInt32(txtPageIndex.Text);
+       
+        PageIndexChanged();
+        //_gridView.PageIndex = Convert.ToInt32(txtPageIndex.Text) - 1;
+    }
+
+    protected void txtPageSize_TextChanged(object sender, EventArgs e)
+    {
+        PageSizeChanged();
+    }
+
+    protected void cmdUpSize_Click(object sender, ImageClickEventArgs e)
+    {
+        int nPageSize = Convert.ToInt32(txtPageSize.Text);
+        this.PageIndex = 1;
+        //this.PageIndexBU = 1;
+        
+        this.PageSize = nPageSize + 5;
+        PageSizeChanged();
+        
+    }
+
+    protected void cmdDownSize_Click(object sender, ImageClickEventArgs e)
+    {
+        int nPageSize = Convert.ToInt32(txtPageSize.Text);
+        if (nPageSize <= 5)
+            return;
+        this.PageIndex = 1;
+        //this.PageIndexBU = 1;
+        //_gridView.PageIndex = 0;
+        this.PageSize = nPageSize - 5;
+        PageSizeChanged();
+    }
+
+    private void PageIndexChanged()
+    {
+        if (_gridView == null)
+            BindData();
+
+        //_gridView.PageIndex = this.PageIndex - 1;
+        //txtPageIndex.Text = this.PageIndex.ToString();
+        // add history point
+        if (_scriptManager != null)
+            _scriptManager.AddHistoryPoint("PageIndex", txtPageIndex.Text);
+        //BindData();
+
+        int iTN = 0;
+        string strOrderDirection = "ASC";
+        if (_gridView.GridViewSortDirection == SortDirection.Descending)
+        {
+            strOrderDirection = "DESC";
+        }
+
+        int iStartIndex = _gridView.PageSize * (int.Parse(txtPageIndex.Text) - 1);
+
+        _gridView.DataSource = SecurityManager.ets_User_GetSorted(_gridView.GridViewSortColumn, 
+            strOrderDirection, iStartIndex, Convert.ToInt32(txtPageSize.Text), this.AccountID ,this.FullName, ref iTN);
+         
+        _gridView.DataBind();
+        _gridView.PageIndex = int.Parse(txtPageIndex.Text) - 1;
+        _gridView.TopPagerRow.Visible = true;
+
+    }
+
+    private void PageSizeChanged()
+    {
+        if (_gridView == null)
+            BindData();
+        //
+
+
+        _gridView.PageSize = Convert.ToInt32(txtPageSize.Text);
+
+        //
+         int iTN=0;
+         string strOrderDirection = "ASC";
+         if (_gridView.GridViewSortDirection == SortDirection.Descending)
+         {
+             strOrderDirection = "DESC";
+         }
+
+         _gridView.DataSource = SecurityManager.ets_User_GetSorted(_gridView.GridViewSortColumn, 
+             strOrderDirection, 0, Convert.ToInt32(txtPageSize.Text), this.AccountID ,this.FullName, ref iTN);
+
+        // save pager size
+        if (ViewState[_strTable + "_PagerSize"] != null)
+            ViewState[_strTable + "_PagerSize"] = _gridView.PageSize.ToString();
+        else
+            ViewState.Add(_strTable + "_PagerSize", _gridView.PageSize.ToString());
+
+        int pageindex = _gridView.PageIndex;
+       
+
+        _gridView.DataBind();
+        if (_gridView.PageIndex != pageindex)
+        {
+            _gridView.DataBind();
+        }
+        int LastPage = 0;
+        if (this.TotalRows > _gridView.PageSize)
+            LastPage = Convert.ToInt32(this.TotalRows / _gridView.PageSize) + 1;
+        else
+            LastPage = Convert.ToInt32(this.TotalRows / _gridView.PageSize);
+        if (LastPage == 0) LastPage = 1;
+        lblPageCount.Text = LastPage.ToString();
+
+        _gridView.TopPagerRow.Visible = true;
+
+    }
+
+    protected void Page_PreRender(object sender, EventArgs e)
+    {
+        if (_gridView != null)
+        {
+          
+            txtPageIndex.Text = (_gridView.PageIndex + 1).ToString();
+            //txtPageIndex.Text = (this.PageIndexBU).ToString();
+            txtPageSize.Text = _gridView.PageSize.ToString();
+        }
+    }
+
+    public void VerifyRenderingInServerForm(Control control)
+    {
+        return;
+    }
+
+    //Exports
+    protected void cmdPDF_Click(object sender, ImageClickEventArgs e)
+    {
+        ExportPDF();
+    }
+
+    protected void cmdWord_Click(object sender, ImageClickEventArgs e)
+    {
+        ExportWord();
+    }
+
+    protected void cmdExcel_Click(object sender, ImageClickEventArgs e)
+    {
+        ExportExcel();
+    }
+
+    private void ExportPDF()
+    {
+        Response.ContentType = "application/pdf";
+        Response.AddHeader("content-disposition",
+         "attachment;filename=GridViewExport.pdf");
+        Response.Cache.SetCacheability(HttpCacheability.NoCache);
+        StringWriter sw = new StringWriter();
+        HtmlTextWriter hw = new HtmlTextWriter(sw);
+
+        //_gridView.AllowPaging = false;
+        //_gridView.DataBind();
+        for (int i = 0; i < _gridView.Columns.Count; i++)
+        {
+            if (string.IsNullOrEmpty(_gridView.Columns[i].HeaderText))
+                _gridView.Columns[i].Visible = false;
+        }
+        _gridView.RenderControl(hw);
+
+        StringReader sr = new StringReader(sw.ToString());
+        Document pdfDoc = new Document(iTextSharp.text.PageSize.A4, 10f, 10f, 10f, 0f);
+        HTMLWorker htmlparser = new HTMLWorker(pdfDoc);
+        PdfWriter.GetInstance(pdfDoc, Response.OutputStream);
+
+        pdfDoc.Open();
+        htmlparser.Parse(sr);
+        pdfDoc.Close();
+
+        Response.Write(pdfDoc);
+        Response.End();
+    }
+    private void ExportWord()
+    {
+        Response.Clear();
+        Response.Buffer = true;
+        Response.AddHeader("content-disposition",
+        "attachment;filename=GridViewExport.doc");
+        Response.Charset = "";
+        Response.ContentType = "application/vnd.ms-word ";
+
+        StringWriter sw = new StringWriter();
+        HtmlTextWriter hw = new HtmlTextWriter(sw);
+
+        _gridView.AllowPaging = false;
+        _gridView.DataBind();
+        for (int i = 0; i < _gridView.Columns.Count; i++)
+        {
+            if (string.IsNullOrEmpty(_gridView.Columns[i].HeaderText))
+                _gridView.Columns[i].Visible = false;
+        }
+        _gridView.RenderControl(hw);
+
+        Response.Output.Write(sw.ToString());
+        Response.Flush();
+        Response.End();
+    }
+    private void ExportExcel()
+    {
+        Response.Clear();
+        Response.Buffer = true;
+        Response.AddHeader("content-disposition",
+        "attachment;filename=GridViewExport.xls");
+        Response.Charset = "";
+        Response.ContentType = "application/vnd.ms-excel";
+
+        StringWriter sw = new StringWriter();
+        HtmlTextWriter hw = new HtmlTextWriter(sw);
+
+        _gridView.AllowPaging = false;
+        _gridView.DataBind();
+        for (int i = 0; i < _gridView.Columns.Count; i++)
+        {
+            if (string.IsNullOrEmpty(_gridView.Columns[i].HeaderText))
+                _gridView.Columns[i].Visible = false;
+        }
+        //Change the Header Row back to white color
+        _gridView.HeaderRow.Style.Add("background-color", "#FFFFFF");
+        //Apply style to Individual Cells
+        _gridView.HeaderRow.Cells[0].Style.Add("background-color", "green");
+        _gridView.HeaderRow.Cells[1].Style.Add("background-color", "green");
+        _gridView.HeaderRow.Cells[2].Style.Add("background-color", "green");
+        _gridView.HeaderRow.Cells[3].Style.Add("background-color", "green");
+
+        for (int i = 0; i < _gridView.Rows.Count; i++)
+        {
+            GridViewRow row = _gridView.Rows[i];
+            //Change Color back to white
+            row.BackColor = System.Drawing.Color.White;
+            //Apply text style to each Row
+            row.Attributes.Add("class", "textmode");
+            //Apply style to Individual Cells of Alternating Row
+            if (i % 2 != 0)
+            {
+                row.Cells[0].Style.Add("background-color", "#C2D69B");
+                row.Cells[1].Style.Add("background-color", "#C2D69B");
+                row.Cells[2].Style.Add("background-color", "#C2D69B");
+                row.Cells[3].Style.Add("background-color", "#C2D69B");
+            }
+        }
+        _gridView.RenderControl(hw);
+
+        //style to format numbers to string
+        string style = @"<style> .textmode { mso-number-format:\@; } </style>";
+        Response.Write(style);
+        Response.Output.Write(sw.ToString());
+        Response.Flush();
+        Response.End();
+    }
+
+    protected void cmdRefresh_Click(object sender, ImageClickEventArgs e)
+    {
+        if (_gridView != null)
+        {
+            this.PageIndex = 1;
+            //this.PageIndexBU = 1;
+            _gridView.PageIndex = 0;
+            _gridView.PageIndex = this.PageIndex;
+            PageIndexChanged();
+        }
+    }
+
+    protected void DeleteLinkButton_Click(object sender, EventArgs e)
+    {
+        string sCheck = "";
+        for (int i = 0; i < _gridView.Rows.Count; i++)
+        {
+            bool ischeck = ((CheckBox)_gridView.Rows[i].FindControl("chkDelete")).Checked;
+            if (ischeck)
+            {
+                sCheck += sCheck += ((Label)_gridView.Rows[i].FindControl("LblID")).Text + ",";
+            }
+        }
+        if (string.IsNullOrEmpty(sCheck))
+        {
+            ScriptManager.RegisterClientScriptBlock(_gridView, typeof(Page), "message_alert", "alert('Please select a record.');", true);
+            //DeleteLinkButton.Focus();
+        }
+        else
+        {
+            //var table = DynamicDataRouteHandler.GetRequestMetaTable(Context);
+            //DeleteItem(table.Name, sCheck);
+        }
+    }
+
+    //private void DeleteItem(string tblname, string keys)
+    //{
+    //    switch (tblname)
+    //    {
+
+    //        #region AccountRight
+    //        // AccountRight
+    //        case "AccountRights":
+    //            {
+    //                try
+    //                {
+    //                    if (!string.IsNullOrEmpty(keys))
+    //                    {
+                       
+    //                        foreach (string sTemp in keys.Split(','))
+    //                        {
+    //                            if (!string.IsNullOrEmpty(sTemp))
+    //                            {
+    //                                AccountRight etTemp = db.AccountRights.Where(t => t.AccountRightID == Convert.ToInt32(sTemp)).FirstOrDefault();
+    //                                db.AccountRights.DeleteOnSubmit(etTemp);
+    //                                db.SubmitChanges();
+
+    //                            }
+    //                        }
+
+                          
+    //                    }
+    //                }
+    //                catch (Exception ex)
+    //                {
+    //                    DBGurus.AddErrorLog(ex.Message);
+    //                    ScriptManager.RegisterClientScriptBlock(_gridView, typeof(Page), "mess_AccountRight", "alert('Delete the Account Right  have fail');", true);
+    //                }
+
+    //                break;
+    //            }
+
+    //        #endregion
+    //        #region Account
+    //        // Account
+    //        case "Accounts":
+    //            {
+    //                try
+    //                {
+    //                    if (!string.IsNullOrEmpty(keys))
+    //                    {
+                         
+    //                        foreach (string sTemp in keys.Split(','))
+    //                        {
+    //                            if (!string.IsNullOrEmpty(sTemp))
+    //                            {
+    //                                Account etTemp = db.Accounts.Where(t => t.AccountID == Convert.ToInt32(sTemp)).FirstOrDefault();
+    //                                db.Accounts.DeleteOnSubmit(etTemp);
+    //                                db.SubmitChanges();
+
+    //                            }
+    //                        }
+
+                          
+    //                    }
+    //                }
+    //                catch (Exception ex)
+    //                {
+    //                    DBGurus.AddErrorLog(ex.Message);
+    //                    ScriptManager.RegisterClientScriptBlock(_gridView, typeof(Page), "mess_Account", "alert('Delete the Account   have fail');", true);
+    //                }
+
+    //                break;
+    //            }
+
+    //        #endregion
+    //        #region Attribute
+    //        case "Attributes":
+    //            {
+    //                try
+    //                {
+    //                    if (!string.IsNullOrEmpty(keys))
+    //                    {
+                           
+    //                        foreach (string sTemp in keys.Split(','))
+    //                        {
+    //                            if (!string.IsNullOrEmpty(sTemp))
+    //                            {
+    //                                //Attribute etTemp = db.Attributes.Where(t => t.AttributeID == Convert.ToInt32(sTemp)).FirstOrDefault();
+    //                                ////listTemp.Add(etTemp);
+    //                                //db.Attributes.DeleteOnSubmit(etTemp);
+    //                                //db.SubmitChanges();
+    //                                db.ExecuteCommand("delete from Attribute   where AttributeID=" + sTemp);
+
+    //                            }
+    //                        }
+
+                         
+                            
+    //                    }
+    //                }
+    //                catch (Exception ex)
+    //                {
+    //                    DBGurus.AddErrorLog(ex.Message);
+    //                    ScriptManager.RegisterClientScriptBlock(_gridView, typeof(Page), "mess_AttributeTypes", "alert('Delete the Attribute Types have fail');", true);
+    //                }
+
+    //                break;
+    //            }
+
+    //        #endregion
+    //        #region Content
+    //        //Content
+    //        case "Contents":
+    //            {
+    //                try
+    //                {
+    //                    if (!string.IsNullOrEmpty(keys))
+    //                    {
+                           
+    //                        foreach (string sTemp in keys.Split(','))
+    //                        {
+    //                            if (!string.IsNullOrEmpty(sTemp))
+    //                            {
+    //                                //Content etTemp = db.Contents.Where(t => t.ContentID == Convert.ToInt32(sTemp)).FirstOrDefault();
+    //                                //db.Contents.DeleteOnSubmit(etTemp);
+    //                                //db.SubmitChanges();
+
+    //                            }
+    //                        }
+                            
+    //                    }
+    //                }
+    //                catch (Exception ex)
+    //                {
+    //                    DBGurus.AddErrorLog(ex.Message);
+    //                    ScriptManager.RegisterClientScriptBlock(_gridView, typeof(Page), "mess_Contents", "alert('Delete the Contents have fail');", true);
+    //                }
+
+    //                break;
+    //            }
+
+
+    //        #endregion
+    //        #region Country
+    //        //Country
+    //        case "Countries":
+    //            {
+    //                try
+    //                {
+    //                    if (!string.IsNullOrEmpty(keys))
+    //                    {
+                          
+    //                        foreach (string sTemp in keys.Split(','))
+    //                        {
+    //                            if (!string.IsNullOrEmpty(sTemp))
+    //                            {
+    //                                //Country etTemp = db.Countries.Where(t => t.CountryID == Convert.ToInt32(sTemp)).FirstOrDefault();
+    //                                //db.Countries.DeleteOnSubmit(etTemp);
+    //                                db.SubmitChanges();
+    //                            }
+    //                        }
+                          
+    //                    }
+    //                }
+    //                catch (Exception ex)
+    //                {
+    //                    DBGurus.AddErrorLog(ex.Message);
+    //                    ScriptManager.RegisterClientScriptBlock(_gridView, typeof(Page), "mess_Country", "alert('Delete the Country have fail');", true);
+    //                }
+
+    //                break;
+    //            }
+
+
+    //        #endregion
+    //        //#region Organisation
+    //        ////Organisation
+    //        //case "Organisations":
+    //        //    {
+    //        //        try
+    //        //        {
+    //        //            if (!string.IsNullOrEmpty(keys))
+    //        //            {
+                           
+    //        //                foreach (string sTemp in keys.Split(','))
+    //        //                {
+    //        //                    if (!string.IsNullOrEmpty(sTemp))
+    //        //                    {
+    //        //                        //Organisation etTemp = db.Organisations.Where(t => t.OrganisationID == Convert.ToInt32(sTemp)).FirstOrDefault();
+    //        //                        //db.Organisations.DeleteOnSubmit(etTemp);
+    //        //                        //db.SubmitChanges();
+    //        //                        db.ExecuteCommand("delete from organisation where organisationid=" + sTemp);
+    //        //                    }
+    //        //                }
+                           
+    //        //            }
+    //        //        }
+    //        //        catch (Exception ex)
+    //        //        {
+    //        //            DBGurus.AddErrorLog(ex.Message);
+    //        //            ScriptManager.RegisterClientScriptBlock(_gridView, typeof(Page), "mess_Companies", "alert('Delete the Companies have fail');", true);
+    //        //        }
+
+    //        //        break;
+    //        //    }
+
+    //        //#endregion
+    //        //#region PersonAttribute
+    //        ////PersonAttributes
+    //        //case "PersonAttributes":
+    //        //    {
+    //        //        try
+    //        //        {
+    //        //            if (!string.IsNullOrEmpty(keys))
+    //        //            {
+                            
+    //        //                foreach (string sTemp in keys.Split(','))
+    //        //                {
+    //        //                    if (!string.IsNullOrEmpty(sTemp))
+    //        //                    {
+    //        //                        PersonAttribute etTemp = db.PersonAttributes.Where(t => t.PersonAttributeID == Convert.ToInt32(sTemp)).FirstOrDefault();
+    //        //                        db.PersonAttributes.DeleteOnSubmit(etTemp);
+    //        //                        db.SubmitChanges();
+    //        //                        //db.ExecuteCommand("delete from state where stateId=" + sTemp);
+
+
+    //        //                    }
+    //        //                }
+                         
+    //        //            }
+    //        //        }
+    //        //        catch (Exception ex)
+    //        //        {
+    //        //            DBGurus.AddErrorLog(ex.Message);
+    //        //            ScriptManager.RegisterClientScriptBlock(_gridView, typeof(Page), "mess_Person Attribute", "alert('Delete the Person Attribute have fail');", true);
+    //        //        }
+
+    //        //        break;
+    //        //    }
+
+    //        //#endregion
+    //        //#region PersonOrganisation
+    //        ////PersonOrganisations
+    //        //case "PersonOrganisations":
+    //        //    {
+    //        //        try
+    //        //        {
+    //        //            if (!string.IsNullOrEmpty(keys))
+    //        //            {
+                          
+    //        //                foreach (string sTemp in keys.Split(','))
+    //        //                {
+    //        //                    if (!string.IsNullOrEmpty(sTemp))
+    //        //                    {
+    //        //                        PersonOrganisation etTemp = db.PersonOrganisations.Where(t => t.PersonOrganisationID == Convert.ToInt32(sTemp)).FirstOrDefault();
+    //        //                        db.PersonOrganisations.DeleteOnSubmit(etTemp);
+    //        //                        db.SubmitChanges();
+    //        //                    }
+    //        //                }
+                           
+    //        //            }
+    //        //        }
+    //        //        catch (Exception ex)
+    //        //        {
+    //        //            DBGurus.AddErrorLog(ex.Message);
+    //        //            ScriptManager.RegisterClientScriptBlock(_gridView, typeof(Page), "mess_Person Organisations", "alert('Delete the Person Organisations have fail');", true);
+    //        //        }
+
+    //        //        break;
+    //        //    }
+
+    //        //#endregion
+    //        //#region Person
+    //        ////Persons
+    //        //case "Persons":
+    //        //    {
+    //        //        try
+    //        //        {
+    //        //            if (!string.IsNullOrEmpty(keys))
+    //        //            {
+                           
+    //        //                foreach (string sTemp in keys.Split(','))
+    //        //                {
+    //        //                    if (!string.IsNullOrEmpty(sTemp))
+    //        //                    {
+    //        //                        Person etTemp = db.Persons.Where(t => t.PersonID == Convert.ToInt32(sTemp)).FirstOrDefault();
+    //        //                        db.Persons.DeleteOnSubmit(etTemp);
+    //        //                        db.SubmitChanges();
+    //        //                    }
+    //        //                }
+                           
+    //        //            }
+    //        //        }
+    //        //        catch (Exception ex)
+    //        //        {
+    //        //            DBGurus.AddErrorLog(ex.Message);
+    //        //            ScriptManager.RegisterClientScriptBlock(_gridView, typeof(Page), "mess_Person ", "alert('Delete the Person  have fail');", true);
+    //        //        }
+
+    //        //        break;
+    //        //    }
+
+    //        //#endregion
+    //        //#region PersonStatus
+    //        ////PersonStatus
+    //        //case "PersonStatus":
+    //        //    {
+    //        //        try
+    //        //        {
+    //        //            if (!string.IsNullOrEmpty(keys))
+    //        //            {
+                            
+    //        //                foreach (string sTemp in keys.Split(','))
+    //        //                {
+    //        //                    if (!string.IsNullOrEmpty(sTemp))
+    //        //                    {
+    //        //                        //PersonStatus etTemp = db.PersonStatus.Where(t => t.PersonStatusID == Convert.ToInt32(sTemp)).FirstOrDefault();
+    //        //                        //db.PersonStatus.DeleteOnSubmit(etTemp);
+    //        //                        //db.SubmitChanges();
+    //        //                        db.ExecuteCommand("delete from PersonStatus  where PersonStatusID=" + sTemp);
+
+    //        //                    }
+    //        //                }
+                          
+    //        //            }
+    //        //        }
+    //        //        catch (Exception ex)
+    //        //        {
+    //        //            DBGurus.AddErrorLog(ex.Message);
+    //        //            ScriptManager.RegisterClientScriptBlock(_gridView, typeof(Page), "mess_Person Status", "alert('Delete the Person status have fail');", true);
+    //        //        }
+
+    //        //        break;
+    //        //    }
+
+    //        //#endregion
+    //        //#region PersonType
+    //        ////PersonType
+    //        //case "PersonTypes":
+    //        //    {
+    //        //        try
+    //        //        {
+    //        //            if (!string.IsNullOrEmpty(keys))
+    //        //            {
+    //        //                //List<PersonType> listTemp = new List<PersonType>();
+    //        //                foreach (string sTemp in keys.Split(','))
+    //        //                {
+    //        //                    if (!string.IsNullOrEmpty(sTemp))
+    //        //                    {
+    //        //                        //PersonType etTemp = db.PersonTypes.Where(t => t.PersonTypeID == Convert.ToInt32(sTemp)).FirstOrDefault();
+    //        //                        //db.PersonTypes.DeleteOnSubmit(etTemp);
+    //        //                        //db.SubmitChanges();
+    //        //                        db.ExecuteCommand("delete from PersonType where PersonTypeID=" + sTemp);
+    //        //                    }
+    //        //                }
+                          
+    //        //            }
+    //        //        }
+    //        //        catch (Exception ex)
+    //        //        {
+    //        //            DBGurus.AddErrorLog(ex.Message);
+    //        //            ScriptManager.RegisterClientScriptBlock(_gridView, typeof(Page), "mess_Person Type", "alert('Delete the Person typr have fail');", true);
+    //        //        }
+
+    //        //        break;
+    //        //    }
+
+    //        //#endregion
+    //        //#region Right
+    //        ////Right
+    //        //case "Rights":
+    //        //    {
+    //        //        try
+    //        //        {
+    //        //            if (!string.IsNullOrEmpty(keys))
+    //        //            {
+                           
+    //        //                foreach (string sTemp in keys.Split(','))
+    //        //                {
+    //        //                    if (!string.IsNullOrEmpty(sTemp))
+    //        //                    {
+    //        //                        Right etTemp = db.Rights.Where(t => t.RightId == Convert.ToInt32(sTemp)).FirstOrDefault();
+    //        //                        db.Rights.DeleteOnSubmit(etTemp);
+    //        //                        db.SubmitChanges();
+    //        //                    }
+    //        //                }
+                           
+    //        //            }
+    //        //        }
+    //        //        catch (Exception ex)
+    //        //        {
+    //        //            DBGurus.AddErrorLog(ex.Message);
+    //        //            ScriptManager.RegisterClientScriptBlock(_gridView, typeof(Page), "mess_Right", "alert('Delete the Right have fail');", true);
+    //        //        }
+
+    //        //        break;
+    //        //    }
+
+    //        //#endregion      
+    //        //#region Role
+    //        ////Roles
+    //        //case "Role":
+    //        //    {
+    //        //        try
+    //        //        {
+    //        //            if (!string.IsNullOrEmpty(keys))
+    //        //            {
+    //        //                List<Role> listTemp = new List<Role>();
+    //        //                List<UserRole> listUR = new List<UserRole>();
+    //        //                foreach (string sTemp in keys.Split(','))
+    //        //                {
+    //        //                    if (!string.IsNullOrEmpty(sTemp))
+    //        //                    {
+    //        //                        Role etTemp = db.Roles.Where(t => t.RoleID == Convert.ToInt32(sTemp)).FirstOrDefault();
+    //        //                        listTemp.Add(etTemp);
+    //        //                        List<UserRole> listURTemp = etTemp.UserRoles.ToList();
+    //        //                        listUR.AddRange(listURTemp);
+    //        //                    }
+    //        //                }
+    //        //                db.UserRoles.DeleteAllOnSubmit(listUR);
+    //        //                db.Roles.DeleteAllOnSubmit(listTemp);
+    //        //                db.SubmitChanges();
+    //        //            }
+    //        //        }
+    //        //        catch (Exception ex)
+    //        //        {
+    //        //            DBGurus.AddErrorLog(ex.Message);
+    //        //            ScriptManager.RegisterClientScriptBlock(_gridView, typeof(Page), "mess_Roles", "alert('Delete the Roles have fail');", true);
+    //        //        }
+                   
+    //        //        break;
+    //        //    }
+
+
+    //        //#endregion
+    //        //#region State
+    //        ////State
+    //        //case "States":
+    //        //    {
+    //        //        try
+    //        //        {
+    //        //            if (!string.IsNullOrEmpty(keys))
+    //        //            {
+                           
+    //        //                foreach (string sTemp in keys.Split(','))
+    //        //                {
+    //        //                    if (!string.IsNullOrEmpty(sTemp))
+    //        //                    {
+    //        //                        db.ExecuteCommand("delete from state where stateId="+sTemp);
+                                    
+    //        //                    }
+                                
+    //        //                }
+                           
+    //        //            }
+    //        //        }
+    //        //        catch (Exception ex)
+    //        //        {
+    //        //            DBGurus.AddErrorLog(ex.Message);
+    //        //            ScriptManager.RegisterClientScriptBlock(_gridView, typeof(Page), "mess_State", "alert('Delete the State have fail');", true);
+    //        //        }
+
+    //        //        break;
+    //        //    }
+
+    //        //#endregion      
+    //        //#region SystemOptions
+    //        ////SystemOptions
+    //        //case "SystemOptions":
+    //        //    {
+    //        //        try
+    //        //        {
+    //        //            if (!string.IsNullOrEmpty(keys))
+    //        //            {
+                            
+    //        //                foreach (string sTemp in keys.Split(','))
+    //        //                {
+    //        //                    if (!string.IsNullOrEmpty(sTemp))
+    //        //                    {
+    //        //                        SystemOption etTemp = db.SystemOptions.Where(t => t.SystemOptionID == Convert.ToInt32(sTemp)).FirstOrDefault();
+    //        //                        db.SystemOptions.DeleteOnSubmit(etTemp);
+    //        //                        db.SubmitChanges();
+    //        //                    }
+    //        //                }
+                          
+    //        //            }
+    //        //        }
+    //        //        catch (Exception ex)
+    //        //        {
+    //        //            DBGurus.AddErrorLog(ex.Message);
+    //        //            ScriptManager.RegisterClientScriptBlock(_gridView, typeof(Page), "mess_SystemOptions", "alert('Delete the System Options have fail');", true);
+    //        //        }
+                   
+    //        //        break;
+    //        //    }
+    //        //#endregion
+    //        #region UserRoles
+    //        //UserRoles
+    //        case "UserRoles":
+    //            {
+    //                try
+    //                {
+    //                    if (!string.IsNullOrEmpty(keys))
+    //                    {
+    //                        List<UserRole> listTemp = new List<UserRole>();
+    //                        foreach (string sTemp in keys.Split(','))
+    //                        {
+    //                            if (!string.IsNullOrEmpty(sTemp))
+    //                            {
+    //                                UserRole etTemp = db.UserRoles.Where(t => t.UserRoleID == Convert.ToInt32(sTemp)).FirstOrDefault();
+    //                                db.UserRoles.DeleteOnSubmit(etTemp);
+    //                                db.SubmitChanges();
+    //                            }
+    //                        }
+                          
+    //                    }
+    //                }
+    //                catch (Exception ex)
+    //                {
+    //                    DBGurus.AddErrorLog(ex.Message);
+    //                    ScriptManager.RegisterClientScriptBlock(_gridView, typeof(Page), "mess_UserRoles", "alert('Delete the User Roles have fail');", true);
+    //                }                   
+    //                break;
+    //            }
+    //        #endregion
+    //        #region Users
+    //        //Users
+    //        case "Users":
+    //            {
+    //                try
+    //                {
+    //                    if (!string.IsNullOrEmpty(keys))
+    //                    {
+    //                        List<User> listTemp = new List<User>();
+    //                        List<UserRole> listUR = new List<UserRole>();
+    //                        foreach (string sTemp in keys.Split(','))
+    //                        {
+    //                            if (!string.IsNullOrEmpty(sTemp))
+    //                            {
+    //                                User etTemp = db.Users.Where(t => t.UserID == Convert.ToInt32(sTemp)).FirstOrDefault();
+    //                                listTemp.Add(etTemp);
+    //                                //User- Roles
+    //                                List<UserRole> listRoles = etTemp.UserRoles.ToList();
+    //                                listUR.AddRange(listRoles);
+    //                            }
+    //                        }
+    //                        db.UserRoles.DeleteAllOnSubmit(listUR);
+    //                        db.Users.DeleteAllOnSubmit(listTemp);
+    //                        db.SubmitChanges();
+    //                    }
+    //                }
+    //                catch (Exception ex)
+    //                {
+    //                    DBGurus.AddErrorLog(ex.Message);
+    //                    ScriptManager.RegisterClientScriptBlock(_gridView, typeof(Page), "mess_Users", "alert('Delete the Users have fail');", true);
+    //                }
+                    
+    //                break;
+    //            }
+
+    //        #endregion
+           
+    //        default:
+    //            break;
+    //    }
+    //}
+}

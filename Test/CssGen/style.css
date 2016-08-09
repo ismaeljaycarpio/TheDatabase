@@ -1,0 +1,218 @@
+﻿body {
+color:#000;
+font-family:"Trebuchet MS",Verdana,"Lucida Grande",Tahoma,Helvetica,Sans-Serif;
+font-size:90%;
+background-color:#FFFFFF;
+text-align:center;
+margin:0;
+padding:0;
+}
+
+div {
+text-align:left;
+}
+
+form {
+display:inline;
+}
+
+select {
+font-size:95%;
+font-family:"Trebuchet MS",Verdana,"Lucida Grande",Tahoma,Helvetica,Sans-Serif;
+}
+
+h1 {
+font-size:110%;
+display:inline;
+color:#000;
+margin:0;
+padding:0;
+}
+
+h2 {
+font-size:100%;
+display:inline;
+color:#000;
+margin:0;
+}
+
+.v00 {
+color:#3f3f3c;
+}
+
+td {
+font-size:80%;
+}
+
+.floatcontentcenteradvanced {
+background-color:#e4e2d4;
+float:left;
+width:215px;
+text-align:left;
+margin:0 5px 0 0;
+}
+
+.floatcontentcenter {
+background-color:#e4e2d4;
+float:left;
+width:215px;
+text-align:center;
+margin:0 5px 0 0;
+}
+
+.floatcontent {
+background-color:#EAE9E1;
+float:left;
+width:230px;
+text-align:left;
+margin:0 5px 0 0;
+}
+
+.floatcontent table {
+font-size:110%;
+}
+
+.conteneur {
+margin:0;
+}
+
+.cl {
+clear:both;
+height:1px;
+overflow:auto;
+}
+
+.sliding {
+border:0;
+background-color:#e4e2d4;
+font-size:100%;
+width:25px;
+}
+
+a {
+color:#605403;
+}
+
+a.l0:hover {
+font-size:90%;
+text-decoration:none;
+color:red;
+}
+
+.thebuttonmenu {
+float:left;
+}
+
+.textinfo {
+background-color:#e4e2d4;
+color:#000;
+font-size:90%;
+font-family:"Trebuchet MS",Verdana,"Lucida Grande",Tahoma,Helvetica,Sans-Serif;
+}
+
+.theinputoptions {
+font-size:100%;
+width:50px;
+}
+
+.txtasterix0 {
+font-size:75%;
+color:#000;
+}
+
+.txtasterix1 {
+font-size:75%;
+}
+
+.txtasterix2 {
+font-size:70%;
+color:#000;
+}
+
+#l001 input {
+color:#fff;
+font-size:90%;
+font-family:"Trebuchet MS",Verdana,"Lucida Grande",Tahoma,Helvetica,Sans-Serif;
+width:83px;
+}
+
+#l001 div {
+float:left;
+display:inline;
+margin:0 3px 0 0;
+padding:0;
+}
+
+.boffbold,.boffunderline,.boffoverline,.boffitalic,.boffoblique,.boffline,.boffuppercase,.boffsmallcaps {
+border:1px solid #605403;
+background-color:#605403;
+}
+
+.bonbold,.bonunderline,.bonoverline,.bonitalic,.bonoblique,.bonline,.bonuppercase,.bonsmallcaps {
+border:1px solid #000;
+background-color:#000;
+}
+
+#area1,#area2,#area3,#area4,#area5 {
+position:relative;
+height:10px;
+width:200px;
+background-color:#aba36f;
+overflow:hidden;
+}
+
+#knob1,#knob2,#knob3,#knob4,#knob5 {
+position:absolute;
+height:10px;
+width:20px;
+background-color:#605403;
+cursor:pointer;
+overflow:hidden;
+}
+
+.bgt0 {
+background-color:#D0D095;
+font-weight:700;
+padding:5px;
+}
+
+input {
+outline:none;
+}
+
+a.l0:link,a.l0:visited,a.l0:active {
+font-size:90%;
+text-decoration:none;
+}
+
+.boffbold,.bonbold {
+font-weight:700;
+}
+
+.boffunderline,.bonunderline {
+text-decoration:underline;
+}
+
+.boffoverline,.bonoverline {
+text-decoration:overline;
+}
+
+.boffitalic,.bonitalic {
+font-style:italic;
+}
+
+.boffoblique,.bonoblique {
+font-style:oblique;
+}
+
+.boffline,.bonline {
+text-decoration:line-through;
+}
+
+.boffuppercase,.bonuppercase {
+text-transform:uppercase;
+}
+
+.boffsmallcaps,.bonsmallcaps {
+font-variant:small-caps;
+}

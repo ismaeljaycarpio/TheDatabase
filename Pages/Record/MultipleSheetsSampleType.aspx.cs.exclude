@@ -1,0 +1,223 @@
+﻿using System;
+//using System.Collections;
+using System.Collections.Generic;
+
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Data;
+using System.IO;
+using System.Reflection;
+using System.Linq;
+using System.Data.SqlClient;
+public partial class Pages_Record_MultipleSheetsTable : SecurePage
+{
+    Menu _theMenu;
+    Menu _qsMenu;
+    User _ObjUser;
+    string _qsMenuID = "";
+    int _iTotalDynamicColumns = 0;
+    int _iValidRecordIDIndex = 0;
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+        if (!Common.HaveAccess(Session["roletype"].ToString(), "1,2,3,4"))
+        { Response.Redirect("~/Default.aspx", false); }
+
+        try
+        {
+            _ObjUser = (User)Session["User"];
+
+            if (Request.QueryString["MenuID"] != null)
+            {
+                _qsMenuID = Cryptography.Decrypt(Request.QueryString["MenuID"]);
+                _theMenu = RecordManager.ets_Menu_Details(int.Parse(_qsMenuID));
+               
+            }
+            else
+            {
+                Response.Redirect("~/Default.aspx", false);
+            }
+
+            int iTemp = 0;
+           
+
+            if(!IsPostBack)
+            {
+                if (Request.QueryString["FileInfo"] != null)
+                {
+                    PopulateFileInfo(int.Parse(Cryptography.Decrypt(Request.QueryString["FileInfo"].ToString())));
+                    //populate sheet drop down
+                    Guid guidNew = Guid.Empty;
+                    string strFileExtension = "";
+                    strFileExtension = hfFileExtension.Value;
+
+                    guidNew = Guid.Parse(hfguidNew.Value);
+
+                    string strFileUniqueName;
+                    strFileUniqueName = guidNew.ToString() + strFileExtension;
+
+                    List<string> lstSheets = OfficeManager.GetExcelSheetNames(Server.MapPath("RecordFiles"), strFileUniqueName);
+                    if (lstSheets.Count > 1)
+                    {
+                        ddlSheetNames.Items.Clear();
+                        foreach (string item in lstSheets)
+                        {
+                            System.Web.UI.WebControls.ListItem liItem = new System.Web.UI.WebControls.ListItem(item, item);
+                            ddlSheetNames.Items.Add(liItem);
+                        }
+
+                    }
+
+
+                }
+
+                hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordUpload.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString(); ;
+            }
+
+            Title = "Multiple Sheets file";
+            lblTitle.Text = "Multiple Sheets file";
+                      
+       
+        }
+        catch (Exception ex)
+        {
+
+        }
+
+    }
+
+
+    protected void PopulateFileInfo(int iSearchCriteriaID)
+    {
+        try
+        {
+            SearchCriteria theSearchCriteria = SystemData.SearchCriteria_Detail(iSearchCriteriaID);
+
+
+            if (theSearchCriteria != null)
+            {
+
+                System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
+
+                xmlDoc.Load(new StringReader(theSearchCriteria.SearchText));
+
+                lblExcelFileName.Text = xmlDoc.FirstChild["FileName"].InnerText;
+                lblBatchDesc.Text = xmlDoc.FirstChild["txtBatchDescription"].InnerText;
+                hfguidNew.Value = xmlDoc.FirstChild["guidNew"].InnerText;
+                hfFileExtension.Value ="." + lblExcelFileName.Text.Substring(lblExcelFileName.Text.LastIndexOf('.') + 1).ToLower();
+                if (lblBatchDesc.Text == "")
+                    lblBatchDesc.Text = lblExcelFileName.Text;
+
+            }
+        }
+        catch (Exception ex)
+        {
+            lblMsg.Text = ex.Message;
+        }
+
+
+    }
+   
+   
+
+    public override void VerifyRenderingInServerForm(Control control)
+    {
+        return;
+    }
+
+  
+
+
+    public static byte[] EncodeString(String sourceData, String charSet)
+    {
+        byte[] bSourceData = System.Text.Encoding.Unicode.GetBytes(sourceData);
+        System.Text.Encoding outEncoding = System.Text.Encoding.GetEncoding(charSet);
+        return System.Text.Encoding.Convert(System.Text.Encoding.Unicode, outEncoding, bSourceData);
+    }
+
+   
+    protected void lnkNext_Click(object sender, EventArgs e)
+    {
+
+
+        lblMsg.Text = "";
+
+        if (Common.HaveAccess(Session["roletype"].ToString(), "1"))
+        {
+            lblMsg.Text = "Global user can not import!";
+            return;
+
+        }
+
+
+        //Session["CurrentBatch"] = txtBatchDescription.Text;
+        Guid guidNew = Guid.Empty;
+        string strFileExtension = "";
+        strFileExtension = hfFileExtension.Value;    
+
+        guidNew = Guid.Parse(hfguidNew.Value);        
+
+        string strFileUniqueName;
+        strFileUniqueName = guidNew.ToString() + strFileExtension;
+       
+        
+        //check if it has multiple sheets
+        string strSelectedSheet = "";
+
+        if (ddlSheetNames.Items.Count > 0)
+        {
+            strSelectedSheet = ddlSheetNames.Text;
+        }
+        string strMsg = "";
+
+        SqlTransaction tn;
+        SqlConnection connection = new SqlConnection(DBGurus.strGlobalConnectionString);
+
+        connection.Open();
+        tn = connection.BeginTransaction();
+
+        try
+        {
+            int iBatchID=-1;
+            UploadManager.UploadCSV(_ObjUser, _theMenu, lblBatchDesc.Text,
+          lblExcelFileName.Text, guidNew, Server.MapPath("RecordFiles"), "-1",
+          "", out strMsg, out iBatchID, ref connection, ref tn, strFileExtension, strSelectedSheet);
+
+            if (strMsg == "")
+            {
+                tn.Commit();
+                connection.Close();
+            }
+            else
+            {
+                tn.Rollback();
+                connection.Close();
+
+                lblMsg.Text = strMsg;
+                return;
+
+            }
+
+
+            Response.Redirect("~/Pages/Record/UploadValidation.aspx?TableID=" + Request.QueryString["TableID"] + "&BatchID=" + Cryptography.Encrypt(iBatchID.ToString()) + "&FileInfo=" + Request.QueryString["FileInfo"] + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString(), false);
+        }
+        catch (Exception ex)
+        {
+
+            tn.Rollback();
+            connection.Close();
+
+            lblMsg.Text = strMsg;
+            //throw;
+        }
+
+
+    }
+    
+
+    
+}
+
+
+

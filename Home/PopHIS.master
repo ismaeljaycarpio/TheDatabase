@@ -1,0 +1,45 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="PopHIS.master.cs" Inherits="Home_PopHIS" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" style="background-image:none; background-color:#ffffff;">
+<head runat="server">
+    <title>TheDatabase</title>
+        <meta name="Description" content="The Environment Tracking System is an environmental monitoring databases for the storage and management of environmental data." />
+    <meta name="Keywords" content="environmental monitoring, environment tracking, environmental database, online, system, environment, monitoring database" />
+      <meta name="google" content="notranslate">
+    <meta http-equiv="Content-Language" content="en">      
+    <link href="~/App_Themes/Default/StyleSheetHIS.css" rel="stylesheet" type="text/css" />
+     <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    </asp:ContentPlaceHolder>
+    <%--<link href="~/css/style.css" rel="stylesheet" type="text/css" />--%>
+</head>
+<body style="background-image:none; background-color:#ffffff;">
+  
+
+    <script type="text/javascript" src="<%=ResolveUrl("~/script/jquery.js")%>"></script>
+      <script type="text/javascript" src="<%=ResolveUrl("~/JS/Common.js")%>"></script>
+
+  
+    
+    <form id="form1" runat="server">
+    <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true">
+    </asp:ScriptManager>
+    <div>
+        <table>
+            <tr style="text-align: left;">
+                <td style="text-align: left;">
+                    <div id="Content" style="text-align: left; padding-left: 25px; padding-right: 10px;
+                        min-height: 200px;" runat="server" clientidmode="Static">
+                        <asp:ContentPlaceHolder ID="HomeContentPlaceHolder" runat="server">
+
+
+
+                        </asp:ContentPlaceHolder>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    </form>
+</body>
+</html>

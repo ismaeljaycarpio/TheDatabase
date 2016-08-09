@@ -1,0 +1,780 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="HIS.master.cs" Inherits="HIS" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <title>TheDatabase.net - Your database on the web</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="Description" content="TheDatabase.net is an online database development platform to make getting your database on the web quick and easy with no upfront costs." />
+    <meta name="Keywords" content="Database, online, web, data, development, platform" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="all" />
+    <meta name="revisit-after" content="7 days" />
+    <meta name="google" content="notranslate">
+    <meta http-equiv="Content-Language" content="en">
+
+
+    <link rel="shortcut icon" href="../Images/favicon.ico" />
+    <link href="~/App_Themes/Default/StyleSheetHIS.css" rel="stylesheet" type="text/css" />
+    
+     <style type="text/css">
+        .container {
+            margin-left: 0px;
+        }
+
+        .divrenew {
+            z-index: 100;
+            position: absolute;
+            top: 27px;
+            left: 600px;
+            background: #ffffff;
+            -khtml-opacity: .70;
+            -moz-opacity: .70;
+            /*-ms-filter: alpha(opacity=70);*/
+            filter: alpha(opacity=70);
+            filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0.7);
+            opacity: .70;
+        }
+
+        .ui-widget {
+            font-size: 12px !important;
+            line-height: 1.25 !important;
+            font-family: Calibri,Verdana,Arial,Helvetica,sans-serif !important;
+        }
+
+        .searchtextbox {
+            border: 1px solid #0070C0 !important;
+            color: #0070C0 !important;
+            height: 31px !important;
+            padding-left: 9px !important;
+            width: 100% !important;
+        }
+    </style>
+    <asp:Literal ID="ltMasterStyles" runat="server"></asp:Literal>
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <script type="text/javascript" src="<%=ResolveUrl("~/script/jquery.js")%>"></script>
+
+    <script type="text/javascript" src="<%=ResolveUrl("~/JS/Common.js")%>"></script>
+    <script type="text/javascript" src="<%=ResolveUrl("~/JS/modernizr.custom.80028.js")%>"></script>
+
+    <link href="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.css")%>" rel="stylesheet"
+        type="text/css" />
+    <script type="text/javascript" src="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.pack.js")%>"></script>
+    <script type="text/javascript" src="<%=ResolveUrl("~/swfobject.js")%>"></script>
+    <form id="form1" runat="server" enctype="multipart/form-data">
+       
+        <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true"  AsyncPostBackTimeout="36000">
+        </asp:ScriptManager>
+         <input id="Hidden1" type="hidden" />
+        <asp:HiddenField runat="server" ID="hfFlashSupport" Value="no" />
+        <asp:HiddenField runat="server" ID="hfIsAccountHolder" />
+
+        <asp:UpdatePanel ID="upNotificationMessage" runat="server" UpdateMode="Always">
+            <ContentTemplate>
+                <div id="divNotificationMessage" style="position: fixed; top: 0px;">
+                    <asp:Label runat="server" ID="lblNotificationMessage"></asp:Label>
+                </div>
+            </ContentTemplate>
+        </asp:UpdatePanel>
+
+        <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+                <td style="padding-left: 20px; width: 350px;">
+                    <asp:HyperLink runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=Home">
+                        <asp:Image ID="Image5" runat="server" ImageUrl="~/App_Themes/Default/images/HIS/logo.png" AlternateText="" />
+                    </asp:HyperLink>
+                </td>
+                <td style="padding-left: 10px;">
+                    <asp:Image ID="Image3" runat="server" ImageUrl="~/App_Themes/Default/images/HIS/home.png" AlternateText="Jack's House" ToolTip="Jack’s skills and experience quickly found him work with a local builder and, in his own time, he tendered for government contracts.  He signed tender documents for State Government work at Fort Lytton on January 29 1912……Representing the first written record of J. Hutchinson, Builder and Contractor, of Manly QLD.  The Bulimba State School was the first project to be completed and to this date we continue to build for the future with many schools and education facilities completed.
+                
+The Queensland Government gazette of March 14, 1912 announced J.Hutchinson had won a contract valued at £73/10S to construct a new kitchen and improvements to non-commissioned offers’ quarters at Fort Lytton, an important commonwealth Defence installation at the mouth of the Brisbane River.
+ 
+This four line announcement signalled that a new identity had emerged within the Queensland Construction Industry." />
+                </td>
+                <td>
+                    <asp:Menu ID="menuProfile" runat="server" Orientation="Horizontal" EnableViewState="false"
+                        RenderingMode="Table" StaticEnableDefaultPopOutImage="false" StaticPopOutImageUrl="~/App_Themes/Default/Images/menu_popup3.gif"
+                        MaximumDynamicDisplayLevels="5" StaticDisplayLevels="1">
+                        <StaticMenuItemStyle CssClass="staticmenuitem2" />
+                        <StaticHoverStyle CssClass="staticmenuhover" />
+                        <DynamicMenuStyle CssClass="dynamicmenu2" />
+                        <DynamicHoverStyle CssClass="dynamicmenuhover" />
+                        <DynamicMenuItemStyle CssClass="dynamicmenuitem" />
+                        <StaticSelectedStyle CssClass="staticselecteditem2" />
+                        <DynamicSelectedStyle CssClass="staticselecteditem2" />
+                    </asp:Menu>
+
+                </td>
+            </tr>
+
+
+            <tr>
+                <td colspan="3">
+                    <div class="header_bottom_area">
+                        <div class="header_bottom_text" style="padding-left: 15px;">
+                            <table width="100%">
+                                <tr>
+                                    <td>
+                                        <ul>
+                                            <li><span>H</span>UTCHIES </li>
+                                            <li><span>I</span>NFORMATION</li>
+                                            <li><span>S</span>YSTEM<span>&nbsp;S</span>YDNEY <span class="do">
+                                                <%--<asp:Label ID="Label1" runat="server" Width="400px"></asp:Label>--%>
+                                            
+                                            </span></li>
+
+                                        </ul>
+                                    </td>
+                                    <td align="right">
+                                        <table width="100%">
+                                            <tr align="right">
+                                                <td>
+                                                    <ul>
+                                                        <li>
+                                                            <asp:HyperLink ID="HyperLink45" runat="server" CssClass="whitelink" NavigateUrl="~/SDisplayContent.aspx?Contentkey=Home">HOME</asp:HyperLink>
+
+                                                        </li>
+
+                                                        <li>
+                                                            <asp:HyperLink ID="HyperLink43" runat="server" CssClass="whitelink" NavigateUrl="~/Pages/Document/Report.aspx?SSearchCriteriaID=kdUxjBEM5oo=&TableID=kdUxjBEM5oo=&SearchCriteriaID=kdUxjBEM5oo=">REPORTS</asp:HyperLink>
+                                                        </li>
+                                                        <li>
+                                                            <asp:HyperLink ID="HyperLink44" runat="server" CssClass="whitelink" NavigateUrl="~/Pages/Document/Document.aspx?SSearchCriteriaID=kdUxjBEM5oo=&TableID=kdUxjBEM5oo=&SearchCriteriaID=kdUxjBEM5oo=">DOCUMENTS</asp:HyperLink>
+                                                        </li>
+                                                    </ul>
+
+                                                </td>
+                                                <td style="padding-bottom: 10px; padding-right: 70px; width: 70px;">
+                                                    <asp:Menu ID="menuETS" runat="server" Orientation="Horizontal" EnableViewState="false"
+                                                        RenderingMode="Table" StaticEnableDefaultPopOutImage="false" StaticPopOutImageUrl="~/App_Themes/Default/Images/menu_popup3_his.gif"
+                                                        MaximumDynamicDisplayLevels="5" StaticDisplayLevels="1">
+                                                        <StaticMenuItemStyle CssClass="staticmenuitem" />
+                                                        <StaticHoverStyle CssClass="staticmenuhover" />
+                                                        <DynamicMenuStyle CssClass="dynamicmenu" />
+                                                        <DynamicHoverStyle CssClass="dynamicmenuhover" />
+                                                        <DynamicMenuItemStyle CssClass="dynamicmenuitem" />
+                                                        <StaticSelectedStyle CssClass="staticselecteditem" />
+                                                        <DynamicSelectedStyle CssClass="staticselecteditem" />
+                                                    </asp:Menu>
+
+
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+
+
+
+                </td>
+            </tr>
+            <tr style="height: 15px">
+                <td colspan="3"></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <table>
+                        <tr>
+                            <td valign="top" style="vertical-align: top;">
+                                <div>
+                                    <div class="left_side_menu" runat="server" id="divHome" visible="true">
+                                        <ul>
+                                            <li>
+                                                <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=Hutchies Sydney">HUTCHIES SYDNEY</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlHOW_WE_WORK_old" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HOW WE WORK">HOW WE WORK</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlProjects" runat="server" NavigateUrl="~/Pages/Record/RecordList.aspx?TableID=QQlxU7sRJz0=&View=944">PROJECTS</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="HyperLink4" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB Contacts">HB CONTACTS</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="HyperLink5" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB Project Management">PROJECT MANAGEMENT DOCUMENTS</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="HyperLink6" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HBQualificationTrainingCourse">QUALIFICATIONS/TRAINING</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="HyperLink7" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HBFirstAidOnLine">INCIDENT MANAGEMENT ONLINE</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="HyperLink8" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HBCommunityInvolvement">COMMUNITY & INDUSTRY INVOLVEMENT</asp:HyperLink>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="left_side_menu" runat="server" id="divHutchies_Sydney" visible="false">
+                                        <ul>
+                                            <li>
+                                                <asp:HyperLink ID="hlHUTCHIES_SYDNEY" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=Hutchies Sydney">HUTCHIES SYDNEY</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlOur_Company_Structure" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_OUR_COMPANY_STRUCTURE">OUR COMPANY STRUCTURE</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlHB_Branding_Templates" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_BRANDING_AND_TEMPLATES">HB BRANDING AND TEMPLATES</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlLOGOS" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HBLogo">LOGOS</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlACCREDITATIONS" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_ACCREDITATIONS_INSURANCES">ACCREDITATIONS/INSURANCES</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlPOLICIES" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HBPolicies">POLICIES</asp:HyperLink>
+                                            </li>
+                                            <%-- <li>
+                                            <asp:HyperLink ID="HyperLink27" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB Contacts">PEOPLE</asp:HyperLink>
+                                        </li>--%>
+                                        </ul>
+                                    </div>
+                                    <div class="left_side_menu" runat="server" id="divHow_we_Work" visible="false">
+                                        <ul>
+                                            <li>
+                                                <asp:HyperLink ID="hlHOW_WE_WORK" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=How We Work" Style="font-size: 36px;">HOW WE WORK</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlSYSTEMS" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=SYSTEMS">SYSTEMS</asp:HyperLink>
+                                                <br />
+                                                <div style="font-size: 10px; padding-left: 10px; line-height: 11px;">
+                                                    <p>
+                                                        <asp:HyperLink ID="hlSYSTEMS_Intranet" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_System_Intranet">Intranet:</asp:HyperLink>
+                                                    </p>
+                                                    <p>
+                                                        <asp:HyperLink ID="hlSYSTEMS_Aconex" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_System_Aconex">Aconex:</asp:HyperLink>
+                                                    </p>
+                                                    <p>
+                                                        <asp:HyperLink ID="hlSYSTEMS_Aconex_Field_Management" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_System_Aconex_Field_Management">Aconex Field Management:</asp:HyperLink>
+                                                    </p>
+                                                    <p>
+                                                        <asp:HyperLink ID="hlSystem_Aconex_Smart_Manuals" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_System_Aconex_Smart_Manuals">Aconex Smart Manuals:</asp:HyperLink>
+                                                    </p>
+                                                    <p>
+                                                        <asp:HyperLink ID="hlSystem_View_Point" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_System_View_Point">View Point:</asp:HyperLink>
+                                                    </p>
+                                                    <p>
+                                                        <asp:HyperLink ID="hlSystem_POMS" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_System_POMS">POMS:</asp:HyperLink>
+                                                    </p>
+                                                    <p>
+                                                        <asp:HyperLink ID="hlSystem_Filenet" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_System_Filenet">Filenet:</asp:HyperLink>
+                                                    </p>
+                                                    <p>
+                                                        <asp:HyperLink ID="hlSystem_Chemwatch" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_System_Chemwatch">Chemwatch:</asp:HyperLink>
+                                                    </p>
+                                                    <p>
+                                                        <asp:HyperLink ID="hlSystem_Blue_Glue" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_System_Blue_Glue">Blue Glue:</asp:HyperLink>
+                                                    </p>
+                                                    <p>
+                                                        <asp:HyperLink ID="hlSystem_RWW_Group" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_System_RWW_Group">RWW Group:</asp:HyperLink>
+                                                    </p>
+                                                    <p>
+                                                        <asp:HyperLink ID="hlSystem_Staples_OnLine" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_System_Staples_OnLine">Staples On Line:</asp:HyperLink>
+                                                    </p>
+                                                    <p>
+                                                        <asp:HyperLink ID="hlSystem_Gencom" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_System_Gencom">Gencom:</asp:HyperLink>
+                                                    </p>
+
+                                                </div>
+
+
+
+
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlHUTCHIES_QA_BOOKLET" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HBBooklet">HUTCHIES Q&A BOOKLET</asp:HyperLink>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="left_side_menu" runat="server" id="divProjects" visible="false">
+                                        <ul>
+                                            <li>
+                                                <asp:HyperLink ID="hlProjectTop" runat="server" NavigateUrl="~/Pages/Record/RecordList.aspx?TableID=QQlxU7sRJz0=&View=944">PROJECTS</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlCurrentProjects" runat="server" NavigateUrl="~/Pages/Record/RecordList.aspx?TableID=QQlxU7sRJz0=&View=944">CURRENT</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlPastProjects" runat="server" NavigateUrl="~/Pages/Record/RecordList.aspx?TableID=QQlxU7sRJz0=&View=945">PAST</asp:HyperLink>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="left_side_menu" runat="server" id="divHB_Contacts" visible="false">
+                                        <ul>
+                                            <li>
+                                                <asp:HyperLink ID="hlHB_CONTACTS" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB CONTACTS">HB CONTACTS</asp:HyperLink>
+                                            </li>
+
+                                            <li>
+                                                <asp:HyperLink ID="hlStaffInternal" runat="server" NavigateUrl="~/Pages/Record/RecordList.aspx?TableID=bbuhIc16qDs=&View=644">INTERNAL</asp:HyperLink>
+                                            </li>
+
+                                            <li>
+                                                <asp:HyperLink ID="hlStaffCW" runat="server" NavigateUrl="~/Pages/Record/RecordList.aspx?TableID=bbuhIc16qDs=&View=645">CW STAFF</asp:HyperLink>
+                                            </li>
+
+                                            <li>
+                                                <asp:HyperLink ID="hlStaffPast" runat="server" NavigateUrl="~/Pages/Record/RecordList.aspx?TableID=bbuhIc16qDs=&View=646">PAST STAFF</asp:HyperLink>
+                                            </li>
+
+                                            <%--
+                                        <li>
+                                            <asp:HyperLink ID="HyperLink29" runat="server" NavigateUrl="~/Pages/Record/RecordList.aspx?TableID=bbuhIc16qDs=">STAFF</asp:HyperLink>
+                                        </li>
+                                        <li>
+                                            <asp:HyperLink ID="HyperLink30" runat="server" NavigateUrl="~/Pages/Record/RecordList.aspx?TableID=bbuhIc16qDs=">SUPPLIERS</asp:HyperLink>
+                                        </li>
+                                        <li>
+                                            <asp:HyperLink ID="HyperLink31" runat="server" NavigateUrl="~/Pages/Record/RecordList.aspx?TableID=bbuhIc16qDs=">CONSULTANTS</asp:HyperLink>
+                                        </li>
+                                        <li>
+                                            <asp:HyperLink ID="HyperLink32" runat="server" NavigateUrl="~/Pages/Record/RecordList.aspx?TableID=bbuhIc16qDs=">SUBCONTRACTORS</asp:HyperLink>
+                                        </li>--%>
+                                        </ul>
+                                    </div>
+                                    <div class="left_side_menu" runat="server" id="divHB_PROJECT_MANAGEMENT" visible="false">
+                                        <ul>
+                                            <li>
+                                                <asp:HyperLink ID="hlHB_PROJECT_MANAGEMENT" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB PROJECT MANAGEMENT">HB PROJECT MANAGEMENT</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlINDUCTIONS" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HBInductions">INDUCTIONS</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlPROCEDURES_MANUALS_GUIDELINES" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_PROCEDURES_MANUALS_GUIDELINES">PROCEDURES MANUALS & GUIDELINES</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlEHSSYSTEMS" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HBHealthSafety">EH&S SYSTEMS</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlHR" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_HR">HR</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlCONTRACTS_ADMINISTRATION" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_CONTRACTS_ADMINISTRATION">CONTRACTS ADMINISTRATION</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlPROJECT_REPORTING" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_PROJECT_REPORTING">PROJECT REPORTING</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlPROJECT_COMPLETION" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_PROJECT_COMPLETION">PROJECT COMPLETION</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlGENERAL_FORMS" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_GENERAL_FORMS">GENERAL FORMS</asp:HyperLink>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="left_side_menu" runat="server" id="divQUALIFICATIONS_TRAININGCOURSES" visible="false">
+                                        <ul>
+                                            <li>
+                                                <asp:HyperLink ID="hlQualificationTrainingCourse" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HBQualificationTrainingCourse">QUALIFICATIONS / TRAININGCOURSES</asp:HyperLink>
+                                            </li>
+                                            <li runat="server" visible="false">
+                                                <asp:HyperLink ID="hlCOURSES" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_COURSES">COURSES</asp:HyperLink>
+                                                
+                                                <div style="font-size: 10px; padding-left: 10px; line-height: 11px;" >
+                                                    <p>
+                                                        <asp:HyperLink ID="hlTickets" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HBTickets">Tickets:</asp:HyperLink>
+                                                    </p>
+                                                    <p>
+                                                        <asp:HyperLink ID="hlHB_Various_EHS_courses" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_Various_EHS_courses">Various EHS courses:</asp:HyperLink>
+                                                    </p>
+                                                    <p>
+                                                        <asp:HyperLink ID="hlHB_IT_Courses" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_IT_Courses">IT Courses:</asp:HyperLink>
+                                                    </p>
+                                                    <p>
+                                                        <asp:HyperLink ID="hlHB_Management_Courses" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_Management_Courses">Management Courses:</asp:HyperLink>
+                                                    </p>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlSTAFF_CURRENT_TICKETS" runat="server" NavigateUrl="~/Pages/Record/RecordList.aspx?TableID=bbuhIc16qDs=">STAFF CURRENT TICKETS</asp:HyperLink>
+                                            </li>
+                                            <li runat="server" visible="false">
+                                                <asp:HyperLink ID="hlSTAFF_FUTURE_TRAINING" runat="server" NavigateUrl="~/Pages/Record/RecordList.aspx?TableID=bbuhIc16qDs=">STAFF FUTURE TRAINING</asp:HyperLink>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="left_side_menu" runat="server" id="divFIRST_AID_ON_LINE" visible="false">
+                                        <ul>
+                                            <li>
+                                                <asp:HyperLink ID="hlHBFirstAidOnLine" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HBFirstAidOnLine" Style="font-size: 36px;">INCIDENT MANAGEMENT ONLINE</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlHB_PROJECT_DETAILS" runat="server" NavigateUrl="~/Pages/Record/RecordList.aspx?TableID=RbS6zECXdF0=">INCIDENT REGISTER</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlHB_INJURY_DETAILS" runat="server" NavigateUrl="~/Pages/Record/RecordDetail.aspx?mode=hBe/iopMPf0=&TableID=RbS6zECXdF0=&SearchCriteriaID=ixjEoQd3meY=">CREATE A NEW INCIDENT</asp:HyperLink>
+                                                <asp:HyperLink ID="hlHB_PLANT_INFORMATION" Visible="false" runat="server" NavigateUrl="~/Pages/Record/RecordList.aspx?TableID=gRFM7avNEtE=">PLANT INFORMATION</asp:HyperLink>
+                                                <asp:HyperLink ID="hlHB_ACTIONS" Visible="false" runat="server" NavigateUrl="~/Pages/Record/RecordList.aspx?TableID=0KGAw9tioMQ=">ACTIONS</asp:HyperLink>
+                                                <asp:HyperLink ID="hlHB_ATTACHMENTS" Visible="false" runat="server" NavigateUrl="~/Pages/Record/RecordList.aspx?TableID=WhtLHiPtfHQ=">ATTACHMENTS</asp:HyperLink>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+
+                                    <div class="left_side_menu" runat="server" id="divCommunity_Involvement" visible="false">
+                                        <ul>
+                                            <li>
+                                                <asp:HyperLink ID="hlHBCommunityInvolvement" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HBCommunityInvolvement">COMMUNITY & INDUSTRY INVOLVEMENT</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlHBIndustryInvolvement" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HBIndustryInvolvement">INDUSTRY INVOLVEMENT</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlHBSocialPartnership" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HBSocialPartnership">SOCIAL PARTNERSHIPS</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlHB_SYDNEY_CHARITY_GALA_EVENTS" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_SYDNEY_CHARITY_GALA_EVENTS">SYDNEY CHARITY GALA EVENTS</asp:HyperLink>
+                                            </li>
+                                            <li>
+                                                <asp:HyperLink ID="hlHB_COMMUNITY_INVESTMENT_PROGRAMS" runat="server" NavigateUrl="~/SDisplayContent.aspx?Contentkey=HB_COMMUNITY_INVESTMENT_PROGRAMS">COMMUNITY INVESTMENT PROGRAMS</asp:HyperLink>
+                                            </li>
+
+
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </td>
+                            <td valign="top" style="vertical-align: top; padding-right: 15px;">
+                                <asp:ContentPlaceHolder ID="HomeContentPlaceHolder" runat="server">
+                                </asp:ContentPlaceHolder>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr style="height: 15px">
+                <td colspan="3"></td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <div class="footer_area">
+                        <table width="100%">
+                            <tr>
+                                <td valign="top" style="vertical-align: top;">
+                                    <div class="footer_link_area">
+                                        <p>
+                                            <a href="" style="color: #ffffff;">
+                                                <h4>Links</h4>
+                                            </a><a href="http://www.hutchinsonbuilders.com.au/" target="_blank" style="text-decoration: none;">HUTCHINSON BUILDERS WEBSITE</a>
+                                            <br />
+                                            <a href="http://hbemp70/HutchIntranet/Default.aspx?classid=0" target="_blank" style="text-decoration: none;">HUTCHIES CORPORATE INTRANET</a>
+
+                                            <br />
+
+                                            <a href="#" target="_blank" style="text-decoration: none;">VIEWPOINT</a>
+                                            <br />
+                                            <a href="http://bca.saiglobal.com/" target="_blank" style="text-decoration: none;">BCA ON LINE</a>
+                                        </p>
+                                    </div>
+                                </td>
+                                <td valign="top" style="vertical-align: top; padding-left: 75px;">
+                                    <div class="f_mid">
+                                        <p id="fast">
+                                            <a href="http://www.aconex.com/" target="_blank" style="text-decoration: none; color: #ffffff;">ACONEX</a>
+
+                                            <br />
+                                            <a href="https://au1.aconex.com/Logon" target="_blank" style="text-decoration: none; color: #ffffff;">ACONEX USER LOGIN</a>
+                                            <br />
+                                            <a href="https://field.aconex.com/app/ui/#/login" target="_blank" style="text-decoration: none; color: #ffffff;">ACONEX FIELD MANAGEMENT </a>
+
+                                            <br />
+                                            <a href="http://www.bom.gov.au/nsw/forecasts/sydney.shtml" target="_blank" style="text-decoration: none; color: #ffffff;">NSW WEATHER BUREAU </a>
+                                        </p>
+                                    </div>
+                                </td>
+                                <td valign="top" style="vertical-align: top; padding-left: 75px;">
+                                    <div class="f_mid_next">
+                                        <p>
+                                            <a href="https://netxpress.biz/?redr=1" target="_blank" style="text-decoration: none; color: #ffffff;">STAPLES ON LINE </a>
+
+                                            <br />
+                                            <a href="http://www.rwwgroup.com.au/" target="_blank" style="text-decoration: none; color: #ffffff;">TOTALLY WORKWARE </a>
+
+                                            <br />
+
+
+
+
+
+                                        </p>
+                                    </div>
+                                </td>
+                                <td valign="top" style="vertical-align: top; padding-left: 350px; padding-right: 20px;" colspan="2" align="right">
+                                    <div class="f_right">
+                                        <h2 style="color: #ffffff;">
+                                            <%-- <span>B</span>uilt On <span>R</span>elationships--%>
+
+                                            <span>B</span>uilding <span>A</span>ustralia <span>S</span>ince 1912
+                                        </h2>
+                                    </div>
+
+                                    <asp:Button ID="lkLogout" runat="server" OnClick="lkLogout_Click" CssClass="btn"
+                                        CausesValidation="false" Style="display: none;" Text="Sign Out"></asp:Button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+
+        </table>
+
+
+
+        <table style="width: 100%" cellpadding="0" cellspacing="0" runat="server" visible="false">
+            <tr>
+                <td align="center">
+                    <table cellpadding="0" cellspacing="0" class="MiddleBody">
+                        <tr runat="server" visible="false">
+                            <td>
+                                <div runat="server" id="divRenew" visible="false" class="divrenew">
+                                    <asp:Label runat="server" ID="lblRenewMessage" Text="" ForeColor="Red"></asp:Label>
+                                    <asp:HyperLink runat="server" ID="hlRenewNow" NavigateUrl="~/Pages/Security/AccountTypeChange.aspx?type=renew">Renew now</asp:HyperLink>
+                                </div>
+                                <div id="Header" runat="server" visible="false">
+                                    <table border="0" cellpadding="0" cellspacing="0" style="width: 1000px;">
+                                        <tr>
+                                            <td style="padding-left: 20px;">
+                                                <div class="environment-logo">
+                                                    <asp:Image ID="imgLogo2" runat="server" ImageUrl="~/Images/environment-logo.jpg"
+                                                        alt="The Database Logo" />
+                                                </div>
+                                            </td>
+                                            <td style="text-align: right;"></td>
+                                            <td style="width: 100px;">
+                                                <asp:LinkButton ID="lkChangeAccount" runat="server" OnClick="lkChangeAccount_Click"
+                                                    CausesValidation="false" Style="display: none;"></asp:LinkButton>
+                                                <asp:HiddenField runat="server" ID="hfAccountIDToChangeAccount" Value="" ClientIDMode="Static" />
+                                            </td>
+                                            <td align="right" valign="top" style="padding-left: 100px;">
+                                                <table width="100%" align="right">
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>
+                                                            <table cellpadding="0" cellspacing="0" width="100%" align="right">
+                                                                <tr valign="middle">
+                                                                    <td style="width: 120px;">
+                                                                        <table>
+                                                                            <tr runat="server" id="trEndDemo" visible="false">
+                                                                                <td>
+                                                                                    <asp:LinkButton ID="lnkEndDemo" runat="server" OnClick="lnkEndDemo_Click" CssClass="btn"
+                                                                                        CausesValidation="false"> <strong>End Demo </strong> </asp:LinkButton>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </td>
+                                                                    <td>
+                                                                        <asp:Menu ID="menuAccount" Visible="false" runat="server" Orientation="Horizontal"
+                                                                            EnableViewState="false" RenderingMode="Table" StaticEnableDefaultPopOutImage="false"
+                                                                            StaticPopOutImageUrl="~/App_Themes/Default/Images/menu_popup3.gif" MaximumDynamicDisplayLevels="5"
+                                                                            StaticDisplayLevels="1">
+                                                                            <StaticMenuItemStyle CssClass="staticmenuitem" />
+                                                                            <StaticHoverStyle CssClass="staticmenuhover" />
+                                                                            <DynamicMenuStyle CssClass="dynamicmenu2" />
+                                                                            <DynamicHoverStyle CssClass="dynamicmenuhover" />
+                                                                            <DynamicMenuItemStyle CssClass="dynamicmenuitem" />
+                                                                            <StaticSelectedStyle CssClass="staticselecteditem" />
+                                                                            <DynamicSelectedStyle CssClass="staticselecteditem" />
+                                                                        </asp:Menu>
+                                                                    </td>
+                                                                    <td style="width: 60px;"></td>
+                                                                    <td></td>
+                                                                </tr>
+                                                                <tr style="height: 25px;">
+                                                                    <td></td>
+                                                                    <td colspan="3"></td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td></td>
+                                                                    <td style="padding-left: 10px;"></td>
+                                                                    <td></td>
+                                                                    <td style="padding-left: 10px;">
+                                                                        <table>
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <asp:Image ID="Image2" runat="server" SkinID="reports" />
+                                                                                </td>
+                                                                                <td>
+                                                                                    <asp:HyperLink ID="hlReport" runat="server" NavigateUrl="#" CausesValidation="false"
+                                                                                        ToolTip="Reports" Font-Size="Small" Font-Bold="true" Style="text-decoration: none; color: #5598F8;">Reports</asp:HyperLink>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr style="height: 20px;">
+                                                                    <td></td>
+                                                                    <td colspan="3"></td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr style="background-color: #D8D8D8;">
+                            <td>
+                                <table style="width: 100%;">
+                                    <tr>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <p style="margin: 0 20px 15px 20px; color: #0070C0; font-family: Calibri (Body); font-size: 30px;">
+                                                            HIS
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <p style="margin: 0 20px 15px 20px; color: #0070C0; font-family: Calibri (Body); font-size: 30px;">
+                                                            HUTCHIES INFORMATION SYSTEM
+                                                        </p>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td style="width: 20%;">
+                                            <asp:Image runat="server" ID="imgLogo" ImageUrl="~/Images/logo.png" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr style="height: 10px; background-color: #0084C5;">
+                            <td></td>
+                        </tr>
+                        <tr runat="server">
+                            <td></td>
+                        </tr>
+                        <tr style="text-align: left;">
+                            <td style="text-align: left;">
+                                <%--<div id="Content" style="text-align: left; padding-left: 25px; padding-right: 10px;
+                                min-height: 500px;">
+                              
+                            </div>--%>
+                            </td>
+                        </tr>
+                        <tr runat="server">
+                            <td valign="top">
+
+                                <div id="footer">
+                                    <div runat="server" id="divMarketingMenu" visible="false">
+                                        <ul>
+                                            <li>
+                                                <asp:HyperLink ID="HyperLink16" runat="server" NavigateUrl="~/Environmental-Monitoring-Management-Database-System.aspx"
+                                                    ToolTip="Home">
+                        Home</asp:HyperLink></li>
+                                            <li>|</li>
+                                            <li>
+                                                <asp:HyperLink ID="HyperLink17" runat="server" NavigateUrl="~/Features-Include-Unlimited-Sample-Types-Alerts-Warnings-Report-Generator.aspx"
+                                                    ToolTip="Features">Features</asp:HyperLink></li>
+                                            <li>|</li>
+                                            <li>
+                                                <asp:HyperLink ID="HyperLink18" runat="server" NavigateUrl="~/StartDemo.aspx" ToolTip="Demo">Demo</asp:HyperLink></li>
+                                            <li>|</li>
+                                            <li>
+                                                <asp:HyperLink ID="HyperLink19" runat="server" NavigateUrl="~/Pricing-Environmental-Monitoring-System.aspx"
+                                                    ToolTip="Packages">Packages</asp:HyperLink></li>
+                                            <li>|</li>
+                                            <li>
+                                                <asp:HyperLink ID="HyperLink20" runat="server" NavigateUrl="~/Product-Development-Environmental-Monitoring-System.aspx"
+                                                    ToolTip="Development">
+                        Development</asp:HyperLink></li>
+                                            <li>|</li>
+                                            <li>
+                                                <asp:HyperLink ID="HyperLink21" runat="server" NavigateUrl="~/Help-For-Environment-Tracking-System.aspx"
+                                                    ToolTip="Help">Help</asp:HyperLink></li>
+                                            <li>|</li>
+                                            <li>
+                                                <asp:HyperLink ID="HyperLink22" runat="server" NavigateUrl="~/Site-Map-For-Environmental-Tracking-System.aspx"
+                                                    ToolTip="Site Map">Site
+                        Map</asp:HyperLink></li>
+                                            <li>|</li>
+                                            <li>
+                                                <asp:HyperLink ID="HyperLink23" runat="server" NavigateUrl="~/Contact-Us-About-Envionmental-Monitoring-System.aspx"
+                                                    ToolTip="Contact Us">
+                        Contact Us</asp:HyperLink></li>
+                                        </ul>
+                                    </div>
+                                    <div class="copyright-text" id="divCopyright" runat="server">
+                                        <table width="100%">
+                                            <tr>
+                                                <td>
+                                                    <table>
+                                                        <tr>
+                                                            <td>
+                                                                <asp:Image ID="Image1" runat="server" ImageUrl="~/App_Themes/Default/Images/DocumentIcon.png" />
+                                                            </td>
+                                                            <td>
+                                                                <asp:HyperLink ID="hlDocuments" runat="server" NavigateUrl="#" CausesValidation="false"
+                                                                    ToolTip="Documents" Font-Size="Small" Font-Bold="true" Style="text-decoration: none; color: #5598F8;">Documents</asp:HyperLink>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                                <td>Hutchinson Builders 2013
+                                                </td>
+                                                <td align="right"></td>
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+
+
+<%--    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var close = document.getElementById('aNotificationMessageClose');
+
+
+            if (close != null) {
+                close.addEventListener('click', function () {
+                    var note = document.getElementById('divNotificationMessage');
+                    note.style.display = 'none';
+                }, false);
+            }
+
+            function HidedivNotificationMessage() {
+                $('#divNotificationMessage').fadeOut();
+                var note = document.getElementById('divNotificationMessage');
+                if (note != null)
+                    note.style.display = 'none';
+            }
+
+
+
+        });
+    </script>--%>
+
+</body>
+</html>

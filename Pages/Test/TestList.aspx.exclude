@@ -1,0 +1,261 @@
+<%@ Page Language="C#" MasterPageFile="~/Home/Home.master" CodeFile="TestList.aspx.cs"
+    Inherits="TestList_SampleTypeGroup" EnableEventValidation="false" %>
+<%@ Register Src="~/Pages/Pager/Pager.ascx" TagName="GridViewPager" TagPrefix="asp" %>
+    <%@ Register Namespace="DBGServerControl" Assembly="DBGServerControl"  TagPrefix="dbg" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="HomeContentPlaceHolder" runat="Server">
+
+<script language="javascript" type="text/javascript">
+
+    function SelectAllCheckboxes(spanChk){
+
+        // Added as ASPX uses SPAN for checkbox
+
+        var oItem = spanChk.children;
+
+        var theBox=(spanChk.type=="checkbox")?spanChk:spanChk.children.item[0];
+
+        xState=theBox.checked;
+
+        elm=theBox.form.elements;
+
+        for(i=0;i<elm.length;i++)
+
+        if(elm[i].type=="checkbox" && elm[i].id!=theBox.id)
+
+        {
+
+        //elm[i].click();
+
+        if(elm[i].checked!=xState)
+
+        elm[i].click();
+
+        //elm[i].checked=xState;
+
+        }
+
+    }
+
+</script>
+
+
+
+    <table border="0" cellpadding="0" cellspacing="0" width="928" align="center">
+        <tr>
+            <td colspan="3" height="40">
+                       
+                <span  class="TopTitle">
+                    Test List</span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" height="13">
+                
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" >
+               
+            </td>
+            <td  valign="top">
+                <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+                    <ContentTemplate>
+                        <div id="search" style="padding-bottom: 10px">
+                            <asp:ValidationSummary ID="ValidationSummary1" runat="server" EnableClientScript="true"
+                                HeaderText="List of validation errors" />
+                            
+                            <table style="border-collapse: collapse" cellpadding="4">
+                                <tr>
+                                    <td align="right">
+                                        <strong>Test Text</strong>
+                                    </td>
+                                    <td>
+                                        <asp:TextBox runat="server" ID="txtSampleTypeGroupSearch" CssClass="NormalTextBox"></asp:TextBox>
+                                        <br />
+                                    </td>
+                                </tr>
+                               
+                                <tr id="trAccount" runat="server" visible="true">
+                                    <td align="right">
+                                        <strong>Account</strong>
+                                    </td>
+                                    <td>
+                                        <asp:DropDownList ID="ddlAccountFilter" runat="server" AutoPostBack="false"
+                                        DataTextField="AccountName" DataValueField="AccountID"  CssClass="NormalTextBox">
+                                        </asp:DropDownList>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                    </td>
+                                    <td>
+                                        <%--<asp:ImageButton ID="btnSearch" runat="server" ImageUrl="../../Images/iconGo.png" 
+                                            onclick="btnSearch_Click" />--%>
+                                            
+                                            <div>
+                                                 <table cellpadding="0" cellspacing="0"  >
+                                                    <tr>
+                                                        <td class="bL">&nbsp;</td>
+                                                        <td class="bC">
+                                                            <asp:LinkButton runat="server" ID="lnkSearch" CssClass="ButtonLink" 
+                                                                onclick="lnkSearch_Click"> Go</asp:LinkButton>
+                                                            
+                                                            </td>
+                                                        <td class="bR">&nbsp;</td>
+                                                    </tr>
+                                                </table>               
+                                            </div>
+                                            
+                                            
+                                            
+                                            
+                                    </td>
+                                </tr>
+                            </table>
+                          
+                        </div>
+                        <asp:UpdateProgress ID="UpdateProgress1" runat="server" AssociatedUpdatePanelID="UpdatePanel1">
+                            <ProgressTemplate>
+                                <table style="width:100%; text-align:center">
+                                <tr>
+                                    <td> <img alt="Processing..." src="../../Images/ajax.gif" /> </td>
+                                </tr>
+                                </table>
+                            </ProgressTemplate>
+                        </asp:UpdateProgress>
+                       <div>
+                        
+                        <dbg:dbgGridView ID="gvTheGrid" runat="server" 
+                            GridLines="Both" CssClass="gridview"  
+                            AllowPaging="True"  EnableViewState="true"
+                            AllowSorting="True" DataKeyNames="SampleTypeGroupID" 
+                            HeaderStyle-ForeColor="Black" Width="100%"
+                            AutoGenerateColumns="false" PageSize="15" onsorting="gvTheGrid_Sorting" 
+                             onprerender="gvTheGrid_PreRender" >
+                            <PagerSettings Position="Top"    />
+                            <Columns>
+                                <asp:TemplateField>
+                                    <ItemStyle Width="10px" HorizontalAlign="Center" />
+                                    <HeaderTemplate>
+                                        <input id="chkAll" onclick="javascript:SelectAllCheckboxes(this);" runat="server" type="checkbox" />
+                                    </HeaderTemplate>
+                                    
+                                    <ItemTemplate>
+                                        <asp:CheckBox ID="chkDelete" runat="server" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField Visible="false" >
+                                    <ItemStyle Width="10px" HorizontalAlign="Center" />
+                                    <ItemTemplate>
+                                        <asp:Label ID="LblID" runat="server" Text='<%# Eval("SampleTypeGroupID") %>'></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                
+                                <asp:TemplateField >
+                                    <ItemStyle Width="10px" HorizontalAlign="Center" />
+                                    <ItemTemplate>
+                                        <asp:HyperLink ID="EditHyperLink" runat="server" ToolTip="Edit"  
+                                        NavigateUrl='<%# GetEditURL() +  Cryptography.Encrypt(Eval("SampleTypeGroupID").ToString()) %>'
+                                            ImageUrl="~/App_Themes/Default/Images/iconEdit.png" />
+                                    </ItemTemplate>
+                                </asp:TemplateField>                                
+                                
+                                                            
+                                  
+                                  
+                                  
+                               <asp:TemplateField HeaderText="Account" SortExpression="AccountName" >
+                                    <ItemTemplate>
+                                         <a href='<%# GetAccountViewURL() + Cryptography.Encrypt(Eval("AccountID").ToString())  %>' ><%# Eval("AccountName")%></a>
+                                    </ItemTemplate>
+                        
+                                </asp:TemplateField>
+                                
+                                <asp:TemplateField SortExpression="SampleTypeGroup" HeaderText="Test Text"  >
+                                   <ItemTemplate>
+                                       <a href='<%# GetViewURL() + Cryptography.Encrypt(Eval("SampleTypeGroupID").ToString()) %>' ><%# Eval("SampleTypeGroupP")%></a>
+                                    </ItemTemplate>
+                                   
+                                    
+                                </asp:TemplateField>
+                                
+                               
+                                
+                                 <asp:TemplateField  HeaderText="Show On Menu" SortExpression="ShowOnMenu">
+                                    <ItemTemplate>
+                                        <asp:Label ID="lblShowOnMenu" runat="server" Text='<%# Eval("ShowOnMenu") %>'></asp:Label>
+                                    </ItemTemplate>
+                                    
+                                </asp:TemplateField>                               
+                                
+                                
+                                
+                            </Columns>
+                            <HeaderStyle CssClass="gridview_header" />
+                            <RowStyle CssClass="gridview_row" />
+                            <PagerTemplate >
+                                   <asp:GridViewPager runat="server" ID="Pager"
+                                   OnDeleteAction="Pager_DeleteAction"  OnApplyFilter="Pager_OnApplyFilter" 
+                                   OnBindTheGridToExport="Pager_BindTheGridToExport" OnBindTheGridAgain="Pager_BindTheGridAgain" 
+                                    />
+                            </PagerTemplate>
+                           
+                        </dbg:dbgGridView>
+                       </div>
+                       <br />
+                       
+                          <div runat="server" id="divEmptyData" visible="false">
+                        There is currently no test text. <br />
+                        To add a new test text, please click  <asp:HyperLink runat="server" ID="hplNewData" >here</asp:HyperLink> 
+                        
+                        </div>
+                        <br />
+                       
+                        <asp:Label runat="server" ID="lblMsg" ForeColor="Red" ></asp:Label>
+                        
+                        <div>
+                    <%--<asp:Button runat="server" ID="btnTest" Text="Import Quarter Million Data" 
+                                onclick="btnTest_Click"  />--%>
+                                
+                                 
+                                 <table cellpadding="0" cellspacing="0"  >
+                                    <tr>
+                                        <td class="bL">&nbsp;</td>
+                                        <td class="bC">
+                                            <asp:LinkButton runat="server" ID="lnlTest" CssClass="ButtonLink" onclick="lnlTest_Click" 
+                                                > Import Quarter Million Data</asp:LinkButton>
+                                            
+                                            </td>
+                                        <td class="bR">&nbsp;</td>
+                                    </tr>
+                                </table> 
+   
+                    
+                    </div>
+                       
+                    </ContentTemplate>
+                    <Triggers>
+                        <asp:AsyncPostBackTrigger ControlID="gvTheGrid" />
+                        <asp:AsyncPostBackTrigger ControlID="lnlTest" />
+                    </Triggers>
+                    
+                   
+                    
+                    
+                </asp:UpdatePanel>
+                
+                <span style="font-weight: bold" align="center"></span>
+            </td>
+            <td >
+               
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3" height="13">
+               
+            </td>
+        </tr>
+    </table>
+  
+</asp:Content>

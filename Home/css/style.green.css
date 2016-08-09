@@ -1,0 +1,160 @@
+@charset "utf-8";
+
+html
+{
+ background-color: #ffffff;
+ background: #ffffff;
+
+}
+
+body 
+{ 
+	font-family:Tahoma,sans-serif,Verdana,Arial,Helvetica,Helvetica-Narrow; 
+	color:#565656; 	margin:0; 
+	font-size:12pt; 
+	background:url(../../images/bg.jpg) center top no-repeat; 
+	line-height:1.25; 
+}
+
+
+h1, h4, h5, h6, p
+{ 
+	margin:0 20px 15px 20px; 
+    padding:0; 
+}
+
+h2
+{
+	margin:40px 20px 15px 20px; 
+	font-size:15pt; 
+	font-weight: normal;
+	color: #0B6DF6;
+}
+
+
+h4
+{
+	margin: 0 20px 5px 20px; 
+	font-size:12pt; 
+	font-weight: bold;
+ 
+}
+
+li
+{
+	margin:0 0 15px 0; 
+}
+
+
+td
+{
+    height: 3;
+	vertical-align:middle;
+}
+
+.leaf 
+{
+    margin: 10px 10px 10px 10px;
+    padding:10px;
+}
+
+.borders
+{
+    margin: 20px 10px 20px 10px;
+    padding:20px;
+}
+
+.pricing
+{
+    border: 1px;
+    border-style: solid;
+    border-collapse:collapse;
+    border-width: 1px;
+}
+
+.borderlxxx
+{
+    border-left-style: solid; border-width: thin;
+    width: 20%;
+}
+
+.borderlrxx
+{
+    border-right-style: solid; border-left-style: solid; border-width: thin;
+    width: 20%;
+}
+
+.clear {clear:both;}
+img { border:0px none; }
+.fleft { float:left; }
+.fright { float:right; }
+#main-container { width:1000px; margin:0 auto;}
+#container { width:988px; padding:0 6px; float:left; background:url(../../images/wht-bg.png) left top repeat-y; }
+/*--------- header ---------*/
+#header { width:948px; float:left; height:137px; border-bottom:1px solid #076bf7; padding:0 20px; }
+.environment-logo { width:292px; float:left; padding:19px 0 34px 0; color:Green; font-weight:bold; background:url(/images/LeafLogo.png) left top repeat-y;}
+.top-right {width:520px;float:right;padding-top:22px;}
+.top-right { width:300px; float:right; }
+.callus { background:url(../../images/callus-icon.jpg) left no-repeat; padding:0 0 0 45px; float:left; font-family:Tahoma,sans-serif,Verdana,Arial,Helvetica,Helvetica-Narrow; font-size:22px; color:#2564c2; line-height:22px; }
+.callus span { font-size:18px; }
+.signin-btn { float:right; }
+a.btn { background:url(../../images/green-left-corn.png) no-repeat left top; display: block; float: left; line-height: 27px; height: 37px; padding-left: 10px; text-decoration: none; font-family:Tahoma,sans-serif,Verdana,Arial,Helvetica,Helvetica-Narrow; font-size:14px; font-weight:bold; color:#FFFFFF; }
+a.btn:hover { background:url(../../images/green-left-corn-hover.png) no-repeat left top; }
+a.btn strong { background:url(../../images/green-right-corn.png) no-repeat right top; display: block; padding: 4px 10px 6px 0; }
+a.btn:hover strong { background:url(../../images/green-right-corn-hover.png) no-repeat right top; color:#474747; }
+/*--------- menu ---------*/
+#navigation { float:right; padding:30px 0 0 0; width:550px; }
+#navigation ul { list-style-type:none; margin:0px; padding:0px; float:right; }
+#navigation ul li { font-family:Tahoma,sans-serif,Verdana,Arial,Helvetica,Helvetica-Narrow; font-size:15px; color:#474747; font-weight:bold; padding:0 0 0 20px; float:left; }
+#navigation ul li:first-child { padding:0 0 0 0; }
+#navigation ul li a { text-decoration:none;color:#474747; }
+#navigation ul li a:hover { color:#2a9507; }
+#navigation ul li a.current { color:#2a9507;}
+/*--------- middle part ---------*/
+#body-part {width:948px; float:left; padding:20px; min-height:420px; }
+/*--------- Footer part ---------*/
+#footer { width:100%; background:url(../../images/footer-grad.jpg) repeat-x left top #fafafa; padding:28px 0 0 0; text-align:center; height:60px; }
+#footer ul { list-style-type:none; margin:0px; padding:0px; }
+#footer ul li { font-family:Tahoma,sans-serif,Verdana,Arial,Helvetica,Helvetica-Narrow; font-size:12px; color:#565656; display:inline; padding:0 5px 0 5px;}
+#footer ul li a { text-decoration:none; color:#565656; }
+#footer ul li a:hover { text-decoration:none; color:#2d940b; }
+.copyright-text { display:block; margin-top:15px;font-size:10pt; }
+
+
+/*-----------Environmental-Monitoring-Management-Database-System---------------*/
+.startbox {width:336px; float:left; padding:0px 0 0 0;}
+.start-gray-middla {width:273px; float:left; padding:10px 31px 10px 32px; background:url(../../images/graybox-middle.jpg) repeat-y left top; text-align:left; font-family:Tahoma,sans-serif,Verdana,Arial,Helvetica,Helvetica-Narrow; font-size:15px; color:#000; font-style:italic;}
+.images {float:left; margin:0px; padding:0px;}
+.readmore {width:273px; float:left; text-align:right; font-family:Tahoma,sans-serif,Verdana,Arial,Helvetica,Helvetica-Narrow; font-size:14px; color:#2175bd; margin-top:20px;}
+.readmore a{text-decoration:none; color:#2175bd;}
+.readmore a:hover {text-decoration:none; color:#000;}
+
+.stratbtn {width:322px; height:42px; padding:12px 0 0 0; margin-left:8px; margin-top:5px; float:left; background:url(../../images/strat-btn.jpg) no-repeat center top; font-family:Tahoma,sans-serif,Verdana,Arial,Helvetica,Helvetica-Narrow; font-size:22px; color:#FFF; font-weight:bold; text-align:center;}
+.stratbtn a {text-decoration:none; color:#FFF;}
+.stratbtn a:hover {text-decoration:none; color:#000;}
+
+/*-----------Pricing-Environmental-Monitoring-System---------------*/
+
+.small-blue1 {height:45px;background:url(../../images/small-text-bg.jpg) no-repeat left top; font-family:Tahoma,sans-serif,Verdana,Arial,Helvetica,Helvetica-Narrow; font-size:20px; color:#fff; text-align:center; padding:0 0 0 0;} 
+.medium-green1 {height:45px;background:url(../../images/green-middle.jpg) no-repeat left top; font-family:Tahoma,sans-serif,Verdana,Arial,Helvetica,Helvetica-Narrow; font-size:20px; color:#fff; text-align:center; padding:0 0 0 0;} 
+.corporate-blue1 {height:45px;background:url(../../images/corporate-grad.jpg) no-repeat left top; font-family:Tahoma,sans-serif,Verdana,Arial,Helvetica,Helvetica-Narrow; font-size:20px; color:#fff; text-align:center; padding:0 0 0 0;}
+
+.description-grad { width:173px;height:71px;background:url(../../images/description-bg.jpg) no-repeat left top; font-family:Tahoma,sans-serif,Verdana,Arial,Helvetica,Helvetica-Narrow; font-size:16px; color:#3b3b3c; padding-left:29px;}
+.monitor-text-grad {width:180px; background:url(../../images/moniter-text-bg.jpg) no-repeat left top; font-family:Tahoma,sans-serif,Verdana,Arial,Helvetica,Helvetica-Narrow; font-size:16px; color:#3b3b3c; text-align:center;}
+.add-alerts-grad {width:180px; background:url(../../images/add-alerts-text-bg.jpg) no-repeat left top; font-family:Tahoma,sans-serif,Verdana,Arial,Helvetica,Helvetica-Narrow; font-size:16px; color:#3b3b3c; text-align:center;}
+.add-report-grad {width:180px; background:url(../../images/add-report-text-bg.jpg) no-repeat left top; font-family:Tahoma,sans-serif,Verdana,Arial,Helvetica,Helvetica-Narrow; font-size:16px; color:#3b3b3c; text-align:center;}
+.allows-large-grad {width:188px; background:url(../../images/allows-data-text-bg.jpg) no-repeat left top; font-family:Tahoma,sans-serif,Verdana,Arial,Helvetica,Helvetica-Narrow; font-size:16px; color:#3b3b3c; text-align:center;}
+.gray-light-grad-line {background: url(../../images/prices-gray-light.jpg) repeat-y left top ;font-family:Tahoma,sans-serif,Verdana,Arial,Helvetica,Helvetica-Narrow; font-size:16px; color:#3b3b3c; line-height:18px;}
+.gray-light-grad-line-td { width:173px;padding:10px 0 10px 29px;}
+
+.white-grad-line {background: url(../../images/prices-w.jpg) repeat-y left top;font-family:Tahoma,sans-serif,Verdana,Arial,Helvetica,Helvetica-Narrow; font-size:16px; color:#3b3b3c; line-height:18px;}
+.white-grad-line-td { width:173px;padding:10px 0 10px 29px; font-weight:bold;}
+
+.prices-btn {float:left; margin-left:47px;}
+.pbtn { background:url(../../images/gray-prices-btn-left.jpg) no-repeat left top; display: block; float: left; line-height: 27px; height: 37px; padding-left: 9px; text-decoration: none; font-family:Tahoma,sans-serif,Verdana,Arial,Helvetica,Helvetica-Narrow; font-size:16px; font-weight:bold; color:#473f43;}
+.pbtn strong { background:url(../../images/gray-prices-btn-right.jpg) no-repeat right top; display: block; padding: 4px 18px 6px 10px;}
+.prices-bottom-bdr {border-top:2px solid #f7f7f7;
+    text-align: center;
+}
+.box-sad {margin-top:-1px; float:left;}
+*+html .box-sad {margin-top:-3px; float:left;}

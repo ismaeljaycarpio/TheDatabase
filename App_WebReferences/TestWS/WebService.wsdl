@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.dbgurus.com.au/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://www.dbgurus.com.au/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.dbgurus.com.au/">
+      <s:element name="GetAccountName">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="strEmail" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strPassword" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAccountNameResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAccountNameResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SyncSampleType">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="strEmail" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strPassword" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SyncSampleTypeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SyncSampleTypeResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSampleXMLTemplate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="strEmail" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strPassword" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSampleXMLTemplateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetSampleXMLTemplateResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SyncSamples">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="strEmail" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="strPassword" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="iSampleTypeID" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="strXML" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SyncSamplesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SyncSamplesResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:any minOccurs="0" maxOccurs="unbounded" namespace="http://www.w3.org/2001/XMLSchema" processContents="lax" />
+                  <s:any minOccurs="1" namespace="urn:schemas-microsoft-com:xml-diffgram-v1" processContents="lax" />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetAccountNameSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAccountName" />
+  </wsdl:message>
+  <wsdl:message name="GetAccountNameSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAccountNameResponse" />
+  </wsdl:message>
+  <wsdl:message name="SyncSampleTypeSoapIn">
+    <wsdl:part name="parameters" element="tns:SyncSampleType" />
+  </wsdl:message>
+  <wsdl:message name="SyncSampleTypeSoapOut">
+    <wsdl:part name="parameters" element="tns:SyncSampleTypeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetSampleXMLTemplateSoapIn">
+    <wsdl:part name="parameters" element="tns:GetSampleXMLTemplate" />
+  </wsdl:message>
+  <wsdl:message name="GetSampleXMLTemplateSoapOut">
+    <wsdl:part name="parameters" element="tns:GetSampleXMLTemplateResponse" />
+  </wsdl:message>
+  <wsdl:message name="SyncSamplesSoapIn">
+    <wsdl:part name="parameters" element="tns:SyncSamples" />
+  </wsdl:message>
+  <wsdl:message name="SyncSamplesSoapOut">
+    <wsdl:part name="parameters" element="tns:SyncSamplesResponse" />
+  </wsdl:message>
+  <wsdl:portType name="WebServiceSoap">
+    <wsdl:operation name="GetAccountName">
+      <wsdl:input message="tns:GetAccountNameSoapIn" />
+      <wsdl:output message="tns:GetAccountNameSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SyncSampleType">
+      <wsdl:input message="tns:SyncSampleTypeSoapIn" />
+      <wsdl:output message="tns:SyncSampleTypeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSampleXMLTemplate">
+      <wsdl:input message="tns:GetSampleXMLTemplateSoapIn" />
+      <wsdl:output message="tns:GetSampleXMLTemplateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SyncSamples">
+      <wsdl:input message="tns:SyncSamplesSoapIn" />
+      <wsdl:output message="tns:SyncSamplesSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WebServiceSoap" type="tns:WebServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetAccountName">
+      <soap:operation soapAction="http://www.dbgurus.com.au/GetAccountName" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SyncSampleType">
+      <soap:operation soapAction="http://www.dbgurus.com.au/SyncSampleType" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSampleXMLTemplate">
+      <soap:operation soapAction="http://www.dbgurus.com.au/GetSampleXMLTemplate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SyncSamples">
+      <soap:operation soapAction="http://www.dbgurus.com.au/SyncSamples" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="WebServiceSoap12" type="tns:WebServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetAccountName">
+      <soap12:operation soapAction="http://www.dbgurus.com.au/GetAccountName" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SyncSampleType">
+      <soap12:operation soapAction="http://www.dbgurus.com.au/SyncSampleType" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSampleXMLTemplate">
+      <soap12:operation soapAction="http://www.dbgurus.com.au/GetSampleXMLTemplate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SyncSamples">
+      <soap12:operation soapAction="http://www.dbgurus.com.au/SyncSamples" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="WebService">
+    <wsdl:port name="WebServiceSoap" binding="tns:WebServiceSoap">
+      <soap:address location="http://www.carbonmonitoring.com.au/WebService/WebService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="WebServiceSoap12" binding="tns:WebServiceSoap12">
+      <soap12:address location="http://www.carbonmonitoring.com.au/WebService/WebService.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

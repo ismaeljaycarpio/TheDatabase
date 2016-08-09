@@ -1,0 +1,6 @@
+#offer{ width:977px; min-height:253px; float:left; color:#FFF; background:url(../images/blue-box-bg-y.jpg) repeat-y;  -moz-border-radius:10px;-webkit-border-radius:10px;-khtml-border-radius:10px;border-radius:10px;}
+.offer-details { width:325px; float:left; color:#FFF; }
+.offer-details h2{ width:285px; float:left; font-size:30px; font-family:sans-serif, Verdana, Geneva; margin:20px;}
+.offer-details h2 img{ vertical-align: middle; padding-right:5px;}
+.offer-details span{margin-left:20px; margin-bottom:15px; float:left; width:90%; }
+.offer-details img{ vertical-align:middle; padding-right:5px;}

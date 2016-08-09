@@ -1,0 +1,86 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MPublic.master.cs" Inherits="Home_MPublic" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+      <%--<meta name="viewport" content="width=device-width">--%>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+          <meta name="Description" content="The ETS is an Environment Tracking System for the collection and management of environmental monitoring data stored online in one central secure location." />
+    <meta name="Keywords" content="environmental monitoring, environment tracking, environmental database, online, system, environment, monitoring database" />
+
+     <meta name="google" content="notranslate">
+    <meta http-equiv="Content-Language" content="en">
+
+      <link rel="shortcut icon" href="../Images/favicon.ico" />
+    <link href="css/mobile.css" rel="stylesheet" type="text/css" />
+                        <link href="~/App_Themes/Default/StyleSheet.css" rel="stylesheet" type="text/css" />
+
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body style="background-image: none;">
+    <form id="form1" runat="server">
+      <script type="text/javascript" src="<%=ResolveUrl("~/script/jquery.js")%>"></script>
+    <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true">
+    </asp:ScriptManager>
+
+
+    <table>
+        <tr>
+            <td>
+              
+                    
+                <table>
+                    <tr>
+                        <td>
+                                <asp:Image ID="Image1" runat="server" ImageUrl="~/Images/logo_m.png" 
+                        alt="The Database" />
+                            
+                        </td>
+                        <%--<td style="width:50px;">
+                        </td>--%>
+                        <%--<td>
+                            <asp:Image ID="Image2" runat="server"  SkinID="House" 
+                        alt="The Database" />
+
+                        </td>--%>
+                    </tr>
+                </table>
+
+                
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <asp:ContentPlaceHolder ID="HomeContentPlaceHolder" runat="server">
+                </asp:ContentPlaceHolder>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="mfooter">
+                    <ul>
+                        <li>
+                            <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/Login.aspx"
+                                ToolTip="Full Version">
+                        Full Version</asp:HyperLink></li>
+                        <li>|</li>
+                        <li>
+                            <asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="~/ETS-Terms-Of-Service.pdf"
+                                ToolTip="Terms">Terms</asp:HyperLink></li>
+                        <li>|</li>
+                        <li>
+                            <asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="~/ETS-Privacy-Policy.pdf"
+                                ToolTip="Privacy">Privacy</asp:HyperLink></li>
+                    </ul>
+                    <div class="copyright-text" style="font-size:11px;">
+                       <a href="http://www.thedatabase.net/">www.TheDatabase.net</a>
+                       </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    </form>
+</body>
+</html>

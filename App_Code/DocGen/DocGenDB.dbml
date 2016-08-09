@@ -1,0 +1,210 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="thedatabase_dev_08-Dec-2015" EntityNamespace="DocGen.DAL" ContextNamespace="DocGen.DAL" Class="DocGenDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=MOHSIN-I3\SQLEXPRESS2008R2;Initial Catalog=thedatabase_dev_08-Dec-2015;Integrated Security=True;Connect Timeout=600" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="CnString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.dgDataMap" Member="DataMaps">
+    <Type Name="DataMap">
+      <Column Name="DataMapID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DisplayText" Type="System.String" DbType="VarChar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="StoredProcedureName" Type="System.String" DbType="VarChar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="DateCreated" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DateUpdated" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ReturnFields" Type="System.String" DbType="VarChar(500)" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.LocationTable" Member="LocationTables">
+    <Type Name="LocationTable">
+      <Column Name="LocationTableID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="LocationID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="TableID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Location_LocationTable" Member="Location" ThisKey="LocationID" OtherKey="LocationID" Type="Location" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.[User]" Member="Users">
+    <Type Name="User">
+      <Column Name="UserID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="FirstName" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="LastName" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="PhoneNumber" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="Email" Type="System.String" DbType="NVarChar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="Password" Type="System.String" DbType="NVarChar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="DateAdded" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="DateUpdated" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="AccountID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="IsAccountHolder" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="IsAdvancedSecurity" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="User_Column" Member="Columns" ThisKey="UserID" OtherKey="LastUpdatedUserID" Type="Column" />
+      <Association Name="User_Document" Member="Documents" ThisKey="UserID" OtherKey="UserID" Type="Document" />
+    </Type>
+  </Table>
+  <Table Name="dbo.DocumentSectionType" Member="DocumentSectionTypes">
+    <Type Name="DocumentSectionType">
+      <Column Name="DocumentSectionTypeID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="SectionType" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Association Name="DocumentSectionType_DocumentSection" Member="DocumentSections" ThisKey="DocumentSectionTypeID" OtherKey="DocumentSectionTypeID" Type="DocumentSection" />
+    </Type>
+  </Table>
+  <Table Name="dbo.DocumentType" Member="DocumentTypes">
+    <Type Name="DocumentType">
+      <Column Name="DocumentTypeID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DocumentTypeName" Type="System.String" DbType="VarChar(150) NOT NULL" CanBeNull="false" />
+      <Column Name="DateAdded" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="DateUpdated" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="AccountID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="DocumentType_Document" Member="Documents" ThisKey="DocumentTypeID" OtherKey="DocumentTypeID" Type="Document" />
+    </Type>
+  </Table>
+  <Table Name="dbo.DocumentSectionStyle" Member="DocumentSectionStyles">
+    <Type Name="DocumentSectionStyle">
+      <Column Name="DocumentSectionStyleID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="AccountID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="StyleName" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="StyleDefinition" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
+      <Column Name="DateAdded" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="DateUpdated" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="IsSystem" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="DocumentSectionStyle_DocumentSection" Member="DocumentSections" ThisKey="DocumentSectionStyleID" OtherKey="DocumentSectionStyleID" Type="DocumentSection" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Column" Member="Columns">
+    <Type Name="Column">
+      <Column Name="ColumnID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="TableID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="SystemName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="DisplayOrder" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DisplayTextSummary" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="DisplayTextDetail" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="NameOnImport" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="NameOnExport" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="GraphTypeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ValidationOnWarning" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
+      <Column Name="ValidationOnEntry" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
+      <Column Name="IsStandard" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="DateAdded" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="DateUpdated" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="DisplayName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="PositionOnImport" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Constant" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Calculation" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
+      <Column Name="ShowTotal" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="IgnoreSymbols" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="Notes" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="IsRound" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="RoundNumber" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="CheckUnlikelyValue" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="GraphLabel" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="LastUpdatedUserID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DropdownValues" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="IsMandatory" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="Alignment" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="NumberType" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DefaultValue" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="AvgColumnID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="AvgNumberOfRecords" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MobileName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="IsDateSingleColumn" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="ShowGraphExceedance" Type="System.Decimal" DbType="Decimal(18,10)" CanBeNull="true" />
+      <Column Name="ShowGraphWarning" Type="System.Decimal" DbType="Decimal(18,10)" CanBeNull="true" />
+      <Column Name="FlatLineNumber" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MaxValueAt" Type="System.Decimal" DbType="Decimal(18,10)" CanBeNull="true" />
+      <Column Name="TextWidth" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TextHeight" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ColumnType" Type="System.String" DbType="VarChar(15) NOT NULL" CanBeNull="false" />
+      <Column Name="DropDownType" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="TableTableID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DisplayColumn" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="DisplayRight" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="Column_Column" Member="Columns" ThisKey="ColumnID" OtherKey="AvgColumnID" Type="Column" />
+      <Association Name="Column_Column" Member="Column1" ThisKey="AvgColumnID" OtherKey="ColumnID" Type="Column" IsForeignKey="true" />
+      <Association Name="User_Column" Member="User" ThisKey="LastUpdatedUserID" OtherKey="UserID" Type="User" IsForeignKey="true" />
+      <Association Name="Table_Column" Member="Table" ThisKey="TableID" OtherKey="TableID" Type="Table" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Table" Member="Tables">
+    <Type Name="Table">
+      <Column Name="TableID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="TableName" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="MenuID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DateAdded" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="DateUpdated" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="IsImportPositional" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="AccountID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="PinImage" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="MaxTimeBetweenRecords" Type="System.Decimal" DbType="Decimal(20,10)" CanBeNull="true" />
+      <Column Name="MaxTimeBetweenRecordsUnit" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="LastUpdatedUserID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="LateDataDays" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ImportDataStartRow" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="AddMissingLocation" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="DateFormat" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
+      <Association Name="Table_Column" Member="Columns" ThisKey="TableID" OtherKey="TableID" Type="Column" />
+      <Association Name="Table_Document" Member="Documents" ThisKey="TableID" OtherKey="TableID" Type="Document" />
+    </Type>
+  </Table>
+  <Table Name="dbo.DocumentSection" Member="DocumentSections">
+    <Type Name="DocumentSection">
+      <Column Name="DocumentSectionID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DocumentID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DocumentSectionTypeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Position" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="SectionName" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="Content" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Filter" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Details" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="DateAdded" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="DateUpdated" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="DocumentSectionStyleID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ValueFields" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="ParentSectionID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ColumnIndex" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="DocumentSectionType_DocumentSection" Member="DocumentSectionType" ThisKey="DocumentSectionTypeID" OtherKey="DocumentSectionTypeID" Type="DocumentSectionType" IsForeignKey="true" />
+      <Association Name="DocumentSectionStyle_DocumentSection" Member="DocumentSectionStyle" ThisKey="DocumentSectionStyleID" OtherKey="DocumentSectionStyleID" Type="DocumentSectionStyle" IsForeignKey="true" />
+      <Association Name="Document_DocumentSection" Member="Document" ThisKey="DocumentID" OtherKey="DocumentID" Type="Document" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Location" Member="Locations">
+    <Type Name="Location">
+      <Column Name="LocationID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="LocationName" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Photo" Type="System.Data.Linq.Binary" DbType="Image" CanBeNull="true" UpdateCheck="Never" />
+      <Column Name="NameOnImport" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Column Name="Notes" Type="System.String" DbType="NVarChar(250)" CanBeNull="true" />
+      <Column Name="IsActive" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="DateAdded" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="DateUpdated" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="Latitude" Type="System.Decimal" DbType="Decimal(9,6)" CanBeNull="true" />
+      <Column Name="Longitude" Type="System.Decimal" DbType="Decimal(9,6)" CanBeNull="true" />
+      <Column Name="AccountID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="LastUpdatedUserID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Email" Type="System.String" DbType="VarChar(250)" CanBeNull="true" />
+      <Association Name="Location_LocationTable" Member="LocationTables" ThisKey="LocationID" OtherKey="LocationID" Type="LocationTable" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Document" Member="Documents">
+    <Type Name="Document">
+      <Column Name="DocumentID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="AccountID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DocumentText" Type="System.String" DbType="VarChar(250) NOT NULL" CanBeNull="false" />
+      <Column Name="DocumentTypeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="UniqueName" Type="System.String" DbType="NVarChar(500) NOT NULL" CanBeNull="false" />
+      <Column Name="FileTitle" Type="System.String" DbType="NVarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="DocumentDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="DateAdded" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="DateUpdated" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="UserID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TableID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ReportHTML" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="IsReportPublic" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="DocumentDescription" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="DocumentEndDate" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="ForDashBoard" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="FolderID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Size" Type="System.Decimal" DbType="Decimal(18,10)" CanBeNull="true" />
+      <Column Name="ReportType" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Association Name="Document_DocumentSection" Member="DocumentSections" ThisKey="DocumentID" OtherKey="DocumentID" Type="DocumentSection" />
+      <Association Name="DocumentType_Document" Member="DocumentType" ThisKey="DocumentTypeID" OtherKey="DocumentTypeID" Type="DocumentType" IsForeignKey="true" />
+      <Association Name="Table_Document" Member="Table" ThisKey="TableID" OtherKey="TableID" Type="Table" IsForeignKey="true" />
+      <Association Name="User_Document" Member="User" ThisKey="UserID" OtherKey="UserID" Type="User" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>

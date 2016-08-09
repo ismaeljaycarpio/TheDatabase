@@ -1,0 +1,100 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Open.master.cs" Inherits="Home_Open" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <meta charset="utf-8" />
+    <title>TheDatabase</title>
+    
+    <meta name="Description" content="TheDatabase.net is an online database development platform to make getting your database on the web quick and easy with no upfront costs." />
+    <meta name="Keywords" content="Database, online, web, data, development, platform" />
+    <meta name="author" content="DB Gurus Pty Ltd, Australia" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google" content="notranslate">
+    <meta http-equiv="Content-Language" content="en">
+
+    <!-- core CSS -->
+    <link href="~/Responsive/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Responsive/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Responsive/css/animate.min.css" rel="stylesheet" />
+    <link href="~/Responsive/css/prettyPhoto.css" rel="stylesheet" />
+    <link href="~/Responsive/css/main.css" rel="stylesheet" />
+    <link href="~/Responsive/css/responsive.css" rel="stylesheet" />
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+    <link rel="shortcut icon" href="~/Images/favicon.ico" />
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="~/Images/favicon.ico" />
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="~/Images/favicon.ico" />
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="~/Images/favicon.ico" />
+    <link rel="apple-touch-icon-precomposed" href="~/Images/favicon.ico" />
+    <style>
+        iframe
+        {
+            border: 0;
+        }
+        
+        .form-group .form-control
+        {
+            border: 1px solid;
+        }
+    </style>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+
+ <script type="text/javascript" src="<%=ResolveUrl("~/Responsive/js/jquery.js")%>"></script>
+
+    <form id="form1" runat="server" enctype="multipart/form-data">
+    <div id="header">
+        <div class="top-bar">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3 col-xs-9 col-sm-4">
+                        <a href="../Default.aspx">
+                            <asp:Image runat="server" ID="imgLogo" ImageUrl="~/Images/logo.png" alt="TheDatbase Logo" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section id="contact-page" >
+ 
+        <div >
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+   
+      </section>
+    <div id="footer" class="midnight-blue wow fadeInDown" data-wow-duration="1000ms"
+        data-wow-delay="200ms">
+        <div class="container">
+
+            <div class="row">
+                <div class="hidden-sm hidden-md hidden-xs" >
+                    <p style="height:100px;"></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12" style="text-align:center;">
+                    <p style="color:#000000;">
+                        TheDatabase.net developed and brought to you by <a style="color:#000000; text-decoration:underline;" href="http://www.dbgurus.com.au/">DB Gurus, Australia.</a>  &copy; 2012-2016</p>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <%--<script type="text/javascript">
+        $('.carousel').carousel()
+    </script>--%>
+    <script type="text/javascript" src="<%=ResolveUrl("~/Responsive/js/bootstrap.min.js")%>"></script>
+    <script type="text/javascript" src="<%=ResolveUrl("~/Responsive/js/jquery.prettyPhoto.js")%>"></script>
+    <script type="text/javascript" src="<%=ResolveUrl("~/Responsive/js/jquery.isotope.min.js")%>"></script>
+    <script type="text/javascript" src="<%=ResolveUrl("~/Responsive/js/main.js")%>"></script>
+    <script type="text/javascript" src="<%=ResolveUrl("~/Responsive/js/wow.min.js")%>"></script>
+    </form>
+</body>
+</html>

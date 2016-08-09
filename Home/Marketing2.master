@@ -1,0 +1,210 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Marketing2.master.cs"
+ Inherits="Home_Marketing2" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>TheDatabase</title>
+    
+    <meta name="Description" content="TheDatabase.net is an online database development platform to make getting your database on the web quick and easy with no upfront costs." />
+    <meta name="Keywords" content="Database, online, web, data, development, platform" />
+  
+   <meta name="google" content="notranslate">
+    <meta http-equiv="Content-Language" content="en">
+
+    <link href="~/App_Themes/Default/StyleSheet.css" rel="stylesheet" type="text/css" />
+
+
+    <link href="~/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/settings.css" rel="stylesheet" type="text/css" />
+    <link rel="shortcut icon" href="../images/favicon.ico" />
+
+     <style type="text/css">
+        .divrenew
+        {
+            z-index: 100;
+            position: absolute;
+            top: 27px;
+            left: 600px;
+            background: #ffffff;
+            -khtml-opacity: .70;
+            -moz-opacity: .70;
+            -ms-filter: ”alpha(opacity=70)”;
+            filter: alpha(opacity=70);
+            filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0.7);
+            opacity: .70;
+        }
+        .ui-widget
+        {
+            font-size: 12px !important;
+            line-height: 1.25 !important;
+            font-family: Verdana,Arial,Helvetica,sans-serif !important;
+        }
+           .divrenew
+        {
+            z-index: 100;
+           position: fixed;
+            top: 35%;
+            left: 30%;
+            background: #ffffff;          
+
+           
+         
+        }
+    </style>
+
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+   <script type="text/javascript" src="<%=ResolveUrl("~/script/jquery.js")%>"></script>
+   
+    <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true">
+    </asp:ScriptManager>
+     <%--<div runat="server" id="divRenew" visible="false" class="divrenew">
+                                <asp:Label runat="server" ID="lblRenewMessage" Text="Account has expired." ForeColor="Red"></asp:Label>
+                                <asp:HyperLink runat="server" ID="hlRenewNow" >Please contact us.</asp:HyperLink>
+                            </div>--%>
+    <table style="width: 100%" cellpadding="0px" cellspacing="0px">
+        <tr>
+        
+            <td>
+                <div id="main-container">
+                    <div id="container">
+                        <div id="header">
+                            <div class="environment-logo">
+                                <asp:Image runat="server" ID="imgLogo" ImageUrl="~/Images/logo.png" alt="TheDatbase Logo"  />
+                                <%--<h1 runat="server" id="h1Logo" visible="false">The Database</h1>--%>
+                                <%--<img src="images/environment-logo.png" width="292" height="78"  alt="The Database" />--%>
+                            </div>
+                            <div class="top-right" runat="server" id="divPhone" visible="false">
+                                <div class="callus">
+                                    1800 60 24 80<br />
+                                    <span>+61 2 4268 5672</span></div>
+                                <div class="signin-btn">
+                                    <a href="/SignUp.aspx" class="btn"><strong>Sign Up</strong></a><br />
+                                    </div>
+                                    
+                            </div>
+                            <div id="navigation" runat="server" clientidmode="Static" visible="false">
+                                <ul>
+                                    <li>
+                                        <asp:HyperLink runat="server" ID="hlHome" NavigateUrl="~/Environmental-Monitoring-Management-Database-System.aspx"
+                                            ToolTip="Home">Home</asp:HyperLink></li>
+                                    <li>
+                                        <asp:HyperLink runat="server" ID="hlFeatures" NavigateUrl="~/Features-Include-Unlimited-Record-Types-Alerts-Warnings-Report-Generator.aspx"
+                                            ToolTip="Features">Features</asp:HyperLink></li>
+                                    <li>
+                                        <asp:HyperLink runat="server" ID="hlCaseStudy" NavigateUrl="~/Case-Studies-Environment-Tracking-System.aspx"
+                                            ToolTip="Demo">Case Studies</asp:HyperLink></li>
+                                    <li>
+                                        <asp:HyperLink runat="server" ID="hlPricing" NavigateUrl="~/Pricing-Environmental-Monitoring-System.aspx"
+                                            ToolTip="Packages">Pricing</asp:HyperLink></li>
+                                    <li>
+                                        <asp:HyperLink runat="server" ID="hlContactUs" NavigateUrl="~/Contact-Us-About-Envionmental-Monitoring-System.aspx"
+                                            ToolTip="Contact Us">Contact Us</asp:HyperLink></li>
+                                      <li>
+                                        <asp:HyperLink runat="server" ID="hlSignIn" NavigateUrl="~/Login.aspx"
+                                            ToolTip="Sign In">Sign In</asp:HyperLink></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div id="body-part">
+                            <asp:ContentPlaceHolder ID="HomeContentPlaceHolder" runat="server">
+                            </asp:ContentPlaceHolder>
+                        </div>
+                        <div class="clear">
+                        </div>
+                        <div id="footerwrapper">
+                            <div class="footer-top" runat="server" id="divFooterTop" clientidmode="Static" visible="false">
+                                <div class="footer-row1">
+                                    <div class="footer-row-text">
+                                        <div class="footer-row2-title">
+                                        Contact Details</div>
+                                        <br /><br />
+                                        <strong>Address:</strong>
+                                        <br />
+                                        3/61 Moore Street<br />
+                                        Austinmer, NSW 2515<br />
+                                        Australia
+                                        <br />
+                                        <br />
+                                        Email:
+                                        <asp:HyperLink runat="server" ID="hlContactUs2" NavigateUrl="~/Contact-Us-About-Envionmental-Monitoring-System.aspx"
+                                            ToolTip="Contact Us">Contact Us</asp:HyperLink><br />
+                                        Freephone: 1800 60 24 80<br />
+                                        Phone: + 61 2 4268 4038<br />
+                                        <br />
+                                        Fax: +61 2 4210 8660
+                                        <br />
+                                        <br />
+                                    </div>
+                                    <div class="clear">
+                                    </div>
+                                </div>
+                                <div class="footer-row2">
+                                    <div class="footer-row2-title">
+                                        Main Pages</div>
+                                    <div class="footer-row2-link">
+                                        <ul>
+                                            <li><asp:HyperLink runat="server" ID="HyperLink1" NavigateUrl="~/Environmental-Monitoring-Management-Database-System.aspx" ToolTip="Home">Home</asp:HyperLink></li>
+                                            <li><asp:HyperLink runat="server" ID="HyperLink2" NavigateUrl="~/Features-Include-Unlimited-Record-Types-Alerts-Warnings-Report-Generator.aspx" ToolTip="Features">Features</asp:HyperLink></li>
+                                            <li><asp:HyperLink runat="server" ID="HyperLink3" NavigateUrl="~/StartDemo.aspx" ToolTip="Demo">Demo</asp:HyperLink></li>
+                                            <li><asp:HyperLink runat="server" ID="HyperLink4" NavigateUrl="~/Pricing-Environmental-Monitoring-System.aspx" ToolTip="Pricing and Options">Pricing</asp:HyperLink></li>
+                                            <li><asp:HyperLink runat="server" ID="HyperLink5" NavigateUrl="~/Contact-Us-About-Envionmental-Monitoring-System.aspx" ToolTip="Contact Us">Contact Us</asp:HyperLink></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="footer-row2">
+                                    <div class="footer-row2-title">
+                                        Other Pages</div>
+                                    <div class="footer-row2-link">
+                                        <ul>
+                                        
+                                            <li><asp:HyperLink runat="server" ID="HyperLink10" NavigateUrl="~/Case-Studies-Environment-Tracking-System.aspx" ToolTip="Case Studies">Case Studies</asp:HyperLink></li>
+                                            <li><asp:HyperLink runat="server" ID="hlFooterDevelopment" NavigateUrl="~/Product-Development-Environmental-Monitoring-System.aspx" ToolTip="Development">Development</asp:HyperLink></li>
+                                            <li><asp:HyperLink runat="server" ID="hlFooterHelp" NavigateUrl="~/Help-For-Environment-Tracking-System.aspx" ToolTip="Help">Help</asp:HyperLink></li>
+                                            <li><asp:HyperLink runat="server" ID="hlFooterSiteMap" NavigateUrl="~/Site-Map-For-Environmental-Tracking-System.aspx" ToolTip="SiteMap">SiteMap</asp:HyperLink></li>
+                                            
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="footer-row2">
+                                    <div class="footer-row2-title">
+                                        Legal</div>
+                                    <div class="footer-row2-link">
+                                        <ul>
+                                            <li><asp:HyperLink runat="server" ID="HyperLink6" NavigateUrl="~/Contact-Us-About-Envionmental-Monitoring-System.aspx" ToolTip="Development">Address</asp:HyperLink></li>
+                                            <li><asp:HyperLink runat="server" ID="HyperLink7" NavigateUrl="~/ETS-Privacy-Policy.pdf" ToolTip="Development">Privacy Policy</asp:HyperLink></li>
+                                            <li><asp:HyperLink runat="server" ID="HyperLink8" NavigateUrl="~/ETS-Terms-Of-Service.pdf" ToolTip="Development">Terms of Service</asp:HyperLink></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="footer-row3">
+                                    <div class="footer-row2-title">
+                                        Get Started</div>
+                                    <div class="footer-row3-link">
+                                        <ul>
+                                            <li><asp:HyperLink runat="server" ID="hlSignUp" NavigateUrl="~/SignUp.aspx" ToolTip="Sign Up">Sign Up</asp:HyperLink></li>
+                                            <li><asp:HyperLink runat="server" ID="hlFooterSignIn" NavigateUrl="~/LogIn.aspx" ToolTip="Sign In">Sign In</asp:HyperLink></li>
+                                        </ul>
+                                        <div class="footer-image">
+                                            <a href="#">
+                                                <img src="images/Guarantee.png"" /></a></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="copyright" id="divCopyright" runat="server">
+                                    © 2012-2016. All rights reserved. <a href="http://www.thedatabase.net/">www.TheDatabase.net</a>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    </form>
+</body>
+</html>

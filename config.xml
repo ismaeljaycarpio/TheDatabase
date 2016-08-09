@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <outline>
+    <url>outline.png</url>
+  </outline>
+  <controls>
+    <control01>
+      <title>Data Loggers</title>
+      <description>Automatically receive data from data loggers in the field and sent via email or FTP upload.</description>
+      <link>http://carbonmonitoring.com.au/DisplayMarketingContent.aspx?Menu=Help&Contentkey=CarbonMonitoringHelp_AutoUploads</link>
+      <image>green1.png</image>
+    </control01>
+    <control02>
+      <title>Excel Upload</title>
+      <description>Support CSV, XLS and XLSX formats for convenient uploads.</description>
+      <link>http://carbonmonitoring.com.au/DisplayMarketingContent.aspx?Menu=Help&Contentkey=CarbonMonitoringHelp_Uploads</link>
+      <image>green6.png</image>
+    </control02>
+    <control03>
+      <title>Environmental Tracking System</title>
+      <description>The ETS is an online environmental monitoring database that allows you to access your data from anywhere at any time.</description>
+      <link>http://CarbonMonitoring.com.au/Pages/Marketing/ETS_Brochure.pdf</link>
+      <image>green11.png</image>
+    </control03>
+    <control04>
+      <title>External Systems</title>
+      <description>Description needed for External Systems</description>
+      <link>http://carbonmonitoring.com.au/DisplayMarketingContent.aspx?Menu=Help&Contentkey=CarbonMonitoringHelp_EDI </link>
+      <image>green2.png</image>
+    </control04>
+    <control05>
+      <title>Notifications and Warnings</title>
+      <description>The ETS keeps you informed by email and SMS of uploads, warnings and exceedances.</description>
+      <link>http://carbonmonitoring.com.au/DisplayMarketingContent.aspx?Menu=Help&Contentkey=CarbonMonitoringHelp_Notifications</link>
+      <image>green8.png</image>
+    </control05>
+    <control06>
+      <title>Internet Forms</title>
+      <description>Enter and edit your data online using our easy-to-use and configurable internet forms.</description>
+      <link>http://carbonmonitoring.com.au/DisplayMarketingContent.aspx?Menu=Help&Contentkey=CarbonMonitoringHelp_Record-Types </link>
+      <image>green3.png</image>
+    </control06>
+    <control07>
+      <title>Graphs and Reports</title>
+      <description>The ETS has a number of graph and reporting formats that allow you to get the information you need from your data.</description>
+      <link>http://carbonmonitoring.com.au/DisplayMarketingContent.aspx?Menu=Help&Contentkey=CarbonMonitoringHelp_Reporting</link>
+      <image>green12.png</image>
+    </control07>
+  </controls>
+</config>

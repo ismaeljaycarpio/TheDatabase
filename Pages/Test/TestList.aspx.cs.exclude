@@ -1,0 +1,286 @@
+﻿using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Configuration;
+using System.Collections;
+using System.Collections.Generic;
+using System.Web;
+using System.Web.Security;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using System.Web.UI.HtmlControls;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using iTextSharp.text.html;
+using iTextSharp.text.html.simpleparser;
+using System.IO;
+
+public partial class TestList_SampleTypeGroup : SecurePage
+{
+
+    Common_Pager _gvPager;   
+
+    protected void PopulateAccountDDL()
+    {
+        int iTemp=0;
+        ddlAccountFilter.DataSource = SecurityManager.Account_Select(null,string.Empty,null,null,"AccountName","ASC",null,null, ref iTemp);
+        ddlAccountFilter.DataBind();
+        System.Web.UI.WebControls.ListItem liAll = new System.Web.UI.WebControls.ListItem("All", "-1");
+        ddlAccountFilter.Items.Insert(0, liAll);
+
+    }
+
+    public override void VerifyRenderingInServerForm(Control control)
+    {
+        return;
+    }
+    
+    protected void Page_Load(object sender, EventArgs e) 
+    {
+        Title = "Test List";
+        lblMsg.Text = "";
+        try
+        {
+            User ObjUser = (User)Session["User"];
+
+            if (!IsPostBack)
+            {
+                if (!Common.HaveAccess(Session["roletype"].ToString(), "1"))
+                { Response.Redirect("~/Default.aspx", false); }
+                PopulateAccountDDL();
+
+                if (Session["GridPageSize"] != null && Session["GridPageSize"].ToString() != "")
+                { gvTheGrid.PageSize = int.Parse(Session["GridPageSize"].ToString()); }
+
+                gvTheGrid.GridViewSortDirection = SortDirection.Descending;
+                BindTheGrid(0,gvTheGrid.PageSize );                
+            }
+            else
+            {
+            }
+
+            GridViewRow gvr = gvTheGrid.TopPagerRow;
+            if (gvr!=null)
+            _gvPager = (Common_Pager)gvr.FindControl("Pager");
+
+        }
+        catch (Exception ex)
+        {
+            ErrorLog theErrorLog = new ErrorLog(null, "Test List", ex.Message, ex.StackTrace, DateTime.Now, Request.Path);
+            SystemData.ErrorLog_Insert(theErrorLog);
+            lblMsg.Text = ex.Message;
+        }
+    }
+
+    public string GetEditURL()
+    {
+
+        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Test/TestDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SampleTypeGroupID=";
+
+    }
+
+
+    public string GetViewURL()
+    {
+       
+
+        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Test/TestDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SampleTypeGroupID=";
+
+    }
+    public string GetAddURL()
+    {
+
+        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Test/TestDetail.aspx?mode=" + Cryptography.Encrypt("add")  ;
+
+    }
+    public string GetAccountViewURL()
+    {
+
+        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&accountid=";
+
+    }
+
+
+    protected void BindTheGrid(int iStartIndex, int iMaxRows)
+    {
+        try
+        {
+            int iTN = 0;
+           
+
+            gvTheGrid.DataSource = SecurityManager.test_TestTable_Select(null,
+                txtSampleTypeGroupSearch.Text.Trim().Replace("'","''"),  null, 
+                int.Parse(ddlAccountFilter.SelectedValue) == -1 ? null : (int?)int.Parse(ddlAccountFilter.SelectedValue),
+                gvTheGrid.GridViewSortColumn, gvTheGrid.GridViewSortDirection == SortDirection.Ascending?"ASC":"DESC",
+                iStartIndex, iMaxRows, ref iTN);
+            
+            gvTheGrid.VirtualItemCount = iTN;
+           
+            gvTheGrid.DataBind();
+            if (gvTheGrid.TopPagerRow != null)
+                gvTheGrid.TopPagerRow.Visible = true;
+
+
+            GridViewRow gvr = gvTheGrid.TopPagerRow;
+            if (gvr != null)
+            {
+                _gvPager = (Common_Pager)gvr.FindControl("Pager");
+                _gvPager.AddURL = GetAddURL();
+            }
+
+            if (iTN == 0)
+            {
+                divEmptyData.Visible = true;
+                hplNewData.NavigateUrl = GetAddURL();
+            }
+            else
+            {
+                divEmptyData.Visible = false;
+            }
+
+        }
+        catch (Exception ex)
+        {
+            ErrorLog theErrorLog = new ErrorLog(null, "Test List", ex.Message, ex.StackTrace, DateTime.Now, Request.Path);
+            SystemData.ErrorLog_Insert(theErrorLog);
+            lblMsg.Text = ex.Message;
+        }
+
+    }
+
+
+    protected void gvTheGrid_PreRender(object sender, EventArgs e)
+    {
+        GridView grid = (GridView)sender;
+        if (grid != null)
+        {
+            GridViewRow pagerRow = (GridViewRow)grid.TopPagerRow;
+            if (pagerRow != null)
+            {
+                pagerRow.Visible = true;
+            }
+        }
+    }
+    protected void gvTheGrid_Sorting(object sender, GridViewSortEventArgs e)
+    {
+
+        BindTheGrid(0, gvTheGrid.PageSize);
+    }
+  
+
+    //protected void btnSearch_Click(object sender, ImageClickEventArgs e)
+    protected void lnkSearch_Click(object sender, EventArgs e)
+    {
+
+        BindTheGrid(0, gvTheGrid.PageSize);      
+       
+    }
+
+
+    protected void Pager_BindTheGridToExport(object sender, EventArgs e)
+    {
+        _gvPager.ExportFileName = "Test List";
+        BindTheGrid(0, _gvPager.TotalRows);
+    }
+
+    protected void Pager_BindTheGridAgain(object sender, EventArgs e)
+    {
+        BindTheGrid(_gvPager.StartIndex, _gvPager._gridView.PageSize);
+    }
+
+    protected void Pager_OnApplyFilter(object sender, EventArgs e)
+    {
+        BindTheGrid(0, gvTheGrid.PageSize);   
+    }
+    
+
+    protected void Pager_DeleteAction(object sender, EventArgs e)
+    {
+        string sCheck = "";
+        for (int i = 0; i < gvTheGrid.Rows.Count; i++)
+        {
+            bool ischeck = ((CheckBox)gvTheGrid.Rows[i].FindControl("chkDelete")).Checked;
+            if (ischeck)
+            {
+                sCheck = sCheck + ((Label)gvTheGrid.Rows[i].FindControl("LblID")).Text + ",";
+            }
+        }
+        if (string.IsNullOrEmpty(sCheck))
+        {
+            ScriptManager.RegisterClientScriptBlock(gvTheGrid, typeof(Page), "message_alert", "alert('Please select a record.');", true);
+        }
+        else
+        {
+            DeleteItem(sCheck);
+            BindTheGrid(_gvPager.StartIndex, gvTheGrid.PageSize);
+            _gvPager._gridView.PageIndex = _gvPager.PageIndex - 1;
+            if (_gvPager._gridView.Rows.Count == 0 && _gvPager._gridView.PageIndex > 0)
+            {
+                BindTheGrid(_gvPager.StartIndex - gvTheGrid.PageSize, gvTheGrid.PageSize);
+            }
+        }
+
+    }
+
+
+
+    private void DeleteItem(string keys)
+    {
+        try
+        {
+            if (!string.IsNullOrEmpty(keys))
+            {
+
+                foreach (string sTemp in keys.Split(','))
+                {
+                    if (!string.IsNullOrEmpty(sTemp))
+                    {
+
+                        SecurityManager.test_TestTable_Delete(int.Parse(sTemp));
+
+                    }
+                }
+
+
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorLog theErrorLog = new ErrorLog(null, "Test List", ex.Message, ex.StackTrace, DateTime.Now, Request.Path);
+            SystemData.ErrorLog_Insert(theErrorLog);
+            lblMsg.Text = ex.Message;
+
+            //ScriptManager.RegisterClientScriptBlock(gvTheGrid, typeof(Page), "msg_delete", "alert('Delete User has failed!');", true);
+        }
+    }
+
+    //protected void btnTest_Click(object sender, EventArgs e)
+    protected void lnlTest_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            SampleTypeGroup newSampleTypeGroup = new SampleTypeGroup(null, "", 2, true, "");
+            SecurityManager.test_TestTable_InsertMillion(newSampleTypeGroup, txtSampleTypeGroupSearch.Text == "" ? "T " + DateTime.Now.ToString() : txtSampleTypeGroupSearch.Text);
+
+            BindTheGrid(0, gvTheGrid.PageSize);
+        }
+        catch (Exception ex)
+        {
+            ErrorLog theErrorLog = new ErrorLog(null, "Test List", ex.Message, ex.StackTrace, DateTime.Now, Request.Path);
+            SystemData.ErrorLog_Insert(theErrorLog);
+            lblMsg.Text = ex.Message;
+            //ScriptManager.RegisterClientScriptBlock(gvTheGrid, typeof(Page), "msg_delete", "alert('Error at inserting millions of data!');", true);
+
+        }
+        
+    }
+
+    //protected void lnkSearch_Click(object sender, EventArgs e)
+    //{
+
+    //}
+    //protected void lnlTest_Click(object sender, EventArgs e)
+    //{
+
+    //}
+}

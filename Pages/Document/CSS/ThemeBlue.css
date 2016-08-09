@@ -1,0 +1,108 @@
+﻿/*-------------------------------*/
+/*Body and HTML supported classes*/
+/*------------
+
+
+/*-------------------------------*/
+/*Container supported classes*/
+/*-------------------------------*/
+/*Main wrapper class*/
+
+
+/*-------------------------------*/
+/*Messages Status supported classes*/
+/*-------------------------------*/
+/*General class for Message*/
+#tblMessage
+{
+	height: 23px;
+	width: 100%;
+}
+/*Message for Successful*/
+#tblMessage.Success
+{
+	border: solid 1px #5AAD0D;
+	background-color: #E5F7D5;
+}
+/*Message for Information*/
+#tblMessage.Information
+{
+	border: solid 1px #88B5E9;
+	background-color: #E2EDF8;
+}
+/*Message for Warning*/
+#tblMessage.Warning
+{
+	border: solid 1px #FD7B04;
+	background-color: #FFF7E7;
+}
+/*Message for Error*/
+#tblMessage.Error
+{
+	border: solid 1px #FF0001;
+	background-color: #FFEAEA;
+}
+
+/*-------------------------------*/
+/*Messages Status Icon supported classes*/
+/*-------------------------------*/
+/*General class for Message Icon*/
+#dvIcon
+{
+	line-height: 23px;
+	background-repeat: no-repeat;
+	background-position: 2px 2px;
+	padding-left: 38px;
+}
+/*Message Icon for Successful*/
+#dvIcon.Success
+{
+	background-image: url('../Images/Message_Success.png');
+}
+/*Message Icon for Information*/
+#dvIcon.Information
+{
+	background-image: url('../Images/Message_Information.png');
+}
+/*Message Icon for Warning*/
+#dvIcon.Warning
+{
+	background-image: url('../Images/Message_Warning.png');
+}
+/*Message Icon for Error*/
+#dvIcon.Error
+{
+	background-image: url('../Images/Message_Error.png');
+}
+
+/*-------------------------------*/
+/*Progressbar supported classes*/
+/*-------------------------------*/
+/*Progressbar container wrapper*/
+
+#dvProgressContainer
+{
+	border-left: solid 1px #CFCFCF;
+	border-right: solid 1px #CFCFCF;
+	width: 300px;
+	height: 12px;
+	background-image: url(../Images/Progressbar_Wrapper.gif);
+}
+/*Progressbar container*/
+#dvProgress
+{
+	background-image: url(../Images/Progressbar_Content.gif);
+	height: 100%;
+	width: 0px;
+}
+
+
+.StartUpload
+{
+	/* for IE */
+	filter:alpha(opacity=80);
+	/* CSS3 standard */
+	opacity:0.8;
+}
+
+

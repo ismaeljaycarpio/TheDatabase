@@ -1,0 +1,85 @@
+body 
+{ 
+	font-size:11px; 
+}
+
+.MultiLineTextBox
+{
+  
+	font-size:11px !important;
+
+}
+
+INPUT.NormalTextBox
+{
+	
+	font-size:11px !important;
+}
+
+SELECT.NormalTextBox
+{
+
+   font-size:11px !important;
+}
+
+.TopTitle
+{
+    font-size: 13pt;
+    font-weight:bold;
+}
+.ContentMainTra
+{
+    font-size:11px !important;
+}
+.ContentMain
+{
+    font-size:11px !important;
+}
+
+.staticmenuitem_mobile
+{
+    
+    color: #000; 
+    padding: 2px 1px 5px 1px;
+   
+    text-align: center;
+    font-size: 14pt;
+    font-weight: bold;  
+    border-style:solid;
+    border-color:#5C9CF8;
+    border-width:1px;
+    width:103px;
+   
+}
+
+.staticselecteditem_mobile
+{
+    background-color:#fff;
+      font-size: 14pt;
+     font-weight: bold;
+      color: #009BB5;
+}
+
+.staticmenuhover_mobile{
+	
+    background-color:#fff;
+     font-size: 14pt;
+    color: #009BB5;
+
+}
+
+#RecordListMain h2
+{
+    font-size:13pt;
+}
+
+#RecordListMain th {font-size:14px; font-weight: bold; padding-bottom: 5px; height:40px; line-height:40px; background:url(/images/header-grad.png) repeat-x left top #fafafa;}
+#RecordListMain a {width:250px; float:left; padding-bottom: 5px; height:40px; line-height:40px; text-align:left; font-size:14px; text-decoration:none; }
+
+/*--------- Footer part ---------*/
+#mfooter { width:100%; background:url(images/footer-grad.jpg) repeat-x left top #fafafa; padding:15px 0 0 0; text-align:center; height:50px; }
+#mfooter ul { list-style-type:none; margin:0px; padding:0px; }
+#mfooter ul li {  font-size:12px; color:#565656; display:inline; padding:0 1px 0 1px;}
+#mfooter ul li a { text-decoration:none; color:#565656; }
+#mfooter ul li a:hover { text-decoration:none; color:#2d940b; }
+.copyright-text { display:block; margin-top:15px;font-size:9pt; }

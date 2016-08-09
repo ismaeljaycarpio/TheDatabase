@@ -1,0 +1,207 @@
+﻿
+<asp:Image runat="server" SkinID="Logo" ImageUrl="images/ets-logo.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="myaccount" ImageUrl="images/my-account-icon_g.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="password" ImageUrl="images/password-icon.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="signout" ImageUrl="images/sign-out-icon.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="footerlogo" ImageUrl="images/logo-small.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="Graph" ImageUrl="images/Graph.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+<asp:Image runat="server" SkinID="Upload" ImageUrl="images/Upload.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="Config" ImageUrl="images/Config.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="Schedule" ImageUrl="images/Schedule.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Imagebutton runat="server" SkinID="email" ImageUrl="images/email.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="email" ImageUrl="images/email.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="Save" ImageUrl="images/Save.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Imagebutton runat="server" SkinID="Save" ImageUrl="images/Save.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+
+<asp:Image runat="server" SkinID="Back" ImageUrl="images/Back.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" /> 
+
+<asp:Imagebutton runat="server" SkinID="Back" ImageUrl="images/Back.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" /> 
+
+
+<asp:Image runat="server" SkinID="Refresh" ImageUrl="images/Refresh2.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Imagebutton runat="server" SkinID="Refresh" ImageUrl="images/Refresh2.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="Document" ImageUrl="images/Document.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="Location" ImageUrl="images/SampleSite.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="BigAdd" ImageUrl="images/BigAdd.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="CreateReport" ImageUrl="images/CreateReport.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+
+<asp:Image runat="server" SkinID="BigFilter" ImageUrl="images/BigFilter.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+
+<asp:Image runat="server" SkinID="text" ImageUrl="images/text_big.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="table" ImageUrl="images/table_big.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="html" ImageUrl="images/html_big.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="photo" ImageUrl="images/picture_big.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="columns" ImageUrl="images/columns_big.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="chart" ImageUrl="images/chart_big.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Imagebutton runat="server" SkinID="text" ImageUrl="images/text.gif" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Imagebutton runat="server" SkinID="html" ImageUrl="images/html.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Imagebutton runat="server" SkinID="table" ImageUrl="images/table.gif" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />  
+
+<asp:Imagebutton runat="server" SkinID="photo" ImageUrl="images/photo.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Imagebutton runat="server" SkinID="chart" ImageUrl="images/chart.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+
+
+
+
+<asp:Image runat="server" SkinID="up" ImageUrl="images/up.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="down" ImageUrl="images/down.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Imagebutton runat="server" SkinID="delete_s" ImageUrl="images/delete_s.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="reports" ImageUrl="images/reports_g.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="alert" ImageUrl="images/alert.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="House" ImageUrl="images/House.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+
+<asp:Image runat="server" SkinID="add32" ImageUrl="images/add32.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="back32" ImageUrl="images/back32.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+<asp:Image runat="server" SkinID="Properties32" ImageUrl="images/Properties32.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+<asp:Image runat="server" SkinID="Publish32" ImageUrl="images/Publish32.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+<asp:Image runat="server" SkinID="Styles32" ImageUrl="images/Styles32.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+<asp:Image runat="server" SkinID="View32" ImageUrl="images/View32.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+<asp:Image runat="server" SkinID="WordDownload32" ImageUrl="images/WordDownload32.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="help" ImageUrl="images/help.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="download" ImageUrl="images/download.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Imagebutton runat="server" SkinID="word" ImageUrl="images/word.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+<asp:Imagebutton runat="server" SkinID="excel" ImageUrl="images/excel.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+<asp:Imagebutton runat="server" SkinID="pdf" ImageUrl="images/pdf.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Imagebutton runat="server" SkinID="csv" ImageUrl="images/csv.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="Search" ImageUrl="images/Search.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+
+<asp:Imagebutton runat="server" SkinID="pdfsave" ImageUrl="images/file_extension_pdf.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Imagebutton runat="server" SkinID="FolderOpen" ImageUrl="images/FolderOpen.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+<asp:Image runat="server" SkinID="FolderOpen" ImageUrl="images/FolderOpen.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Imagebutton runat="server" SkinID="GraphIcon" ImageUrl="images/GraphIcon.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="GraphIcon" ImageUrl="images/GraphIcon.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="map" ImageUrl="images/Map.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="dial" ImageUrl="images/clock_select_remain.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="Edit_big" ImageUrl="images/Edit_big.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="delete_big" ImageUrl="images/delete_big.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="Restore_Big" ImageUrl="images/Restore_Big.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+  
+<asp:Image runat="server" SkinID="delete_s" ImageUrl="images/delete_s.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+<asp:Image runat="server" SkinID="Edit" ImageUrl="images/iconEdit.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+
+<asp:Image runat="server" SkinID="Prev" ImageUrl="images/control_rewind_blue.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+
+<asp:Image runat="server" SkinID="Next" ImageUrl="images/control_fastforward_blue.png" 
+style="padding-left: 2px;padding-right: 2px;padding-bottom: 2px;" />
+
+
+

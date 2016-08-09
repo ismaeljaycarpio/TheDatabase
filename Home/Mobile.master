@@ -1,0 +1,116 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Mobile.master.cs" EnableTheming="false"
+ Inherits="Home_Mobile" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <meta name="Description" content="The ETS is an Environment Tracking System for the collection and management of environmental monitoring data stored online in one central secure location." />
+    <meta name="Keywords" content="environmental monitoring, environment tracking, environmental database, online, system, environment, monitoring database" />
+
+     <meta name="google" content="notranslate">
+    <meta http-equiv="Content-Language" content="en">
+
+
+    <link rel="shortcut icon" href="../Images/favicon.ico" />
+                    <link href="~/App_Themes/Default/StyleSheet.css" rel="stylesheet" type="text/css" />
+
+    <link href="css/mobile.css" rel="stylesheet" type="text/css" />
+
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body style="background-image: none;">
+    <script type="text/javascript" src="<%=ResolveUrl("~/script/jquery.js")%>"></script>
+    <script type="text/javascript" src="<%=ResolveUrl("~/JS/Common.js")%>"></script>
+    <link href="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.css")%>" rel="stylesheet"
+        type="text/css" />
+    <script type="text/javascript" src="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.pack.js")%>"></script>
+    <form id="form1" runat="server">
+    <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true">
+    </asp:ScriptManager>
+    <table>
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td>
+                        <asp:HyperLink runat="server" ID="hlHomePageMobile" NavigateUrl="~/Pages/Mobile/Default.aspx">
+                                   <asp:Image ID="imgLogo" runat="server" ImageUrl="~/Images/logo_m.png"
+                                alt="The Database" />
+                        </asp:HyperLink>
+                            
+                        </td>
+                        <td style="width: 30px;">
+                        </td>
+                        <td align="left">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <asp:HyperLink runat="server" ID="lnlUserName" Font-Size="Small" NavigateUrl="~/Pages/Mobile/Profile.aspx">
+                                            <asp:Image runat="server" ImageUrl="~/App_Themes/Default/Images/Head.png" AlternateText="Profile" />
+                                        </asp:HyperLink>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr runat="server" id="trGotoMenu">
+            <td>
+                    
+                <table>
+                    <tr>
+                        <td>
+                          <strong>Go To: </strong>  
+
+                        </td>
+                        <td>
+                            <asp:DropDownList runat="server" AutoPostBack="true" ID="ddlTableMenu" CssClass="TopTitle"
+                                        OnSelectedIndexChanged="ddlTableMenu_SelectedIndexChanged" Width="200px">
+                                    </asp:DropDownList>
+
+                        </td>
+                    </tr>
+                </table>
+
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <asp:ContentPlaceHolder ID="HomeContentPlaceHolder" runat="server">
+                </asp:ContentPlaceHolder>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="mfooter">
+                    <ul>
+                        <li>
+                            <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/Default.aspx" ToolTip="Home">
+                        Full Version</asp:HyperLink></li>
+                        <li>|</li>
+                        <li>
+                            <asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="~/ETS-Terms-Of-Service.pdf"
+                                ToolTip="Terms">Terms</asp:HyperLink></li>
+                        <li>|</li>
+                        <li>
+                            <asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="~/ETS-Privacy-Policy.pdf"
+                                ToolTip="Privacy">Privacy</asp:HyperLink></li>
+                        <li>|</li>
+                        <li>
+                            <asp:HyperLink ID="hlAccount" runat="server" NavigateUrl="" ToolTip="Account">Account</asp:HyperLink></li>
+                    </ul>
+                    <div class="copyright-text">
+                         <a href="http://www.thedatabase.net/">www.TheDatabase.net</a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    </form>
+</body>
+</html>

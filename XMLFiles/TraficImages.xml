@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<items>
+    <Item Index="1">
+        <DisplayText>Light - Green</DisplayText>
+        <ImageFile>/images/TrafficLight-Green.png</ImageFile>
+    </Item>
+    <Item Index="2">
+        <DisplayText>Light – Yellow</DisplayText>
+        <ImageFile>/images/TrafficLight-Yellow.png</ImageFile>
+        </Item>
+    <Item Index="3">
+        <DisplayText>Light – Red</DisplayText>
+        <ImageFile>/images/TrafficLight-Red.png</ImageFile>
+    </Item>
+    <Item Index="4">
+        <DisplayText>Light – Blue</DisplayText>
+        <ImageFile>/images/TrafficLight-Blue.png</ImageFile>
+    </Item>
+    <Item Index="3">
+        <DisplayText>Light – Purple</DisplayText>
+        <ImageFile>/images/TrafficLight-Purple.png</ImageFile>
+    </Item>
+</items>
+

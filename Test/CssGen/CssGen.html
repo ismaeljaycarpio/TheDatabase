@@ -1,0 +1,362 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <title>Css code generator for text - CSSTXT</title>
+    <meta name="Description" content="Online tool that can simply add style to your text." />
+    <meta name="Keywords" content="tool,css,web 2.0,options,color,bold,effect,style" />
+    <link rel="shortcut icon" href="img/favicon.ico" />
+    <link rel="stylesheet" href="style.css" type="text/css" />
+    <script src="mootools.js" type="text/javascript"></script>
+    <script src="fcts.js" type="text/javascript"></script>
+    <script src="jscolor/jscolor.js" type="text/javascript"></script>
+</head>
+<body>
+    <div id="fb-root">
+    </div>
+    <script>        (function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = "//connect.facebook.net/fr_FR/all.js#xfbml=1"; fjs.parentNode.insertBefore(js, fjs); } (document, 'script', 'facebook-jssdk'));</script>
+    <div style="text-align: left; margin: auto; width: 724px;">
+       
+        <div style="margin: 0;">
+            <fieldset style="margin: 0; padding: 0 10px 0 15px; border: 1px solid #605403;">
+                <legend><span id="form_css">
+                    <h1>
+                       DBGurus Css code generator</h1>
+                </span></legend>
+                <div style="padding: 0; margin: 8px 0 0 0;">
+                    <form name="textform" action="">
+                    <div style="margin: 0; padding: 0;">
+                        <span id="zone01"></span>
+                        <textarea style="width: 680px; height: 85px;" id="zonetext0" onkeyup="new_fct();"
+                            name="content0" cols="83" rows="4">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.</textarea>
+                    </div>
+                    <div id="l001" style="overflow: auto; width: 100%; margin: 5px 0 5px 0; padding: 0;">
+                        <div>
+                            <input class="boffbold" type="button" id="boldtxt" onclick="fct_0('boldtxt','boffbold','bonbold','b0val');"
+                                name="boldv" value="bold" /><input type="hidden" id="idb0" name="nameb0" value="font-weight:bold" /><input
+                                    type="hidden" id="b0val" name="b0name" value="2" /></div>
+                        <div>
+                            <input class="boffunderline" type="button" id="underlinetxt" onclick="fct_0('underlinetxt','boffunderline','bonunderline','b1val');"
+                                name="underlinev" value="underline" /><input type="hidden" id="idb1" name="nameb1"
+                                    value="underline" /><input type="hidden" id="b1val" name="b1name" value="2" /></div>
+                        <div>
+                            <input class="boffoverline" type="button" id="overlinetxt" onclick="fct_0('overlinetxt','boffoverline','bonoverline','b2val');"
+                                name="overlinev" value="overline" /><input type="hidden" id="idb2" name="nameb2"
+                                    value="overline" /><input type="hidden" id="b2val" name="b2name" value="2" /></div>
+                        <div>
+                            <input class="boffitalic" type="button" id="italictxt" onclick="fct_0('italictxt','boffitalic','bonitalic','b3val');"
+                                name="italicv" value="italic" /><input type="hidden" id="idb3" name="nameb3" value="font-style:italic" /><input
+                                    type="hidden" id="b3val" name="b3name" value="2" /></div>
+                        <div>
+                            <input class="boffoblique" type="button" id="obliquetxt" onclick="fct_0('obliquetxt','boffoblique','bonoblique','b4val');"
+                                name="obliquev" value="oblique" /><input type="hidden" id="idb4" name="nameb4" value="font-style:oblique" /><input
+                                    type="hidden" id="b4val" name="b4name" value="2" /></div>
+                        <div>
+                            <input class="boffline" type="button" id="linetxt" onclick="fct_0('linetxt','boffline','bonline','b5val');"
+                                name="linev" value="line-through" /><input type="hidden" id="idb5" name="nameb5"
+                                    value="line-through" /><input type="hidden" id="b5val" name="b5name" value="2" /></div>
+                        <div>
+                            <input class="boffuppercase" type="button" id="uppercasetxt" onclick="fct_0('uppercasetxt','boffuppercase','bonuppercase','b6val');"
+                                name="uppercasev" value="uppercase" /><input type="hidden" id="idb6" name="nameb6"
+                                    value="text-transform:uppercase" /><input type="hidden" id="b6val" name="b6name"
+                                        value="2" /></div>
+                        <div>
+                            <input class="boffsmallcaps" type="button" id="smallcapstxt" onclick="fct_0('smallcapstxt','boffsmallcaps','bonsmallcaps','b7val');"
+                                name="smallcapsv" value="smallcaps" /><input type="hidden" id="idb7" name="nameb7"
+                                    value="font-variant:small-caps" /><input type="hidden" id="b7val" name="b7name" value="2" /></div>
+                        <input id="seecode" name="seecodeinput" type="hidden" value="1" />
+                    </div>
+                    <div style="margin: 0;">
+                        <div class="conteneur">
+                            <div class="floatcontent">
+                                <table border="0" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td valign="top" colspan="2">
+                                            Letter spacing
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top">
+                                            <div id="area1">
+                                                <div id="knob1">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td valign="top">
+                                            <span id="spanslider1">XX&nbsp;</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top" colspan="2">
+                                            Word spacing
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top">
+                                            <div id="area2">
+                                                <div id="knob2">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td valign="top">
+                                            <span id="spanslider2">XX&nbsp;</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top" colspan="2">
+                                            Font size &nbsp;px<input checked="checked" id="pixeltext" onclick="pixeltext.value='1';emtext.value='3';new_fct();"
+                                                name="textsizeinfochoice" type="radio" value="1" />
+                                            &nbsp;em<input id="emtext" onclick="emtext.value='1';pixeltext.value='3';pcttext.value='3';new_fct();"
+                                                name="textsizeinfochoice" type="radio" value="0" />
+                                            &nbsp;%<input id="pcttext" onclick="pcttext.value='1';pixeltext.value='3';emtext.value='3';new_fct();"
+                                                name="textsizeinfochoice" type="radio" value="0" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top">
+                                            <div id="area3">
+                                                <div id="knob3">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td valign="top">
+                                            <span id="spanslider3">XX&nbsp;</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top" colspan="2">
+                                            Line height
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top">
+                                            <div id="area4">
+                                                <div id="knob4">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td valign="top">
+                                            <span id="spanslider4">XX&nbsp;</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top" colspan="2">
+                                            Border size <font class="txtasterix1">(*)</font>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top">
+                                            <div id="area5">
+                                                <div id="knob5">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td valign="top">
+                                            <span id="spanslider5">XX&nbsp;</span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="floatcontentcenter">
+                            </div>
+                            <div class="floatcontent">
+                                <table border="0" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td valign="top">
+                                            Font family
+                                        </td>
+                                        <td align="right">
+                                            <select onchange="new_fct()" style="width: 110px" id="familyfont" name="familychoice">
+                                                <option style="font-family: arial, helvetica, sans-serif" value="arial, helvetica, sans-serif"
+                                                    selected="selected">Arial</option>
+                                                <option style="font-family: arial black, sans-serif" value="arial black, sans-serif">
+                                                    Arial Black</option>
+                                                <option style="font-family: trebuchet MS, sans-serif" value="trebuchet MS, sans-serif">
+                                                    Trebuchet MS</option>
+                                                <option style="font-family: courier new, courier, monospace" value="courier new, courier, monospace">
+                                                    Courier</option>
+                                                <option style="font-family: helvetica, sans-serif" value="helvetica, sans-serif">Helvetica</option>
+                                                <option style="font-family: verdana, sans-serif" value="verdana, sans-serif">Verdana</option>
+                                                <option style="font-family: georgia, serif" value="georgia, serif">Georgia</option>
+                                                <option style="font-family: palatino linotype, palatino, serif" value="palatino linotype, palatino, serif">
+                                                    Palatino</option>
+                                                <option style="font-family: impact, sans-serif" value="impact, sans-serif">Impact</option>
+                                                <option style="font-family: comic sans, comic sans ms, cursive, verdana, arial, sans-serif"
+                                                    value="comic sans, comic sans ms, cursive, verdana, arial, sans-serif">Comic Sans
+                                                    MS</option>
+                                                <option style="font-family: tahoma, verdana, arial, sans-serif" value="tahoma, verdana, arial, sans-serif">
+                                                    Tahoma</option>
+                                                <option style="font-family: times new roman, times, serif" value="times new roman, times, serif">
+                                                    Times New Roman</option>
+                                                <option style="font-family: lucida sans unicode, lucida grande, sans-serif" value="lucida sans unicode, lucida grande, sans-serif">
+                                                    Lucida Sans</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Text align
+                                        </td>
+                                        <td align="right">
+                                            <select onchange="new_fct()" style="width: 110px" id="alignfont" name="alignfontchoice">
+                                                <option value="left" selected="selected">Left</option>
+                                                <option value="center">Center</option>
+                                                <option value="right">Right</option>
+                                                <option value="justify">Justify</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Border style <font class="txtasterix1">(*)</font>
+                                        </td>
+                                        <td align="right">
+                                            <select onchange="new_fct();i3_b();" style="width: 110px" id="bordercontent" name="bordercontentchoice">
+                                                <option value="none" selected="selected">none</option>
+                                                <option value="solid">solid</option>
+                                                <option value="dotted">dotted</option>
+                                                <option value="dashed">dashed</option>
+                                                <option value="double">double</option>
+                                                <option value="groove">groove</option>
+                                                <option value="ridge">ridge</option>
+                                                <option value="inset">inset</option>
+                                                <option value="outset">outset</option>
+                                            </select>
+                                            <input id="positiontext" type="hidden" name="positiontextchoice" value="none" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            &nbsp;
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            &nbsp;
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Font color
+                                        </td>
+                                        <td align="right">
+                                            <img src="img/colors.gif" alt="" onclick="document.getElementById('myInput1').color.showPicker()"
+                                                height="16" width="16" />
+                                            <input id="myInput1" name="myInput1c" onchange="new_fct();" class="color" size="10"
+                                                type="text" value="000000" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Background color
+                                        </td>
+                                        <td align="right">
+                                            <img src="img/colors.gif" alt="" onclick="document.getElementById('myInput2').color.showPicker()"
+                                                height="16" width="16">
+                                            <input id="myInput2" name="myInput2c" onchange="new_fct();" class="color" size="10"
+                                                value="" type="text" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Border color <font class="txtasterix1">(*)</font>
+                                        </td>
+                                        <td align="right">
+                                            <img src="img/colors.gif" alt="" onclick="document.getElementById('myInput3').color.showPicker()"
+                                                height="16" width="16" />
+                                            <input id="myInput3" name="myInput3c" onchange="new_fct();" class="color" value=""
+                                                size="10" type="text" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="cl">
+                            </div>
+                        </div>
+                    </div>
+                    <input id="step_load" name="step_loadinput" type="hidden" value="off" />
+                    <div style="margin: 0 10 5 10;">
+                        <div style="float: left; border: 0px solid #000000;">
+                            <span id="advancedoptions">
+                                <img src="http://csstxt.com/img/information.gif" onmouseover="tooltip('<div class=\'textinfo\'>By default using <b>P</b> tag(defines a paragraph) and HTML automatically <br><b>adds</b> an extra blank line before and after a paragraph.<br>You can fixe it with options (margin) and force to options you want.<br><b>DIV</b> tag(defines a division/section in a document) and <b>doesn\'t add</b> an extra blank,<br>and you can use it with all options too.I put the choices to select what you will prefer.</div>');"
+                                    onmouseout="exit();" align="absmiddle" border="0" height="16" width="16">
+                                <br>
+                                <div class="floatcontent" style="font-size: 90%;">
+                                    Html tag :&nbsp;&lt;p&gt;<input checked="" id="ptagtext" onclick="ptagtext.value='1';divtagtext.value='3';new_fct();"
+                                        name="htmltagchoice" value="1" type="radio">&nbsp;&lt;div&gt;<input id="divtagtext"
+                                            onclick="divtagtext.value='1';ptagtext.value='3';new_fct();" name="htmltagchoice"
+                                            value="0" type="radio">
+                                </div>
+                                <div class="floatcontentcenteradvanced" style="font-size: 90%;">
+                                    Margin&nbsp;<input id="slider6" style="width: 30px" name="margininput" onkeyup="new_fct();"
+                                        size="2" value="" type="text">px &nbsp;&nbsp;Padding&nbsp;<input id="slider7" name="paddinginput"
+                                            style="width: 30px" onkeyup="new_fct();" size="2" value="" type="text">px
+                                </div>
+                                <div class="floatcontent" style="font-size: 90%;">
+                                    Width&nbsp;<input id="slider8" style="width: 30px" name="widthinput" size="2" onkeyup="new_fct();"
+                                        value="" type="text">px &nbsp;&nbsp;Height&nbsp;<input id="slider9" name="heightinput"
+                                            style="width: 30px" size="2" onkeyup="new_fct();" value="" type="text">px
+                                </div>
+                                <div class="cl">
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                    <div style="margin: 0 10px 5px 10px;">
+                        <div style="float: left;">
+                            &nbsp;
+                        </div>
+                        <div style="float: right; margin: 20px 0px 0px 0px;">
+                            <font class="txtasterix0">(*)</font> <font class="txtasterix2">if you have a border
+                                size >0 , style and color should be completed.</font>
+                        </div>
+                        <div class="cl">
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </fieldset>
+        </div>
+        <div>
+            <span id="zonetextnew">
+                <img valign="absmiddle" src="http://csstxt.com/img/start-result.gif" alt="" border="0"><p
+                    style="font-weight: normal; color: #000000; background-color: #FFBA6B; letter-spacing: 1pt;
+                    word-spacing: 2pt; font-size: 12px; text-align: left; font-family: arial, helvetica, sans-serif;
+                    line-height: 1;">
+                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed non risus. Suspendisse
+                    lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor. Cras elementum
+                    ultrices diam. Maecenas ligula massa, varius a, semper congue, euismod non, mi.</p>
+                <img valign="absmiddle" src="http://csstxt.com/img/end-result.gif" alt="" border="0"><br>
+                <br>
+                <center>
+                    <a href="javascript:void(0);" onclick="displaytext('a1');document.getElementById('seecode').value='2';new_fct()">
+                        <img style="border: none;" onmouseover="this.src='img/ic-code-1.jpg'" onmouseout="this.src='img/ic-code.jpg'"
+                            src="http://csstxt.com/img/ic-code.jpg" alt="" align="absmiddle"></a></center>
+            </span>
+            
+            <span id="zonetextnew1"><span id="a1" style="display: none;">
+                <br />
+                <fieldset style="margin: 0px; padding: 0px 10px 0px 15px; border: 1px solid #605403;">
+                    <legend><font color="#605403">Copy and paste this code into a new page and save as example.html</font></legend>
+                    <div style="margin: 8px 0 5px 0; font-size: 90%;">
+                        Version 1 "novice"<br />
+                        <div id="csscode1">
+                        </div>
+                        <span id="i1"></span>
+                        <br />
+                        <br />
+                        <font color="#605403">Or use Version 2 that returns the same result.</font><br />
+                        <br />
+                        Version 2 "expert"
+                        <br />
+                        <div id="csscode2">
+                        </div>
+                        <span id="i2"></span>
+                    </div>
+                </fieldset>
+            </span></span><span id="zonetext1"></span><span id="zonetext2"></span>
+        </div>
+      
+        <script type="text/javascript">            function init_page() { setTimeout("load_c()", 1000); } function load_c() { document.getElementById('myInput2').value = ""; document.getElementById('myInput3').value = ""; } init_page();</script>
+    </div>
+</body>
+</html>

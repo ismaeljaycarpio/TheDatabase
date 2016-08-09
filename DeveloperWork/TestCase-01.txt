@@ -1,0 +1,11 @@
+﻿
+
+
+#
+
+DECLARE @X INT
+EXEC ets_User_GetSorted 'Username',0,5,@X
+PRINT @X
+
+#
+

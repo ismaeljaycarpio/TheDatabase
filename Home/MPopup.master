@@ -1,0 +1,44 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MPopup.master.cs" Inherits="Home_MPopup" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+
+         <meta name="google" content="notranslate">
+    <meta http-equiv="Content-Language" content="en">
+
+                          <link href="~/App_Themes/Default/StyleSheet.css" rel="stylesheet" type="text/css" />
+
+     <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+
+<body style="background-image:none; background-color:#ffffff;">
+    <script type="text/javascript" src="<%=ResolveUrl("~/script/jquery.js")%>"></script>
+    
+    <form id="form1" runat="server">
+    <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true">
+    </asp:ScriptManager>
+    <div>
+        <table>
+            <tr style="text-align: left;">
+                <td style="text-align: left;">
+                    <div id="Content" >
+                        <asp:ContentPlaceHolder ID="HomeContentPlaceHolder" runat="server">
+
+
+
+                        </asp:ContentPlaceHolder>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    </form>
+</body>
+
+
+</html>
