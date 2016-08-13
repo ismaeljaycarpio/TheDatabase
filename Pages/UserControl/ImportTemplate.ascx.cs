@@ -36,7 +36,7 @@ public partial class Pages_UserControl_ImportTemplate : System.Web.UI.UserContro
                 null,
                 null,
                 int.Parse(Session["AccountID"].ToString()),
-                null, null, true,
+                null, null, null,
                 "st.TableName", "ASC",
                 null, null, ref  iTN, Session["STs"].ToString());
 

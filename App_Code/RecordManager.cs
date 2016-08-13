@@ -14295,14 +14295,17 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
         string strConW = "";
         if (theColumn.ValidationOnWarning != "")
         {
-            strBody = strBody.Replace("[WarningIf]", theColumn.ValidationOnWarning);
+            strConW = Common.GetFromulaMsg("", theColumn.DisplayName, theColumn.ValidationOnWarning);
+            //strBody = strBody.Replace("[WarningIf]", theColumn.ValidationOnWarning);
         }
         else
         {
             strConW = UploadWorld.Condition_GetFormulaHTMLTable(theColumn, "W", "");
 
-            strBody = strBody.Replace("[WarningIf]", strConW);
+          
         }
+
+        strBody = strBody.Replace("[WarningIf]", strConW);
         strEmailFullBody = strEmailFullBody + "</br>" + strBody;
       
 
@@ -14315,16 +14318,16 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
         strBody = strBody.Replace("[Record]", strClickHere);
         strBody = strBody.Replace("[Field]", theColumn.DisplayName);
         strBody = strBody.Replace("[Value]", strValue);
-
+        strBody = strBody.Replace("[WarningIf]", strConW);
         
-        if (theColumn.ValidationOnWarning != "")
-        {
-            strBody = strBody.Replace("[WarningIf]", theColumn.ValidationOnWarning);
-        }
-        else
-        {
-            strBody = strBody.Replace("[WarningIf]", strConW);
-        }
+        //if (theColumn.ValidationOnWarning != "")
+        //{
+        //    strBody = strBody.Replace("[WarningIf]", theColumn.ValidationOnWarning);
+        //}
+        //else
+        //{
+        //    strBody = strBody.Replace("[WarningIf]", strConW);
+        //}
 
 
         strSMSFullBody = strSMSFullBody + "</br>" + strBody;
@@ -14367,7 +14370,8 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
         string strConE = "";
         if (theColumn.ValidationOnExceedance != "")
         {
-            strBody = strBody.Replace("[ExceedanceIf]", theColumn.ValidationOnExceedance);
+            strConE = Common.GetFromulaMsg("", theColumn.DisplayName, theColumn.ValidationOnExceedance);
+            //strBody = strBody.Replace("[ExceedanceIf]",Common.GetFromulaMsg("e",theColumn.DisplayName, theColumn.ValidationOnExceedance));
         }
         else
         {
@@ -14375,9 +14379,9 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
             
              strConE = UploadWorld.Condition_GetFormulaHTMLTable(theColumn,  "E", "");          
             
-            strBody = strBody.Replace("[ExceedanceIf]", strConE);
+           
         }
-
+        strBody = strBody.Replace("[ExceedanceIf]", strConE);
         strEmailFullBody = strEmailFullBody + "</br>" + strBody;
 
 
@@ -14390,15 +14394,7 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
         strBody = strBody.Replace("[Record]", strClickHere);
         strBody = strBody.Replace("[Field]", theColumn.DisplayName);
         strBody = strBody.Replace("[Value]", strValue);
-        if (theColumn.ValidationOnExceedance != "")
-        {
-            strBody = strBody.Replace("[ExceedanceIf]", theColumn.ValidationOnExceedance);
-        }
-        else
-        {
-            //it must be conditions           
-            strBody = strBody.Replace("[ExceedanceIf]", strConE);
-        }
+        strBody = strBody.Replace("[ExceedanceIf]", strConE);
 
         strSMSFullBody = strSMSFullBody + "</br>" + strBody;
         
@@ -14434,28 +14430,22 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
         strBody = strBody.Replace("[Field]", theColumn.DisplayName);
         strBody = strBody.Replace("[NoOfRecords]", dNoOfRecords.ToString());
         strBody = strBody.Replace("[NoOfRows]", dNoOfRecords.ToString());
-        
+        string strConW = "";
         if (theColumn.ValidationOnWarning != "")
         {
-            strBody = strBody.Replace("[WarningIf]", theColumn.ValidationOnWarning);
+            //strBody = strBody.Replace("[WarningIf]", theColumn.ValidationOnWarning);
+            strConW = Common.GetFromulaMsg("", theColumn.DisplayName, theColumn.ValidationOnWarning);
         }
         else
         {
             //it must be conditions
-            string strConW = UploadWorld.Condition_GetFormulaHTMLTable(theColumn, "W", "");
+            strConW = UploadWorld.Condition_GetFormulaHTMLTable(theColumn, "W", "");
 
-            if (strConW == "")
-            {
-                strBody = strBody.Replace("[WarningIf]", "");
-            }
-            else
-            {
-                strBody = strBody.Replace("[WarningIf]", strConW);
-            }
+           
 
         }
 
-
+        strBody = strBody.Replace("[WarningIf]", strConW);
         //MailMessage msg = new MailMessage();
         //msg.From = new MailAddress(strEmail);
 
@@ -14628,27 +14618,29 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
         strBody = strBody.Replace("[Field]", theColumn.DisplayName);
         strBody = strBody.Replace("[NoOfRecords]", dNoOfRecords.ToString());
         strBody = strBody.Replace("[NoOfRows]", dNoOfRecords.ToString());
-
+        string strConE = "";
         if (theColumn.ValidationOnExceedance != "")
         {
-            strBody = strBody.Replace("[ExceedanceIf]", theColumn.ValidationOnExceedance);
+            //strBody = strBody.Replace("[ExceedanceIf]", theColumn.ValidationOnExceedance);
+            strConE = Common.GetFromulaMsg("", theColumn.DisplayName, theColumn.ValidationOnExceedance);
         }
         else
         {
             //it must be conditions
-            string strConE = UploadWorld.Condition_GetFormulaHTMLTable(theColumn, "E", "");
+             strConE = UploadWorld.Condition_GetFormulaHTMLTable(theColumn, "E", "");
 
-            if (strConE=="")
-            {
-                strBody = strBody.Replace("[ExceedanceIf]", "");
-            }
-            else
-            {
-                strBody = strBody.Replace("[ExceedanceIf]", strConE);
-            }
+            //if (strConE=="")
+            //{
+            //    strBody = strBody.Replace("[ExceedanceIf]", "");
+            //}
+            //else
+            //{
+            //    strBody = strBody.Replace("[ExceedanceIf]", strConE);
+            //}
             
         }
 
+        strBody = strBody.Replace("[ExceedanceIf]", strConE);
 
         string strSubject = "";
         if (IsCalculationChanged)
@@ -16361,27 +16353,22 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
         strBody = strBody.Replace("[Field]", theColumn.DisplayName);
         strBody = strBody.Replace("[NoOfRecords]", dNoOfRecords.ToString());
         strBody = strBody.Replace("[NoOfRows]", dNoOfRecords.ToString());
+        string strConV = "";
         if (theColumn.ValidationOnEntry != "")
         {
-            strBody = strBody.Replace("[ValidIf]", theColumn.ValidationOnEntry);
+            //strBody = strBody.Replace("[ValidIf]", theColumn.ValidationOnEntry);
+            strConV = Common.GetFromulaMsg("", theColumn.DisplayName, theColumn.ValidationOnEntry);
         }
         else
         {
             //it must be conditions
-            string strConV = UploadWorld.Condition_GetFormulaHTMLTable(theColumn, "V", "");
+            strConV = UploadWorld.Condition_GetFormulaHTMLTable(theColumn, "V", "");
 
-            if (strConV == "")
-            {
-                strBody = strBody.Replace("[ValidIf]", "");
-            }
-            else
-            {
-                strBody = strBody.Replace("[ValidIf]", strConV);
-            }
+            
 
         }
 
-
+        strBody = strBody.Replace("[ValidIf]", strConV);
         //MailMessage msg = new MailMessage();
         //msg.From = new MailAddress(strEmail);
         string strSubject = "";

@@ -562,254 +562,257 @@ FROM         [Table] INNER JOIN
             }
         }
 
-        if(_bGodUser)
+        if (_bGodUser)
         {
             _bIsAccountHolder = true;
         }
 
-        string strFancy = @" $(function () {
-            $("".validationlink"").fancybox({
-                scrolling: 'auto',
-                type: 'iframe',
-                width: 700,
-                height: 650,
-                titleShow: false
-            });
-        });
+        string strFancy = @"
 
-
-            $(function () {
-            $("".optionimgelink"").fancybox({
-                scrolling: 'auto',
-                type: 'iframe',
-                width: 700,
-                height: 650,
-                titleShow: false
-            });
-        });
-
-          $(function () {
-            $(""#hlDDEdit"").fancybox({
-                scrolling: 'auto',
-                type: 'iframe',
-                width: 600,
-                height: 300,
-                titleShow: false
-            });
-        });
-
-
-          $(function () {
-            $(""#hlEditMappopup"").fancybox({
-                scrolling: 'auto',
-                type: 'iframe',
-                width: 800,
-                height: 600,
-                titleShow: false
-            });
-        });
-
-        $(function () {
-            $(""#hlReminders"").fancybox({
-                scrolling: 'auto',
-                type: 'iframe',
-                width: 900,
-                height: 800,
-                titleShow: false,
-                 onClosed : function(){
-                    //$('#btnRefreshRminder').trigger('click');                    
-                    var d = new Date();
-                $.ajax({
-                    
-                    url: '../../GetLocations.aspx?Reminder=yes&t=' + d,
-                    dataType: 'json',
-                    success: function (res) {
-                        if(res>0)
-                        {
-                        document.getElementById('hlReminders').innerHTML='Reminders('+ res+')';
-                        }
-                        else
-                        {
-                        document.getElementById('hlReminders').innerHTML='Reminders';
-                        }
-                        
-                    },
-                    error: function (xhr, err) {
-                       //                    
-                    }
-                });
-
-
-                }
-            });
-        });
-
-
-        $(function () {
-            $(""#hlValidConditions"").fancybox({
-                scrolling: 'auto',
-                type: 'iframe',
-                width: 900,
-                height: 800,
-                titleShow: false,
-                 onClosed : function(){
-                    var d = new Date();
-                    $.ajax({                        
-                          url: '../../GetLocations.aspx?Conditions=yes&ConditionType=V&ColumnID=" + _qsColumnID + @"&t=' + d,
-                        dataType: 'json',
-                        success: function (res) {
-                             var chkValidConditions=document.getElementById('chkValidConditions');
-                            if(res>0)
-                            {
-                                 document.getElementById('hlValidConditions').innerHTML='Conditions('+ res+')';
-                                chkValidConditions.checked=true;
-                                   var chkValidFormula = document.getElementById('chkValidFormula');
-                                    if (chkValidFormula != null)
-                                        chkValidFormula.checked = false;
-                            }
-                            else
-                            {
-                                 document.getElementById('hlValidConditions').innerHTML='Conditions';
-                                chkValidConditions.checked=false;
-                            }
-                            //alert(res);
-                        }
+        $(document).ready(function () {
+                    $(function () {
+                        $("".validationlink"").fancybox({
+                            scrolling: 'auto',
+                            type: 'iframe',
+                            width: 700,
+                            height: 650,
+                            titleShow: false
+                        });
                     });
 
 
-                }
-            });
-        });
+                        $(function () {
+                        $("".optionimgelink"").fancybox({
+                            scrolling: 'auto',
+                            type: 'iframe',
+                            width: 700,
+                            height: 650,
+                            titleShow: false
+                        });
+                    });
+
+                      $(function () {
+                        $(""#hlDDEdit"").fancybox({
+                            scrolling: 'auto',
+                            type: 'iframe',
+                            width: 600,
+                            height: 300,
+                            titleShow: false
+                        });
+                    });
 
 
-    $(function () {
-            $(""#hlWarningConditions"").fancybox({
-                scrolling: 'auto',
-                type: 'iframe',
-                width: 900,
-                height: 800,
-                titleShow: false,
-                 onClosed : function(){
-                    var d = new Date();
-                    $.ajax({
-                    url: '../../GetLocations.aspx?Conditions=yes&ConditionType=W&ColumnID=" + _qsColumnID + @"&t=' + d,
-                    dataType: 'json',
-                    success: function (res) {
-                         var chkWarningConditions=document.getElementById('chkWarningConditions');
-                        if(res>0)
-                        {
-                            chkWarningConditions.checked=true;
-                             document.getElementById('hlWarningConditions').innerHTML='Conditions('+ res+')';
-                               
-                                   var chkWarningFormula = document.getElementById('chkWarningFormula');
-                                    if (chkWarningFormula != null)
-                                        chkWarningFormula.checked = false;
-                        }
-                        else
-                        {
-                            document.getElementById('hlWarningConditions').innerHTML='Conditions';
-                            chkWarningConditions.checked=false;
-                        }
+                      $(function () {
+                        $(""#hlEditMappopup"").fancybox({
+                            scrolling: 'auto',
+                            type: 'iframe',
+                            width: 800,
+                            height: 600,
+                            titleShow: false
+                        });
+                    });
+
+                    $(function () {
+                        $(""#hlReminders"").fancybox({
+                            scrolling: 'auto',
+                            type: 'iframe',
+                            width: 900,
+                            height: 800,
+                            titleShow: false,
+                             onClosed : function(){
+                                //$('#btnRefreshRminder').trigger('click');                    
+                                var d = new Date();
+                            $.ajax({
+                    
+                                url: '../../GetLocations.aspx?Reminder=yes&t=' + d,
+                                dataType: 'json',
+                                success: function (res) {
+                                    if(res>0)
+                                    {
+                                    document.getElementById('hlReminders').innerHTML='Reminders('+ res+')';
+                                    }
+                                    else
+                                    {
+                                    document.getElementById('hlReminders').innerHTML='Reminders';
+                                    }
                         
-                    },
-                    error: function (xhr, err) {
-                       //                    
-                    }
-                });
+                                },
+                                error: function (xhr, err) {
+                                   //                    
+                                }
+                            });
 
 
-                }
-            });
-        });
+                            }
+                        });
+                    });
 
- $(function () {
-            $(""#hlExceedanceConditions"").fancybox({
-                scrolling: 'auto',
-                type: 'iframe',
-                width: 900,
-                height: 800,
-                titleShow: false,
-                 onClosed : function(){
-                    var d = new Date();
-                        $.ajax({
-                    url: '../../GetLocations.aspx?Conditions=yes&ConditionType=E&ColumnID=" + _qsColumnID + @"&t=' + d,
-                    dataType: 'json',
-                    success: function (res) {
-                         var chkExceedanceConditions=document.getElementById('chkExceedanceConditions');
-                        if(res>0)
-                        {
-                            chkExceedanceConditions.checked=true;
-                             document.getElementById('hlExceedanceConditions').innerHTML='Conditions('+ res+')';
+
+                    $(function () {
+                        $(""#hlValidConditions"").fancybox({
+                            scrolling: 'auto',
+                            type: 'iframe',
+                            width: 900,
+                            height: 800,
+                            titleShow: false,
+                             onClosed : function(){
+                                var d = new Date();
+                                $.ajax({                        
+                                      url: '../../GetLocations.aspx?Conditions=yes&ConditionType=V&ColumnID=" + _qsColumnID + @"&t=' + d,
+                                    dataType: 'json',
+                                    success: function (res) {
+                                         var chkValidConditions=document.getElementById('chkValidConditions');
+                                        if(res>0)
+                                        {
+                                             document.getElementById('hlValidConditions').innerHTML='Conditions('+ res+')';
+                                            chkValidConditions.checked=true;
+                                               var chkValidFormula = document.getElementById('chkValidFormula');
+                                                if (chkValidFormula != null)
+                                                    chkValidFormula.checked = false;
+                                        }
+                                        else
+                                        {
+                                             document.getElementById('hlValidConditions').innerHTML='Conditions';
+                                            chkValidConditions.checked=false;
+                                        }
+                                        //alert(res);
+                                    }
+                                });
+
+
+                            }
+                        });
+                    });
+
+
+                $(function () {
+                        $(""#hlWarningConditions"").fancybox({
+                            scrolling: 'auto',
+                            type: 'iframe',
+                            width: 900,
+                            height: 800,
+                            titleShow: false,
+                             onClosed : function(){
+                                var d = new Date();
+                                $.ajax({
+                                url: '../../GetLocations.aspx?Conditions=yes&ConditionType=W&ColumnID=" + _qsColumnID + @"&t=' + d,
+                                dataType: 'json',
+                                success: function (res) {
+                                     var chkWarningConditions=document.getElementById('chkWarningConditions');
+                                    if(res>0)
+                                    {
+                                        chkWarningConditions.checked=true;
+                                         document.getElementById('hlWarningConditions').innerHTML='Conditions('+ res+')';
                                
-                                   var chkExceedanceFormula = document.getElementById('chkExceedanceFormula');
-                                    if (chkExceedanceFormula != null)
-                                        chkExceedanceFormula.checked = false;
-                        }
-                        else
-                        {
-                            chkExceedanceConditions.checked=false;
-                             document.getElementById('hlExceedanceConditions').innerHTML='Conditions';
-                        }
+                                               var chkWarningFormula = document.getElementById('chkWarningFormula');
+                                                if (chkWarningFormula != null)
+                                                    chkWarningFormula.checked = false;
+                                    }
+                                    else
+                                    {
+                                        document.getElementById('hlWarningConditions').innerHTML='Conditions';
+                                        chkWarningConditions.checked=false;
+                                    }
                         
-                    },
-                    error: function (xhr, err) {
-                       //                    
-                    }
-                });
+                                },
+                                error: function (xhr, err) {
+                                   //                    
+                                }
+                            });
 
 
-                }
-            });
-        });
-        $(function () {
-            $("".calculationlink"").fancybox({
-                scrolling: 'auto',
-                type: 'iframe',
-                width: 600,
-                height: 550,
-                titleShow: false
-            });
-        });
+                            }
+                        });
+                    });
 
-        $(function () {
-            $("".popuplink"").fancybox({
-                scrolling: 'auto',
-                type: 'iframe',
-                width: 600,
-                height: 650,
-                titleShow: false
-            });
-        });
+                 $(function () {
+                            $(""#hlExceedanceConditions"").fancybox({
+                                scrolling: 'auto',
+                                type: 'iframe',
+                                width: 900,
+                                height: 800,
+                                titleShow: false,
+                                 onClosed : function(){
+                                    var d = new Date();
+                                        $.ajax({
+                                    url: '../../GetLocations.aspx?Conditions=yes&ConditionType=E&ColumnID=" + _qsColumnID + @"&t=' + d,
+                                    dataType: 'json',
+                                    success: function (res) {
+                                         var chkExceedanceConditions=document.getElementById('chkExceedanceConditions');
+                                        if(res>0)
+                                        {
+                                            chkExceedanceConditions.checked=true;
+                                             document.getElementById('hlExceedanceConditions').innerHTML='Conditions('+ res+')';
+                               
+                                                   var chkExceedanceFormula = document.getElementById('chkExceedanceFormula');
+                                                    if (chkExceedanceFormula != null)
+                                                        chkExceedanceFormula.checked = false;
+                                        }
+                                        else
+                                        {
+                                            chkExceedanceConditions.checked=false;
+                                             document.getElementById('hlExceedanceConditions').innerHTML='Conditions';
+                                        }
+                        
+                                    },
+                                    error: function (xhr, err) {
+                                       //                    
+                                    }
+                                });
 
-         $(function () {
-            $("".showlink"").fancybox({
-                scrolling: 'auto',
-                type: 'iframe',
-                width: 900,
-                height: 500,
-                titleShow: false
-            });
-        });
 
-        $(function () {
-            $("".colourlink"").fancybox({
-                scrolling: 'auto',
-                type: 'iframe',
-                width: 900,
-                height: 500,
-                titleShow: false
-            });
-        });
+                                }
+                            });
+                        });
+                        $(function () {
+                            $("".calculationlink"").fancybox({
+                                scrolling: 'auto',
+                                type: 'iframe',
+                                width: 600,
+                                height: 550,
+                                titleShow: false
+                            });
+                        });
 
- $(function () {
-            $("".showfilteredlink"").fancybox({
-                scrolling: 'auto',
-                type: 'iframe',
-                width: 650,
-                height: 350,
-                titleShow: false
-            });
-        });
+                        $(function () {
+                            $("".popuplink"").fancybox({
+                                scrolling: 'auto',
+                                type: 'iframe',
+                                width: 600,
+                                height: 650,
+                                titleShow: false
+                            });
+                        });
+
+                         $(function () {
+                            $("".showlink"").fancybox({
+                                scrolling: 'auto',
+                                type: 'iframe',
+                                width: 900,
+                                height: 500,
+                                titleShow: false
+                            });
+                        });
+
+                        $(function () {
+                            $("".colourlink"").fancybox({
+                                scrolling: 'auto',
+                                type: 'iframe',
+                                width: 900,
+                                height: 500,
+                                titleShow: false
+                            });
+                        });
+
+                     $(function () {
+                                $("".showfilteredlink"").fancybox({
+                                    scrolling: 'auto',
+                                    type: 'iframe',
+                                    width: 650,
+                                    height: 350,
+                                    titleShow: false
+                                });
+                            });
 
 
                 $(function () {
@@ -836,44 +839,59 @@ FROM         [Table] INNER JOIN
                             });
                         });               
 
-             document.getElementById('ctl00_HomeContentPlaceHolder_hlExceedanceAdvanced').href = '../Help/FormulaTest.aspx?type=exceedance&formula='
-                + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationOnExceedance').value)
-                + '&min=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtMinExceedance').value)
-                + '&max=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtMaxExceedance').value)
-                + '&Tableid=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_hfTableID').value)
-                + '&Columnid=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_hfColumnID').value); 
+                        document.getElementById('hlFiltered').href = 'Filtered.aspx?hfFilterOperator=' + encodeURIComponent(document.getElementById('hfFilterOperator').value)
+                            + '&hfFilterParentColumnID=' + encodeURIComponent(document.getElementById('hfFilterParentColumnID').value) 
+                            + '&hfFilterOtherColumnID=' + encodeURIComponent(document.getElementById('hfFilterOtherColumnID').value) 
+                            + '&hfFilterValue=' + encodeURIComponent(document.getElementById('hfFilterValue').value) + '&ParentTableID=' 
+                            + encodeURIComponent(document.getElementById('hfParentTableID').value) + '&Tableid=' 
+                            + document.getElementById('ctl00_HomeContentPlaceHolder_hfTableID').value 
+                            + '&Columnid=' + document.getElementById('ctl00_HomeContentPlaceHolder_hfColumnID').value;
 
-             document.getElementById('ctl00_HomeContentPlaceHolder_hlWarningAdvanced').href = '../Help/FormulaTest.aspx?type=warning&formula='
-                + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationOnWarning').value)
-                + '&min=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtMinWaring').value)
-                + '&max=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtMaxWrning').value)
-                + '&Tableid=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_hfTableID').value)
-                + '&Columnid=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_hfColumnID').value);   
+                        document.getElementById('hlDDEdit').href = '../Help/TableColumn.aspx?formula=' + encodeURIComponent(document.getElementById('hfDisplayColumnsFormula').value) 
+                            + '&Tableid=' + document.getElementById('hf_ddlDDTable').value; // $('#ddlDDTable').val();
 
-             document.getElementById('ctl00_HomeContentPlaceHolder_hlValidAdvanced').href = '../Help/FormulaTest.aspx?type=valid&formula='
-                + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationEntry').value)
-                + '&min=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtMinValid').value)
-                + '&max=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtMaxValid').value)
-                + '&Tableid=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_hfTableID').value)
-                + '&Columnid=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_hfColumnID').value);     
+                        document.getElementById('ctl00_HomeContentPlaceHolder_hlCalculationEdit').href = '../Help/CalculationTest.aspx?type=calculation&formula=' 
+                            + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtCalculation').value) 
+                            + '&Tableid=' + document.getElementById('ctl00_HomeContentPlaceHolder_hfTableID').value + '&Columnid=' 
+                            + document.getElementById('ctl00_HomeContentPlaceHolder_hfColumnID').value;
+                       document.getElementById('hfCalculationType').value = document.getElementById('ctl00_HomeContentPlaceHolder_hlCalculationEdit').href;
 
-            document.getElementById('ctl00_HomeContentPlaceHolder_hlExceedanceEdit').href = '../Help/FormulaTest.aspx?type=exceedance&min=&max=&formula=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationOnExceedance').value)
+
+                     document.getElementById('ctl00_HomeContentPlaceHolder_hlExceedanceAdvanced').href = '../Help/FormulaTest.aspx?type=exceedance&formula='
+                        + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationOnExceedance').value)
+                        + '&min=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtMinExceedance').value)
+                        + '&max=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtMaxExceedance').value)
                         + '&Tableid=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_hfTableID').value)
-                        + '&Columnid=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_hfColumnID').value);
-           document.getElementById('ctl00_HomeContentPlaceHolder_hlWarningEdit').href = '../Help/FormulaTest.aspx?type=warning&min=&max=&formula=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationOnWarning').value)
+                        + '&Columnid=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_hfColumnID').value); 
+
+                     document.getElementById('ctl00_HomeContentPlaceHolder_hlWarningAdvanced').href = '../Help/FormulaTest.aspx?type=warning&formula='
+                        + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationOnWarning').value)
+                        + '&min=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtMinWaring').value)
+                        + '&max=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtMaxWrning').value)
                         + '&Tableid=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_hfTableID').value)
-                         + '&Columnid=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_hfColumnID').value);
-            document.getElementById('ctl00_HomeContentPlaceHolder_hlValidEdit').href = '../Help/FormulaTest.aspx?type=valid&formula=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationEntry').value)
+                        + '&Columnid=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_hfColumnID').value);   
+
+                     document.getElementById('ctl00_HomeContentPlaceHolder_hlValidAdvanced').href = '../Help/FormulaTest.aspx?type=valid&formula='
+                        + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationEntry').value)
+                        + '&min=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtMinValid').value)
+                        + '&max=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtMaxValid').value)
                         + '&Tableid=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_hfTableID').value)
-                        + '&Columnid=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_hfColumnID').value);
-            document.getElementById('ctl00_HomeContentPlaceHolder_hlCalculationEdit').href = '../Help/CalculationTest.aspx?type=calculation&formula=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtCalculation').value) + ""&Tableid="" + document.getElementById(""ctl00_HomeContentPlaceHolder_hfTableID"").value + ""&Columnid="" + document.getElementById(""ctl00_HomeContentPlaceHolder_hfColumnID"").value;";
+                        + '&Columnid=' + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_hfColumnID').value);     
+
+                    document.getElementById('ctl00_HomeContentPlaceHolder_hlCalculationEdit').href = '../Help/CalculationTest.aspx?type=calculation&formula=' 
+                        + encodeURIComponent(document.getElementById('ctl00_HomeContentPlaceHolder_txtCalculation').value) + ""&Tableid="" 
+                        + document.getElementById(""ctl00_HomeContentPlaceHolder_hfTableID"").value + ""&Columnid="" 
+                        + document.getElementById(""ctl00_HomeContentPlaceHolder_hfColumnID"").value;
+
+  });
+";
 
         //ScriptManager.RegisterStartupScript(this, this.GetType(), "FancyBox", strFancy, true);
 
 
 
         string strMaxHeight = "50";
-        
+
         string strFilePath = _strFilesLocation + "/UserFiles/AppFiles/";
         string strScriptPath = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Handler.ashx";
         string strFileExtension = "*.jpg;*.gif;*.png";
@@ -883,7 +901,7 @@ FROM         [Table] INNER JOIN
         + " <img style=\"padding-bottom:7px; max-height:"
         + strMaxHeight + "px;\" id=\"img" + hfButtonValue.ID + "\"  />" + "</a><br/>";
 
-        string strJSPostBack =  @" $(document).ready(function () {
+        string strJSPostBack = @" $(document).ready(function () {
                                         $('#" + fuButtonValue.ClientID + @"').uploadify({
                                             'uploader': '../Document/uploadify/uploadify.swf',
                                             'script': '" + strScriptPath + @"',
@@ -1125,7 +1143,22 @@ FROM         [Table] INNER JOIN
             _bShowExceedances = true;
             hfShowExceedance.Value = "yes";
         }
+        if (!IsPostBack && !Common.HaveAccess(Session["roletype"].ToString(), "1"))
+        {
+            string strHideFormula = SystemData.SystemOption_ValueByKey_Account("Hide Formula", _theTable.AccountID, _theTable.TableID);
 
+            if (strHideFormula != "" && strHideFormula.ToLower() == "yes")
+            {
+                hfHideFormula.Value = "yes";
+            }
+            string strHideConditions = SystemData.SystemOption_ValueByKey_Account("Hide Conditions", _theTable.AccountID, _theTable.TableID);
+
+            if (strHideConditions != "" && strHideConditions.ToLower() == "yes")
+            {
+                hfHideConditions.Value = "yes";
+            }
+        }
+        
         string strTitle = "Field Detail";
 
         switch (_strActionMode.ToLower())
@@ -1245,8 +1278,8 @@ FROM         [Table] INNER JOIN
 
 
         hlValidConditions.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/Condition.aspx?ConditionType=V&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&ColumnID=" + _qsColumnID;
-        hlWarningConditions.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/Condition.aspx?ConditionType=W&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&ColumnID=" + _qsColumnID;
-        hlExceedanceConditions.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/Condition.aspx?ConditionType=E&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&ColumnID=" + _qsColumnID;
+        hlWarningConditions.NavigateUrl = "~/Pages/Help/Condition.aspx?ConditionType=W&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&ColumnID=" + _qsColumnID;
+        hlExceedanceConditions.NavigateUrl = "~/Pages/Help/Condition.aspx?ConditionType=E&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&ColumnID=" + _qsColumnID;
 
 
         //}
@@ -1498,7 +1531,7 @@ FROM         [Table] INNER JOIN
     protected void PopulateShowWhen()
     {
 
-        DataTable dtTemp = RecordManager.dbg_ShowWhen_Select(int.Parse(_qsColumnID),null);
+        DataTable dtTemp = RecordManager.dbg_ShowWhen_Select(int.Parse(_qsColumnID), null);
 
         if (dtTemp.Rows.Count == 0)
         {
@@ -1713,7 +1746,7 @@ FROM         [Table] INNER JOIN
         {
             chkSummaryPage.Checked = true;
             txtDisplayTextSummary.Text = theColumn.DisplayTextSummary;
-            txtViewName.Text = "";
+            //txtViewName.Text = "";
 
         }
 
@@ -2492,10 +2525,10 @@ FROM         [Table] INNER JOIN
                 txtImageHeightDetail.Text = theColumn.TextHeight.ToString();
         }
 
-        if (theColumn.ShowTotal != null)
-        {
-            chkShowTotal.Checked = (bool)theColumn.ShowTotal;
-        }
+        //if (theColumn.ShowTotal != null)
+        //{
+        //    chkShowTotal.Checked = (bool)theColumn.ShowTotal;
+        //}
         if (theColumn.IsRound != null)
         {
             chkRound.Checked = (bool)theColumn.IsRound;
@@ -2528,14 +2561,14 @@ FROM         [Table] INNER JOIN
         }
 
 
-        if (theColumn.Alignment == "")
-        {
-            ddlAlignment.Text = "-1";
-        }
-        else
-        {
-            ddlAlignment.Text = theColumn.Alignment;
-        }
+        //if (theColumn.Alignment == "")
+        //{
+        //    ddlAlignment.Text = "-1";
+        //}
+        //else
+        //{
+        //    ddlAlignment.Text = theColumn.Alignment;
+        //}
 
         //if (theColumn.DropdownValues != "")
         //{
@@ -2577,7 +2610,7 @@ FROM         [Table] INNER JOIN
                             hfButtonValue.Value = theButtonInfo.ImageFullPath;
 
 
-                            string strMaxHeight = "50";                            
+                            string strMaxHeight = "50";
                             string strFilePath = _strFilesLocation + "/UserFiles/AppFiles/"
                                     + theButtonInfo.ImageFullPath;
                             lblButtonValue.Text = "<a target='_blank' href='" + strFilePath + "'>"
@@ -2587,7 +2620,7 @@ FROM         [Table] INNER JOIN
                             lblButtonValue.Text = "<img title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + hfButtonValue.ID + "\" src=\"" + "http://" + Request.Url.Authority + Request.ApplicationPath
                               + "/App_Themes/Default/Images/icon_delete.gif\" />" + lblButtonValue.Text;
 
-                           // hfButtonValue.Value = theButtonInfo.ImageFullPath;
+                            // hfButtonValue.Value = theButtonInfo.ImageFullPath;
 
                             string strTempJS = @"  document.getElementById('dimg" + hfButtonValue.ID + @"').addEventListener('click', function (e) {
                                                      document.getElementById('" + hfButtonValue.ID + @"').value='';
@@ -2633,11 +2666,11 @@ FROM         [Table] INNER JOIN
 
             if (Request.QueryString["SearchCriteria"] != null)
             {
-                hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordColumnDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&typemode=" + Request.QueryString["typemode"] + "&MenuID=" + Request.QueryString["MenuID"] + "&ColumnID=" + Cryptography.Encrypt(theColumn.ColumnID.ToString()) + "&SearchCriteria2=" + Request.QueryString["SearchCriteria2"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"];
+                hlEditLink.NavigateUrl = "~/Pages/Record/RecordColumnDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&typemode=" + Request.QueryString["typemode"] + "&MenuID=" + Request.QueryString["MenuID"] + "&ColumnID=" + Cryptography.Encrypt(theColumn.ColumnID.ToString()) + "&SearchCriteria2=" + Request.QueryString["SearchCriteria2"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"];
             }
             else
             {
-                hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordColumnDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&typemode=" + Request.QueryString["typemode"] + "&MenuID=" + Request.QueryString["MenuID"] + "&ColumnID=" + Cryptography.Encrypt(theColumn.ColumnID.ToString()) + "&SearchCriteria2=" + Request.QueryString["SearchCriteria2"];
+                hlEditLink.NavigateUrl = "~/Pages/Record/RecordColumnDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&typemode=" + Request.QueryString["typemode"] + "&MenuID=" + Request.QueryString["MenuID"] + "&ColumnID=" + Cryptography.Encrypt(theColumn.ColumnID.ToString()) + "&SearchCriteria2=" + Request.QueryString["SearchCriteria2"];
             }
 
             if (Request.QueryString["signup"] != null)
@@ -2697,7 +2730,7 @@ FROM         [Table] INNER JOIN
         {
             chkSummaryPage.Enabled = false;
             txtDisplayTextSummary.Enabled = false;
-            txtViewName.Enabled = false;
+            //txtViewName.Enabled = false;
             chkDetailPage.Enabled = false;
             chkImport.Enabled = false;
             chkExport.Enabled = false;
@@ -2806,7 +2839,7 @@ FROM         [Table] INNER JOIN
             txtTextHeight.Enabled = false;
             txtTextWidth.Enabled = false;
             chkMandatory.Enabled = false;
-            chkShowTotal.Enabled = false;
+            //chkShowTotal.Enabled = false;
             chkIgnoreSymbols.Enabled = false;
             chkCheckUnlikelyValue.Enabled = false;
             //chkDefaultValue.Enabled = false;
@@ -2856,10 +2889,10 @@ FROM         [Table] INNER JOIN
 
         //if (_bIsAccountHolder == false)
         //{
-            //txtColumnName.Enabled = false;
-            //ddlType.Enabled = false;
-            //ddlDDType.Enabled = false;
-            //divDelete.Visible = false;
+        //txtColumnName.Enabled = false;
+        //ddlType.Enabled = false;
+        //ddlDDType.Enabled = false;
+        //divDelete.Visible = false;
         //}
 
 
@@ -3037,7 +3070,7 @@ FROM         [Table] INNER JOIN
         txtTable.Enabled = p_bEnable;
         txtColumnName.Enabled = p_bEnable;
         txtDisplayTextSummary.Enabled = p_bEnable;
-        txtViewName.Enabled = p_bEnable;
+        //txtViewName.Enabled = p_bEnable;
         txtDisplayTextDetail.Enabled = p_bEnable;
         txtGraph.Enabled = p_bEnable;
         txtNameOnExport.Enabled = p_bEnable;
@@ -3087,9 +3120,9 @@ FROM         [Table] INNER JOIN
         }
 
         hlCalculationEdit.Enabled = p_bEnable;
-        hlValidEdit.Enabled = p_bEnable;
-        hlWarningEdit.Enabled = p_bEnable;
-        hlExceedanceEdit.Enabled = p_bEnable;
+        //hlValidEdit.Enabled = p_bEnable;
+        //hlWarningEdit.Enabled = p_bEnable;
+        //hlExceedanceEdit.Enabled = p_bEnable;
 
         txtMaxWrning.Enabled = p_bEnable;
         txtMinWaring.Enabled = p_bEnable;
@@ -3111,12 +3144,12 @@ FROM         [Table] INNER JOIN
             chkCheckUnlikelyValue.Enabled = p_bEnable;
         }
 
-        if (chkShowTotal.Visible)
-        {
-            chkShowTotal.Enabled = p_bEnable;
-        }
+        //if (chkShowTotal.Visible)
+        //{
+        //    chkShowTotal.Enabled = p_bEnable;
+        //}
         txtNotes.Enabled = p_bEnable;
-        ddlAlignment.Enabled = p_bEnable;
+        //ddlAlignment.Enabled = p_bEnable;
         if (chkRound.Visible)
         {
             chkRound.Enabled = p_bEnable;
@@ -4421,7 +4454,7 @@ FROM         [Table] INNER JOIN
                     }
 
 
-                    newColumn.Alignment = ddlAlignment.Text == "-1" ? null : ddlAlignment.Text;
+                    //newColumn.Alignment = ddlAlignment.Text == "-1" ? null : ddlAlignment.Text;
 
 
                     newColumn.DefaultType = ddlDefaultValue.SelectedValue;
@@ -4521,10 +4554,10 @@ FROM         [Table] INNER JOIN
                         if (txtTextWidth.Text != "")
                             newColumn.TextWidth = int.Parse(txtTextWidth.Text);
 
-                        if (chkShowTotal.Checked)
-                        {
-                            newColumn.ShowTotal = true;
-                        }
+                        //if (chkShowTotal.Checked)
+                        //{
+                        //    newColumn.ShowTotal = true;
+                        //}
                         if (chkIgnoreSymbols.Checked)
                         {
                             newColumn.IgnoreSymbols = true;
@@ -4974,7 +5007,7 @@ FROM         [Table] INNER JOIN
                     if (ddlType.Text == "calculation")
                     {
 
-                        newColumn.ShowTotal = chkShowTotal.Checked;
+                        //newColumn.ShowTotal = chkShowTotal.Checked;
 
                         newColumn.TextType = ddlCalculationType.Text;
                         newColumn.RegEx = txtCalFinancialSymbol.Text;
@@ -6081,14 +6114,14 @@ FROM         [Table] INNER JOIN
                             editColumn.TextWidth = null;
                         }
 
-                        if (chkShowTotal.Checked)
-                        {
-                            editColumn.ShowTotal = true;
-                        }
-                        else
-                        {
-                            editColumn.ShowTotal = false;
-                        }
+                        //if (chkShowTotal.Checked)
+                        //{
+                        //    editColumn.ShowTotal = true;
+                        //}
+                        //else
+                        //{
+                        //    editColumn.ShowTotal = false;
+                        //}
 
                         if (chkIgnoreSymbols.Checked)
                         {
@@ -6628,7 +6661,7 @@ FROM         [Table] INNER JOIN
                         //    return;
                         //}
                         ColumnButtonInfo aButtonInfo = new ColumnButtonInfo();
-                        if(chkSPToRun.Checked)
+                        if (chkSPToRun.Checked)
                         {
                             aButtonInfo.SPToRun = txtSPToRun.Text;
                         }
@@ -6636,7 +6669,7 @@ FROM         [Table] INNER JOIN
                         {
                             aButtonInfo.SPToRun = "";
                         }
-                        if(chkButtonOpenLink.Checked)
+                        if (chkButtonOpenLink.Checked)
                         {
                             aButtonInfo.OpenLink = txtButtonOpenLink.Text;
                         }
@@ -6665,7 +6698,7 @@ FROM         [Table] INNER JOIN
 
 
                     editColumn.Notes = txtNotes.Text.Trim();
-                    editColumn.Alignment = ddlAlignment.Text == "-1" ? null : ddlAlignment.Text;
+                    //editColumn.Alignment = ddlAlignment.Text == "-1" ? null : ddlAlignment.Text;
                     editColumn.LastUpdatedUserID = (int)_ObjUser.UserID;
 
                     if (editColumn.ColumnType == "image")
@@ -6691,7 +6724,7 @@ FROM         [Table] INNER JOIN
                     if (editColumn.ColumnType == "calculation")
                     {
                         editColumn.IsRound = chkRound.Checked;
-                        editColumn.ShowTotal = chkShowTotal.Checked;
+                        //editColumn.ShowTotal = chkShowTotal.Checked;
                         editColumn.CheckUnlikelyValue = chkCheckUnlikelyValue.Checked;
 
                         editColumn.TextType = ddlCalculationType.Text;
@@ -6995,7 +7028,7 @@ FROM         [Table] INNER JOIN
 
 
 
-                     
+
                         if (bCalculationChanged)
                         {
                             string strCalOutput = RecordManager.ets_AdjustCalculationFormulaChanges(editColumn, ref strErrorCal);
@@ -7093,11 +7126,11 @@ FROM         [Table] INNER JOIN
     //{
     //    if (Request.QueryString["SearchCriteria2"] != null)
     //    {
-    //        Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Request.QueryString["typemode"] + "&AccountID=" + Request.QueryString["AccountID"] + "&MenuID=" + Request.QueryString["MenuID"] + "&TableID=" + Cryptography.Encrypt(hfTableID.Value) + "&SearchCriteria2=" + Request.QueryString["SearchCriteria2"], false);
+    //        Response.Redirect("~/Pages/Record/TableDetail.aspx?mode=" + Request.QueryString["typemode"] + "&AccountID=" + Request.QueryString["AccountID"] + "&MenuID=" + Request.QueryString["MenuID"] + "&TableID=" + Cryptography.Encrypt(hfTableID.Value) + "&SearchCriteria2=" + Request.QueryString["SearchCriteria2"], false);
     //    }
     //    else
     //    {
-    //        Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Request.QueryString["typemode"] + "&AccountID=" + Request.QueryString["AccountID"] + "&MenuID=" + Request.QueryString["MenuID"] + "&TableID=" + Cryptography.Encrypt(hfTableID.Value), false);
+    //        Response.Redirect("~/Pages/Record/TableDetail.aspx?mode=" + Request.QueryString["typemode"] + "&AccountID=" + Request.QueryString["AccountID"] + "&MenuID=" + Request.QueryString["MenuID"] + "&TableID=" + Cryptography.Encrypt(hfTableID.Value), false);
     //    }
     //}
 

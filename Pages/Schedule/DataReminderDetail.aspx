@@ -180,7 +180,7 @@
                                                                     <ItemStyle Width="10px" HorizontalAlign="Center" />
                                                                     <ItemTemplate>
                                                                         <asp:ImageButton ID="imgbtnDelete" runat="server" ImageUrl="~/App_Themes/Default/Images/delete_s.png"
-                                                                            CommandName="deletetype"  CausesValidation="false" />
+                                                                            CommandName="deletetype"  CausesValidation="false" OnClientClick="return confirm('Are you sure you want to delete selected recipient?');" />
                                                                     </ItemTemplate>
                                                                 </asp:TemplateField>
                                                                 <asp:TemplateField HeaderText="Recipient">

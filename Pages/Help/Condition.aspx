@@ -96,12 +96,12 @@ CodeFile="Condition.aspx.cs" Inherits="Pages_Schedule_Condition" %>
                                         <asp:Label ID="lblCheckValue" runat="server" ></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
-                                   <asp:TemplateField HeaderText="Greater Than" >
+                                   <asp:TemplateField HeaderText="Value Less Than" >
                                         <ItemTemplate>
                                             <asp:Label ID="lblMin" runat="server" ></asp:Label>
                                         </ItemTemplate>
                                     </asp:TemplateField>
-                                     <asp:TemplateField HeaderText="Less Than" >
+                                     <asp:TemplateField HeaderText="Value Greater Than" >
                                         <ItemTemplate>
                                             <asp:Label ID="lblMax" runat="server" ></asp:Label>
                                         </ItemTemplate>
@@ -112,7 +112,7 @@ CodeFile="Condition.aspx.cs" Inherits="Pages_Schedule_Condition" %>
                             <PagerTemplate>
                                 <asp:GridViewPager runat="server" ID="Pager" HideDelete="false" HideAdd="false"
                                     HideAllExport="true" HideEdit="true" HideExcelExport="true" HidePagerGoButton="true"
-                                    HidePageSizeButton="true" 
+                                    HidePageSizeButton="true"  DelConfirmation="Are you sure you want to delete selected condition(s)?" 
                                     OnBindTheGridAgain="Pager_BindTheGridAgain"  OnDeleteAction="Pager_DeleteAction" HideNavigation="true"
                                      HideExport="true" HideFilter="true" HideRefresh="true" HideGo="true" HidePageSize="true"   />
                             </PagerTemplate>

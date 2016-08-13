@@ -304,7 +304,7 @@
                             <PagerTemplate>
                                 <asp:GridViewPager runat="server" ID="Pager" HideDelete="false" HideAdd="false" OnExportForCSV="Pager_OnExportForCSV"
                                     OnApplyFilter="Pager_OnApplyFilter" OnBindTheGridToExport="Pager_BindTheGridToExport" HideFilter="true" 
-                                    HideAllExport="true" HideExport="true"
+                                    HideAllExport="true" HideExport="true"   DelConfirmation="Are you sure you want to delete selected import template(s)?" 
                                     OnBindTheGridAgain="Pager_BindTheGridAgain" OnDeleteAction="Pager_DeleteAction" />
                             </PagerTemplate>
                         </dbg:dbgGridView>

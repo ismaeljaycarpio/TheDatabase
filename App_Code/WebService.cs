@@ -115,8 +115,8 @@ public class WebService : System.Web.Services.WebService {
 
              if (dtSC.Rows[i]["ValidationOnEntry"] != DBNull.Value && dtSC.Rows[i]["ValidationOnEntry"].ToString() != "")
              {
-                 dtSC.Rows[i]["MinValue"] = Common.GetMinVaue(dtSC.Rows[i]["ValidationOnEntry"].ToString());
-                 dtSC.Rows[i]["MaxValue"] = Common.GetMaxVaue(dtSC.Rows[i]["ValidationOnEntry"].ToString());
+                 dtSC.Rows[i]["MinValue"] = Common.GetMinFromFormula(dtSC.Rows[i]["ValidationOnEntry"].ToString());
+                 dtSC.Rows[i]["MaxValue"] = Common.GetMaxFromFormula(dtSC.Rows[i]["ValidationOnEntry"].ToString());
 
              }
          }

@@ -453,7 +453,7 @@
 
                                                 </asp:GridView>
 
-                                                <span style="font-size: 10px; padding-top: 5px;">To ignore tick the checkbox and press Save again</span>
+                                                <%--<span style="font-size: 10px; padding-top: 5px;">To ignore tick the checkbox and press Save again</span>--%>
                                             </div>
                                         </td>
                                         <td valign="top">

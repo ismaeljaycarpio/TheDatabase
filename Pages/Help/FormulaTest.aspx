@@ -11,36 +11,27 @@
         var hfAdvanced = document.getElementById('hfAdvanced')
         if (val == 'valid') {
 
-//            window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationEntry').value = document.getElementById('txtValidation').value;
-//            window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlValidEdit').href = '../Help/FormulaTest.aspx?type=valid&formula=' + encodeURIComponent(document.getElementById('txtValidation').value);
-            //            parent.$.fancybox.close();
-
             if (hfAdvanced.value == 'yes') {
                 window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationEntry').value = document.getElementById('txtValidation').value;
-                window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlValidEdit').href = '../Help/FormulaTest.aspx?type=valid&min=&max=&formula=' +
+                window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlValidAdvanced').href = '../Help/FormulaTest.aspx?type=valid&min=&max=&formula=' +
                     encodeURIComponent(document.getElementById('txtValidation').value) + "&Tableid=" + document.getElementById("ctl00_HomeContentPlaceHolder_hfTableID").value + "&Columnid=" + document.getElementById("ctl00_HomeContentPlaceHolder_hfColumnID").value;
-
+                window.parent.document.getElementById('hfShowValidMinMax').value = 'no';
                 window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_txtMinValid').value = '';
                 window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_txtMaxValid').value = '';
 
                 var x = window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationEntry');
                 x.style.display = 'block';
-
-                x = window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlValidEdit');
+                x = window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlValidAdvanced');
                 x.style.display = 'block';
 
-                x = window.parent.document.getElementById('divValidAdvanced');
+                x = window.parent.document.getElementById('divValidMinMax');
                 x.style.display = 'none';
-                x = window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlValidAdvanced');
-                x.style.display = 'none';
-
-
-               // window.parent.$("#ctl00_HomeContentPlaceHolder_lblValidationEntry").text("Data Valid if");
-
+              
+              
             }
 
             if (hfAdvanced.value == 'no') {
-
+                window.parent.document.getElementById('hfShowValidMinMax').value = 'yes';
                 window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationEntry').value = '';
                 window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlValidAdvanced').href = '../Help/FormulaTest.aspx?type=valid&formula='
                 + '&min=' + encodeURIComponent(document.getElementById('hfMin').value)
@@ -50,18 +41,14 @@
                 window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_txtMaxValid').value = document.getElementById('hfMax').value;
 
                 var x = window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationEntry');
-                x.style.display = 'none';
-                x = window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlValidEdit');
-                x.style.display = 'none';
-                x = window.parent.document.getElementById('divValidAdvanced');
+                x.style.display = 'none';              
+                x = window.parent.document.getElementById('divValidMinMax');
                 x.style.display = 'block';
                 x = window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlValidAdvanced');
-                x.style.display = 'block';
-
-               // window.parent.$("#ctl00_HomeContentPlaceHolder_lblValidationEntry").text("Data Valid Between");
-
+                x.style.display = 'block';              
                
             }
+            //parent.ShowValidMinMax();
             var chk = window.parent.document.getElementById('chkValidFormula');
             chk.checked = true;
             chk = window.parent.document.getElementById('chkValidConditions');
@@ -71,14 +58,11 @@
 
         }
         else if (val == 'warning') {
-//            window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationOnWarning').value = document.getElementById('txtValidation').value;
-//            window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlWarningEdit').href = '../Help/FormulaTest.aspx?type=warning&formula=' + encodeURIComponent(document.getElementById('txtValidation').value);
-            //            parent.$.fancybox.close();
-            
 
             if (hfAdvanced.value == 'yes') {
+                window.parent.document.getElementById('hfShowWarningMinMax').value = 'no';
                 window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationOnWarning').value = document.getElementById('txtValidation').value;
-                window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlWarningEdit').href = '../Help/FormulaTest.aspx?type=warning&min=&max=&formula=' +
+                window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlWarningAdvanced').href = '../Help/FormulaTest.aspx?type=warning&min=&max=&formula=' +
                     encodeURIComponent(document.getElementById('txtValidation').value) + "&Tableid=" + document.getElementById("ctl00_HomeContentPlaceHolder_hfTableID").value + "&Columnid=" + document.getElementById("ctl00_HomeContentPlaceHolder_hfColumnID").value;
 
                 window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_txtMinWaring').value = '';
@@ -89,21 +73,15 @@
                 var x = window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationOnWarning');
                 x.style.display = 'block';
 
-                x = window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlWarningEdit');
-                x.style.display = 'block';
-
-                x = window.parent.document.getElementById('divWrningAdvanced');
+                x = window.parent.document.getElementById('divWarningMinMax');
                 x.style.display = 'none';
                 x = window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlWarningAdvanced');
-                x.style.display = 'none';
-                //window.parent.$("#ctl00_HomeContentPlaceHolder_lblWarningValidation").text("Data Warning if");
-
-               // parent.$.fancybox.close();
-                
+                x.style.display = 'block';
+              
             }
 
             if (hfAdvanced.value == 'no') {
-
+                window.parent.document.getElementById('hfShowWarningMinMax').value = 'yes';
                 window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationOnWarning').value = '';
                 window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlWarningAdvanced').href = '../Help/FormulaTest.aspx?type=warning&formula='
                 + '&min=' + encodeURIComponent(document.getElementById('hfMin').value)
@@ -113,17 +91,14 @@
 
                 var x = window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationOnWarning');
                 x.style.display = 'none';
-                x = window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlWarningEdit');
-                x.style.display = 'none';
-                x = window.parent.document.getElementById('divWrningAdvanced');
+            
+                x = window.parent.document.getElementById('divWarningMinMax');
                 x.style.display = 'block';
                 x = window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlWarningAdvanced');
                 x.style.display = 'block';
-                
-                //window.parent.$("#ctl00_HomeContentPlaceHolder_lblWarningValidation").text("Data Warning if outside the range");
-
-               // parent.$.fancybox.close();
+             
             }
+            //window.parent.ShowWarningMinMax();
             var chk = window.parent.document.getElementById('chkWarningFormula');
             chk.checked = true;
             chk = window.parent.document.getElementById('chkWarningConditions');
@@ -133,8 +108,9 @@
         else
         {
             if (hfAdvanced.value == 'yes') {
+                window.parent.document.getElementById('hfShowExceedanceMinMax').value = 'no';
                 window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationOnExceedance').value = document.getElementById('txtValidation').value;
-                window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlExceedanceEdit').href = '../Help/FormulaTest.aspx?type=Exceedance&min=&max=&formula=' +
+                window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlExceedanceAdvanced').href = '../Help/FormulaTest.aspx?type=Exceedance&min=&max=&formula=' +
                     encodeURIComponent(document.getElementById('txtValidation').value) +  "&Tableid=" + document.getElementById("ctl00_HomeContentPlaceHolder_hfTableID").value + "&Columnid=" + document.getElementById("ctl00_HomeContentPlaceHolder_hfColumnID").value;
 
                 window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_txtMinExceedance').value = '';
@@ -144,22 +120,16 @@
 
                 var x = window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationOnExceedance');
                 x.style.display = 'block';
-
-                x = window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlExceedanceEdit');
-                x.style.display = 'block';
-
-                x = window.parent.document.getElementById('divExceedanceAdvanced');
+                          
+                x = window.parent.document.getElementById('divExceedanceMinMax');
                 x.style.display = 'none';
                 x = window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlExceedanceAdvanced');
-                x.style.display = 'none';
-               // window.parent.$("#ctl00_HomeContentPlaceHolder_lblExceedanceValidation").text("Data Exceedance if");
-
-                //parent.$.fancybox.close();
-
+                x.style.display = 'block';
+              
             }
 
             if (hfAdvanced.value == 'no') {
-
+                window.parent.document.getElementById('hfShowExceedanceMinMax').value = 'yes';
                 window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationOnExceedance').value = '';
                 window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlExceedanceAdvanced').href = '../Help/FormulaTest.aspx?type=exceedance&formula='
                 + '&min=' + encodeURIComponent(document.getElementById('hfMin').value)
@@ -169,18 +139,14 @@
                 window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_txtMaxExceedance').value = document.getElementById('hfMax').value;
 
                 var x = window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationOnExceedance');
-                x.style.display = 'none';
-                x = window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlExceedanceEdit');
-                x.style.display = 'none';
-                x = window.parent.document.getElementById('divExceedanceAdvanced');
+                x.style.display = 'none';            
+                x = window.parent.document.getElementById('divExceedanceMinMax');
                 x.style.display = 'block';
                 x = window.parent.document.getElementById('ctl00_HomeContentPlaceHolder_hlExceedanceAdvanced');
                 x.style.display = 'block';
-
-               // window.parent.$("#ctl00_HomeContentPlaceHolder_lblExceedanceValidation").text("Data Exceedance if outside the range");
-
-                //parent.$.fancybox.close();
+              
             }
+            //window.parent.ShowExceedanceMinMax();
             var chk = window.parent.document.getElementById('chkExceedanceFormula');
             chk.checked = true;
             chk = window.parent.document.getElementById('chkExceedanceConditions');
@@ -188,7 +154,6 @@
             parent.$.fancybox.close();
 
         }
-//        window.close();
 
     }
 

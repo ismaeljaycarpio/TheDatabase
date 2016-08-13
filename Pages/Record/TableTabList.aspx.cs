@@ -111,13 +111,20 @@ public partial class Pages_Record_TableTabList : SecurePage
 
 
             TableTab theTableTab = RecordManager.ets_TableTab_Detail(int.Parse(DataBinder.Eval(e.Row.DataItem, "TableTabID").ToString()));
-
+            ImageButton imgbtnDelete = e.Row.FindControl("imgbtnDelete") as ImageButton;
+            if (imgbtnDelete != null)
+            {
+                imgbtnDelete.OnClientClick = "Javascript:return confirm('Are you sure you want to delete " + theTableTab.TabName + " page?');";
+            }
             if (theTableTab != null && theTableTab.DisplayOrder == 0)
             {
 
-                ImageButton imgbtnDelete = e.Row.FindControl("imgbtnDelete") as ImageButton;
+               
                 if (imgbtnDelete != null)
+                {
                     imgbtnDelete.Visible = false;
+                }
+                    
             }
 
         }

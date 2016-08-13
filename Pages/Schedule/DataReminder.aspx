@@ -99,7 +99,7 @@ CodeFile="DataReminder.aspx.cs" Inherits="Pages_Schedule_DataReminder" %>
                             <RowStyle CssClass="gridview_row" />
                             <PagerTemplate>
                                 <asp:GridViewPager runat="server" ID="Pager" HideDelete="false" HideAdd="false" OnExportForCSV="Pager_OnExportForCSV"
-                                    OnApplyFilter="Pager_OnApplyFilter" OnBindTheGridToExport="Pager_BindTheGridToExport"
+                                    OnApplyFilter="Pager_OnApplyFilter" OnBindTheGridToExport="Pager_BindTheGridToExport"   DelConfirmation="Are you sure you want to delete selected reminder(s)?" 
                                     OnBindTheGridAgain="Pager_BindTheGridAgain"  OnDeleteAction="Pager_DeleteAction" HideNavigation="true"
                                      HideExport="true" HideFilter="true" HideRefresh="true" HideGo="true" HidePageSize="true"   />
                             </PagerTemplate>

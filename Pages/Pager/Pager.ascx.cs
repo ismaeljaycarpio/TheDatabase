@@ -83,7 +83,7 @@ public partial class Common_Pager : System.Web.UI.UserControl
 
     private bool _bDOCustomPDF = false;
     private bool _bCustomPager = false;
-
+    
     //public int? TableID { get; set; }
 
     public int? TableID
@@ -125,6 +125,21 @@ public partial class Common_Pager : System.Web.UI.UserControl
             HyperAdd.CssClass = value;
         }
     }
+
+
+    public string DelConfirmation
+    {
+
+        set
+        {
+            if (!string.IsNullOrEmpty(value))
+            {
+                DeleteLinkButton.OnClientClick = "return confirm('" + value.Replace("'","''")+ "');";
+            }
+           
+        }
+    }
+
 
     public bool DOCustomPDF
     {

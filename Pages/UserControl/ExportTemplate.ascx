@@ -294,7 +294,8 @@
                             <RowStyle CssClass="gridview_row" />
                             <PagerTemplate>
                                 <asp:GridViewPager runat="server" ID="Pager" HideDelete="false" HideAdd="false" OnExportForCSV="Pager_OnExportForCSV"
-                                    OnApplyFilter="Pager_OnApplyFilter" OnBindTheGridToExport="Pager_BindTheGridToExport" HideFilter="true" HideAllExport="true" HideExport="true"
+                                    OnApplyFilter="Pager_OnApplyFilter"   DelConfirmation="Are you sure you want to delete selected export template(s)?" 
+                                    OnBindTheGridToExport="Pager_BindTheGridToExport" HideFilter="true" HideAllExport="true" HideExport="true"
                                     OnBindTheGridAgain="Pager_BindTheGridAgain" OnDeleteAction="Pager_DeleteAction" />
                             </PagerTemplate>
                         </dbg:dbgGridView>

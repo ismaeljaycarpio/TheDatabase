@@ -783,77 +783,36 @@ public class Common
 
 
 
-    public static string GetMinVaue(string strFormula)
-    {
-        strFormula = strFormula.ToLower();
-        strFormula = strFormula.Replace("\r\n", " ").Replace("\r", " ").Replace("\n", " ");
-        strFormula = strFormula.Replace("  ", " ");
-        strFormula = strFormula.Replace("value >=", "value>=");
-        strFormula = strFormula.Replace("value > =", "value>=");
+    //public static string GetMinVaue(string strFormula)
+    //{
+    //    strFormula = strFormula.ToLower();
+    //    strFormula = strFormula.Replace("\r\n", " ").Replace("\r", " ").Replace("\n", " ");
+    //    strFormula = strFormula.Replace("  ", " ");
+    //    strFormula = strFormula.Replace("value >=", "value>=");
+    //    strFormula = strFormula.Replace("value > =", "value>=");
 
-        if (strFormula.IndexOf("value>=") > -1)
-        {
-            //we have MIN
-            string strMin = strFormula.Substring(strFormula.IndexOf("value>=") + 7);
-            strMin = strMin.Trim();
-            if (strMin.IndexOf(" ") > -1)
-            {
-                return strMin.Substring(0, strMin.IndexOf(" "));
-            }
-            else
-            {
-                return strMin;
-            }
+    //    if (strFormula.IndexOf("value>=") > -1)
+    //    {
+    //        //we have MIN
+    //        string strMin = strFormula.Substring(strFormula.IndexOf("value>=") + 7);
+    //        strMin = strMin.Trim();
+    //        if (strMin.IndexOf(" ") > -1)
+    //        {
+    //            return strMin.Substring(0, strMin.IndexOf(" "));
+    //        }
+    //        else
+    //        {
+    //            return strMin;
+    //        }
 
-        }
+    //    }
 
 
-        return "";
-    }
+    //    return "";
+    //}
 
 
     public static string GetMaxFromFormula (string strFormula)
-    {
-        strFormula = strFormula.ToLower();
-        strFormula = strFormula.Replace("\r\n", " ").Replace("\r", " ").Replace("\n", " ");
-        strFormula = strFormula.Replace("  ", " ");
-        strFormula = strFormula.Replace("value <", "value<");       
-
-        if (strFormula.IndexOf("value<") > -1)
-        {
-            //we have MIN
-            string strMin = strFormula.Substring(strFormula.IndexOf("value<") + 6);
-            strMin = strMin.Trim();
-            if (strMin.IndexOf(" ") > -1)
-            {
-                if (strMin.IndexOf("=") > -1)
-                {
-                    return "";
-                }
-                else
-                {
-                    return strMin.Substring(0, strMin.IndexOf(" "));
-                }
-            }
-            else
-            {
-                if (strMin.IndexOf("=") > -1)
-                {
-                    return "";
-                }
-                else
-                {
-                    return strMin;
-                }
-            }
-
-        }
-
-
-        return "";
-    }
-
-    public static string GetMaxVaue(string strFormula)
     {
         strFormula = strFormula.ToLower();
         strFormula = strFormula.Replace("\r\n", " ").Replace("\r", " ").Replace("\n", " ");
@@ -863,7 +822,7 @@ public class Common
 
         if (strFormula.IndexOf("value<=") > -1)
         {
-            //we have Max
+            //we have max
             string strMax = strFormula.Substring(strFormula.IndexOf("value<=") + 7);
             strMax = strMax.Trim();
             if (strMax.IndexOf(" ") > -1)
@@ -877,8 +836,36 @@ public class Common
 
         }
 
+
         return "";
     }
+
+    //public static string GetMaxVaue(string strFormula)
+    //{
+    //    strFormula = strFormula.ToLower();
+    //    strFormula = strFormula.Replace("\r\n", " ").Replace("\r", " ").Replace("\n", " ");
+    //    strFormula = strFormula.Replace("  ", " ");
+    //    strFormula = strFormula.Replace("value <=", "value<=");
+    //    strFormula = strFormula.Replace("value < =", "value<=");
+
+    //    if (strFormula.IndexOf("value<=") > -1)
+    //    {
+    //        //we have Max
+    //        string strMax = strFormula.Substring(strFormula.IndexOf("value<=") + 7);
+    //        strMax = strMax.Trim();
+    //        if (strMax.IndexOf(" ") > -1)
+    //        {
+    //            return strMax.Substring(0, strMax.IndexOf(" "));
+    //        }
+    //        else
+    //        {
+    //            return strMax;
+    //        }
+
+    //    }
+
+    //    return "";
+    //}
 
 
     public static string GetFullFormula(string strMin,string strMax,string strFull)
@@ -888,18 +875,18 @@ public class Common
             string strFormula = "";
             if (strMin != "")
             {
-                strFormula = "value>" + strMin;
+                strFormula = "value>=" + strMin;
             }
 
             if (strMax != "")
             {
-                strFormula = "value<" + strMax;
+                strFormula = "value<=" + strMax;
             }
 
             if (strMin != ""
             && strMax != "")
             {
-                strFormula = "value>" + strMin + " AND " + "value<" + strMax;
+                strFormula = "value>=" + strMin + " AND " + "value<=" + strMax;
             }
 
             return strFormula;
@@ -910,41 +897,28 @@ public class Common
             return strFull;
         }
 
-        return "";
+       
     }
     public static string GetMinFromFormula(string strFormula)
     {
         strFormula = strFormula.ToLower();
         strFormula = strFormula.Replace("\r\n", " ").Replace("\r", " ").Replace("\n", " ");
         strFormula = strFormula.Replace("  ", " ");
-        strFormula = strFormula.Replace("value >", "value>");        
+        strFormula = strFormula.Replace("value >=", "value>=");
+        strFormula = strFormula.Replace("value > =", "value>=");      
 
-        if (strFormula.IndexOf("value>") > -1)
+        if (strFormula.IndexOf("value>=") > -1)
         {
-            //we have Max
-            string strMax = strFormula.Substring(strFormula.IndexOf("value>") + 6);
-            strMax = strMax.Trim();
-            if (strMax.IndexOf(" ") > -1)
+            //we have Min
+            string strMin = strFormula.Substring(strFormula.IndexOf("value>=") + 7);
+            strMin = strMin.Trim();
+            if (strMin.IndexOf(" ") > -1)
             {
-                if (strMax.IndexOf("=") > -1)
-                {
-                    return "";
-                }
-                else
-                {
-                    return strMax.Substring(0, strMax.IndexOf(" "));
-                }
+                return strMin.Substring(0, strMin.IndexOf(" "));
             }
             else
             {
-                if (strMax.IndexOf("=") > -1)
-                {
-                    return "";
-                }
-                else
-                {
-                    return strMax;
-                }
+                return strMin;
             }
 
         }
@@ -977,7 +951,6 @@ public class Common
                 }
                 else
                 {
-
                     bAdvanced = true;
                 }
             }
@@ -989,15 +962,11 @@ public class Common
                 }
                 else
                 {
-
                     bAdvanced = true;
                 }
 
             }
         }
-
-
-
 
         if (bAdvanced)
         {
@@ -1009,6 +978,108 @@ public class Common
             txtMax.Text = strMax;          
         }
 
+    }
+
+    public static string GetFromulaMsg(string sType,string strDisplayName, string strFormula)
+    {
+        string strReturnMessage = "";
+        string strMin = "";
+        string strMax = "";
+        strMin = Common.GetMinFromFormula(strFormula);
+        strMax = Common.GetMaxFromFormula(strFormula);
+
+        int iTotalValue = Common.GetNumberOfValue(strFormula);
+        bool bAdvanced = false;
+
+        if (iTotalValue > 2)
+        {
+
+            bAdvanced = true;
+        }
+        else
+        {
+            if (iTotalValue > 1)
+            {
+                if (strMin != "" && strMax != "")
+                {
+
+                }
+                else
+                {
+                    bAdvanced = true;
+                }
+            }
+            else
+            {
+                if (strMin != "" || strMax != "")
+                {
+
+                }
+                else
+                {
+                    bAdvanced = true;
+                }
+
+            }
+        }
+
+        switch (sType)
+        {
+            case "i":
+                strReturnMessage = "INVALID: ";
+                break;
+            case "e":
+                strReturnMessage = "EXCEEDANCE: ";
+                break;
+            case "w":
+                strReturnMessage = "WARNING: ";
+                break;
+        }
+
+        if (strReturnMessage!="")
+            strReturnMessage = strReturnMessage + strDisplayName + " ";
+
+        if (bAdvanced)
+        {            
+           strReturnMessage = strReturnMessage + "Value outside accepted range(" + strFormula + ").";
+        }
+        else
+        {           
+           if(sType=="")
+           {
+               if (strMin == "")
+                   strMin = "Not set";
+               if (strMax == "")
+                   strMax = "Not set";
+           }
+
+            if (strMin != "" && strMax!="")
+            {
+                if (sType == "")
+                {
+                    strReturnMessage = "Value greater than: " + strMin + "<br/> Value less than: " + strMax ;
+                }
+                else
+                {
+                    strReturnMessage = strReturnMessage + "greater than: " + strMin + " and less than: " + strMax;
+                }
+               
+            }
+            else
+            {
+                if (strMin != "")
+                {
+                    strReturnMessage = strReturnMessage + "greater than: " + strMin;
+                }
+                if (strMax != "")
+                {
+                    strReturnMessage = strReturnMessage + "less than: " + strMax;
+                }
+            }
+                
+
+        }
+        return strReturnMessage;
     }
     public static int GetNumberOfValue(string strFormula)
     {

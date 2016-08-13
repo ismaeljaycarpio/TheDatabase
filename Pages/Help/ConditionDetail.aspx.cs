@@ -64,7 +64,7 @@ public partial class Pages_Schedule_ConditionDetail : SecurePage
                 _strConTypeDisplay = "Exceedance";
                 break;
             default:
-                _strConTypeDisplay = "Validation";
+                _strConTypeDisplay = "Invalid";
                 break;
         }
 
@@ -84,7 +84,7 @@ public partial class Pages_Schedule_ConditionDetail : SecurePage
             hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/Condition.aspx?ConditionType=" + Request.QueryString["ConditionType"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + "&ColumnID=" + Request.QueryString["ColumnID"].ToString();//i think no need
             //}
 
-
+            lblValidation.Text = "Data " + _strConTypeDisplay + " if outside the range";
         }
         if (Request.QueryString["mode"] == null)
         {

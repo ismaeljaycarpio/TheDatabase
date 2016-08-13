@@ -248,7 +248,7 @@ public class UploadWorld
                                        <strong>Is</strong>
                                    </td>
                                    <td style=""border-color: #600;border-width: 1px 1px 0 0; border-style: solid;margin: 0;"">
-                                       <strong>Formula</strong>
+                                       <strong></strong>
                                    </td>
                                </tr>";
             foreach(DataRow dr in dtCondition.Rows)
@@ -258,7 +258,7 @@ public class UploadWorld
                 string strCheckValue = Common.GetDisplayTextFromColumnAndValue(theCheckColumn, dr["CheckValue"].ToString());
 
                 string strCheckFormula = dr["CheckFormula"].ToString();
-
+                strCheckFormula = Common.GetFromulaMsg("", theColumn.DisplayName, strCheckFormula);
                 try
                 {
                     strDisplayName = System.Net.WebUtility.HtmlEncode(strDisplayName);

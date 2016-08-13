@@ -167,7 +167,7 @@
                                                     <ItemStyle Width="10px" HorizontalAlign="Center" />
                                                     <ItemTemplate>
                                                         <asp:ImageButton ID="imgbtnDelete" runat="server" ImageUrl="~/App_Themes/Default/Images/icon_delete.gif"
-                                                            CommandName="deletetype" CommandArgument='<%# Eval("TableTabID") %>' />
+                                                            CommandName="deletetype" CommandArgument='<%# Eval("TableTabID") %>'  />
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
                                                 <asp:TemplateField HeaderText="">

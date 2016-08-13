@@ -4537,7 +4537,9 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 string strEachFormulaV = "";
                 string strEachFormulaW = "";
                 string strEachFormulaE = "";
-
+                string strEachFormulaV_Msg = "";
+                string strEachFormulaW_Msg = "";
+                string strEachFormulaE_Msg = "";
                 
 
 
@@ -4680,8 +4682,9 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         }
                     }
 
-
-
+                    strEachFormulaV_Msg = Common.GetFromulaMsg("i", _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), strEachFormulaV);
+                    strEachFormulaW_Msg = Common.GetFromulaMsg("w", _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), strEachFormulaW);
+                    strEachFormulaE_Msg = Common.GetFromulaMsg("e", _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), strEachFormulaE);
 
 
                     if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "date" &&
@@ -5544,14 +5547,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             if (strWarning.IndexOf("WARNING: " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range") >= 0)
                             {
                                 _imgWarning[i].Visible = true;
-                                strToopTip = "Value outside accepted range(" + strEachFormulaW + ").";
+                                strToopTip = strEachFormulaW_Msg;// "Value outside accepted range(" + strEachFormulaW + ").";
                                 _imgWarning[i].ToolTip = strToopTip;
                             }
 
                             if (strWarning.IndexOf("EXCEEDANCE: " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range") >= 0)
                             {
                                 _imgWarning[i].Visible = true;
-                                strToopTip = "Value outside accepted range(" + strEachFormulaE + ").";
+                                strToopTip = strEachFormulaE_Msg;// "Value outside accepted range(" + strEachFormulaE + ").";
                                 _imgWarning[i].ToolTip = strToopTip;
                                 _imgWarning[i].ImageUrl = _imgWarning[i].ImageUrl.Replace("warning.png", "exceedance.png");
                             }
@@ -5559,7 +5562,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             if (strWarning.IndexOf("INVALID (and ignored): " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() ) >= 0)
                             {
                                 _imgWarning[i].Visible = true;
-                                strToopTip = "INVALID (and ignored):" + strEachFormulaV + ".";
+                                strToopTip = strEachFormulaV_Msg;// "INVALID (and ignored):" + strEachFormulaV + ".";
                                 _imgWarning[i].ToolTip = strToopTip;
                                 _imgWarning[i].ImageUrl = _imgWarning[i].ImageUrl.Replace("warning.png", "Invalid.png");
                                 _imgWarning[i].ImageUrl = _imgWarning[i].ImageUrl.Replace("exceedance.png", "Invalid.png");
@@ -5776,13 +5779,13 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 if (strWarning.IndexOf("WARNING: " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range") >= 0)
                                 {
                                     _imgWarning[i].Visible = true;
-                                    strToopTip = "Value outside accepted range(" + strEachFormulaW + ").";
+                                    strToopTip = strEachFormulaW_Msg;// "Value outside accepted range(" + strEachFormulaW + ").";
                                     _imgWarning[i].ToolTip = strToopTip;
                                 }
                                 if (strWarning.IndexOf("EXCEEDANCE: " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range") >= 0)
                                 {
                                     _imgWarning[i].Visible = true;
-                                    strToopTip = "Value outside accepted range(" + strEachFormulaE + ").";
+                                    strToopTip = strEachFormulaE_Msg;// "Value outside accepted range(" + strEachFormulaE + ").";
                                     _imgWarning[i].ToolTip = strToopTip;
                                     _imgWarning[i].ImageUrl = _imgWarning[i].ImageUrl.Replace("warning.png", "exceedance.png");
                                 }
@@ -5790,7 +5793,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 if (strWarning.IndexOf("INVALID (and ignored): " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString()) >= 0)
                                 {
                                     _imgWarning[i].Visible = true;
-                                    strToopTip = "INVALID (and ignored):" + strEachFormulaV + ".";
+                                    strToopTip = strEachFormulaV_Msg;// "INVALID (and ignored):" + strEachFormulaV + ".";
                                     _imgWarning[i].ToolTip = strToopTip;
                                     _imgWarning[i].ImageUrl = _imgWarning[i].ImageUrl.Replace("warning.png", "Invalid.png");
                                     _imgWarning[i].ImageUrl = _imgWarning[i].ImageUrl.Replace("exceedance.png", "Invalid.png");
@@ -6098,12 +6101,13 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
         {
             bool bValidationCanIgnore = false;
-
+            string sCanignore = "no";
             if (_dtColumnsDetail.Rows[i]["ValidationCanIgnore"] != DBNull.Value)
             {
                 if ((bool)_dtColumnsDetail.Rows[i]["ValidationCanIgnore"])
                 {
                     bValidationCanIgnore = true;
+                    sCanignore = "yes";
                 }
             }
 
@@ -10377,8 +10381,9 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                         if (bAddToGrid)
                         {
-                            dtValidWarning.Rows.Add(_dtColumnsAll.Rows[i]["ColumnID"].ToString(), "i", "no", "Invalid data - " + _dtColumnsAll.Rows[i]["DisplayName"].ToString(),
-                        strFormulaV, strValue);
+                            dtValidWarning.Rows.Add(_dtColumnsAll.Rows[i]["ColumnID"].ToString(), "i", "no",
+                            Common.GetFromulaMsg("i", _dtColumnsAll.Rows[i]["DisplayName"].ToString(), strFormulaV)//    "Invalid data - " + _dtColumnsAll.Rows[i]["DisplayName"].ToString()
+                                ,strFormulaV, strValue);
                            
                         }
                     }
@@ -10418,8 +10423,9 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             //_bDataExceedance = true;
                             if (bAddToGrid)
                             {
-                                dtValidWarning.Rows.Add(_dtColumnsAll.Rows[i]["ColumnID"].ToString(), "e", "yes", "EXCEEDANCE: " + _dtColumnsAll.Rows[i]["DisplayName"].ToString() + " –  Value outside accepted range.",
-                    strFormulaE, strValue);
+                                dtValidWarning.Rows.Add(_dtColumnsAll.Rows[i]["ColumnID"].ToString(), "e", "yes",
+                                  Common.GetFromulaMsg("e", _dtColumnsAll.Rows[i]["DisplayName"].ToString(), strFormulaE)//  "EXCEEDANCE: " + _dtColumnsAll.Rows[i]["DisplayName"].ToString() + " –  Value outside accepted range."
+                                    , strFormulaE, strValue);
                             }
 
                             if (bSendEmail)
@@ -10463,8 +10469,9 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         //_bDataWarning = true;
                         if (bAddToGrid)
                         {
-                            dtValidWarning.Rows.Add(_dtColumnsAll.Rows[i]["ColumnID"].ToString(), "w", "no", "WARNING: " + _dtColumnsAll.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range.",
-                                                  strFormulaW, strValue);
+                            dtValidWarning.Rows.Add(_dtColumnsAll.Rows[i]["ColumnID"].ToString(), "w", "no",
+                               Common.GetFromulaMsg("w", _dtColumnsAll.Rows[i]["DisplayName"].ToString(), strFormulaW)// "WARNING: " + _dtColumnsAll.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range."
+                                , strFormulaW, strValue);
                         }
 
                         if (bSendEmail)
@@ -10999,9 +11006,9 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                 Label lblFullMsg = ((Label)e.Row.FindControl("lblFullMsg"));
 
-                lblFullMsg.Text = strValidWarningMsg + "<img src='../../Images/GetInfo.png' title='" + strValidWarningFormula + "' />";
+                lblFullMsg.Text = strValidWarningMsg;// +"<img src='../../Images/GetInfo.png' title='" + strValidWarningFormula + "' />";
 
-
+                chkIgnore.Checked = false;
 
                 if (strValidationType == "w")
                 {
@@ -11011,8 +11018,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 else if (strValidationType == "e")
                 {
                     lblFullMsg.ForeColor = System.Drawing.Color.Orange;
-                    chkIgnore.Checked = true;
-                    chkIgnore.Enabled = false;
+                    //chkIgnore.Checked = true;
+                    //chkIgnore.Enabled = false;
                 }
                 else if (strValidationType == "c")
                 {
@@ -11021,11 +11028,16 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 }
                 else
                 {
-                    lblFullMsg.ForeColor = System.Drawing.Color.Red;
+                    lblFullMsg.ForeColor = System.Drawing.Color.Red;                  
+
+                }
+
+                if (strValidationType == "c" || strValidationType == "i")
+                {
                     try
                     {
                         Column theColumn = RecordManager.ets_Column_Details(int.Parse(strColumnID));
-                        if ((bool)theColumn.ValidationCanIgnore)
+                        if (theColumn.ValidationCanIgnore != null && (bool)theColumn.ValidationCanIgnore)
                         {
 
                             chkIgnore.Enabled = true;
@@ -11040,8 +11052,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     {
 
                     }
-
                 }
+                
 
             }
             catch
@@ -12103,12 +12115,13 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     && _dtColumnsDetail.Rows[i]["CompareOperator"] != DBNull.Value && strValue1.Length > 0)
                                 {
                                     bool bValidationCanIgnore = false;
-
+                                    string sCanignore = "no";
                                     if (_dtColumnsDetail.Rows[i]["ValidationCanIgnore"] != DBNull.Value)
                                     {
                                         if ((bool)_dtColumnsDetail.Rows[i]["ValidationCanIgnore"])
                                         {
                                             bValidationCanIgnore = true;
+                                            sCanignore = "yes";
                                         }
                                     }
 
@@ -12136,7 +12149,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                     string strComparisonErrorToolTip = "Comparison error:" + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + "(" + strValue1 + ")" + " "
                                         + Common.CompareOperatorErrorMsg(_dtColumnsDetail.Rows[i]["CompareOperator"].ToString()) + " " + theComparisonColumn.DisplayName + "(" + strValue2 + ")";
 
-                                    if (bValidationCanIgnore && strValue2.Length > 0)
+                                    if (strValue2.Length > 0) //bValidationCanIgnore && 
                                     {
                                         //need server side validation                                        
 
@@ -12383,7 +12396,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                                         if (bValid == false)
                                         {
-                                            dtValidWarning.Rows.Add(_dtColumnsDetail.Rows[i]["ColumnID"].ToString(), "c", "no", strComparisonErrorMessage,
+                                            dtValidWarning.Rows.Add(_dtColumnsDetail.Rows[i]["ColumnID"].ToString(), "c", sCanignore, strComparisonErrorMessage,
                                         strComparisonErrorToolTip, strValue);
 
                                         }
@@ -13721,12 +13734,13 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     && _dtColumnsDetail.Rows[i]["CompareOperator"] != DBNull.Value && strValue1.Length > 0)
                                 {
                                     bool bValidationCanIgnore = false;
-
+                                    string sCanignore = "no";
                                     if (_dtColumnsDetail.Rows[i]["ValidationCanIgnore"] != DBNull.Value)
                                     {
                                         if ((bool)_dtColumnsDetail.Rows[i]["ValidationCanIgnore"])
                                         {
                                             bValidationCanIgnore = true;
+                                            sCanignore = "yes";
                                         }
                                     }
 
@@ -13750,7 +13764,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                     string strComparisonErrorToolTip = "Comparison error:" + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + "(" + strValue1 + ")" + " "
                                         + Common.CompareOperatorErrorMsg(_dtColumnsDetail.Rows[i]["CompareOperator"].ToString()) + " " + theComparisonColumn.DisplayName + "(" + strValue2 + ")";
 
-                                    if (bValidationCanIgnore && strValue2.Length > 0)
+                                    if (strValue2.Length > 0)//bValidationCanIgnore &&
                                     {
                                         //need server side validation
 
@@ -14002,7 +14016,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                                         if (bValid == false)
                                         {
-                                            dtValidWarning.Rows.Add(_dtColumnsDetail.Rows[i]["ColumnID"].ToString(), "c", "no", strComparisonErrorMessage,
+                                            dtValidWarning.Rows.Add(_dtColumnsDetail.Rows[i]["ColumnID"].ToString(), "c", sCanignore, strComparisonErrorMessage,
                                         strComparisonErrorToolTip, strValue);
 
                                         }

@@ -120,31 +120,49 @@
 
                                         </td>
                                     </tr>
-                                   
                                     <tr>
-                                        <td align="right">
-                                            <strong>Greater Than</strong>
-                                        </td>
-                                        <td >
-                                           <asp:TextBox ID="txtMin" runat="server" Width="150px" CssClass="NormalTextBox"></asp:TextBox>
-                                            <asp:RegularExpressionValidator ID="revNumber" ControlToValidate="txtMin" 
-                                            runat="server" ErrorMessage="Numeric!" Display="Dynamic"
-                                            ValidationExpression="(^-?\d{1,20}\.$)|(^-?\d{1,20}$)|(^-?\d{0,20}\.\d{1,10}$)">
-                                        </asp:RegularExpressionValidator>
+                                        <td colspan="2"></td>
+                                    </tr>
+
+                                    <tr>
+                                        <td></td>
+                                        <td>
+
+                                            <table>
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <asp:Label runat="server" ID="lblValidation" Text="Data Invalid if outside the range"
+                                                            Font-Bold="true"></asp:Label>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="right" valign="top" style="width: 15px;"></td>
+                                                    <td align="right">
+                                                        Value less than:
+                                                    </td>
+                                                    <td>
+                                                        <asp:TextBox ID="txtMin" runat="server" Width="150px" CssClass="NormalTextBox"></asp:TextBox>
+                                                        <asp:RegularExpressionValidator ID="revNumber" ControlToValidate="txtMin"
+                                                            runat="server" ErrorMessage="Numeric!" Display="Dynamic"
+                                                            ValidationExpression="(^-?\d{1,20}\.$)|(^-?\d{1,20}$)|(^-?\d{0,20}\.\d{1,10}$)">
+                                                        </asp:RegularExpressionValidator>
+                                                    </td>
+                                                    <td align="right">
+                                                        Value greater than:
+                                                    </td>
+                                                    <td>
+                                                        <asp:TextBox ID="txtMax" runat="server" Width="150px" CssClass="NormalTextBox"></asp:TextBox>
+                                                        <asp:RegularExpressionValidator ID="RegularExpressionValidator1" ControlToValidate="txtMax"
+                                                            runat="server" ErrorMessage="Numeric!" Display="Dynamic"
+                                                            ValidationExpression="(^-?\d{1,20}\.$)|(^-?\d{1,20}$)|(^-?\d{0,20}\.\d{1,10}$)">
+                                                        </asp:RegularExpressionValidator>
+                                                    </td>
+
+                                                </tr>
+                                            </table>
                                         </td>
                                     </tr>
-                                     <tr>
-                                        <td align="right">
-                                            <strong>Less Than</strong>
-                                        </td>
-                                        <td >
-                                           <asp:TextBox ID="txtMax" runat="server" Width="150px" CssClass="NormalTextBox"></asp:TextBox>
-                                            <asp:RegularExpressionValidator ID="RegularExpressionValidator1" ControlToValidate="txtMax"
-                                                runat="server" ErrorMessage="Numeric!" Display="Dynamic"
-                                                ValidationExpression="(^-?\d{1,20}\.$)|(^-?\d{1,20}$)|(^-?\d{0,20}\.\d{1,10}$)">
-                                            </asp:RegularExpressionValidator>
-                                        </td>
-                                    </tr>
+                                   
                                    
                                     
                                 </table>

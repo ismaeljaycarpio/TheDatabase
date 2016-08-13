@@ -21,7 +21,7 @@ public partial class Pages_Schedule_Condition : SecurePage
     //string _strGridViewSortColumn = "ConditionID";
     //string _strGridViewSortDirection = "ASC";
     int _iColumnID = -1;
-    string _strConTypeDisplay = "Validation";
+    string _strConTypeDisplay = "Invalid";
     Table _theTable;
 
     public override void VerifyRenderingInServerForm(Control control)
@@ -45,12 +45,12 @@ public partial class Pages_Schedule_Condition : SecurePage
                 _strConTypeDisplay = "Exceedance";
                 break;
             default:
-                _strConTypeDisplay = "Validation";
+                _strConTypeDisplay = "Invalid";
                 break;
         }
 
 
-        lblTopTitle.Text = "Data " + _strConTypeDisplay + " Conditions";
+        lblTopTitle.Text = "Data " + _strConTypeDisplay + " if outside the range";
         Title = lblTopTitle.Text;
 
         try

@@ -339,8 +339,8 @@ public partial class Page_Help_FormulaTest: SecurePage
                 iTotalValue = Common.GetNumberOfValue(strFormula);
 
 
-                strMin = Common.GetMinVaue(strFormula);
-                strMax = Common.GetMaxVaue(strFormula);
+                strMin = Common.GetMinFromFormula(strFormula);
+                strMax = Common.GetMaxFromFormula(strFormula);
                 hfMax.Value = strMax;
                 hfMin.Value = strMin;
 

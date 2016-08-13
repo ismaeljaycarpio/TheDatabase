@@ -86,11 +86,11 @@ public class UploadManager
 
             }
 
-            if (strFileExtension.ToLower()=="virtual" && iImportTemplateID == null
-                && theTable.DefaultImportTemplateID != null && strImportFolder!="") //ALS Labdata only
-            {
-                iImportTemplateID = theTable.DefaultImportTemplateID;
-            }
+            //if (strFileExtension.ToLower()=="virtual" && iImportTemplateID == null
+            //    && theTable.DefaultImportTemplateID != null && strImportFolder!="") //ALS Labdata only
+            //{
+            //    iImportTemplateID = theTable.DefaultImportTemplateID;
+            //}
 
 
 
@@ -648,11 +648,25 @@ public class UploadManager
                             }
                         }
 
+                        // || theTable.TableName.IndexOf("EMD_Test") > -1
                         if (bParentImportColumnID == false)// when bParentImportColumnID==true we use  [dbo].[spAdjustTempRecordLinkedValueOnImport]
                         {
                             string lookupColumnName = drC["DisplayColumn"].ToString();
 
-                            string lookupSystemName = Common.GetValueFromSQL("SELECT dbo.fnReplaceDisplayColumns_NoAlias(" + drC["ColumnID"].ToString() + ")");
+                            string lookupSystemName = "";                           
+                            if (strFileExtension.ToLower() == "virtual" && strImportFolder!="")
+                            {
+                                if (lookupColumnName == "[Site Name]")
+                                {
+                                    lookupSystemName = Common.GetValueFromSQL("SELECT SystemName FROM [Column] WHERE TableID=" + drC["TableTableID"].ToString()
+                                        + " AND (DisplayName='Site Name On Import File' OR NameOnImport='Site Name On Import File')");
+                                }                                   
+                            }
+
+                           if(lookupSystemName.Trim()=="")
+                           {
+                               lookupSystemName = Common.GetValueFromSQL("SELECT dbo.fnReplaceDisplayColumns_NoAlias(" + drC["ColumnID"].ToString() + ")");
+                           }
 
                             if (lookupSystemName != "")
                             {
@@ -843,7 +857,14 @@ public class UploadManager
                                         {
 
                                             string strRecordIDSQL = "SELECT RecordID FROM [Record] WHERE IsActive=1 AND TableID=" + dtRecordTypleColumns.Rows[i]["TableTableID"]
-                                                + " AND " + dtRecordTypleColumns.Rows[i]["ParentColumnSystemName"] + "='" + dtImportFileTable.Rows[r][dc.ColumnName].ToString() + "'";
+                                                 + " AND CHARINDEX (';' +'" + dtImportFileTable.Rows[r][dc.ColumnName].ToString() 
+                                                                     + "'+ ';',';' + " 
+                                                                     + dtRecordTypleColumns.Rows[i]["ParentColumnSystemName"] + " + ';')>0";
+                                                
+                                            
+                                            //+ " AND " + dtRecordTypleColumns.Rows[i]["ParentColumnSystemName"] + "='" + dtImportFileTable.Rows[r][dc.ColumnName].ToString() + "'";
+                                                                                       
+
                                             string strParentRecordID = Common.GetValueFromSQL(strRecordIDSQL);
                                             if (strParentRecordID != "")
                                             {

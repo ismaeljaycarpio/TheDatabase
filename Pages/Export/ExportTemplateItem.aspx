@@ -290,7 +290,7 @@
                                                                     <HeaderStyle CssClass="gridview_header" />
                                                                     <PagerTemplate>
                                                                         <asp:GridViewPager runat="server" ID="ExportTemplateItemPager" OnDeleteAction="ExportTemplateItemPager_DeleteAction"
-                                                                            HideFilter="true" HidePageSizeButton="true"
+                                                                            HideFilter="true" HidePageSizeButton="true"  DelConfirmation="Are you sure you want to remove selected field(s)?" 
                                                                             HideGo="true" HideNavigation="true" HideRefresh="true" HideExport="true" OnBindTheGridAgain="ExportTemplateItemPager_BindTheGridAgain" />
                                                                     </PagerTemplate>
                                                                 </dbg:dbgGridView>
