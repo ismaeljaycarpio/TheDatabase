@@ -75,6 +75,7 @@ public class SectionREST : IHttpHandler,IRequiresSessionState {
                              }
                          }                        
                     }
+                    ctx.ExecuteCommand("DELETE FROM [ShowWhen] WHERE DocumentSectionID = {0}", ID);
                     ctx.ExecuteCommand("DELETE FROM DocumentSection WHERE DocumentSectionID = {0}", ID);
                 }
             }

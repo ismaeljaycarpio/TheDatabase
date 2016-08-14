@@ -26,8 +26,8 @@ public partial class Pages_Record_TableTabList : SecurePage
                                 type: 'iframe',
                                 'transitionIn': 'elastic',
                                 'transitionOut': 'none',
-                                width: 800,
-                                height: 450,
+                                width: 1100,
+                                height: 750,
                                 titleShow: false
                             });
                         });
@@ -58,17 +58,36 @@ public partial class Pages_Record_TableTabList : SecurePage
             try
             {
 
+                string strTabName = Common.GetValueFromSQL("SELECT TabName FROM [TableTab] WHERE TableTabID=" + e.CommandArgument.ToString());
+
+
                 string strNoOfTabs = Common.GetValueFromSQL("SELECT Count(*) FROM TableTab WHERE TableID=" + _iTableID.ToString());
 
                 int iNoOfTabs = int.Parse(strNoOfTabs);
 
                 if (iNoOfTabs > 1)
                 {
-                    RecordManager.dbg_TableTab_Delete(int.Parse(e.CommandArgument.ToString()));
+                    string strHasFields = Common.GetValueFromSQL("SELECT TOP 1 ColumnID FROM [Column] WHERE TableTabID=" + e.CommandArgument.ToString());
+
+                    if (strHasFields!="")
+                    {
+
+                        Session["tdbmsgpb"] = "Page " + strTabName + " has fields, please move those fields to another page and try again.";
+                       
+                    }
+                    else
+                    {
+                        RecordManager.dbg_TableTab_Delete(int.Parse(e.CommandArgument.ToString()));
+                        Session["tdbmsgpb"] = "Page " + strTabName + " has been deleted.";
+                    }
+
+                   
+                    
                 }
                 else
                 {
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "TableTabdEL", "alert('You can not delete the primary tab.');", true);
+                    Session["tdbmsgpb"] = "You can not delete the primary tab.";
+                    //ScriptManager.RegisterStartupScript(this, this.GetType(), "TableTabdEL", "alert('You can not delete the primary tab.');", true);
 
                 }
 

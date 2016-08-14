@@ -712,7 +712,7 @@
                                             &nbsp; &nbsp; &nbsp;
                                         
                                             <asp:HyperLink runat="server" ID="hlTableTabs" Style="text-decoration: none; color: Black; padding-bottom:10px;"
-                                                CssClass="popuplink"> <strong style="text-decoration: underline; color: Blue;">
+                                                CssClass="popuplinktt"> <strong style="text-decoration: underline; color: Blue;">
                                                Configure Pages</strong>
                                             </asp:HyperLink>
                                        

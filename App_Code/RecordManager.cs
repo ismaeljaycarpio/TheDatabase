@@ -18256,6 +18256,8 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
                 pRV.Direction = ParameterDirection.Output;
 
                 command.Parameters.Add(pRV);
+                if (p_ShowWhen.TableTabID != null)
+                    command.Parameters.Add(new SqlParameter("@TableTabID", p_ShowWhen.TableTabID));
 
                 if (p_ShowWhen.ColumnID!=null)
                 command.Parameters.Add(new SqlParameter("@nColumnID", p_ShowWhen.ColumnID));
@@ -18306,6 +18308,10 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
             {
                 command.CommandType = CommandType.StoredProcedure;
 
+
+                if (p_ShowWhen.TableTabID != null)
+                    command.Parameters.Add(new SqlParameter("@TableTabID", p_ShowWhen.TableTabID));
+
                 command.Parameters.Add(new SqlParameter("@nShowWhenID", p_ShowWhen.ShowWhenID));
                 if (p_ShowWhen.ColumnID != null)
                     command.Parameters.Add(new SqlParameter("@nColumnID", p_ShowWhen.ColumnID));
@@ -18353,7 +18359,8 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
 
 
 
-    public static DataTable dbg_ShowWhen_Select(int? nColumnID, int? DocumentSectionID)
+    public static DataTable dbg_ShowWhen_Select(int? nColumnID, int? DocumentSectionID, 
+        int? TableTabID)
     {
 
         using (SqlConnection connection = new SqlConnection(DBGurus.strGlobalConnectionString))
@@ -18361,7 +18368,8 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
             using (SqlCommand command = new SqlCommand("dbg_ShowWhen_Select", connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
-
+                if (TableTabID != null)
+                    command.Parameters.Add(new SqlParameter("@TableTabID", TableTabID));
 
                 if (nColumnID!=null)
                     command.Parameters.Add(new SqlParameter("@nColumnID", nColumnID));
@@ -18404,7 +18412,7 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
 
 
 
-    public static DataTable dbg_ShowWhen_ForGrid(int? nColumnID, int? DocumentSectionID)
+    public static DataTable dbg_ShowWhen_ForGrid(int? nColumnID, int? DocumentSectionID, int? TableTabID)
     {
 
         using (SqlConnection connection = new SqlConnection(DBGurus.strGlobalConnectionString))
@@ -18418,6 +18426,9 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
 
                 if (DocumentSectionID != null)
                     command.Parameters.Add(new SqlParameter("@DocumentSectionID", DocumentSectionID));
+
+                if (TableTabID != null)
+                    command.Parameters.Add(new SqlParameter("@TableTabID", TableTabID));
 
                 SqlDataAdapter da = new SqlDataAdapter();
                 da.SelectCommand = command;
@@ -18521,6 +18532,8 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
                                 );
                             temp.Context = reader["Context"] == DBNull.Value ? "" : (string)reader["Context"];
                             temp.DocumentSectionID = reader["DocumentSectionID"] == DBNull.Value ? null : (int?)reader["DocumentSectionID"];
+                            temp.TableTabID = reader["TableTabID"] == DBNull.Value ? null : (int?)reader["TableTabID"];
+
                             connection.Close();
                             connection.Dispose();
 

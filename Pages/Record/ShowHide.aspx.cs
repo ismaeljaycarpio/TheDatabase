@@ -13,17 +13,22 @@ public partial class Pages_Record_ShowHide : System.Web.UI.Page
     int _iTableID = -1;
     int _iColumnID = -1;
     int _iDocumentSectionID = -1;
+    int _iTableTabID = -1;
     string _strContext = "field";
     
     protected void Page_Load(object sender, EventArgs e)
     {
         if (Request.QueryString["TableID"]!=null)
             _iTableID =int.Parse( Request.QueryString["TableID"].ToString());
+
         if (Request.QueryString["ColumnID"] != null)
             _iColumnID = int.Parse( Request.QueryString["ColumnID"].ToString());
 
         if (Request.QueryString["DocumentSectionID"] != null)
             _iDocumentSectionID = int.Parse(Request.QueryString["DocumentSectionID"].ToString());
+
+        if (Request.QueryString["TableTabID"] != null)
+            _iTableTabID = int.Parse(Request.QueryString["TableTabID"].ToString());
 
         if (Request.QueryString["Context"] != null)
             _strContext = Request.QueryString["Context"].ToString().ToLower();
@@ -89,6 +94,11 @@ public partial class Pages_Record_ShowHide : System.Web.UI.Page
                     swcShowWhen.ShowTable = true;
                     swcShowWhen.DocumentSectionID = _iDocumentSectionID;
                 }
+                else if (_strContext == "tabletab")
+                {                  
+                    swcShowWhen.TableID = _iTableID;
+                    swcShowWhen.TableTabID = _iTableTabID;
+                }
                 else
                 {
                     swcShowWhen.TableID = _iTableID;
@@ -149,7 +159,9 @@ public partial class Pages_Record_ShowHide : System.Web.UI.Page
 
                     dtShowWhen.Rows.Add(lblID.Text, lblShowWhenID.Text,_strContext=="field"? _iColumnID.ToString():"", swcShowWhen.ddlHideColumnV,
                         swcShowWhen.hfHideColumnValueV, swcShowWhen.ddlOperatorV, iDisplayOrder.ToString(), swcShowWhen.ddlJoinOperatorV,
-                        _strContext == "dashboard" ? _iDocumentSectionID.ToString() : "",_strContext);
+                        _strContext == "dashboard" ? _iDocumentSectionID.ToString() : "",
+                         _strContext == "tabletab" ? _iTableTabID.ToString() : "",
+                        _strContext);
                     iDisplayOrder = iDisplayOrder + 1;
                 }
 
@@ -171,16 +183,18 @@ public partial class Pages_Record_ShowHide : System.Web.UI.Page
         dtShowWhen.Columns.Add("HideOperator");
         dtShowWhen.Columns.Add("DisplayOrder");
         dtShowWhen.Columns.Add("JoinOperator");
-        dtShowWhen.Columns.Add("DocumentSectionID");
+        dtShowWhen.Columns.Add("DocumentSectionID");       
         dtShowWhen.Columns.Add("Context");
+        dtShowWhen.Columns.Add("TableTabID");
         dtShowWhen.AcceptChanges();
 
-        if ((_iColumnID != -1 || _iDocumentSectionID!=-1) && ViewState["dtShowWhen"] == null)
+        if ((_iColumnID != -1 || _iDocumentSectionID!=-1 || _iTableTabID!=-1) && ViewState["dtShowWhen"] == null)
         {
 
 
             DataTable dtShowWhenDB = RecordManager.dbg_ShowWhen_ForGrid(_strContext == "field" ? (int?)_iColumnID : null,
-                                                                    _strContext == "dashboard" ? (int?)_iDocumentSectionID : null);
+                                                                    _strContext == "dashboard" ? (int?)_iDocumentSectionID : null,
+                                                                    _strContext=="tabletab"?(int?)_iTableTabID:null);
 
             if (dtShowWhen != null && dtShowWhenDB != null)
             {
@@ -202,6 +216,7 @@ public partial class Pages_Record_ShowHide : System.Web.UI.Page
                     newRow[7] = dr[7].ToString();
                     newRow[8] = dr[8].ToString();
                     newRow[8] = dr[9].ToString();
+                    newRow[9] = dr[10].ToString();
                     dtShowWhen.Rows.Add(newRow);
                 }
 
@@ -213,8 +228,8 @@ public partial class Pages_Record_ShowHide : System.Web.UI.Page
 
                 if(dtShowWhen.Rows.Count==0)
                 {
-                    dtShowWhen.Rows.Add(Guid.NewGuid().ToString(),"-1", _strContext=="field"?"-1":"", 
-                        "", "", "equals", "1", "", _strContext == "dashboard" ? "-1" : "",_strContext);
+                    dtShowWhen.Rows.Add(Guid.NewGuid().ToString(),"-1", _strContext=="field"?"-1":"",
+                        "", "", "equals", "1", "", _strContext == "dashboard" ? "-1" : "", _strContext, _strContext == "tabletab" ? "-1" : "");
                     dtShowWhen.AcceptChanges();
                 }
 
@@ -231,8 +246,8 @@ public partial class Pages_Record_ShowHide : System.Web.UI.Page
             {
                 if (Session["dtShowWhen"] == null)
                {
-                   dtShowWhen.Rows.Add(Guid.NewGuid().ToString(), "-1",  _strContext == "field" ? "-1" : "", "", "", 
-                       "equals", "1", "", _strContext == "dashboard" ? "-1" : "",_strContext);
+                   dtShowWhen.Rows.Add(Guid.NewGuid().ToString(), "-1",  _strContext == "field" ? "-1" : "", "", "",
+                       "equals", "1", "", _strContext == "dashboard" ? "-1" : "", _strContext, _strContext == "tabletab" ? "-1" : "");
 
                    grdShowWhen.DataSource = dtShowWhen;
                    grdShowWhen.DataBind();
@@ -331,6 +346,7 @@ public partial class Pages_Record_ShowHide : System.Web.UI.Page
                     newRow[7] = "";
                     newRow[8] = _strContext == "dashboard" ? _iDocumentSectionID.ToString() : "";
                     newRow[9] = _strContext;
+                    newRow[10] = _strContext == "tabletab" ? _iTableTabID.ToString() : "";
 
                     dtShowWhen.Rows.InsertAt(newRow, iPos + 1);
 
@@ -360,13 +376,15 @@ public partial class Pages_Record_ShowHide : System.Web.UI.Page
 
         SetShowWhenRowData();
 
-        if (ViewState["dtShowWhen"] != null && ((_strContext == "field" && _iColumnID != -1) || (_strContext == "dashboard" && _iDocumentSectionID != -1)))
+        if (ViewState["dtShowWhen"] != null && ((_strContext == "field" && _iColumnID != -1)
+            || (_strContext == "dashboard" && _iDocumentSectionID != -1) || (_strContext == "tabletab" && _iTableTabID != -1)))
         {
             //Common.ExecuteText("UPDATE [Column] SET HideColumnID=" + ddlHideColumn.SelectedValue
             //    + ", HideColumnValue='" + hfHideColumnValue.Value.Replace("'", "''") + "',HideOperator='"+ddlOperator.SelectedValue+"' WHERE ColumnID=" + _qsColumnID);
 
             DataTable dtOldShowWhen = RecordManager.dbg_ShowWhen_Select(_strContext == "field" ? (int?)_iColumnID : null,
-                                                                        _strContext == "dashboard" ? (int?)_iDocumentSectionID : null);
+                                                                        _strContext == "dashboard" ? (int?)_iDocumentSectionID : null,
+                                                                        _strContext == "tabletab" ? (int?)_iTableTabID : null);
 
             DataTable dtShowWhen = (DataTable)ViewState["dtShowWhen"];
 
@@ -392,6 +410,7 @@ public partial class Pages_Record_ShowHide : System.Web.UI.Page
 
                     theShowWhen1.ColumnID = _strContext == "field" ? (int?)_iColumnID : null;
                     theShowWhen1.DocumentSectionID = _strContext == "dashboard" ? (int?)_iDocumentSectionID : null;
+                    theShowWhen1.TableTabID = _strContext == "tabletab" ? (int?)_iTableTabID : null;
                     theShowWhen1.Context = _strContext;
 
                     theShowWhen1.HideColumnID = int.Parse(drSW["HideColumnID"].ToString());
@@ -436,6 +455,7 @@ public partial class Pages_Record_ShowHide : System.Web.UI.Page
 
                     theShowWhenJoin.ColumnID = _strContext == "field" ? (int?)_iColumnID : null;
                     theShowWhenJoin.DocumentSectionID = _strContext == "dashboard" ? (int?)_iDocumentSectionID : null;
+                    theShowWhenJoin.TableTabID = _strContext == "tabletab" ? (int?)_iTableTabID : null;
                     theShowWhenJoin.Context = _strContext;
 
                     theShowWhenJoin.HideColumnID = null;
@@ -462,6 +482,7 @@ public partial class Pages_Record_ShowHide : System.Web.UI.Page
                    
                     theShowWhen.ColumnID = _strContext == "field" ? (int?)_iColumnID : null;
                     theShowWhen.DocumentSectionID = _strContext == "dashboard" ? (int?)_iDocumentSectionID : null;
+                    theShowWhen.TableTabID = _strContext == "tabletab" ? (int?)_iTableTabID : null;
                     theShowWhen.Context = _strContext;
 
 
@@ -496,6 +517,7 @@ public partial class Pages_Record_ShowHide : System.Web.UI.Page
                     
                     theShowWhenJoin.ColumnID = _strContext == "field" ? (int?)_iColumnID : null;
                     theShowWhenJoin.DocumentSectionID = _strContext == "dashboard" ? (int?)_iDocumentSectionID : null;
+                    theShowWhenJoin.TableTabID = _strContext == "tabletab" ? (int?)_iTableTabID : null;
                     theShowWhenJoin.Context = _strContext;
 
                     theShowWhenJoin.HideColumnID = null;
@@ -513,6 +535,7 @@ public partial class Pages_Record_ShowHide : System.Web.UI.Page
                    
                     theShowWhen.ColumnID = _strContext == "field" ? (int?)_iColumnID : null;
                     theShowWhen.DocumentSectionID = _strContext == "dashboard" ? (int?)_iDocumentSectionID : null;
+                    theShowWhen.TableTabID = _strContext == "tabletab" ? (int?)_iTableTabID : null;
                     theShowWhen.Context = _strContext;
 
                     theShowWhen.HideColumnID = int.Parse(drSW["HideColumnID"].ToString());
@@ -536,6 +559,12 @@ public partial class Pages_Record_ShowHide : System.Web.UI.Page
                         + @" AND ShowWhenID NOT IN (" + strActiveShowWhenIDs + @")");
 
                 }
+                else if (_strContext == "tabletab")
+                {
+                    Common.ExecuteText(@"DELETE ShowWhen WHERE TableTabID=" + _iTableTabID.ToString()
+                        + @" AND ShowWhenID NOT IN (" + strActiveShowWhenIDs + @")");
+
+                }
                 else
                 {
                     Common.ExecuteText(@"DELETE ShowWhen WHERE ColumnID=" + _iColumnID.ToString() 
@@ -546,7 +575,8 @@ public partial class Pages_Record_ShowHide : System.Web.UI.Page
         }
 
         if ( ViewState["dtShowWhen"] != null &&
-            ((_strContext=="field" && _iColumnID==-1) || (_strContext=="dashboard" && _iDocumentSectionID==-1)))
+            ((_strContext == "field" && _iColumnID == -1) || (_strContext == "dashboard" && _iDocumentSectionID == -1)
+            || (_strContext == "tabletab" && _iTableTabID == -1)))
         {
             Session["dtShowWhen"] = (DataTable)ViewState["dtShowWhen"];
         }

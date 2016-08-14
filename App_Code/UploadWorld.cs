@@ -259,6 +259,7 @@ public class UploadWorld
 
                 string strCheckFormula = dr["CheckFormula"].ToString();
                 strCheckFormula = Common.GetFromulaMsg("", theColumn.DisplayName, strCheckFormula);
+                strCheckFormula = strCheckFormula.Replace("<br/>", " and ");
                 try
                 {
                     strDisplayName = System.Net.WebUtility.HtmlEncode(strDisplayName);

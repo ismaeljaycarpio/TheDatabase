@@ -5228,13 +5228,15 @@ public class ShowWhen
 {
     public int? ShowWhenID { get; set; }
     public int? ColumnID { get; set; }
+    public int? DocumentSectionID { get; set; }
+    public int? TableTabID { get; set; }
+    public string Context { get; set; }
     public int? HideColumnID { get; set; }
     public string HideColumnValue { get; set; }
     public string HideOperator { get; set; }
     public int? DisplayOrder { get; set; }
     public string JoinOperator { get; set; }
-    public int? DocumentSectionID { get; set; }
-    public string Context { get; set; }
+    
     public ShowWhen()
     {
 

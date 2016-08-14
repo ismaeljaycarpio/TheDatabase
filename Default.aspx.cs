@@ -604,7 +604,7 @@ namespace DocGen.Document
         {
             try
             {
-                DataTable dtShowWhen = RecordManager.dbg_ShowWhen_ForGrid(null,iDocumentSectionID);
+                DataTable dtShowWhen = RecordManager.dbg_ShowWhen_ForGrid(null,iDocumentSectionID,null);
                 if (dtShowWhen.Rows.Count > 0)
                 {
                    

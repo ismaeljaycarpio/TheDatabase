@@ -141,6 +141,19 @@ public partial class Pages_Record_TableDetail : SecurePage
                             });
                         }); 
                     $(function () {
+                            $('.popuplinktt').fancybox({
+                                scrolling: 'auto',
+                                type: 'iframe',
+                                'transitionIn': 'elastic',
+                                'transitionOut': 'none',
+                                width: 1200,
+                                height: 800,
+                                titleShow: false
+                            });
+                        }); 
+
+
+                    $(function () {
                            $('.popuprenametable').fancybox({
                                 scrolling: 'auto',
                                 type: 'iframe',

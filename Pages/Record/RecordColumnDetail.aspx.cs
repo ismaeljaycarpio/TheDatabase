@@ -1531,7 +1531,7 @@ FROM         [Table] INNER JOIN
     protected void PopulateShowWhen()
     {
 
-        DataTable dtTemp = RecordManager.dbg_ShowWhen_Select(int.Parse(_qsColumnID), null);
+        DataTable dtTemp = RecordManager.dbg_ShowWhen_Select(int.Parse(_qsColumnID), null, null);
 
         if (dtTemp.Rows.Count == 0)
         {

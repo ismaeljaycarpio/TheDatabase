@@ -25,7 +25,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
     string _strClickFirstTab = "";
     string _strFilesLocation = "";
     string _strFilesPhisicalPath = "";
-
+    string _strChildSession = "";
     public string ContentPage { get; set; }
     public int TableID { get; set; }
     public int? RecordID { get; set; }
@@ -430,6 +430,34 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
         //HtmlTableRow[] trXB = new HtmlTableRow[_dtRecordTypleColumlns.Rows.Count + 4];
 
+
+        if (TextSearch == null)
+        {
+            TextSearch = "";
+        }
+
+        string strFirstRecord = "";
+        if (TextSearch != "")
+        {
+            strFirstRecord = Common.GetValueFromSQL("SELECT TOP 1 RecordID FROM Record WHERE TableID=" + TableID.ToString() + " AND IsActive= 1 AND (" + TextSearch + ") ORDER BY RecordID");
+        }
+        else
+        {
+            strFirstRecord = "";
+        }
+
+        if (strFirstRecord == "" && RecordID != null)
+        {
+            strFirstRecord = RecordID.ToString();
+        }
+        if (strFirstRecord != "")
+        {
+            ViewState["RecordID"] = strFirstRecord;
+        }
+
+
+
+
         _dtDBTableTab = Common.DataTableFromText("SELECT * FROM TableTab WHERE TableID=" + _theTable.TableID.ToString() + " ORDER BY DisplayOrder");
 
         if (_dtDBTableTab != null)
@@ -439,6 +467,124 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 pnlDetailTab.CssClass = "showhidedivs" + _theTable.TableID.ToString();
               
                 _bTableTabYes = true;
+
+
+
+                //Tab Show When
+                _strChildSession="child" + _iParentRecordID.ToString() + "_" + _theTable.TableID.ToString();
+
+                if(!IsPostBack)
+                {
+                    Session[_strChildSession] = null;
+                }
+
+                Record childRecord = null;
+                if (Session[_strChildSession]!=null)
+                {
+                    string strRecordID = Session[_strChildSession].ToString();
+                    if (Request.Params.Get("__EVENTTARGET")!=null)
+                    {
+                        if (Request.Params.Get("__EVENTTARGET").ToString().Replace("$", "_")==lnkNext.ClientID)
+                        {
+                            strRecordID = GetNextRecordID(strRecordID);
+                        }
+                        if (Request.Params.Get("__EVENTTARGET").ToString().Replace("$", "_") == lnkPrevious.ClientID)
+                        {
+                            strRecordID = GetPreviousRecordID(strRecordID);
+                        }
+                    }
+
+                    childRecord = RecordManager.ets_Record_Detail_Full(int.Parse(strRecordID));
+                }
+                if (childRecord == null && strFirstRecord!="")
+                {
+                    childRecord = RecordManager.ets_Record_Detail_Full(int.Parse(strFirstRecord));
+                }
+
+                if (childRecord != null)
+                {
+                    try
+                    {
+                        string strHaveShowWhen = Common.GetValueFromSQL(@"SELECT TOP 1 SW.TableTabID FROM [ShowWhen] SW JOIN [TableTab] TT
+                                             ON SW.TableTabID=TT.TableTabID
+	                                            WHERE TT.TableID=" + childRecord.TableID.ToString());
+                        if (strHaveShowWhen != "")
+                        {
+                            string strHiddenTableTabID = "-1";
+                            for (int t = 0; t < _dtDBTableTab.Rows.Count; t++)
+                            {
+                                DataTable dtTabShowWhen = RecordManager.dbg_ShowWhen_ForGrid(null, null, int.Parse(_dtDBTableTab.Rows[t]["TableTabID"].ToString()));
+
+                                if (dtTabShowWhen.Rows.Count > 1)
+                                {
+                                    string strFullFormula = "";
+                                    foreach (DataRow drSW in dtTabShowWhen.Rows)
+                                    {
+                                        if (drSW["TableTabID"] != DBNull.Value && drSW["HideColumnID"] != DBNull.Value
+                                            && drSW["HideColumnValue"] != DBNull.Value && drSW["HideOperator"] != DBNull.Value)
+                                        {
+                                            Column theHideColumn = RecordManager.ets_Column_Details(int.Parse(drSW["HideColumnID"].ToString()));
+                                            if (theHideColumn != null)
+                                            {
+                                                string strEachFormula = "Value=0";
+
+                                                if (Common.IsDataValidCommon(theHideColumn.ColumnType, RecordManager.GetRecordValue(ref childRecord, theHideColumn.SystemName),
+                                                   drSW["HideOperator"].ToString(), drSW["HideColumnValue"].ToString()))
+                                                {
+                                                    strEachFormula = "Value=1";
+                                                    
+                                                }
+                                                else
+                                                {
+                                                    strEachFormula = "Value=0";
+                                                }
+
+
+
+                                                if (strEachFormula != "")
+                                                    strFullFormula = strFullFormula + " " + drSW["JoinOperator"].ToString() + " " + strEachFormula;
+
+                                            }
+                                        }
+                                    }
+
+                                    if (strFullFormula != "")
+                                    {
+                                        strFullFormula = strFullFormula.Trim();
+                                        string strError = "";
+
+                                        if (UploadManager.IsDataValid("1", strFullFormula, ref strError))
+                                        {
+                                            //
+                                        }
+                                        else
+                                        {
+                                            strHiddenTableTabID = strHiddenTableTabID + "," + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
+                                        }
+                                    }
+                                }
+
+                            }
+
+
+                            if (strHiddenTableTabID != "-1")
+                            {
+                                _dtDBTableTab = Common.DataTableFromText("SELECT * FROM TableTab WHERE TableID=" +
+                                    _theTable.TableID.ToString() + " AND TableTabID NOT IN (" + strHiddenTableTabID + ")  ORDER BY DisplayOrder");
+                            }
+
+
+                        }
+
+                    }
+                    catch
+                    {
+                        //
+                    }
+
+                }
+
+
 
                 _pnlDetailTabD = new Panel[_dtDBTableTab.Rows.Count];
                 _tblMainD = new HtmlTable[_dtDBTableTab.Rows.Count];
@@ -3621,43 +3767,29 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-        if (RecordID != null)
+        //if (RecordID != null)
+        //{
+
+        //    //MakeChildTables();
+
+        //}
+        //else
+        //{
+        //    //add mode
+        //    //MakeChildTables();
+        //}
+
+
+        
+
+        if (strFirstRecord != "")
         {
-
-            //MakeChildTables();
-
-        }
-        else
-        {
-            //add mode
-            //MakeChildTables();
-        }
-
-
-        if (TextSearch == null)
-        {
-            TextSearch = "";
-        }
-
-
-        if (TextSearch != "")
-        {
-            ViewState["RecordID"] = Common.GetValueFromSQL("SELECT TOP 1 RecordID FROM Record WHERE TableID=" + TableID.ToString() + " AND IsActive= 1 AND (" + TextSearch + ") ORDER BY RecordID");
-        }
-        else
-        {
-            ViewState["RecordID"] = "";
-        }
-
-        if (ViewState["RecordID"].ToString() == "")
-        {
-            ViewState["RecordID"] = RecordID.ToString();
-        }
-
-        if (ViewState["RecordID"].ToString() != "")
-        {
+           
             if(!IsPostBack)
+            {               
                 PopulateRecord();
+            }
+               
         }
         else
         {
@@ -4358,7 +4490,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
             //perform unlimited showwhen
 
-            DataTable dtShowWhen = RecordManager.dbg_ShowWhen_Select(int.Parse(_dtRecordTypleColumlns.Rows[i]["ColumnID"].ToString()),null);
+            DataTable dtShowWhen = RecordManager.dbg_ShowWhen_Select(int.Parse(_dtRecordTypleColumlns.Rows[i]["ColumnID"].ToString()), null, null);
 
             if (dtShowWhen.Rows.Count > 0)
             {
@@ -7345,6 +7477,12 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
         hfRecordID.Value = RecordID.ToString();
+
+        if (_strChildSession!="")
+        {
+            Session[_strChildSession] = RecordID.ToString();
+        }
+
         //RecordID = int.Parse(_qsRecordID);
         _dtRecordedetail = RecordManager.ets_Record_Details((int)RecordID).Tables[1];
         _qsRecord = RecordManager.ets_Record_Detail_Full((int)RecordID);
@@ -9408,7 +9546,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
         if (ViewState["RecordID"].ToString() != "")
         {
-            string strRecordID = Common.GetValueFromSQL("SELECT TOP 1 RecordID FROM Record WHERE TableID=" + TableID.ToString() + " AND IsActive= 1 AND RecordID>" + ViewState["RecordID"].ToString() + " AND (" + TextSearch + ") ORDER BY RecordID");
+            string strRecordID = GetNextRecordID(ViewState["RecordID"].ToString());// Common.GetValueFromSQL("SELECT TOP 1 RecordID FROM Record WHERE TableID=" + TableID.ToString() + " AND IsActive= 1 AND RecordID>" + ViewState["RecordID"].ToString() + " AND (" + TextSearch + ") ORDER BY RecordID");
 
             if (strRecordID != "")
             {
@@ -9419,13 +9557,16 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
             PopulateRecord();
         }
     }
-
+    protected string GetNextRecordID(string baseRecordID)
+    {
+        return Common.GetValueFromSQL("SELECT TOP 1 RecordID FROM Record WHERE TableID=" + TableID.ToString() + " AND IsActive= 1 AND RecordID>" + baseRecordID + " AND (" + TextSearch + ") ORDER BY RecordID");
+    }
 
     protected void lnkPrevious_Click(object sender, EventArgs e)
     {
         if (ViewState["RecordID"].ToString() != "")
         {
-            string strRecordID = Common.GetValueFromSQL("SELECT TOP 1 RecordID FROM Record WHERE TableID=" + TableID.ToString() + " AND IsActive= 1 AND RecordID<" + ViewState["RecordID"].ToString() + " AND (" + TextSearch + ") ORDER BY RecordID DESC");
+            string strRecordID = GetPreviousRecordID(ViewState["RecordID"].ToString());// Common.GetValueFromSQL("SELECT TOP 1 RecordID FROM Record WHERE TableID=" + TableID.ToString() + " AND IsActive= 1 AND RecordID<" + ViewState["RecordID"].ToString() + " AND (" + TextSearch + ") ORDER BY RecordID DESC");
 
             if (strRecordID != "")
             {
@@ -9438,7 +9579,10 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
         }
     }
 
-
+    protected string GetPreviousRecordID(string baseRecordID)
+    {
+        return Common.GetValueFromSQL("SELECT TOP 1 RecordID FROM Record WHERE TableID=" + TableID.ToString() + " AND IsActive= 1 AND RecordID<" + baseRecordID + " AND (" + TextSearch + ") ORDER BY RecordID DESC");
+    }
     protected void AutoCreateUser()
     {
         if (_theTable != null)

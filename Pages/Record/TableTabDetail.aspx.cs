@@ -25,8 +25,33 @@ public partial class Pages_Record_TableTabDetail : SecurePage
         //int iTableTabID = int.Parse(Cryptography.Decrypt(Request.QueryString["TableTabID"].ToString()));
 
         _qsTableID = Cryptography.Decrypt(Request.QueryString["TableID"].ToString());
-           
-            
+
+        if (Request.QueryString["TableTabID"] != null)
+        {
+
+            _qsTableTabID = Cryptography.Decrypt(Request.QueryString["TableTabID"]);
+
+            _iTableTabID = int.Parse(_qsTableTabID);
+        }
+        if (!IsPostBack)
+        {
+            Session["dtShowWhen"] = null;
+            string strShowWhenID = "";
+            if(_qsTableTabID=="")
+            {
+                hlShowWhen.NavigateUrl = "~/Pages/Record/ShowHide.aspx?TableID="+_qsTableID+"&Context=tabletab";
+            }
+            else
+            {
+                hlShowWhen.NavigateUrl = "~/Pages/Record/ShowHide.aspx?TableID=" + _qsTableID + "&Context=tabletab&tabletabid=" + _qsTableTabID;
+                strShowWhenID = Common.GetValueFromSQL("SELECT TOP 1 ShowWhenID FROM ShowWhen WHERE tabletabid=" + _qsTableTabID);
+            } 
+
+            if (strShowWhenID != "")
+            {
+                chkShowWhen.Checked = true;
+            }
+        }
            
         if (Request.QueryString["mode"] == null)
         {
@@ -41,15 +66,7 @@ public partial class Pages_Record_TableTabDetail : SecurePage
                 _qsMode == "edit")
             {
                 _strActionMode = _qsMode;
-
-
-                if (Request.QueryString["TableTabID"] != null)
-                {
-
-                    _qsTableTabID = Cryptography.Decrypt(Request.QueryString["TableTabID"]);
-
-                    _iTableTabID = int.Parse(_qsTableTabID);
-                }
+                             
 
             }
             else
@@ -178,9 +195,72 @@ public partial class Pages_Record_TableTabDetail : SecurePage
 
                         TableTab newTableTab = new TableTab(null, int.Parse(_qsTableID), txtTabName.Text,
                             iDisplayOrder);
-                       
 
-                        RecordManager.dbg_TableTab_Insert(newTableTab);
+
+                        int iTableTabID=RecordManager.dbg_TableTab_Insert(newTableTab);
+
+                        if (chkShowWhen.Checked && Session["dtShowWhen"] != null)
+                        {
+                            //insert new show when
+                            DataTable dtShowWhen = (DataTable)Session["dtShowWhen"];
+                            int iDO = 1;
+                            foreach (DataRow drSW in dtShowWhen.Rows)
+                            {
+                                if (iDO == 1)
+                                {
+                                    if (drSW["HideColumnID"].ToString() == "" || drSW["HideColumnValue"].ToString() == "")
+                                    {
+                                        continue;
+                                    }
+                                    ShowWhen theShowWhen1 = new ShowWhen();
+                                    theShowWhen1.TableTabID = iTableTabID;
+                                    theShowWhen1.Context = "tabletab";
+                                    theShowWhen1.HideColumnID = int.Parse(drSW["HideColumnID"].ToString());
+                                    theShowWhen1.HideColumnValue = drSW["HideColumnValue"].ToString();
+                                    theShowWhen1.HideOperator = drSW["HideOperator"].ToString();
+                                    theShowWhen1.DisplayOrder = 1;
+                                    theShowWhen1.JoinOperator = "";
+                                    theShowWhen1.ShowWhenID = RecordManager.dbg_ShowWhen_Insert(theShowWhen1);
+
+                                    iDO = iDO + 1;
+                                    continue;
+                                }
+                                else
+                                {
+                                    if (drSW["HideColumnID"].ToString() == "" || drSW["HideColumnValue"].ToString() == "" || drSW["JoinOperator"].ToString() == "")
+                                    {
+                                        continue;
+                                    }
+
+
+                                    ShowWhen theShowWhenJoin = new ShowWhen();
+                                    theShowWhenJoin.TableTabID = iTableTabID;
+                                    theShowWhenJoin.Context = "tabletab";
+                                    theShowWhenJoin.HideColumnID = null;
+                                    theShowWhenJoin.HideColumnValue = "";
+                                    theShowWhenJoin.HideOperator = "";
+                                    theShowWhenJoin.DisplayOrder = iDO;
+                                    theShowWhenJoin.JoinOperator = drSW["JoinOperator"].ToString();
+
+                                    theShowWhenJoin.ShowWhenID = RecordManager.dbg_ShowWhen_Insert(theShowWhenJoin);
+                                    iDO = iDO + 1;
+
+                                    ShowWhen theShowWhen = new ShowWhen();
+                                    theShowWhen.TableTabID = iTableTabID;
+                                    theShowWhen.Context = "tabletab";
+                                    theShowWhen.HideColumnID = int.Parse(drSW["HideColumnID"].ToString());
+                                    theShowWhen.HideColumnValue = drSW["HideColumnValue"].ToString();
+                                    theShowWhen.HideOperator = drSW["HideOperator"].ToString();
+                                    theShowWhen.DisplayOrder = iDO;
+                                    theShowWhen.JoinOperator = "";
+
+                                    theShowWhen.ShowWhenID = RecordManager.dbg_ShowWhen_Insert(theShowWhen);
+                                    iDO = iDO + 1;
+
+                                }
+                            }
+
+                        }
 
                         break;
 
@@ -203,6 +283,10 @@ public partial class Pages_Record_TableTabDetail : SecurePage
                         //?
                         break;
                 }
+
+
+               
+
             }
             else
             {

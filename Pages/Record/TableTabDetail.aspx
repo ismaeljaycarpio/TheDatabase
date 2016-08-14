@@ -2,20 +2,48 @@
     CodeFile="TableTabDetail.aspx.cs" Inherits="Pages_Record_TableTabDetail" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HomeContentPlaceHolder" runat="Server">
-    <script language="javascript" type="text/javascript">
-        function abc() {
-            var b = document.getElementById('<%= lnkSave.ClientID %>');
-            if (b && typeof (b.click) == 'undefined') {
-                b.click = function () {
-                    var result = true;
-                    if (b.onclick) result = b.onclick();
-                    if (typeof (result) == 'undefined' || result) {
-                        eval(b.getAttribute('href'));
-                    }
-                }
-            }
+     <link href="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.css")%>" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.pack.js")%>"></script>
 
-        }
+
+
+    <script language="javascript" type="text/javascript">
+
+        $(document).ready(function () {
+
+
+            $(function () {
+                $(".showlink").fancybox({
+                    scrolling: 'auto',
+                    type: 'iframe',
+                    width: 900,
+                    height: 500,
+                    titleShow: false
+                });
+            });
+            $("#chkShowWhen").click(function () {
+                var chkShowWhen = document.getElementById("chkShowWhen");
+                if (chkShowWhen.checked == true) {
+                    $("#hlShowWhen").trigger("click");
+                }
+
+            });
+
+
+            function abc() {
+                var b = document.getElementById('<%= lnkSave.ClientID %>');
+                    if (b && typeof (b.click) == 'undefined') {
+                        b.click = function () {
+                            var result = true;
+                            if (b.onclick) result = b.onclick();
+                            if (typeof (result) == 'undefined' || result) {
+                                eval(b.getAttribute('href'));
+                            }
+                        }
+                    }
+
+                }
+        });
 
       
 
@@ -78,7 +106,17 @@
                                                 ErrorMessage="Page - Required"></asp:RequiredFieldValidator>
                                         </td>
                                     </tr>
-                                   
+                                    <tr id="rrShowWhen" runat="server">
+                                        <td></td>
+                                        <td align="left">
+                                            <asp:CheckBox runat="server" ID="chkShowWhen" Text="" TextAlign="Right" Font-Bold="true"
+                                                ClientIDMode="Static" />
+                                            <asp:HyperLink runat="server" NavigateUrl="~/Pages/Record/ShowHide.aspx" CssClass="showlink"
+                                                ID="hlShowWhen" ClientIDMode="Static">Show When...</asp:HyperLink>
+                                            <asp:HiddenField runat="server" ClientIDMode="Static" ID="hfShowHref" />
+                                            <br />
+                                        </td>
+                                    </tr>
                                     
                                 </table>
                             </div>

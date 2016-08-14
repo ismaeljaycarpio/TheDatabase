@@ -191,7 +191,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                 strExtra = "&View=" + Request.QueryString["View"].ToString();
             }
 
-            return "~/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + strExtra + "&Recordid=";
+            return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + strExtra + "&Recordid=";
         }
         else
         {
@@ -201,7 +201,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             }
             else
             {
-                return "~/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&parentRecordid=" + Request.QueryString["Recordid"].ToString() + "&Recordid=";
+                return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&parentRecordid=" + Request.QueryString["Recordid"].ToString() + "&Recordid=";
             }
 
         }
@@ -222,14 +222,14 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             strExtra = "&View=" + Request.QueryString["View"].ToString();
         }
 
-        return "~/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + strExtra + "&Recordid=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + strExtra + "&Recordid=";
 
     }
 
     public string GetAccountViewURL()
     {
 
-        return "~/Pages/Security/AccountDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&accountid=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&accountid=";
 
     }
 
@@ -710,10 +710,10 @@ function checkAllHR(objRef,GridView) {
                 divEnteredBy.CssClass = "ddlDIV";
                 stgFilter.Style.Add("color", "#ffffff");
                 tblAdvancedOptionChk.Style.Add("color", "#ffffff");
-                imgShowGraph.ImageUrl = "~/Pages/Pager/Images/rrp/Graph.png";
-                imgUpload.ImageUrl = "~/Pages/Pager/Images/rrp/upload.png";
-                ibEmail.ImageUrl = "~/Pages/Pager/Images/rrp/email.png";
-                imgConfig.ImageUrl = "~/Pages/Pager/Images/rrp/config.png";
+                imgShowGraph.ImageUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Pager/Images/rrp/Graph.png";
+                imgUpload.ImageUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Pager/Images/rrp/upload.png";
+                ibEmail.ImageUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Pager/Images/rrp/email.png";
+                imgConfig.ImageUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Pager/Images/rrp/config.png";
 
                 if (_theTable.HeaderColor != "")
                 {
@@ -2823,8 +2823,8 @@ function checkAllHR(objRef,GridView) {
                     PopulateExportTemplate((int)_theTable.TableID);
                     ddlTemplate_SelectedIndexChanged(null, null);
 
-                    hlExportTemplateNew.NavigateUrl = "~/Pages/Export/ExportTemplateItem.aspx?mode=" + Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&SearchCriteriaET=" + Cryptography.Encrypt("-1") + "&fixedbackurl=" + Cryptography.Encrypt(Request.RawUrl);
-                    //hlExportTemplate.NavigateUrl = "~/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) +"&SearchCriteriaET=" + Cryptography.Encrypt("-1");
+                    hlExportTemplateNew.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Export/ExportTemplateItem.aspx?mode=" + Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&SearchCriteriaET=" + Cryptography.Encrypt("-1") + "&fixedbackurl=" + Cryptography.Encrypt(Request.RawUrl);
+                    //hlExportTemplate.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) +"&SearchCriteriaET=" + Cryptography.Encrypt("-1");
                 }
 
 
@@ -3647,7 +3647,7 @@ function checkAllHR(objRef,GridView) {
             strExtra = "";
         }
 
-        return "~/Pages/Record/ViewEditPage.aspx?" + _strNoAjaxView + "TableID=" + Cryptography.Encrypt(_qsTableID)
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/ViewEditPage.aspx?" + _strNoAjaxView + "TableID=" + Cryptography.Encrypt(_qsTableID)
                         + "&ViewSession=" + Cryptography.Encrypt(_strViewSession)
                         + "&ViewID=" + _theView.ViewID.ToString() + (PageType == "c" ? "&tabindex=" + DetailTabIndex.ToString() : "")
                         + ((_strViewPageType == "child" && _iParentTableID != null) ? "&ParentTableID=" + Cryptography.Encrypt(_iParentTableID.ToString()) : "")
@@ -4387,7 +4387,7 @@ function checkAllHR(objRef,GridView) {
                 //System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
                 //xmlDoc.Load(new StringReader(_theView.FilterControlsInfo));
                 //Pages_UserControl_ViewDetail vdFilter = new Pages_UserControl_ViewDetail();
-                //vdFilter = (Pages_UserControl_ViewDetail)LoadControl("~/Pages/UserControl/ViewDetail.ascx");
+                //vdFilter = (Pages_UserControl_ViewDetail)LoadControl( "~/Pages/UserControl/ViewDetail.ascx");
                 //vdFilter.PopulateFilterControl(xmlDoc.OuterXml, ((int)_theView.TableID));
                 //_theView.SortOrder=vdFilter.GetViewOrderString();
                 _theView.SortOrder = "";
@@ -4801,12 +4801,12 @@ function checkAllHR(objRef,GridView) {
             ViewState["_iSearchCriteriaID"] = _iSearchCriteriaID;
             Session["SCid" + hfViewID.Value] = _iSearchCriteriaID;
 
-            hlShowGraph.NavigateUrl = "~/Pages/Graph/RecordChart.aspx?SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString());
-            //hlSchedule.NavigateUrl = "~/Pages/Schedule/MonitorSchedules.aspx?SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString());
+            hlShowGraph.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Graph/RecordChart.aspx?SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString());
+            //hlSchedule.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Schedule/MonitorSchedules.aspx?SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString());
 
-            hlUpload.NavigateUrl = "~/Pages/Record/RecordUpload.aspx?SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString());
+            hlUpload.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordUpload.aspx?SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString());
 
-            //hlDocuments.NavigateUrl = "~/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString());
+            //hlDocuments.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString());
 
         }
         catch (Exception ex)
@@ -5014,7 +5014,7 @@ function checkAllHR(objRef,GridView) {
                 strExtra = strExtra + "&fixedurl=" + Cryptography.Encrypt("~/Default.aspx");
             }
 
-            string strAddURL = "~/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + strExtra;
+            string strAddURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + strExtra;
 
             if (_theTable.AddOpensForm != null && (bool)_theTable.AddOpensForm && _theTable.AddRecordSP != "")
             {
@@ -5030,7 +5030,7 @@ function checkAllHR(objRef,GridView) {
             }
             else
             {
-                return "~/Pages/" + _strRecordFolder + "/RecordDetail.aspx?tabindex=" + DetailTabIndex.ToString() + "&onlyback=yes&parentRecordid=" + Request.QueryString["Recordid"].ToString() + "&mode=" + Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+                return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?tabindex=" + DetailTabIndex.ToString() + "&onlyback=yes&parentRecordid=" + Request.QueryString["Recordid"].ToString() + "&mode=" + Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
             }
         }
 
@@ -5145,7 +5145,7 @@ function checkAllHR(objRef,GridView) {
         {
             strSearch = Request.QueryString["SearchCriteriaID"].ToString();
         }
-        string strURL = "~/Pages/Record/FormSetWizard.aspx?SearchCriteriaID=" + strSearch
+        string strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetWizard.aspx?SearchCriteriaID=" + strSearch
     + "&FormSetID=" + Cryptography.Encrypt(ddlFormSet.SelectedValue)
     + "&ParentTableID=" + Cryptography.Encrypt(_theTable.TableID.ToString())
     + "&ParentRecordID=" + Cryptography.Encrypt(iNewRecordID.ToString()) + "&ps=0";
@@ -5276,7 +5276,7 @@ function checkAllHR(objRef,GridView) {
     //            null,null,int.Parse(Session["AccountID"].ToString()));
 
     //    int iSearchCriteriaID = RecordManager.ets_SearchCriteria_Insert(newSearchCriteria);
-    //    Response.Redirect("~/Pages/Graph/RecordChart.aspx?SearchCriteriaID="+iSearchCriteriaID.ToString()+"&TableID=" + TableID.ToString() );
+    //    Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Graph/RecordChart.aspx?SearchCriteriaID="+iSearchCriteriaID.ToString()+"&TableID=" + TableID.ToString() );
 
     //}
 
@@ -6159,7 +6159,7 @@ function checkAllHR(objRef,GridView) {
             {
                 if (_bCustomDDL)
                 {
-                    EditHyperLink.ImageUrl = "~/Pages/Pager/Images/rrp/edit_s.png";
+                    EditHyperLink.ImageUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Pager/Images/rrp/edit_s.png";
                 }
             }
 
@@ -6578,7 +6578,7 @@ function checkAllHR(objRef,GridView) {
                                         {
                                             string strFilePath = Cryptography.Encrypt(_strFilesLocation + "/UserFiles/AppFiles/" + strValueAsString);
                                             string strFileName = Cryptography.Encrypt(strValueAsString.Substring(37));
-                                            string strFileURL = "~/Pages/Security/Filedownload.aspx?FilePath="
+                                            string strFileURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Filedownload.aspx?FilePath="
                             + strFilePath + "&FileName=" + strFileName;
 
                                             e.Row.Cells[j + 4].Text = "<a target='_blank' href='" + strFileURL + "'>"
@@ -6934,7 +6934,7 @@ function checkAllHR(objRef,GridView) {
                                                 if (strPaRecordID != "" && bIsRecord)
                                                 {
 
-                                                    string strLink = "~/Pages/Record/RecordDetail.aspx?mode=" +
+                                                    string strLink = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" +
                                                 Cryptography.Encrypt(strMode) + "&TableID=" + Cryptography.Encrypt(_dtRecordColums.Rows[i]["TableTableID"].ToString())
                                                 + "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&RecordID=" + Cryptography.Encrypt(strPaRecordID) + "&UrlReferrer=y" + strFixedURL;
                                                     string strViewHTML = "<a  href='" + strLink + "' target='" + strTarget + "'> " + e.Row.Cells[j + 4].Text.ToString() + " <a>";
@@ -6954,7 +6954,7 @@ function checkAllHR(objRef,GridView) {
                                                             if (dtTheRecord.Rows.Count > 0)
                                                             {
                                                                 strPaRecordID = dtTheRecord.Rows[0]["RecordID"].ToString();
-                                                                string strLink = "~/Pages/Record/RecordDetail.aspx?mode=" +
+                                                                string strLink = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" +
                                                Cryptography.Encrypt(strMode) + "&TableID=" + Cryptography.Encrypt(_dtRecordColums.Rows[i]["TableTableID"].ToString())
                                                + "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&RecordID=" + Cryptography.Encrypt(strPaRecordID) + "&UrlReferrer=y" + strFixedURL;
                                                                 string strViewHTML = "<a  href='" + strLink + "'  target='" + strTarget + "'> " + e.Row.Cells[j + 4].Text.ToString() + " <a>";
@@ -7052,7 +7052,7 @@ function checkAllHR(objRef,GridView) {
                                     //        {
                                     //            if (strPaRecordID != "")
                                     //            {
-                                    //                string strLink = "~/Pages/Record/RecordDetail.aspx?mode=" +
+                                    //                string strLink = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" +
                                     //            Cryptography.Encrypt(strMode) + "&TableID=" + Cryptography.Encrypt(_dtRecordColums.Rows[i]["TableTableID"].ToString())
                                     //            + "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&RecordID=" + Cryptography.Encrypt(strPaRecordID) + "&UrlReferrer=y";
                                     //                string strViewHTML = "<a  href='" + strLink + "'> " + strDisplayColumn + " <a>";
@@ -7527,7 +7527,7 @@ function checkAllHR(objRef,GridView) {
                 //liTemp.Attributes.Add("DataValue", dr["SystemName"].ToString());
                 chklstFields.Items.Add(liTemp);
             }
-            hlExportTemplate.NavigateUrl = "~/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&SearchCriteriaET=" + Cryptography.Encrypt("-1");
+            hlExportTemplate.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&SearchCriteriaET=" + Cryptography.Encrypt("-1");
 
         }
         else
@@ -7543,7 +7543,7 @@ function checkAllHR(objRef,GridView) {
                 //liTemp.Attributes.Add("DataValue", dr["SystemName"].ToString());
                 chklstFields.Items.Add(liTemp);
             }
-            hlExportTemplate.NavigateUrl = "~/Pages/Export/ExportTemplateItem.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&SearchCriteriaET=" + Cryptography.Encrypt("-1") + "&ExportTemplateID=" + Cryptography.Encrypt(ddlTemplate.SelectedValue) + "&fixedbackurl=" + Cryptography.Encrypt(Request.RawUrl);
+            hlExportTemplate.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Export/ExportTemplateItem.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&SearchCriteriaET=" + Cryptography.Encrypt("-1") + "&ExportTemplateID=" + Cryptography.Encrypt(ddlTemplate.SelectedValue) + "&fixedbackurl=" + Cryptography.Encrypt(Request.RawUrl);
 
         }
 
@@ -8779,7 +8779,7 @@ function checkAllHR(objRef,GridView) {
         string strSendEmailURl = "";
         if (PageType == "p")
         {
-            //Response.Redirect("~/Pages/Record/SendEmail.aspx?TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&recordids=" + Cryptography.Encrypt(iSearchCriteriaID.ToString()) + strSC, false);
+            //Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/SendEmail.aspx?TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&recordids=" + Cryptography.Encrypt(iSearchCriteriaID.ToString()) + strSC, false);
             strSendEmailURl = "/Pages/Record/SendEmail.aspx?TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&recordids=" + Cryptography.Encrypt(iSearchCriteriaID.ToString()) + strSC;
         }
         else
@@ -8793,7 +8793,7 @@ function checkAllHR(objRef,GridView) {
                 }
             }
             strSendEmailURl = "/Pages/Record/SendEmail.aspx?TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&recordids=" + Cryptography.Encrypt(iSearchCriteriaID.ToString()) + strSC + "&fixedurl=" + Cryptography.Encrypt(Request.RawUrl) + "&tabindex=" + DetailTabIndex.ToString();
-            //Response.Redirect("~/Pages/Record/SendEmail.aspx?TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&recordids=" + Cryptography.Encrypt(iSearchCriteriaID.ToString()) + strSC + "&fixedurl=" + Cryptography.Encrypt(Request.RawUrl) + "&tabindex=" + DetailTabIndex.ToString(), false);
+            //Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/SendEmail.aspx?TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&recordids=" + Cryptography.Encrypt(iSearchCriteriaID.ToString()) + strSC + "&fixedurl=" + Cryptography.Encrypt(Request.RawUrl) + "&tabindex=" + DetailTabIndex.ToString(), false);
 
         }
 
@@ -11220,7 +11220,7 @@ function checkAllHR(objRef,GridView) {
                     csvWriter.Close();
 
                     Fs.Close();
-                    HttpContext.Current.Response.Redirect("~/Pages/User/SendEmail.aspx?Source=" + Cryptography.Encrypt("Recordlist") + "&SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&FileName=" + Cryptography.Encrypt(strFileName), false);
+                    HttpContext.Current.Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/SendEmail.aspx?Source=" + Cryptography.Encrypt("Recordlist") + "&SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&FileName=" + Cryptography.Encrypt(strFileName), false);
 
                 }
             }
@@ -15246,7 +15246,7 @@ function checkAllHR(objRef,GridView) {
 
     //        //now lets email this to the user.
 
-    //        Response.Redirect("~/Pages/User/SendEmail.aspx?Source=" + Cryptography.Encrypt("Recordlist") + "&SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&FileName=" + Cryptography.Encrypt(strFileName), false);
+    //        Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/SendEmail.aspx?Source=" + Cryptography.Encrypt("Recordlist") + "&SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&FileName=" + Cryptography.Encrypt(strFileName), false);
 
     //    }
     //    catch (Exception ex)
@@ -15260,7 +15260,7 @@ function checkAllHR(objRef,GridView) {
 
     protected void ddlTableMenu_SelectedIndexChanged(object sender, EventArgs e)
     {
-        Response.Redirect("~/Pages/" + _strRecordFolder + "/RecordList.aspx?TableID=" + Cryptography.Encrypt(ddlTableMenu.SelectedValue), false);
+        Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordList.aspx?TableID=" + Cryptography.Encrypt(ddlTableMenu.SelectedValue), false);
     }
 
 

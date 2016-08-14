@@ -612,6 +612,28 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
         lblFristTabTableName.Text = _theTable.TableName;
 
+        if (Request.QueryString["RecordID"] != null || _bCopyRecord == true)
+        {
+            if (Request.QueryString["RecordID"] != null)
+            {
+                _qsRecordID = Cryptography.Decrypt(Request.QueryString["RecordID"]);
+            }
+            if (Request.QueryString["CopyRecordID"] != null)
+            {
+                _qsRecordID = Cryptography.Decrypt(Request.QueryString["CopyRecordID"]);
+            }
+            if (int.TryParse(_qsRecordID, out _iRecordID) == false)
+            {
+                //not a Record ID, what to do
+            }
+            hfRecordID.Value = _qsRecordID;
+            _dtRecordedetail = RecordManager.ets_Record_Details(_iRecordID).Tables[1];
+            _theRecord = RecordManager.ets_Record_Detail_Full(_iRecordID);
+
+        }
+
+
+
         _dtDBTableTab = Common.DataTableFromText("SELECT * FROM TableTab WHERE TableID=" +
             _theTable.TableID.ToString() + " ORDER BY DisplayOrder");
 
@@ -621,6 +643,91 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             {
 
                 _bTableTabYes = true;
+
+               
+                //Tab Show When
+                if (_theRecord!=null)
+                {
+                    try
+                    {
+                        string strHaveShowWhen = Common.GetValueFromSQL(@"SELECT TOP 1 SW.TableTabID FROM [ShowWhen] SW JOIN [TableTab] TT
+                                             ON SW.TableTabID=TT.TableTabID
+	                                            WHERE TT.TableID=" + _theRecord.TableID.ToString());
+                        if(strHaveShowWhen!="")
+                        {
+                            string strHiddenTableTabID = "-1";
+                             for (int t = 0; t < _dtDBTableTab.Rows.Count; t++)
+                             {
+                                 DataTable dtTabShowWhen = RecordManager.dbg_ShowWhen_ForGrid(null, null, int.Parse(_dtDBTableTab.Rows[t]["TableTabID"].ToString()));
+
+                                 if(dtTabShowWhen.Rows.Count>1)
+                                 {
+                                     string strFullFormula = "";
+                                     foreach (DataRow drSW in dtTabShowWhen.Rows)
+                                     {
+                                         if (drSW["TableTabID"] != DBNull.Value && drSW["HideColumnID"] != DBNull.Value
+                                             && drSW["HideColumnValue"] != DBNull.Value && drSW["HideOperator"] != DBNull.Value)
+                                         {
+                                             Column theHideColumn = RecordManager.ets_Column_Details(int.Parse(drSW["HideColumnID"].ToString()));
+                                             if (theHideColumn != null)
+                                             {
+                                                 string strEachFormula = "Value=0";
+
+                                                 if (Common.IsDataValidCommon(theHideColumn.ColumnType, RecordManager.GetRecordValue(ref _theRecord, theHideColumn.SystemName),
+                                                    drSW["HideOperator"].ToString(), drSW["HideColumnValue"].ToString()))
+                                                {
+                                                    strEachFormula = "Value=1";
+                                                   
+                                                }
+                                                else
+                                                {
+                                                    strEachFormula = "Value=0";
+                                                }
+                                                
+                                                 
+
+                                                 if (strEachFormula != "")
+                                                     strFullFormula = strFullFormula + " " + drSW["JoinOperator"].ToString() + " " + strEachFormula;
+
+                                             }
+                                         }
+                                     }
+
+                                     if (strFullFormula != "")
+                                     {
+                                         strFullFormula = strFullFormula.Trim();
+                                         string strError = "";
+
+                                         if (UploadManager.IsDataValid("1", strFullFormula, ref strError))
+                                         {
+                                             //
+                                         }
+                                         else
+                                         {
+                                             strHiddenTableTabID = strHiddenTableTabID + "," + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
+                                         }
+                                     }
+                                 }
+
+                             }
+
+
+                            if(strHiddenTableTabID!="-1")
+                            {
+                                _dtDBTableTab = Common.DataTableFromText("SELECT * FROM TableTab WHERE TableID=" +
+                                    _theTable.TableID.ToString() + " AND TableTabID NOT IN (" + strHiddenTableTabID + ")  ORDER BY DisplayOrder");
+                            }
+
+
+                        }
+                       
+                    }
+                    catch
+                    {
+                        //
+                    }
+
+                }
 
                 _pnlDetailTabD = new Panel[_dtDBTableTab.Rows.Count];
                 _tblMainD = new HtmlTable[_dtDBTableTab.Rows.Count];
@@ -4395,14 +4502,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
 
-            if (Request.QueryString["RecordID"] != null)
-            {
-                _qsRecordID = Cryptography.Decrypt(Request.QueryString["RecordID"]);
-            }
-            if (Request.QueryString["CopyRecordID"] != null)
-            {
-                _qsRecordID = Cryptography.Decrypt(Request.QueryString["CopyRecordID"]);
-            }
+            
 
 
             if (_theTable != null && _bCopyRecord == false)
@@ -4465,15 +4565,9 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             }
 
 
-            if (int.TryParse(_qsRecordID, out _iRecordID) == false)
-            {
-                //not a Record ID, what to do
-            }
+           
 
-            hfRecordID.Value = _qsRecordID;
-            //_iRecordID = int.Parse(_qsRecordID);
-            _dtRecordedetail = RecordManager.ets_Record_Details(_iRecordID).Tables[1];
-            _theRecord = RecordManager.ets_Record_Detail_Full(_iRecordID);
+          
 
             if (_qsMode == "edit")
                 trReasonForChange.Visible = true;
@@ -6779,7 +6873,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
 
-            DataTable dtShowWhen = RecordManager.dbg_ShowWhen_Select(int.Parse(_dtColumnsDetail.Rows[i]["ColumnID"].ToString()),null);
+            DataTable dtShowWhen = RecordManager.dbg_ShowWhen_Select(int.Parse(_dtColumnsDetail.Rows[i]["ColumnID"].ToString()), null, null);
 
             if (dtShowWhen.Rows.Count > 0)
             {
@@ -8822,7 +8916,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
     protected void ResetTabs()
     {
-        if (_bTableTabYes)
+        if (_bTableTabYes && _strActionMode!="add")
         {
 
 
@@ -10639,6 +10733,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 tabDetail.ActiveTabIndex = 0;
             }
         }
+        ResetTabs();
     }
 
     protected void lnkWordWxport_Click(object sender, EventArgs e)
@@ -10903,6 +10998,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         {
 
         }
+        ResetTabs();
     }
     protected void lnkSaveClose_Click(object sender, EventArgs e)
     {
@@ -10958,16 +11054,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                 }
             }
-            else
-            {
-                //upDetailDynamic.Update();
-
-            }
+            
         }
         catch (Exception ex)
         {
             lblMsg.Text = ex.Message + "  " + ex.StackTrace;
+           
         }
+        ResetTabs();
     }
 
 
@@ -11188,20 +11282,16 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 if (_strActionMode.ToLower() == "add")
                 {
                     Response.Redirect(hlEditLink.NavigateUrl, false);
+                    return;
                 }
-            }
-            else
-            {
-
-            }
-
+            }           
 
         }
         catch (Exception ex)
         {
             //
         }
-
+        ResetTabs();
     }
 
     protected void AutoCreateUser()

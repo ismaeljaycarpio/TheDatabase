@@ -175,12 +175,16 @@
                                                                         <asp:Label runat="server" ID="lblValidData" ForeColor="Green" Text="Valid Data: 0"
                                                                             Font-Bold="true"></asp:Label>
                                                                     </td>
-                                                                    <td style="width: 10px;"></td>
-                                                                    <td>
+                                                                   
+                                                                    <td style="padding-left:10px;">
                                                                         <asp:Label runat="server" ID="lblWarning" ForeColor="Blue" Text="Warnings: 0" Font-Bold="true"></asp:Label>
                                                                     </td>
-                                                                    <td style="width: 10px;"></td>
-                                                                    <td>
+                                                                   
+                                                                    <td style="padding-left:10px;" runat="server" id="tdExceedance">
+                                                                        <asp:Label runat="server" ID="lblExceedance" ForeColor="Orange" Text="Exceedances: 0" Font-Bold="true"></asp:Label>
+                                                                    </td>
+                                                                   
+                                                                    <td style="padding-left:10px;">
                                                                         <asp:Label runat="server" ID="lblInvalidData" ForeColor="Red" Text="Invalid Data: 0"
                                                                             Font-Bold="true"></asp:Label>
                                                                     </td>

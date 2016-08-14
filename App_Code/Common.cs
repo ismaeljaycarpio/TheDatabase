@@ -331,6 +331,16 @@ public class Common
         return true;
     }
 
+    public static bool SO_ShowExceedances(int? iAccountID, int? iTableID)
+    {
+        string strOptionValue = SystemData.SystemOption_ValueByKey_Account("Show Exceedances", iAccountID, iTableID);
+        if (strOptionValue != "" && strOptionValue.ToLower() == "no")
+        {
+            return false;
+        }
+        return true;
+    }
+
     //END of Import Template 
 
     public static bool SO_SearchAllifToIsNull(int? iAccountID, int? iTableID)

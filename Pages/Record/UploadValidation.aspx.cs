@@ -1023,6 +1023,29 @@ public partial class Pages_Record_UploadValidation : SecurePage
 
             lblWarning.Text = "Warnings: " + iTN.ToString() + "&nbsp;<a href='#stWarnings'> View</a>";
 
+            if(Common.SO_ShowExceedances(_qsTable.AccountID,_qsTable.TableID))
+            {
+                tdExceedance.Visible = true;
+                string strWC = Common.GetValueFromSQL(@"Select COUNT(RecordID)
+                        FROM [TempRecord] WHERE WarningReason is not null AND RejectReason is null 
+                                AND WarningReason LIKE '%WARNING:%'   AND WarningReason NOT LIKE '%EXCEEDANCE:%'
+                                AND BatchID =" + _qsBatchID.ToString());
+                string strEC = Common.GetValueFromSQL(@"Select COUNT(RecordID)
+                        FROM [TempRecord] WHERE WarningReason is not null AND RejectReason is null 
+                                AND WarningReason LIKE '%EXCEEDANCE:%'
+                                AND BatchID =" + _qsBatchID.ToString());
+                if (strWC == "")
+                    strWC = "0";
+                if (strEC == "")
+                    strEC = "0";
+                lblWarning.Text = "Warnings: " + strWC + "&nbsp;<a href='#stWarnings'> View</a>";
+                lblExceedance.Text = "Exceedances: " + strEC.ToString() + "&nbsp;<a href='#stWarnings'> View</a>";
+            }
+            else
+            {
+                tdExceedance.Visible = false;
+            }
+
             GridViewRow gvr = gvWarning.TopPagerRow;
             if (gvr != null)
             {

@@ -15,6 +15,7 @@ public partial class Pages_UserControl_ShowWhenCondition : System.Web.UI.UserCon
     public int? ColumnID { get; set; }
     
     public int? DocumentSectionID { get; set; }
+    public int? TableTabID { get; set; }
     public bool? ShowTable { get; set; }
 
     public event EventHandler ddlHideColumn_Changed;
