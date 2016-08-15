@@ -515,7 +515,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                             {
                                 DataTable dtTabShowWhen = RecordManager.dbg_ShowWhen_ForGrid(null, null, int.Parse(_dtDBTableTab.Rows[t]["TableTabID"].ToString()));
 
-                                if (dtTabShowWhen.Rows.Count > 1)
+                                if (dtTabShowWhen.Rows.Count > 0)
                                 {
                                     string strFullFormula = "";
                                     foreach (DataRow drSW in dtTabShowWhen.Rows)

@@ -615,7 +615,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
             }
 
 
-            if (!Common.HaveAccess(_strRecordRightID, "1,2,3,4,5,7"))
+            if (!Common.HaveAccess(_strRecordRightID, "1,2,3,4,5,7,8,9"))
             { Response.Redirect("~/Default.aspx", false); }
 
 
@@ -659,7 +659,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                         }
                         else
                         {
-                            if (Common.HaveAccess(_strRecordRightID, "1,2"))
+                            if (Common.HaveAccess(_strRecordRightID, "1,2,8,9"))
                             {
                                 divSubmit.Visible = false;
                                 divImport.Visible = true;

@@ -660,7 +660,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                              {
                                  DataTable dtTabShowWhen = RecordManager.dbg_ShowWhen_ForGrid(null, null, int.Parse(_dtDBTableTab.Rows[t]["TableTabID"].ToString()));
 
-                                 if(dtTabShowWhen.Rows.Count>1)
+                                 if(dtTabShowWhen.Rows.Count>0)
                                  {
                                      string strFullFormula = "";
                                      foreach (DataRow drSW in dtTabShowWhen.Rows)

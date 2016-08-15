@@ -485,6 +485,9 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
         ltScriptHere.Text = @"
 <script type='text/javascript'>
+
+
+
     function MouseEvents(objRef, evt) {
         var checkbox = objRef.getElementsByTagName('input')[0];
 
@@ -510,6 +513,39 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             }
         }
     }
+   function toggleAndOr(t, hf) {
+            if (t.text == 'and') {
+                t.text = 'or';
+            } else {
+                t.text = 'and';
+            }
+            document.getElementById(hf).value = t.text;
+        }
+
+        function abc() {
+            var b = document.getElementById('"+ lnkSearch.ClientID+ @"');
+            if (b && typeof (b.click) == 'undefined') {
+                b.click = function () {
+                    var result = true;
+                    if (b.onclick) result = b.onclick();
+                    if (typeof (result) == 'undefined' || result) {
+                        eval(b.getAttribute('href'));
+                    }
+                }
+            }
+
+        }
+
+        function AddClick() {
+
+            $('#ctl00_HomeContentPlaceHolder_rlOne_btnAdd').trigger('click');
+        }
+
+        function CreateFile() {
+
+                document.getElementById('btnEmail').click();
+
+            }
 
 
     function Check_Click(objRef) {
@@ -664,7 +700,54 @@ function checkAllHR(objRef,GridView) {
             }
         }
     }
+
+  function SelectAllCheckboxes(spanChk) {
+
+            // alert($(spanChk).attr('id'));
+            checkAll(spanChk);
+            var GridView = spanChk.parentNode.parentNode.parentNode;
+
+            //alert($(GridView).attr('id'));
+            // alert(GridView.id);
+
+            var inputList = GridView.getElementsByTagName('input');
+            for (var i = 0; i < inputList.length; i++) {
+                var row = inputList[i].parentNode.parentNode;
+                if (inputList[i].type == 'checkbox' && spanChk != inputList[i]) {
+                    if (spanChk.checked) {
+                        inputList[i].checked = true;
+                    }
+                    else {
+                        inputList[i].checked = false;
+                    }
+                }
+
+            }
+        }
+
+
+  function SelectAllCheckboxesHR(spanChk, GridView) {
+
+            checkAllHR(spanChk, GridView);
+            var inputList = GridView.getElementsByTagName('input');
+            for (var i = 0; i < inputList.length; i++) {
+                var row = inputList[i].parentNode.parentNode;
+                if (inputList[i].type == 'checkbox' && spanChk != inputList[i]) {
+                    if (spanChk.checked) {
+                        inputList[i].checked = true;
+                    }
+                    else {
+                        inputList[i].checked = false;
+                    }
+                }
+
+            }
+        }
+
        " + strMainListJS + @"
+
+
+
 </script>
 ";
 
@@ -3813,7 +3896,220 @@ function checkAllHR(objRef,GridView) {
                 && _theView != null && _theView.ShowFixedHeader != null && (bool)_theView.ShowFixedHeader)
             {
                 hfUsingScrol.Value = "yes";
-                ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "Key", "<script>SetStyleEvent();MakeStaticHeader('" + gvTheGrid.ClientID + "', 600, 1100 , 90 ,false); </script>", false);
+
+                //ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "Key", "<script>SetStyleEvent();MakeStaticHeader('" + gvTheGrid.ClientID + "', 600, 1100 , 90 ,false); </script>", false);
+                string strStaticheaderJS = @"
+
+     $(document).ready(function () {
+        
+
+
+
+                $.fn.visibleHeight = function () {
+                    var elBottom, elTop, scrollBot, scrollTop, visibleBottom, visibleTop;
+                    scrollTop = $(window).scrollTop();
+                    scrollBot = scrollTop + $(window).height();
+                    elTop = this.offset().top;
+                    elBottom = elTop + this.outerHeight();
+                    visibleTop = elTop < scrollTop ? scrollTop : elTop;
+                    visibleBottom = elBottom > scrollBot ? scrollBot : elBottom;
+                    return visibleBottom - visibleTop
+                }
+
+
+
+
+        function SetStyleEvent() {
+
+            $('#ctl00_HomeContentPlaceHolder_rlOne_UpdateProgress1').fadeIn();
+
+            var DivPR = document.getElementById('DivPagerRow');
+            var DivHR = document.getElementById('DivHeaderRow');
+            var DivMC = document.getElementById('DivMainContent');
+            var DivFR = document.getElementById('DivFooterRow');
+            var DivR = document.getElementById('DivRoot');
+
+            DivMC.style.overflowY = 'auto';
+            DivMC.style.overflowX = 'hidden';
+            DivMC.style.minWidth = '1000px';
+
+            DivPR.style.minWidth = '980px';
+            DivHR.style.minWidth = '1000px';
+            DivFR.style.minWidth = '1000px';
+            DivR.style.minWidth = '980px';
+
+            DivMC.style.paddingRight = '17px';
+            DivHR.style.paddingRight = '17px';
+            DivR.style.overflow = 'hidden';
+
+
+            var tbl = document.getElementById('ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid');
+
+
+            var chkAll = $(tbl.rows[1]).find('#ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid_ctl02_chkAll');
+            $(chkAll).attr('onclick', 'javascript: SelectAllCheckboxesHR(this,ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid);');
+
+
+//            var iTD0 = 0;
+//            $(tbl.rows[1]).find('th').each(function () {
+//
+//                var aTH = $(tbl.rows[1]).find('th').eq(iTD0);
+//                var aTD = $(tbl.rows[2]).find('td').eq(iTD0);                
+//                var iFirstWidth=$(tbl.rows[2]).find('td').eq(iTD0).width()
+//              
+//                $(aTD).width(iFirstWidth);
+//                $(aTH).width(iFirstWidth);
+//
+//                iTD0 = iTD0 + 1;
+//            });          
+
+        }
+
+
+         function MakeStaticHeader(gridId, height, width, headerHeight, isFooter) {
+            var tbl = document.getElementById(gridId);
+            //alert($('#DivMainContent').visibleHeight());
+            height = $('#DivMainContent').visibleHeight();
+            height = height - 65;
+            if (tbl) {
+                var DivPR = document.getElementById('DivPagerRow');
+                var DivHR = document.getElementById('DivHeaderRow');
+                var DivMC = document.getElementById('DivMainContent');
+                var DivFR = document.getElementById('DivFooterRow');
+                var DivR = document.getElementById('DivRoot');
+                //var scrollbarWidth = DivMC.offsetWidth - DivMC.clientWidth;
+
+                //*** Set divheaderRow Properties ****
+                var oWidth = $(tbl).outerWidth();
+                width = $(tbl).width();
+                var iWidth = $(tbl).innerWidth();
+                headerHeight = DivHR.style.height;
+                var paregHeight = 45;
+                $(DivR).width(width - 20);
+
+                //pager
+                DivPR.style.height = paregHeight + 'px'; // headerHeight / 2
+                //DivPR.style.width = (parseInt(width)) + 'px';
+                //$(DivPR).outerWidth(oWidth - 20);
+                $(DivPR).width(width - 20);
+                //$(DivPR).innerWidth(iWidth - 20);
+
+                DivPR.style.position = 'relative';
+                DivPR.style.top = '0px';
+                //DivPR.style.verticalAlign = 'top';
+
+                DivHR.style.height = headerHeight + 'px';// headerHeight/2
+                //$(DivHR).outerWidth(oWidth - 20 );
+                $(DivHR).width(width);
+                //$(DivHR).innerWidth(iWidth - 20 );
+
+
+                DivHR.style.position = 'relative';
+                DivHR.style.top = '0px';
+                // DivHR.style.verticalAlign = 'top';
+                //DivHR.rules = 'none';
+
+
+                //*** Set divMainContent Properties ****
+                //$(DivMC).outerWidth(oWidth);
+                $(DivMC).width(width);
+                //$(DivMC).innerWidth(iWidth);
+
+                DivMC.style.height = height + 'px';
+                DivMC.style.position = 'relative';
+                DivMC.style.top = '0px'; //(headerHeight) + 'px';// //
+                DivMC.style.zIndex = '0';
+
+
+
+
+                if (isFooter) {
+                    //*** Set divFooterRow Properties ****
+                    DivFR.style.width = (parseInt(width)) + 'px';
+                    DivFR.style.position = 'relative';
+                    DivFR.style.top = -(headerHeight) + 'px';
+                    DivFR.style.verticalAlign = 'top';
+                    DivFR.style.paddingtop = '2px';
+
+
+                    var tblfr = tbl.cloneNode(true);
+                    tblfr.removeChild(tblfr.getElementsByTagName('tbody')[0]);
+                    var tblBody = document.createElement('tbody');
+                    tblfr.style.width = '100%';
+                    tblfr.cellSpacing = '0';
+                    tblfr.border = '0px';
+                    tblfr.rules = 'none';
+                    //*****In the case of Footer Row *******
+                    tblBody.appendChild(tbl.rows[tbl.rows.length - 1]);
+                    tblfr.appendChild(tblBody);
+                    DivFR.appendChild(tblfr);
+                }
+                //****Copy Header in divHeaderRow****
+
+                var tblPR = tbl.cloneNode(true);
+                tblPR.removeChild(tblPR.getElementsByTagName('tbody')[0]);
+                $(tblPR).attr('id', gridId + 'PR');
+                $(tblPR).css({ minWidth: '980px' });
+
+                var tblHR = tbl.cloneNode(true);
+                tblHR.removeChild(tblHR.getElementsByTagName('tbody')[0]);
+                $(tblHR).attr('id', gridId + 'HR');
+                //$(tblHR).css({ table-layout: fixed });
+
+
+                var tblBodyPR = document.createElement('tbody');
+                var tblBodyHR = document.createElement('tbody');
+
+
+                tblBodyPR.appendChild(tbl.rows[0]);
+                tblBodyHR.appendChild(tbl.rows[0]);
+               
+
+                tblPR.appendChild(tblBodyPR);
+                tblHR.appendChild(tblBodyHR);
+
+                DivPR.appendChild(tblPR);
+                DivHR.appendChild(tblHR);
+
+            var iTD0 = 0;
+            $(tbl.rows[0]).find('td').each(function () {
+
+                var aTH = $(tblHR.rows[0]).find('th').eq(iTD0);
+                var aTD = $(tbl.rows[0]).find('td').eq(iTD0);                
+                var iFirstWidth=$(tbl.rows[0]).find('td').eq(iTD0).width();
+                var iColumnWidth=$(tblHR.rows[0]).find('th').eq(iTD0).width();
+                if(iColumnWidth>iFirstWidth)
+                    {iFirstWidth=iColumnWidth;}
+
+                //$(aTD).width(iFirstWidth);
+                $(aTD).css({ minWidth: iFirstWidth+'px' });
+                $(aTD).css({ maxWidth: iFirstWidth+'px' });
+                $(aTH).css({ minWidth: iFirstWidth+'px' });
+                $(aTH).css({ maxWidth: iFirstWidth+'px' });
+                //$(aTH).width=iFirstWidth;
+
+                iTD0 = iTD0 + 1;
+            }); 
+
+                $('#ctl00_HomeContentPlaceHolder_rlOne_UpdateProgress1').fadeOut();
+            }
+        }
+
+
+
+             $('#loadingredirect').fadeIn();
+            SetStyleEvent();
+            MakeStaticHeader('" + gvTheGrid.ClientID + @"', 600, 1100 , 90 ,false);
+            $('#loadingredirect').fadeOut();
+
+    });
+ 
+";
+
+
+                ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strStaticheaderJS_key", strStaticheaderJS, true);
+
+                
                 lnkEditManyCancel.Visible = false;
                 lnkEditManyCancel2.Visible = true;
                 mpeEditMany.OkControlID = "";
@@ -3926,12 +4222,38 @@ function checkAllHR(objRef,GridView) {
                 ShowHidePermanentDelete();
             }
 
+
+            if (iTN == 0)
+            {
+                if (IsFiltered())
+                {
+                    divNoFilter.Visible = true;
+                    divEmptyData.Visible = false;
+
+                    if (_theView != null)
+                    {
+                        if (_theView.ShowAddIcon == false)
+                        {
+                            divNoFilter.Visible = false;
+                        }
+                    }
+                }
+                else
+                {
+                    divNoFilter.Visible = false;
+                }
+            }
+            else
+            {
+                divNoFilter.Visible = false;
+            }
+
             if (_strRecordRightID == Common.UserRoleType.ReadOnly)
             {
                 //gvTheGrid.Columns[0].Visible = false;//delete check
                 gvTheGrid.Columns[2].Visible = false;//edit   
                 gvTheGrid.Columns[3].Visible = true;//view
-
+                divAddAndViewControls.Visible = false;
                 if (_theView != null)
                 {
                     if ((bool)_theView.ShowViewIcon == false)
@@ -3959,7 +4281,8 @@ function checkAllHR(objRef,GridView) {
                 //gvTheGrid.Columns[0].Visible = false;//delete check
                 gvTheGrid.Columns[2].Visible = true;//edit   
                 gvTheGrid.Columns[3].Visible = true;//view
-
+                divEmptyData.Visible = false;
+                divAddAndViewControls.Visible = false;
                 if (_theView != null)
                 {
                     if ((bool)_theView.ShowViewIcon == false)
@@ -3979,7 +4302,7 @@ function checkAllHR(objRef,GridView) {
                 if (gvr != null)
                 {
                     _gvPager = (Common_Pager)gvr.FindControl("Pager");
-                    //_gvPager.HideAdd = true;
+                    _gvPager.HideAdd = true;
                     _gvPager.HideDelete = true;
                 }
             }
@@ -3988,7 +4311,8 @@ function checkAllHR(objRef,GridView) {
                 //gvTheGrid.Columns[0].Visible = false;//delete check
                 gvTheGrid.Columns[2].Visible = true;//edit   
                 gvTheGrid.Columns[3].Visible = true;//view
-
+                divEmptyData.Visible = false;
+                divAddAndViewControls.Visible = false;
                 if (_theView != null)
                 {
                     if ((bool)_theView.ShowViewIcon == false)
@@ -4004,7 +4328,7 @@ function checkAllHR(objRef,GridView) {
                 if (gvr != null)
                 {
                     _gvPager = (Common_Pager)gvr.FindControl("Pager");
-                    //_gvPager.HideAdd = true;
+                    _gvPager.HideAdd = true;
                     _gvPager.HideDelete = true;
                 }
             }
@@ -4027,7 +4351,7 @@ function checkAllHR(objRef,GridView) {
                 if (gvr != null)
                 {
                     _gvPager = (Common_Pager)gvr.FindControl("Pager");
-                    //_gvPager.HideAdd = true;
+
                     _gvPager.HideDelete = true;
                 }
 
@@ -4126,10 +4450,10 @@ function checkAllHR(objRef,GridView) {
                     {
                         divEmptyData.Visible = false;
                     }
-                    else
-                    {
-                        divEmptyData.Visible = true;
-                    }
+                    //else
+                    //{
+                    //    divEmptyData.Visible = true;
+                    //}
                 }
 
                 if (_theView != null)
@@ -4154,8 +4478,7 @@ function checkAllHR(objRef,GridView) {
 
             if (_gvPager != null)
             {
-
-
+                
                 if (PageType == "c")
                 {
                     if (ShowAddButton == false)
@@ -4163,14 +4486,7 @@ function checkAllHR(objRef,GridView) {
                         _gvPager.HideAdd = true;
 
                     }
-
-                    //gvTheGrid.Columns[0].Visible = false;//delete check
-                    //_gvPager.HideDelete = true;
-                    //_gvPager.HideExport = true;
-                    //_gvPager.HideExcelExport = true;
-                    //_gvPager.HideUnDelete = true;
-
-                    _gvPager.HideAllExport = true;
+                     _gvPager.HideAllExport = true;
                 }
                 else
                 {
@@ -4181,9 +4497,7 @@ function checkAllHR(objRef,GridView) {
                         {
                             _gvPager.HideParmanentDelete = false;
                             _gvPager.HideEditMany = true;
-
-
-
+                            
                         }
                         else
                         {
@@ -4218,47 +4532,16 @@ function checkAllHR(objRef,GridView) {
             }
 
 
-            if (iTN == 0)
-            {
-                if (IsFiltered())
-                {
-                    divNoFilter.Visible = true;
-                    divEmptyData.Visible = false;
-
-                    if (_theView != null)
-                    {
-                        if (_theView.ShowAddIcon == false)
-                        {
-                            divNoFilter.Visible = false;
-                        }
-                    }
-                }
-                else
-                {
-                    divNoFilter.Visible = false;
-                }
-            }
-            else
-            {
-                divNoFilter.Visible = false;
-            }
+           
 
             if (_gvPager != null && Request.QueryString["RecordTable"] != null)
-            {
-                //_gvPager.HideAdd = true;
-                //_gvPager.HideDelete = true;
-                //_gvPager.HideEdit = true;
-                //_gvPager.HideEditMany = true;
-                //divRecordListTop.Visible = false;
+            {               
                 divShowGraph.Visible = false;
                 divUpload.Visible = false;
                 divEmail.Visible = false;
                 divConfig.Visible = false;
                 divBatches.Visible = false;
-
-
-
-
+                
             }
 
             //implement view final touch
@@ -6164,22 +6447,31 @@ function checkAllHR(objRef,GridView) {
             }
 
 
-            if (_strRecordRightID == Common.UserRoleType.EditOwnViewOther)
+            if (_strRecordRightID == Common.UserRoleType.EditOwnViewOther
+                || _strRecordRightID==Common.UserRoleType.OwnData)
             {
                 Record theRecord = RecordManager.ets_Record_Detail_Full(int.Parse(rowView["DBGSystemRecordID"].ToString()));
                 if (theRecord != null)
                 {
-                    if (_ObjUser.UserID.ToString() != theRecord.EnteredBy.ToString())
+                    if (_ObjUser.UserID == theRecord.EnteredBy
+                        || (theRecord.OwnerUserID != null && (_ObjUser.UserID == theRecord.OwnerUserID)))
                     {
-                        strURL = GetViewURL() + Cryptography.Encrypt(strDBGSystemRecordID);
-                        if (EditHyperLink != null)
-                            EditHyperLink.Visible = false;
+                        strURL = GetEditURL() + Cryptography.Encrypt(strDBGSystemRecordID);
+                        if (viewHyperLink != null)
+                            viewHyperLink.Visible = false;
 
+                        if (EditHyperLink != null)
+                            EditHyperLink.Visible = true;
                     }
                     else
                     {
+                      
+                        strURL = GetViewURL() + Cryptography.Encrypt(strDBGSystemRecordID);
+                        if (EditHyperLink != null)
+                            EditHyperLink.Visible = false;
                         if (viewHyperLink != null)
-                            viewHyperLink.Visible = false;
+                            viewHyperLink.Visible = true;
+
                     }
                 }
             }
@@ -7970,6 +8262,10 @@ function checkAllHR(objRef,GridView) {
         if (string.IsNullOrEmpty(sCheck))
         {
             Session["tdbmsgpb"] = "Please select a record.";
+            if (hfUsingScrol.Value == "yes" && _gvPager!=null)
+            {
+                BindTheGrid(_gvPager.StartIndex, gvTheGrid.PageSize);
+            }
             //ScriptManager.RegisterClientScriptBlock(gvTheGrid, typeof(Page), "message_alert", "alert('Please select a record.');", true);
             return;
         }
@@ -12752,7 +13048,10 @@ function checkAllHR(objRef,GridView) {
     }
 
 
+    protected void AddVisible(bool bVisible)
+    {
 
+    }
 
     protected void PopulateSearchParams()
     {
@@ -14022,89 +14321,86 @@ function checkAllHR(objRef,GridView) {
 
             TextSearch = TextSearch + stringTotalTS;
 
+        }
 
+        TextSearch = TextSearch + hfTextSearch.Value;
 
-            TextSearch = TextSearch + hfTextSearch.Value;
-
-            if ((bool)_theUserRole.IsAdvancedSecurity)
+        if ((bool)_theUserRole.IsAdvancedSecurity)
+        {
+            if (_strRecordRightID == Common.UserRoleType.OwnData)
             {
-                if (_strRecordRightID == Common.UserRoleType.OwnData)
-                {
-                    //TextSearch = TextSearch + " AND Record.OwnerUserID=" + _ObjUser.UserID.ToString();
-                    TextSearch = TextSearch + " AND (Record.OwnerUserID=" + _ObjUser.UserID.ToString() + " OR Record.EnteredBy=" + _ObjUser.UserID.ToString() + ")";
-                }
-
-            }
-            else
-            {
-                if (Session["roletype"].ToString() == Common.UserRoleType.OwnData)
-                {
-                    //TextSearch = TextSearch + " AND Record.OwnerUserID=" + _ObjUser.UserID.ToString();
-                    TextSearch = TextSearch + " AND (Record.OwnerUserID=" + _ObjUser.UserID.ToString() + " OR Record.EnteredBy=" + _ObjUser.UserID.ToString() + ")";
-                }
-
-
+                //TextSearch = TextSearch + " AND Record.OwnerUserID=" + _ObjUser.UserID.ToString();
+                TextSearch = TextSearch + " AND (Record.OwnerUserID=" + _ObjUser.UserID.ToString() + " OR Record.EnteredBy=" + _ObjUser.UserID.ToString() + ")";
             }
 
-            //lets play with data scope
-
-            if (_theAccount.UseDataScope != null)
+        }
+        else
+        {
+            if (Session["roletype"].ToString() == Common.UserRoleType.OwnData)
             {
-                if ((bool)_theAccount.UseDataScope)
-                {
-                    if (_theUserRole.DataScopeColumnID != null && _theUserRole.DataScopeValue != "")
-                    {
-                        //this user need Data Scope
-
-                        Column theDataScopeColumn = RecordManager.ets_Column_Details((int)_theUserRole.DataScopeColumnID);
-
-                        if (theDataScopeColumn != null)
-                        {
-
-                            TextSearch = TextSearch + GetDataScopeWhere((int)theDataScopeColumn.TableID, (int)theDataScopeColumn.TableID, theDataScopeColumn.SystemName);
-
-                        }
-
-                    }
-                }
+                //TextSearch = TextSearch + " AND Record.OwnerUserID=" + _ObjUser.UserID.ToString();
+                TextSearch = TextSearch + " AND (Record.OwnerUserID=" + _ObjUser.UserID.ToString() + " OR Record.EnteredBy=" + _ObjUser.UserID.ToString() + ")";
             }
 
-            if (TextSearchParent == null)
-                TextSearchParent = "";
-
-            //ddlActiveFilter.SelectedValue == "-1" ? null : (bool?)bool.Parse(ddlActiveFilter.SelectedValue)
-
-
-            PopulateDateAddedSearch();
-
-
-
-            string strSummaryTableFilterText = SystemData.SystemOption_ValueByKey_Account("SummaryTableFilterText", null, int.Parse(TableID.ToString()));
-
-            if (strSummaryTableFilterText != "")
-                TextSearch = TextSearch + " " + strSummaryTableFilterText;
-
-
-            //if (Request.QueryString["viewname"] == null)
-            //{
-            //    TextSearch = TextSearch + " " + SystemData.SystemOption_ValueByKey_Account("NoViewName", null, int.Parse(TableID.ToString()));
-            //}
-            //else
-            //{
-            //    TextSearch = TextSearch + " " + SystemData.SystemOption_ValueByKey_Account(Request.QueryString["viewname"].ToString(), null, int.Parse(TableID.ToString()));
-
-            //}
-
-            if (chkShowAdvancedOptions.Checked && ddlUploadedBatch.SelectedValue != "")
-            {
-                TextSearch = TextSearch + "  AND Record.BatchID=" + ddlUploadedBatch.SelectedValue;
-            }
-
-            if (TextSearch.Trim() == "")
-                TextSearch = "";
 
         }
 
+        //lets play with data scope
+
+        if (_theAccount.UseDataScope != null)
+        {
+            if ((bool)_theAccount.UseDataScope)
+            {
+                if (_theUserRole.DataScopeColumnID != null && _theUserRole.DataScopeValue != "")
+                {
+                    //this user need Data Scope
+
+                    Column theDataScopeColumn = RecordManager.ets_Column_Details((int)_theUserRole.DataScopeColumnID);
+
+                    if (theDataScopeColumn != null)
+                    {
+
+                        TextSearch = TextSearch + GetDataScopeWhere((int)theDataScopeColumn.TableID, (int)theDataScopeColumn.TableID, theDataScopeColumn.SystemName);
+
+                    }
+
+                }
+            }
+        }
+
+        if (TextSearchParent == null)
+            TextSearchParent = "";
+
+        //ddlActiveFilter.SelectedValue == "-1" ? null : (bool?)bool.Parse(ddlActiveFilter.SelectedValue)
+
+
+        PopulateDateAddedSearch();
+
+
+
+        string strSummaryTableFilterText = SystemData.SystemOption_ValueByKey_Account("SummaryTableFilterText", null, int.Parse(TableID.ToString()));
+
+        if (strSummaryTableFilterText != "")
+            TextSearch = TextSearch + " " + strSummaryTableFilterText;
+
+
+        //if (Request.QueryString["viewname"] == null)
+        //{
+        //    TextSearch = TextSearch + " " + SystemData.SystemOption_ValueByKey_Account("NoViewName", null, int.Parse(TableID.ToString()));
+        //}
+        //else
+        //{
+        //    TextSearch = TextSearch + " " + SystemData.SystemOption_ValueByKey_Account(Request.QueryString["viewname"].ToString(), null, int.Parse(TableID.ToString()));
+
+        //}
+
+        if (chkShowAdvancedOptions.Checked && ddlUploadedBatch.SelectedValue != "")
+        {
+            TextSearch = TextSearch + "  AND Record.BatchID=" + ddlUploadedBatch.SelectedValue;
+        }
+
+        if (TextSearch.Trim() == "")
+            TextSearch = "";
 
 
 

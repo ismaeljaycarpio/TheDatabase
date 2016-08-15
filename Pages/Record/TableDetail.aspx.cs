@@ -148,7 +148,8 @@ public partial class Pages_Record_TableDetail : SecurePage
                                 'transitionOut': 'none',
                                 width: 1200,
                                 height: 800,
-                                titleShow: false
+                                titleShow: false,
+                                onClosed: function () { $('#loadingredirect').fadeIn(); window.parent.location.reload();}
                             });
                         }); 
 

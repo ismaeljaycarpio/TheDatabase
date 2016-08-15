@@ -5068,8 +5068,9 @@ FROM         [Table] INNER JOIN
 
                         if (txtCalculation.Text.Trim() != "")
                         {
-                            lblMsg.Text = "This field has been configured on the import which would cause a conflict with this formula. Please un check import field name or remove calculation formula!";
-                            return;
+                            newColumn.NameOnImport = "";
+                            //lblMsg.Text = "This field has been configured on the import which would cause a conflict with this formula. Please un check import field name or remove calculation formula!";
+                            //return;
                         }
                     }
 
