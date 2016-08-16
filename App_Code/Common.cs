@@ -1528,7 +1528,7 @@ public class Common
     //        foreach (Text text in texts)
     //        {
     //            //Console.WriteLine(text.Text);
-               
+
     //            for (int i = 0; i < theDatatable.Columns.Count; i++)
     //            {
 
@@ -1555,6 +1555,94 @@ public class Common
     //    //Console.ReadLine();
     //}
 
+
+    //oliver <begin> Ticket 1451
+    public static void GenerateWORDDoc2(string documentFileName, DataTable theDatatable, out string error)
+    {
+        error = String.Empty;
+
+
+        using (WordprocessingDocument wordprocessingDocument = WordprocessingDocument.Open(documentFileName, true))
+        {
+            string path = System.IO.Path.GetDirectoryName(documentFileName);
+            MainDocumentPart mainPart = wordprocessingDocument.MainDocumentPart;
+            DocumentFormat.OpenXml.Wordprocessing.Document document = mainPart.Document;
+            IEnumerable<Paragraph> paragraphs = document.Body.Descendants<Paragraph>();
+            foreach (Paragraph paragraph in paragraphs)
+            {
+                IEnumerable<Run> runs = from x in paragraph.Descendants<Run>()
+                                        where (from y in x.Descendants<Text>()
+                                               where y.Text.Contains('«')
+                                               select y).Any()
+                                        select x;
+
+                foreach (Run run in runs)
+                {
+                    Text text = run.Descendants<Text>().FirstOrDefault();
+                    int startPos = text.Text.IndexOf('«');
+                    int endPos = text.Text.IndexOf('»', startPos);
+                    if (endPos != -1)
+                    {
+                        //Console.WriteLine(text.Text.Substring(startPos, endPos - startPos + 1));
+                        string newText = null;
+                        if (TryReplace2(text.Text, out newText, theDatatable))
+                            text.Text = newText;
+                    }
+                    else
+                    {
+                        List<Run> runsToDelete = new List<Run>();
+                        string s = text.Text;
+                        Run nextRun = run;
+                        while (nextRun != null)
+                        {
+                            nextRun = nextRun.NextSibling<Run>();
+                            if (nextRun != null)
+                            {
+                                runsToDelete.Add(nextRun);
+                                Text nextText = nextRun.Descendants<Text>().FirstOrDefault();
+                                if (nextText != null)
+                                {
+                                    s = s + nextText.Text;
+                                    if (nextText.Text.IndexOf('»', startPos) != -1)
+                                        break;
+                                }
+                            }
+                        }
+                        //Console.WriteLine(s);
+                        string newText = null;
+                        if (TryReplace2(s, out newText, theDatatable))
+                        {
+                            text.Text = newText;
+                            foreach (Run x in runsToDelete)
+                                paragraph.RemoveChild<Run>(x);
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+    //oliver <end>
+
+    //oliver <begin> Ticket 1451
+    static private bool TryReplace2(string oldText, out string newText, DataTable theDatatable)
+    {
+        newText = string.Empty;
+
+        for (int i = 0; i < theDatatable.Columns.Count; i++)
+        {
+
+            if (oldText.Contains("«" + theDatatable.Columns[i].ColumnName + "»"))
+            {
+                newText = oldText.Replace("«" + theDatatable.Columns[i].ColumnName + "»", theDatatable.Rows[0][i].ToString());
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+    //oliver <end> Ticket 1451
 
     public static void GenerateWORDDoc(string documentFileName, DataTable theDatatable, out string error)
     {

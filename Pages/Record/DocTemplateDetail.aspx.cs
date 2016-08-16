@@ -34,12 +34,25 @@ public partial class Pages_Record_DocTemplateDetail : SecurePage
             }
             else
             {
+                //oliver <begin> ticket 1451
+                AutoSelectDataRetriever();
+                //oliver <end>
+
                 lblDetailTitle.Text = "Add Template";              
             }
         }
 
 
     }
+
+    //oliver <begin> Ticket 1451
+    protected void AutoSelectDataRetriever()
+    {
+        ddlDataRetriever.SelectedValue = Common.GetValueFromSQL(@"SELECT DataRetrieverID FROM DataRetriever WHERE TableID=" + _iTableID.ToString());
+        ddlDataRetriever_SelectedIndexChanged(null, null);
+    }
+    //oliver <end>
+
     protected void PopulateRecord()
     {
         DocTemplate theDocTemplate = DocumentManager.dbg_DocTemplate_Detail((int)_iDocTemplateID);
@@ -173,8 +186,11 @@ public partial class Pages_Record_DocTemplateDetail : SecurePage
                 {
                     foreach (DataColumn dc in dtDR.Columns)
                     {
+                        //oliver <begin> Ticket 1451
+                        lblTokens.Text = lblTokens.Text + "«" + dc.ColumnName + "»<br/>";
+                        //oliver <end>
 
-                        lblTokens.Text = lblTokens.Text + "[" + dc.ColumnName + "]<br/>";
+                        //lblTokens.Text = lblTokens.Text + "[" + dc.ColumnName + "]<br/>";
                     }
                 }
 

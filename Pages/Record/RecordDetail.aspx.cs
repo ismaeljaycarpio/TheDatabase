@@ -10767,20 +10767,56 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                 DataTable dtRecordInfo = DocumentManager.DataRetrieverSP(null, _iRecordID, theDataRetriever.SPName);
                 //string strFolder = "DocTemplates";
-                string strFileToCopy = Server.MapPath("DocTemplates\\" + theDocTemplate.FileUniqueName);
-                string strNewCopy = Server.MapPath("Temp\\" + theDocTemplate.FileUniqueName);
+
+
+                //oliver <begin> Ticket 1451
+                string sTableName = Common.GetValueFromSQL("SELECT TableName FROM [Table] WHERE TableID=" + theDataRetriever.TableID.ToString());
+                string[] sFileSplitter = theDocTemplate.FileUniqueName.ToString().Split('.');
+                string sFileExt = sFileSplitter[sFileSplitter.Length - 1].ToString();
+                string sFileName = sTableName + "_" + _iRecordID.ToString() + "." + sFileExt;
+
+                string strFileToCopy = Server.MapPath("Temp\\" + theDocTemplate.FileUniqueName);
+                string strNewCopy = Server.MapPath("DocTemplates\\" + sFileName);
+
                 if (System.IO.File.Exists(strNewCopy))
                     System.IO.File.Delete(strNewCopy);
 
+                if (System.IO.File.Exists(Server.MapPath("Temp\\" + sFileName)))
+                    System.IO.File.Delete(Server.MapPath("Temp\\" + sFileName));
+
+                if (!System.IO.File.Exists(strFileToCopy))
+                {
+                    if (System.IO.File.Exists(Server.MapPath("DocTemplates\\" + theDocTemplate.FileUniqueName)))
+                    {
+                        System.IO.File.Copy(Server.MapPath("DocTemplates\\" + theDocTemplate.FileUniqueName), strFileToCopy);
+                    }
+                }
 
                 System.IO.File.Copy(strFileToCopy, strNewCopy);
-                Common.GenerateWORDDoc(strNewCopy, dtRecordInfo, out strError);
+                System.IO.File.Copy(strFileToCopy, Server.MapPath("Temp\\" + sFileName));
+                Common.GenerateWORDDoc2(Server.MapPath("Temp\\" + sFileName), dtRecordInfo, out strError);
+                //oliver <end> Ticket 1451
+
+
+                //string strFileToCopy = Server.MapPath("DocTemplates\\" + theDocTemplate.FileUniqueName);
+                //string strNewCopy = Server.MapPath("Temp\\" + theDocTemplate.FileUniqueName);
+                //if (System.IO.File.Exists(strNewCopy))
+                //    System.IO.File.Delete(strNewCopy);
+
+
+                //System.IO.File.Copy(strFileToCopy, strNewCopy);
+                //Common.GenerateWORDDoc(strNewCopy, dtRecordInfo, out strError);
 
                 mpeModalWordExport.Hide();
 
                 //System.Threading.Thread.Sleep(5000);
 
-                Page.Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Temp/" + theDocTemplate.FileUniqueName, false);
+                //oliver <begin> Ticket 1451
+                Page.Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Temp/" + sFileName, false);
+                //oliver <end>
+
+                //Page.Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Temp/" + theDocTemplate.FileUniqueName, false);
+
                 //Response.Flush();
                 //System.Threading.Thread.Sleep(5000);
                 //Server.Transfer( Server.MapPath( "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Temp/" + theDocTemplate.FileUniqueName));

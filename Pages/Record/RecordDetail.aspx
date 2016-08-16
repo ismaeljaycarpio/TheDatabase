@@ -213,11 +213,8 @@
 
 
         }
-
-
-
     </script>
-    <asp:UpdateProgress class="ajax-indicator-full" ID="UpdateProgress3" runat="server">
+    <%--<asp:UpdateProgress class="ajax-indicator-full" ID="UpdateProgress3" runat="server">
         <ProgressTemplate>
             <table style="width: 100%; height: 100%; text-align: center;">
                 <tr valign="middle">
@@ -230,7 +227,7 @@
                 </tr>
             </table>
         </ProgressTemplate>
-    </asp:UpdateProgress>
+    </asp:UpdateProgress>--%>
 
     <asp:UpdatePanel ID="upDetailDynamic" runat="server" UpdateMode="Conditional">
         <ContentTemplate>

@@ -3708,14 +3708,28 @@ public partial class Pages_Record_TableDetail : SecurePage
     }
     protected void PopulateTemplates()
     {
-         DataTable dtTemp = Common.DataTableFromText(@"
-            SELECT DocTemplateID,FileUniqueName,FileName,SPName,DocTemplate.DataRetrieverID FROM DocTemplate INNER JOIN DataRetriever
-            ON DocTemplate.DataRetrieverID=DataRetriever.DataRetrieverID
-            WHERE TableID=" + _theTable.TableID.ToString());
-
-
-         gvTemplates.DataSource = dtTemp;
+        //oliver <begin> Ticket 1451
+        DataTable dtTemp = getDocTemplate();
+        gvTemplates.DataSource = dtTemp;
         gvTemplates.DataBind();
+
+        if (!(gvTemplates.Rows.Count > 0))
+        {
+            string sError = String.Empty;
+            //will create the 'AllFields' data retriever
+            DBGurus.ExecuteSQL("IF NOT EXISTS (SELECT DataRetrieverID FROM [DataRetriever] "
+                             + "WHERE TableID = " + _theTable.TableID.ToString() + " "
+                             + "AND DataRetrieverName = 'All Fields' "
+                             + "AND SPName = 'dataRetriever_AllFields') "
+                             + "   INSERT INTO [DataRetriever] (TableID, DataRetrieverName, SPName) "
+                             + "   VALUES "
+                             + "   (" + _theTable.TableID.ToString() + ", 'All Fields', 'dataRetriever_AllFields')",
+                             out sError);
+
+            dtTemp = getDocTemplate();
+            gvTemplates.DataSource = dtTemp;
+            gvTemplates.DataBind();
+        }
 
         if (dtTemp.Rows.Count > 0)
         {
@@ -3725,91 +3739,127 @@ public partial class Pages_Record_TableDetail : SecurePage
         {
             divEmptyDataTemplates.Visible = true;
         }
+        //oliver <end> 
+
+
+
+
+        // DataTable dtTemp = Common.DataTableFromText(@"
+        //    SELECT DocTemplateID,FileUniqueName,FileName,SPName,DocTemplate.DataRetrieverID FROM DocTemplate INNER JOIN DataRetriever
+        //    ON DocTemplate.DataRetrieverID=DataRetriever.DataRetrieverID
+        //    WHERE TableID=" + _theTable.TableID.ToString());
+
+
+        // gvTemplates.DataSource = dtTemp;
+        //gvTemplates.DataBind();
+
+        //if (dtTemp.Rows.Count > 0)
+        //{
+        //    divEmptyDataTemplates.Visible = false;
+        //}
+        //else
+        //{
+        //    divEmptyDataTemplates.Visible = true;
+        //}
 
 
 
     }
 
-//    protected void PopulateOutSavetoTable()
-//    {
-//        DataTable dtTemp = Common.DataTableFromText(@"SELECT   TableChild.ChildTableID, [Table].TableName 
-//                        FROM         [Table] INNER JOIN
-//                        TableChild ON [Table].TableID = TableChild.ChildTableID
-//                        WHERE [Table].IsActive=1 AND TableChild.ParentTableID=" + _qsTableID);
-//        ddlOutSaveToTable.Items.Clear();
-//        foreach (DataRow dr in dtTemp.Rows)
-//        {
-//            ListItem liItem = new ListItem(dr["TableName"].ToString(), dr["ChildTableID"].ToString());
-//            ddlOutSaveToTable.Items.Add(liItem);
 
-//        }
-
-//        ListItem liSelect= new ListItem("--Select Table--","");
-//        ddlOutSaveToTable.Items.Insert(0,liSelect);
-
-//    }
+    //oliver <begin> Ticket 1451
+    private DataTable getDocTemplate()
+    {
+        DataTable dtTemp;
+        dtTemp = Common.DataTableFromText(@"
+            SELECT DocTemplateID,FileUniqueName,FileName,SPName,DocTemplate.DataRetrieverID FROM DocTemplate INNER JOIN DataRetriever
+            ON DocTemplate.DataRetrieverID=DataRetriever.DataRetrieverID
+            WHERE TableID=" + _theTable.TableID.ToString());
+        return dtTemp;
+    }
+    //oliver <end>
 
 
+    //    protected void PopulateOutSavetoTable()
+    //    {
+    //        DataTable dtTemp = Common.DataTableFromText(@"SELECT   TableChild.ChildTableID, [Table].TableName 
+    //                        FROM         [Table] INNER JOIN
+    //                        TableChild ON [Table].TableID = TableChild.ChildTableID
+    //                        WHERE [Table].IsActive=1 AND TableChild.ParentTableID=" + _qsTableID);
+    //        ddlOutSaveToTable.Items.Clear();
+    //        foreach (DataRow dr in dtTemp.Rows)
+    //        {
+    //            ListItem liItem = new ListItem(dr["TableName"].ToString(), dr["ChildTableID"].ToString());
+    //            ddlOutSaveToTable.Items.Add(liItem);
 
-//    protected void PopulateInSavetoTable()
-//    {
-//        DataTable dtTemp = Common.DataTableFromText(@"SELECT   TableChild.ChildTableID, [Table].TableName 
-//                        FROM         [Table] INNER JOIN
-//                        TableChild ON [Table].TableID = TableChild.ChildTableID
-//                        WHERE [Table].IsActive=1 AND TableChild.ParentTableID=" + _qsTableID);
+    //        }
 
-//        ddlInSaveToTable.Items.Clear();
-//        foreach (DataRow dr in dtTemp.Rows)
-//        {
-//            ListItem liItem = new ListItem(dr["TableName"].ToString(), dr["ChildTableID"].ToString());
-//            ddlInSaveToTable.Items.Add(liItem);
+    //        ListItem liSelect= new ListItem("--Select Table--","");
+    //        ddlOutSaveToTable.Items.Insert(0,liSelect);
 
-//        }
-
-//        ListItem liSelect = new ListItem("--Select Table--", "");
-//        ddlInSaveToTable.Items.Insert(0, liSelect);
-
-//    }
+    //    }
 
 
-//    protected void PopulateIncomingIdentifier()
-//    {
-//        ddlInIdentifier.Items.Clear();
-//        DataTable dtTemp = Common.DataTableFromText(@"SELECT ColumnID, DisplayName FROM [Column] WHERE 
-//            (SystemName='recordid' OR(ColumnType='number' AND NumberType=8)) AND TableID=" + _qsTableID);
-//        foreach (DataRow dr in dtTemp.Rows)
-//        {
-//            ListItem liItem = new ListItem(dr["DisplayName"].ToString(), dr["ColumnID"].ToString());
-//            ddlInIdentifier.Items.Add(liItem);
-//        }
-//        ListItem liSelect = new ListItem("--Select Field--", "");
-//        ddlInIdentifier.Items.Insert(0, liSelect);
 
-//    }
+    //    protected void PopulateInSavetoTable()
+    //    {
+    //        DataTable dtTemp = Common.DataTableFromText(@"SELECT   TableChild.ChildTableID, [Table].TableName 
+    //                        FROM         [Table] INNER JOIN
+    //                        TableChild ON [Table].TableID = TableChild.ChildTableID
+    //                        WHERE [Table].IsActive=1 AND TableChild.ParentTableID=" + _qsTableID);
+
+    //        ddlInSaveToTable.Items.Clear();
+    //        foreach (DataRow dr in dtTemp.Rows)
+    //        {
+    //            ListItem liItem = new ListItem(dr["TableName"].ToString(), dr["ChildTableID"].ToString());
+    //            ddlInSaveToTable.Items.Add(liItem);
+
+    //        }
+
+    //        ListItem liSelect = new ListItem("--Select Table--", "");
+    //        ddlInSaveToTable.Items.Insert(0, liSelect);
+
+    //    }
 
 
-//    protected void ddlOutSaveToTable_SelectedIndexChanged(object sender, EventArgs e)
-//    {
-//        if (ddlOutSaveToTable.SelectedValue == "")
-//        {
-//            ddlOutSaveBodyTo.Items.Clear();
-//            ddlOutSaveRecipient.Items.Clear();
-//            ddlOutSaveSubjectto.Items.Clear();
+    //    protected void PopulateIncomingIdentifier()
+    //    {
+    //        ddlInIdentifier.Items.Clear();
+    //        DataTable dtTemp = Common.DataTableFromText(@"SELECT ColumnID, DisplayName FROM [Column] WHERE 
+    //            (SystemName='recordid' OR(ColumnType='number' AND NumberType=8)) AND TableID=" + _qsTableID);
+    //        foreach (DataRow dr in dtTemp.Rows)
+    //        {
+    //            ListItem liItem = new ListItem(dr["DisplayName"].ToString(), dr["ColumnID"].ToString());
+    //            ddlInIdentifier.Items.Add(liItem);
+    //        }
+    //        ListItem liSelect = new ListItem("--Select Field--", "");
+    //        ddlInIdentifier.Items.Insert(0, liSelect);
 
-//            ListItem liSelect = new ListItem("--None--", "");
-//            ddlOutSaveBodyTo.Items.Insert(0, liSelect);
+    //    }
 
-//            ListItem liSelect2 = new ListItem("--None--", "");
-//            ddlOutSaveRecipient.Items.Insert(0, liSelect2);
 
-//            ListItem liSelect3 = new ListItem("--None--", "");
-//            ddlOutSaveSubjectto.Items.Insert(0, liSelect3);
-//        }
-//        else
-//        {
-//            PopulateOutgoingColumns();
-//        }
-//    }
+    //    protected void ddlOutSaveToTable_SelectedIndexChanged(object sender, EventArgs e)
+    //    {
+    //        if (ddlOutSaveToTable.SelectedValue == "")
+    //        {
+    //            ddlOutSaveBodyTo.Items.Clear();
+    //            ddlOutSaveRecipient.Items.Clear();
+    //            ddlOutSaveSubjectto.Items.Clear();
+
+    //            ListItem liSelect = new ListItem("--None--", "");
+    //            ddlOutSaveBodyTo.Items.Insert(0, liSelect);
+
+    //            ListItem liSelect2 = new ListItem("--None--", "");
+    //            ddlOutSaveRecipient.Items.Insert(0, liSelect2);
+
+    //            ListItem liSelect3 = new ListItem("--None--", "");
+    //            ddlOutSaveSubjectto.Items.Insert(0, liSelect3);
+    //        }
+    //        else
+    //        {
+    //            PopulateOutgoingColumns();
+    //        }
+    //    }
 
 
     protected void ddlTableTabs_SelectedIndexChanged(object sender, EventArgs e)

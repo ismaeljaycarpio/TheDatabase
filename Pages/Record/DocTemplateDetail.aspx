@@ -66,8 +66,8 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2" style="padding-left: 10px;">
-                                            Below is a list of data items returned by the Data Retriever that you can put inside
-                                            your Word Document – note that you must include the square brackets!
+                                            Below is a list of data fields you can put into your Word Document 
+                                            – note that you must include these symbols « »!
                                         </td>
                                     </tr>
                                     <tr>
