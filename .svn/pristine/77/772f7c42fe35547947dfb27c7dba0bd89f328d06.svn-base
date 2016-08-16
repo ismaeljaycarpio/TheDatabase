@@ -6,390 +6,537 @@
     TagPrefix="dbg" %>
 <%--<%@ Register Src="~/Pages/UserControl/ControlByColumnValue.ascx" TagName="cbcValue" TagPrefix="dbg" %>--%>
 <%@ Register Src="~/Pages/UserControl/ViewDetail.ascx" TagName="OneView" TagPrefix="dbg" %>
-<script type="text/javascript">
-    function toggleAndOr(t, hf) {
-        // alert(hf);
-
-        if (t.text == "and") {
-            t.text = "or";
-        } else {
-            t.text = "and";
-        }
-        document.getElementById(hf).value = t.text;
-        //alert(document.getElementById(hf).value);
-
-        //            if (t.innerHTML == "and") {
-        //                t.innerHTML = "or";
-        //            } else {
-        //                t.innerHTML = "and";
-        //            }
-
-    }
-</script>
-
-
-
 
 <asp:Literal ID="ltScriptHere" runat="server"></asp:Literal>
 <asp:Literal ID="ltTextStyles" runat="server"></asp:Literal>
-
-<script language="javascript" type="text/javascript">
-    function abc() {
-        var b = document.getElementById('<%= lnkSearch.ClientID %>');
-        if (b && typeof (b.click) == 'undefined') {
-            b.click = function () {
-                var result = true;
-                if (b.onclick) result = b.onclick();
-                if (typeof (result) == 'undefined' || result) {
-                    eval(b.getAttribute('href'));
-                }
-            }
-        }
-
-    }
-
-    function AddClick() {
-
-        $('#ctl00_HomeContentPlaceHolder_rlOne_btnAdd').trigger('click');
-    }
-</script>
-<script language="javascript" type="text/javascript">
-    function SelectAllCheckboxes(spanChk) {
-
-        // alert($(spanChk).attr('id'));
-        checkAll(spanChk);
-        var GridView = spanChk.parentNode.parentNode.parentNode;
-
-        //alert($(GridView).attr('id'));
-        // alert(GridView.id);
-
-        var inputList = GridView.getElementsByTagName("input");
-        for (var i = 0; i < inputList.length; i++) {
-            var row = inputList[i].parentNode.parentNode;
-            if (inputList[i].type == "checkbox" && spanChk != inputList[i]) {
-                if (spanChk.checked) {
-                    inputList[i].checked = true;
-                }
-                else {
-                    inputList[i].checked = false;
-                }
-            }
-
-        }
-    }
-
-
-
-    function SelectAllCheckboxesHR(spanChk, GridView) {
-
-        checkAllHR(spanChk, GridView);
-        var inputList = GridView.getElementsByTagName("input");
-        for (var i = 0; i < inputList.length; i++) {
-            var row = inputList[i].parentNode.parentNode;
-            if (inputList[i].type == "checkbox" && spanChk != inputList[i]) {
-                if (spanChk.checked) {
-                    inputList[i].checked = true;
-                }
-                else {
-                    inputList[i].checked = false;
-                }
-            }
-
-        }
-    }
-
-
-    function CreateFile() {
-
-        document.getElementById('btnEmail').click();
-
-    }
-
-
-
-</script>
-
-
-<script type="text/javascript">
-
-    $.fn.visibleHeight = function () {
-        var elBottom, elTop, scrollBot, scrollTop, visibleBottom, visibleTop;
-        scrollTop = $(window).scrollTop();
-        scrollBot = scrollTop + $(window).height();
-        elTop = this.offset().top;
-        elBottom = elTop + this.outerHeight();
-        visibleTop = elTop < scrollTop ? scrollTop : elTop;
-        visibleBottom = elBottom > scrollBot ? scrollBot : elBottom;
-        return visibleBottom - visibleTop
-    }
-
-    function MakeStaticHeader(gridId, height, width, headerHeight, isFooter) {
-
-
-
-        var tbl = document.getElementById(gridId);
-
-        //alert($("#DivMainContent").visibleHeight());
-        height = $("#DivMainContent").visibleHeight();
-        height = height - 65;
-        if (tbl) {
-            var DivPR = document.getElementById('DivPagerRow');
-            var DivHR = document.getElementById('DivHeaderRow');
-            var DivMC = document.getElementById('DivMainContent');
-            var DivFR = document.getElementById('DivFooterRow');
-            var DivR = document.getElementById('DivRoot');
-            //var scrollbarWidth = DivMC.offsetWidth - DivMC.clientWidth;
-
-            //*** Set divheaderRow Properties ****
-            var oWidth = $(tbl).outerWidth();
-            width = $(tbl).width();
-            var iWidth = $(tbl).innerWidth();
-            headerHeight = DivHR.style.height;
-            var paregHeight = 45;
-            $(DivR).width(width - 20);
-
-            //pager
-            DivPR.style.height = paregHeight + 'px'; // headerHeight / 2
-            //DivPR.style.width = (parseInt(width)) + 'px';
-            //$(DivPR).outerWidth(oWidth - 20);
-            $(DivPR).width(width - 20);
-            //$(DivPR).innerWidth(iWidth - 20);
-
-            DivPR.style.position = 'relative';
-            DivPR.style.top = '0px';
-            //DivPR.style.verticalAlign = 'top';
-
-            DivHR.style.height = headerHeight + 'px';// headerHeight/2
-            //$(DivHR).outerWidth(oWidth - 20 );
-            $(DivHR).width(width - 20);
-            //$(DivHR).innerWidth(iWidth - 20 );
-
-
-            DivHR.style.position = 'relative';
-            DivHR.style.top = '0px';
-            // DivHR.style.verticalAlign = 'top';
-            //DivHR.rules = "none";
-
-
-            //*** Set divMainContent Properties ****
-            //$(DivMC).outerWidth(oWidth);
-            $(DivMC).width(width);
-            //$(DivMC).innerWidth(iWidth);
-
-            DivMC.style.height = height + 'px';
-            DivMC.style.position = 'relative';
-            DivMC.style.top = "0px"; //(headerHeight) + 'px';// //
-            DivMC.style.zIndex = '0';
-
-
-
-
-            if (isFooter) {
-                //*** Set divFooterRow Properties ****
-                DivFR.style.width = (parseInt(width)) + 'px';
-                DivFR.style.position = 'relative';
-                DivFR.style.top = -(headerHeight) + 'px';
-                DivFR.style.verticalAlign = 'top';
-                DivFR.style.paddingtop = '2px';
-
-
-                var tblfr = tbl.cloneNode(true);
-                tblfr.removeChild(tblfr.getElementsByTagName('tbody')[0]);
-                var tblBody = document.createElement('tbody');
-                tblfr.style.width = '100%';
-                tblfr.cellSpacing = "0";
-                tblfr.border = "0px";
-                tblfr.rules = "none";
-                //*****In the case of Footer Row *******
-                tblBody.appendChild(tbl.rows[tbl.rows.length - 1]);
-                tblfr.appendChild(tblBody);
-                DivFR.appendChild(tblfr);
-            }
-            //****Copy Header in divHeaderRow****
-
-            var tblPR = tbl.cloneNode(true);
-            tblPR.removeChild(tblPR.getElementsByTagName('tbody')[0]);
-            $(tblPR).attr('id', gridId + 'PR');
-            $(tblPR).css({ minWidth: "980px" });
-
-            var tblHR = tbl.cloneNode(true);
-            tblHR.removeChild(tblHR.getElementsByTagName('tbody')[0]);
-            $(tblHR).attr('id', gridId + 'HR');
-
-
-
-            var tblBodyPR = document.createElement('tbody');
-            var tblBodyHR = document.createElement('tbody');
-
-
-            tblBodyPR.appendChild(tbl.rows[0]);
-            tblBodyHR.appendChild(tbl.rows[0]);
-
-            tblPR.appendChild(tblBodyPR);
-            tblHR.appendChild(tblBodyHR);
-
-            DivPR.appendChild(tblPR);
-            DivHR.appendChild(tblHR);
-
-            $('#ctl00_HomeContentPlaceHolder_rlOne_UpdateProgress1').fadeOut();
-        }
-    }
-
-    function SetStyleEvent() {
-
-        $('#ctl00_HomeContentPlaceHolder_rlOne_UpdateProgress1').fadeIn();
-
-        var DivPR = document.getElementById('DivPagerRow');
-        var DivHR = document.getElementById('DivHeaderRow');
-        var DivMC = document.getElementById('DivMainContent');
-        var DivFR = document.getElementById('DivFooterRow');
-        var DivR = document.getElementById('DivRoot');
-
-        DivMC.style.overflowY = 'auto';
-        DivMC.style.overflowX = 'hidden';
-        DivMC.style.minWidth = "1000px";
-
-        DivPR.style.minWidth = "980px";
-        DivHR.style.minWidth = "1000px";
-        DivFR.style.minWidth = "1000px";
-        DivR.style.minWidth = "980px";
-
-        DivMC.style.paddingRight = '17px';
-        DivHR.style.paddingRight = '17px';
-        DivR.style.overflow = 'hidden';
-
-
-        var tbl = document.getElementById('ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid');
-
-
-        var chkAll = $(tbl.rows[1]).find('#ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid_ctl02_chkAll');
-        $(chkAll).attr('onclick', 'javascript: SelectAllCheckboxesHR(this,ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid);');
-
-        var iTD0 = 0;
-        $(tbl.rows[1]).find('th').each(function () {
-
-            var aTH = $(tbl.rows[1]).find('th').eq(iTD0);
-            var aTD = $(tbl.rows[2]).find('td').eq(iTD0);
-            //$(aTH).outerWidth($(tbl.rows[2]).find('td').eq(iTD0).outerWidth());
-
-            // var iMaxWidth = 0;
-            // var iRow=0;
-            // $("#ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid tr").each(function () {
-
-            //     if (iRow > 1)
-            //     {
-            //         //var cell = $('table#ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid tr:nth-child(' + iRow + ') td:nth-child(' + iTD0 + ')');
-            //         //if( $('#ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid tr:eq(' + iRow + ')') !=
-            //         //    $('#ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid tr').last())
-            //         //{
-            //             var cell = $('#ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid tr:eq(' + iRow + ') td:eq(' + iTD0 + ')');
-            //             iMaxWidth = Math.max(iMaxWidth, $(cell).width());
-            //        // }
-
-
-            //     }
-            //     else if (iRow==1)
-            //     {
-            //         var cell = $('#ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid tr:eq(' + iRow + ') th:eq(' + iTD0 + ')');
-            //         iMaxWidth = Math.max(iMaxWidth, $(cell).width());
-            //     }
-
-
-            //     iRow = iRow + 1;
-            // });
-            //// alert(iRow);
-            // $(aTH).width(iMaxWidth);
-            // $(aTD).width(iMaxWidth);
-
-            //$(aTH).css({width:$(tbl.rows[2]).find('td').eq(iTD0).width()});
-            //$(aTD).css({ width: $(tbl.rows[2]).find('td').eq(iTD0).width() });
-
-            $(aTH).width($(tbl.rows[2]).find('td').eq(iTD0).width());
-            $(aTD).width($(tbl.rows[2]).find('td').eq(iTD0).width());
-
-            iTD0 = iTD0 + 1;
-        });
-
-        //var iTD0 = 0;
-        //$(tbl.rows[2]).find('td').each(function () {
-
-        //    var aTH = $(tbl.rows[2]).find('td').eq(iTD0);
-
-        //    //$(aTH).outerWidth($(tbl.rows[2]).find('td').eq(iTD0).outerWidth());
-        //    $(aTH).width($(tbl.rows[2]).find('td').eq(iTD0).width());
-        //    //$(aTH).outerWidth($(tbl.rows[2]).find('td').eq(iTD0).outerWidth());
-        //    iTD0 = iTD0 + 1;
-        //});
-
-        //var iTH = 0;
-        //$(tbl.rows[1]).find('th').each(function () {
-        //    var iTD = 0;
-        //    $(tbl.rows[2]).find('td').each(function () {
-        //        if (iTD == iTH) {
-        //            var aTH = $(tbl.rows[1]).find('th').eq(iTD);
-        //            //$(aTH).outerWidth($(tbl.rows[2]).find('td').eq(iTD).outerWidth());
-        //            $(aTH).width($(tbl.rows[2]).find('td').eq(iTD).width());
-        //            //$(aTH).innerWidth($(tbl.rows[2]).find('td').eq(iTD).innerWidth());
-        //        }
-        //        iTD = iTD + 1;
-        //    });           
-        //    iTH = iTH + 1;
-        //});
-
-
-        //var scrollbarWidth = DivMC.offsetWidth - DivMC.clientWidth;
-        //var aTHL = $(tbl.rows[1]).find('th').eq(iTH - 1);
-
-        //$(aTHL).outerWidth($(aTHL).outerWidth() + scrollbarWidth);
-        //$(aTHL).width($(aTHL).width() + scrollbarWidth);
-        //$(aTHL).innerWidth($(aTHL).innerWidth() + scrollbarWidth);
-
-    }
-
-    function OnScrollDiv(Scrollablediv) {
-        //DivPagerRow
-        document.getElementById('DivPagerRow').scrollLeft = Scrollablediv.scrollLeft;
-        document.getElementById('DivHeaderRow').scrollLeft = Scrollablediv.scrollLeft;
-        document.getElementById('DivFooterRow').scrollLeft = Scrollablediv.scrollLeft;
-    }
-
-    function autoResizeMe(id, w) {
-        //var newheight;
-        var newwidth;
-
-        if (document.getElementById) {
-            //newheight = document.getElementById(id).contentWindow.document.body.scrollHeight;
-            // var newwidthS = document.getElementById(id).contentWindow.document.body.scrollWidth;
-            newwidth = $(window).width() - 100;
-            // document.getElementById(id).height = (newheight) + "px";
-            //alert(newwidth);
-            if (parseInt(w) == 2) {
-                document.getElementById(id).width = (newwidth / parseInt(w)) + "px";
-            }
-            else {
-
-                document.getElementById(id).width = (newwidth) + "px";
-
-            }
-
-        }
-
-    }
-
-
-</script>
-
-
-
 <style type="text/css">
     .headerlink a {
         text-decoration: none;
     }
 </style>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+       <%-- function toggleAndOr(t, hf) {
+            if (t.text == "and") {
+                t.text = "or";
+            } else {
+                t.text = "and";
+            }
+            document.getElementById(hf).value = t.text;
+        }
+
+        function abc() {
+            var b = document.getElementById('<%= lnkSearch.ClientID %>');
+            if (b && typeof (b.click) == 'undefined') {
+                b.click = function () {
+                    var result = true;
+                    if (b.onclick) result = b.onclick();
+                    if (typeof (result) == 'undefined' || result) {
+                        eval(b.getAttribute('href'));
+                    }
+                }
+            }
+
+        }
+
+        function AddClick() {
+
+            $('#ctl00_HomeContentPlaceHolder_rlOne_btnAdd').trigger('click');
+        }--%>
+
+        //function SelectAllCheckboxes(spanChk) {
+
+        //    // alert($(spanChk).attr('id'));
+        //    checkAll(spanChk);
+        //    var GridView = spanChk.parentNode.parentNode.parentNode;
+
+        //    //alert($(GridView).attr('id'));
+        //    // alert(GridView.id);
+
+        //    var inputList = GridView.getElementsByTagName("input");
+        //    for (var i = 0; i < inputList.length; i++) {
+        //        var row = inputList[i].parentNode.parentNode;
+        //        if (inputList[i].type == "checkbox" && spanChk != inputList[i]) {
+        //            if (spanChk.checked) {
+        //                inputList[i].checked = true;
+        //            }
+        //            else {
+        //                inputList[i].checked = false;
+        //            }
+        //        }
+
+        //    }
+        //}
+
+
+
+        //function SelectAllCheckboxesHR(spanChk, GridView) {
+
+        //    checkAllHR(spanChk, GridView);
+        //    var inputList = GridView.getElementsByTagName("input");
+        //    for (var i = 0; i < inputList.length; i++) {
+        //        var row = inputList[i].parentNode.parentNode;
+        //        if (inputList[i].type == "checkbox" && spanChk != inputList[i]) {
+        //            if (spanChk.checked) {
+        //                inputList[i].checked = true;
+        //            }
+        //            else {
+        //                inputList[i].checked = false;
+        //            }
+        //        }
+
+        //    }
+        //}
+
+
+        //function CreateFile() {
+
+        //    document.getElementById('btnEmail').click();
+
+        //}
+
+
+
+
+        //$.fn.visibleHeight = function () {
+        //    var elBottom, elTop, scrollBot, scrollTop, visibleBottom, visibleTop;
+        //    scrollTop = $(window).scrollTop();
+        //    scrollBot = scrollTop + $(window).height();
+        //    elTop = this.offset().top;
+        //    elBottom = elTop + this.outerHeight();
+        //    visibleTop = elTop < scrollTop ? scrollTop : elTop;
+        //    visibleBottom = elBottom > scrollBot ? scrollBot : elBottom;
+        //    return visibleBottom - visibleTop
+        //}
+
+        //function SetStyleEvent() {
+
+        //    $('#ctl00_HomeContentPlaceHolder_rlOne_UpdateProgress1').fadeIn();
+
+        //    var DivPR = document.getElementById('DivPagerRow');
+        //    var DivHR = document.getElementById('DivHeaderRow');
+        //    var DivMC = document.getElementById('DivMainContent');
+        //    var DivFR = document.getElementById('DivFooterRow');
+        //    var DivR = document.getElementById('DivRoot');
+
+        //    DivMC.style.overflowY = 'auto';
+        //    DivMC.style.overflowX = 'hidden';
+        //    DivMC.style.minWidth = "1000px";
+
+        //    DivPR.style.minWidth = "980px";
+        //    DivHR.style.minWidth = "1000px";
+        //    DivFR.style.minWidth = "1000px";
+        //    DivR.style.minWidth = "980px";
+
+        //    DivMC.style.paddingRight = '17px';
+        //    DivHR.style.paddingRight = '17px';
+        //    DivR.style.overflow = 'hidden';
+
+
+        //    var tbl = document.getElementById('ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid');
+
+
+        //    var chkAll = $(tbl.rows[1]).find('#ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid_ctl02_chkAll');
+        //    $(chkAll).attr('onclick', 'javascript: SelectAllCheckboxesHR(this,ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid);');
+
+
+        //    var iTD0 = 0;
+        //    $(tbl.rows[1]).find('th').each(function () {
+
+        //        var aTH = $(tbl.rows[1]).find('th').eq(iTD0);
+        //        var aTD = $(tbl.rows[2]).find('td').eq(iTD0);                
+
+        //        $(aTH).width($(tbl.rows[2]).find('td').eq(iTD0).width());
+        //        $(aTD).width($(tbl.rows[2]).find('td').eq(iTD0).width());
+
+        //        iTD0 = iTD0 + 1;
+        //    });          
+
+        //}
+
+        //function MakeStaticHeader(gridId, height, width, headerHeight, isFooter) {
+
+
+
+        //    var tbl = document.getElementById(gridId);
+
+        //    //alert($("#DivMainContent").visibleHeight());
+        //    height = $("#DivMainContent").visibleHeight();
+        //    height = height - 65;
+        //    if (tbl) {
+        //        var DivPR = document.getElementById('DivPagerRow');
+        //        var DivHR = document.getElementById('DivHeaderRow');
+        //        var DivMC = document.getElementById('DivMainContent');
+        //        var DivFR = document.getElementById('DivFooterRow');
+        //        var DivR = document.getElementById('DivRoot');
+        //        //var scrollbarWidth = DivMC.offsetWidth - DivMC.clientWidth;
+
+        //        //*** Set divheaderRow Properties ****
+        //        var oWidth = $(tbl).outerWidth();
+        //        width = $(tbl).width();
+        //        var iWidth = $(tbl).innerWidth();
+        //        headerHeight = DivHR.style.height;
+        //        var paregHeight = 45;
+        //        $(DivR).width(width - 20);
+
+        //        //pager
+        //        DivPR.style.height = paregHeight + 'px'; // headerHeight / 2
+        //        //DivPR.style.width = (parseInt(width)) + 'px';
+        //        //$(DivPR).outerWidth(oWidth - 20);
+        //        $(DivPR).width(width - 20);
+        //        //$(DivPR).innerWidth(iWidth - 20);
+
+        //        DivPR.style.position = 'relative';
+        //        DivPR.style.top = '0px';
+        //        //DivPR.style.verticalAlign = 'top';
+
+        //        DivHR.style.height = headerHeight + 'px';// headerHeight/2
+        //        //$(DivHR).outerWidth(oWidth - 20 );
+        //        $(DivHR).width(width - 20);
+        //        //$(DivHR).innerWidth(iWidth - 20 );
+
+
+        //        DivHR.style.position = 'relative';
+        //        DivHR.style.top = '0px';
+        //        // DivHR.style.verticalAlign = 'top';
+        //        //DivHR.rules = "none";
+
+
+        //        //*** Set divMainContent Properties ****
+        //        //$(DivMC).outerWidth(oWidth);
+        //        $(DivMC).width(width);
+        //        //$(DivMC).innerWidth(iWidth);
+
+        //        DivMC.style.height = height + 'px';
+        //        DivMC.style.position = 'relative';
+        //        DivMC.style.top = "0px"; //(headerHeight) + 'px';// //
+        //        DivMC.style.zIndex = '0';
+
+
+
+
+        //        if (isFooter) {
+        //            //*** Set divFooterRow Properties ****
+        //            DivFR.style.width = (parseInt(width)) + 'px';
+        //            DivFR.style.position = 'relative';
+        //            DivFR.style.top = -(headerHeight) + 'px';
+        //            DivFR.style.verticalAlign = 'top';
+        //            DivFR.style.paddingtop = '2px';
+
+
+        //            var tblfr = tbl.cloneNode(true);
+        //            tblfr.removeChild(tblfr.getElementsByTagName('tbody')[0]);
+        //            var tblBody = document.createElement('tbody');
+        //            tblfr.style.width = '100%';
+        //            tblfr.cellSpacing = "0";
+        //            tblfr.border = "0px";
+        //            tblfr.rules = "none";
+        //            //*****In the case of Footer Row *******
+        //            tblBody.appendChild(tbl.rows[tbl.rows.length - 1]);
+        //            tblfr.appendChild(tblBody);
+        //            DivFR.appendChild(tblfr);
+        //        }
+        //        //****Copy Header in divHeaderRow****
+
+        //        var tblPR = tbl.cloneNode(true);
+        //        tblPR.removeChild(tblPR.getElementsByTagName('tbody')[0]);
+        //        $(tblPR).attr('id', gridId + 'PR');
+        //        $(tblPR).css({ minWidth: "980px" });
+
+        //        var tblHR = tbl.cloneNode(true);
+        //        tblHR.removeChild(tblHR.getElementsByTagName('tbody')[0]);
+        //        $(tblHR).attr('id', gridId + 'HR');
+
+
+
+        //        var tblBodyPR = document.createElement('tbody');
+        //        var tblBodyHR = document.createElement('tbody');
+
+
+        //        tblBodyPR.appendChild(tbl.rows[0]);
+        //        tblBodyHR.appendChild(tbl.rows[0]);
+
+        //        tblPR.appendChild(tblBodyPR);
+        //        tblHR.appendChild(tblBodyHR);
+
+        //        DivPR.appendChild(tblPR);
+        //        DivHR.appendChild(tblHR);
+
+        //        $('#ctl00_HomeContentPlaceHolder_rlOne_UpdateProgress1').fadeOut();
+        //    }
+        //}
+
+
+
+
+        //function SetStyleEvent_old() {
+
+        //    $('#ctl00_HomeContentPlaceHolder_rlOne_UpdateProgress1').fadeIn();
+
+        //    var DivPR = document.getElementById('DivPagerRow');
+        //    var DivHR = document.getElementById('DivHeaderRow');
+        //    var DivMC = document.getElementById('DivMainContent');
+        //    var DivFR = document.getElementById('DivFooterRow');
+        //    var DivR = document.getElementById('DivRoot');
+
+        //    DivMC.style.overflowY = 'auto';
+        //    DivMC.style.overflowX = 'hidden';
+        //    DivMC.style.minWidth = "1000px";
+
+        //    DivPR.style.minWidth = "980px";
+        //    DivHR.style.minWidth = "1000px";
+        //    DivFR.style.minWidth = "1000px";
+        //    DivR.style.minWidth = "980px";
+
+        //    DivMC.style.paddingRight = '17px';
+        //    DivHR.style.paddingRight = '17px';
+        //    DivR.style.overflow = 'hidden';
+
+
+        //    var tbl = document.getElementById('ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid');
+
+
+        //    var chkAll = $(tbl.rows[1]).find('#ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid_ctl02_chkAll');
+        //    $(chkAll).attr('onclick', 'javascript: SelectAllCheckboxesHR(this,ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid);');
+
+
+        //    var iTD0 = 0;
+        //    $(tbl.rows[1]).find('th').each(function () {
+
+        //        var aTH = $(tbl.rows[1]).find('th').eq(iTD0);
+        //        var aTD = $(tbl.rows[2]).find('td').eq(iTD0);
+
+        //        //$(aTH).outerWidth($(tbl.rows[2]).find('td').eq(iTD0).outerWidth());
+
+        //        // var iMaxWidth = 0;
+        //        // var iRow=0;
+        //        // $("#ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid tr").each(function () {
+
+        //        //     if (iRow > 1)
+        //        //     {
+        //        //         //var cell = $('table#ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid tr:nth-child(' + iRow + ') td:nth-child(' + iTD0 + ')');
+        //        //         //if( $('#ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid tr:eq(' + iRow + ')') !=
+        //        //         //    $('#ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid tr').last())
+        //        //         //{
+        //        //             var cell = $('#ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid tr:eq(' + iRow + ') td:eq(' + iTD0 + ')');
+        //        //             iMaxWidth = Math.max(iMaxWidth, $(cell).width());
+        //        //        // }
+
+
+        //        //     }
+        //        //     else if (iRow==1)
+        //        //     {
+        //        //         var cell = $('#ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid tr:eq(' + iRow + ') th:eq(' + iTD0 + ')');
+        //        //         iMaxWidth = Math.max(iMaxWidth, $(cell).width());
+        //        //     }
+
+
+        //        //     iRow = iRow + 1;
+        //        // });
+        //        //// alert(iRow);
+        //        // $(aTH).width(iMaxWidth);
+        //        // $(aTD).width(iMaxWidth);
+
+        //        //$(aTH).css({width:$(tbl.rows[2]).find('td').eq(iTD0).width()});
+        //        //$(aTD).css({ width: $(tbl.rows[2]).find('td').eq(iTD0).width() });
+
+        //        $(aTH).width($(tbl.rows[2]).find('td').eq(iTD0).width());
+        //        $(aTD).width($(tbl.rows[2]).find('td').eq(iTD0).width());
+
+        //        iTD0 = iTD0 + 1;
+        //    });
+
+        //    //var iTD0 = 0;
+        //    //$(tbl.rows[2]).find('td').each(function () {
+
+        //    //    var aTH = $(tbl.rows[2]).find('td').eq(iTD0);
+
+        //    //    //$(aTH).outerWidth($(tbl.rows[2]).find('td').eq(iTD0).outerWidth());
+        //    //    $(aTH).width($(tbl.rows[2]).find('td').eq(iTD0).width());
+        //    //    //$(aTH).outerWidth($(tbl.rows[2]).find('td').eq(iTD0).outerWidth());
+        //    //    iTD0 = iTD0 + 1;
+        //    //});
+
+        //    //var iTH = 0;
+        //    //$(tbl.rows[1]).find('th').each(function () {
+        //    //    var iTD = 0;
+        //    //    $(tbl.rows[2]).find('td').each(function () {
+        //    //        if (iTD == iTH) {
+        //    //            var aTH = $(tbl.rows[1]).find('th').eq(iTD);
+        //    //            //$(aTH).outerWidth($(tbl.rows[2]).find('td').eq(iTD).outerWidth());
+        //    //            $(aTH).width($(tbl.rows[2]).find('td').eq(iTD).width());
+        //    //            //$(aTH).innerWidth($(tbl.rows[2]).find('td').eq(iTD).innerWidth());
+        //    //        }
+        //    //        iTD = iTD + 1;
+        //    //    });           
+        //    //    iTH = iTH + 1;
+        //    //});
+
+
+        //    //var scrollbarWidth = DivMC.offsetWidth - DivMC.clientWidth;
+        //    //var aTHL = $(tbl.rows[1]).find('th').eq(iTH - 1);
+
+        //    //$(aTHL).outerWidth($(aTHL).outerWidth() + scrollbarWidth);
+        //    //$(aTHL).width($(aTHL).width() + scrollbarWidth);
+        //    //$(aTHL).innerWidth($(aTHL).innerWidth() + scrollbarWidth);
+
+        //}
+
+        //function MakeStaticHeader_old(gridId, height, width, headerHeight, isFooter) {
+
+
+
+        //    var tbl = document.getElementById(gridId);
+
+        //    //alert($("#DivMainContent").visibleHeight());
+        //    height = $("#DivMainContent").visibleHeight();
+        //    height = height - 65;
+        //    if (tbl) {
+        //        var DivPR = document.getElementById('DivPagerRow');
+        //        var DivHR = document.getElementById('DivHeaderRow');
+        //        var DivMC = document.getElementById('DivMainContent');
+        //        var DivFR = document.getElementById('DivFooterRow');
+        //        var DivR = document.getElementById('DivRoot');
+        //        //var scrollbarWidth = DivMC.offsetWidth - DivMC.clientWidth;
+
+        //        //*** Set divheaderRow Properties ****
+        //        var oWidth = $(tbl).outerWidth();
+        //        width = $(tbl).width();
+        //        var iWidth = $(tbl).innerWidth();
+        //        headerHeight = DivHR.style.height;
+        //        var paregHeight = 45;
+        //        $(DivR).width(width - 20);
+
+        //        //pager
+        //        DivPR.style.height = paregHeight + 'px'; // headerHeight / 2
+        //        //DivPR.style.width = (parseInt(width)) + 'px';
+        //        //$(DivPR).outerWidth(oWidth - 20);
+        //        $(DivPR).width(width - 20);
+        //        //$(DivPR).innerWidth(iWidth - 20);
+
+        //        DivPR.style.position = 'relative';
+        //        DivPR.style.top = '0px';
+        //        //DivPR.style.verticalAlign = 'top';
+
+        //        DivHR.style.height = headerHeight + 'px';// headerHeight/2
+        //        //$(DivHR).outerWidth(oWidth - 20 );
+        //        $(DivHR).width(width - 20);
+        //        //$(DivHR).innerWidth(iWidth - 20 );
+
+
+        //        DivHR.style.position = 'relative';
+        //        DivHR.style.top = '0px';
+        //        // DivHR.style.verticalAlign = 'top';
+        //        //DivHR.rules = "none";
+
+
+        //        //*** Set divMainContent Properties ****
+        //        //$(DivMC).outerWidth(oWidth);
+        //        $(DivMC).width(width);
+        //        //$(DivMC).innerWidth(iWidth);
+
+        //        DivMC.style.height = height + 'px';
+        //        DivMC.style.position = 'relative';
+        //        DivMC.style.top = "0px"; //(headerHeight) + 'px';// //
+        //        DivMC.style.zIndex = '0';
+
+
+
+
+        //        if (isFooter) {
+        //            //*** Set divFooterRow Properties ****
+        //            DivFR.style.width = (parseInt(width)) + 'px';
+        //            DivFR.style.position = 'relative';
+        //            DivFR.style.top = -(headerHeight) + 'px';
+        //            DivFR.style.verticalAlign = 'top';
+        //            DivFR.style.paddingtop = '2px';
+
+
+        //            var tblfr = tbl.cloneNode(true);
+        //            tblfr.removeChild(tblfr.getElementsByTagName('tbody')[0]);
+        //            var tblBody = document.createElement('tbody');
+        //            tblfr.style.width = '100%';
+        //            tblfr.cellSpacing = "0";
+        //            tblfr.border = "0px";
+        //            tblfr.rules = "none";
+        //            //*****In the case of Footer Row *******
+        //            tblBody.appendChild(tbl.rows[tbl.rows.length - 1]);
+        //            tblfr.appendChild(tblBody);
+        //            DivFR.appendChild(tblfr);
+        //        }
+        //        //****Copy Header in divHeaderRow****
+
+        //        var tblPR = tbl.cloneNode(true);
+        //        tblPR.removeChild(tblPR.getElementsByTagName('tbody')[0]);
+        //        $(tblPR).attr('id', gridId + 'PR');
+        //        $(tblPR).css({ minWidth: "980px" });
+
+        //        var tblHR = tbl.cloneNode(true);
+        //        tblHR.removeChild(tblHR.getElementsByTagName('tbody')[0]);
+        //        $(tblHR).attr('id', gridId + 'HR');
+
+
+
+        //        var tblBodyPR = document.createElement('tbody');
+        //        var tblBodyHR = document.createElement('tbody');
+
+
+        //        tblBodyPR.appendChild(tbl.rows[0]);
+        //        tblBodyHR.appendChild(tbl.rows[0]);
+
+        //        tblPR.appendChild(tblBodyPR);
+        //        tblHR.appendChild(tblBodyHR);
+
+        //        DivPR.appendChild(tblPR);
+        //        DivHR.appendChild(tblHR);
+
+        //        $('#ctl00_HomeContentPlaceHolder_rlOne_UpdateProgress1').fadeOut();
+        //    }
+        //}
+
+
+
+        function OnScrollDiv(Scrollablediv) {
+            //DivPagerRow
+            document.getElementById('DivPagerRow').scrollLeft = Scrollablediv.scrollLeft;
+            document.getElementById('DivHeaderRow').scrollLeft = Scrollablediv.scrollLeft;
+            document.getElementById('DivFooterRow').scrollLeft = Scrollablediv.scrollLeft;
+        }
+
+        function autoResizeMe(id, w) {
+            //var newheight;
+            var newwidth;
+
+            if (document.getElementById) {
+                //newheight = document.getElementById(id).contentWindow.document.body.scrollHeight;
+                // var newwidthS = document.getElementById(id).contentWindow.document.body.scrollWidth;
+                newwidth = $(window).width() - 100;
+                // document.getElementById(id).height = (newheight) + "px";
+                //alert(newwidth);
+                if (parseInt(w) == 2) {
+                    document.getElementById(id).width = (newwidth / parseInt(w)) + "px";
+                }
+                else {
+
+                    document.getElementById(id).width = (newwidth) + "px";
+
+                }
+
+            }
+
+        }
+
+    });
+</script>
+
+
+
+
 <asp:UpdatePanel ID="UpdatePanel1" runat="server">
     <ContentTemplate>
         <div runat="server" id="divRecordListTop">
-            <table cellpadding="0" cellspacing="0" style="width: 100%">
+            <table style="width: 100%; border-collapse: collapse; border-spacing: 0;">
                 <tr>
                     <td colspan="3" align="left">
                         <table runat="server" id="tblTopCaption" width="100%">
@@ -520,16 +667,15 @@
                                                             </td>
                                                             <td>
                                                                 <table>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <dbg:ControlByColumn ID="cbcSearchMain" runat="server" OnddlCompareOperator_Changed="cbcSearchMain_OnddlCompareOperator_Changed" OnddlYAxis_Changed="cbcSearchMain_OnddlYAxis_Changed" />
-                                                                        </td>
-                                                                        <td>
-                                                                            <asp:LinkButton ID="lnkAddSearch1" runat="server" OnClick="lnkSearch_Click" Visible="false">
+                                                                    <td>
+                                                                        <dbg:ControlByColumn runat="server" ID="cbcSearchMain" OnddlYAxis_Changed="cbcSearchMain_OnddlYAxis_Changed"
+                                                                            OnddlCompareOperator_Changed="cbcSearchMain_OnddlCompareOperator_Changed" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <asp:LinkButton runat="server" ID="lnkAddSearch1" Visible="false" OnClick="lnkSearch_Click">
                                                                         <asp:Image  runat="server" ImageUrl="~/App_Themes/Default/Images/PlusAdd.png"/>
                                                                         </asp:LinkButton>
-                                                                        </td>
-                                                                    </tr>
+                                                                    </td>
                                                                 </table>
                                                             </td>
                                                         </tr>
@@ -545,16 +691,16 @@
                                                             </td>
                                                             <td>
                                                                 <table>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <dbg:ControlByColumn ID="cbcSearch1" runat="server" OnddlCompareOperator_Changed="cbcSearch1_OnddlCompareOperator_Changed" OnddlYAxis_Changed="cbcSearch1_OnddlYAxis_Changed" />
-                                                                        </td>
-                                                                        <td>
-                                                                            <asp:LinkButton ID="lnkAddSearch2" runat="server" OnClick="lnkSearch_Click" Visible="false">
+                                                                    <td>
+                                                                        <dbg:ControlByColumn runat="server" ID="cbcSearch1"
+                                                                            OnddlYAxis_Changed="cbcSearch1_OnddlYAxis_Changed"
+                                                                            OnddlCompareOperator_Changed="cbcSearch1_OnddlCompareOperator_Changed" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <asp:LinkButton runat="server" ID="lnkAddSearch2" Visible="false" OnClick="lnkSearch_Click">
                                                                         <asp:Image ID="Image2" runat="server" ImageUrl="~/App_Themes/Default/Images/PlusAdd.png" />
                                                                         </asp:LinkButton>
-                                                                        </td>
-                                                                    </tr>
+                                                                    </td>
                                                                 </table>
                                                             </td>
                                                         </tr>
@@ -570,16 +716,14 @@
                                                             </td>
                                                             <td>
                                                                 <table>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <dbg:ControlByColumn ID="cbcSearch2" runat="server" OnddlCompareOperator_Changed="cbcSearch2_OnddlCompareOperator_Changed" OnddlYAxis_Changed="cbcSearch2_OnddlYAxis_Changed" />
-                                                                        </td>
-                                                                        <td>
-                                                                            <asp:LinkButton ID="lnkAddSearch3" runat="server" OnClick="lnkSearch_Click" Visible="false">
+                                                                    <td>
+                                                                        <dbg:ControlByColumn runat="server" ID="cbcSearch2" OnddlYAxis_Changed="cbcSearch2_OnddlYAxis_Changed" OnddlCompareOperator_Changed="cbcSearch2_OnddlCompareOperator_Changed" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <asp:LinkButton runat="server" ID="lnkAddSearch3" Visible="false" OnClick="lnkSearch_Click">
                                                                         <asp:Image ID="Image3" runat="server" ImageUrl="~/App_Themes/Default/Images/PlusAdd.png" />
                                                                         </asp:LinkButton>
-                                                                        </td>
-                                                                    </tr>
+                                                                    </td>
                                                                 </table>
                                                             </td>
                                                         </tr>
@@ -614,7 +758,7 @@
                                                     </table>
                                                 </div>
                                             </td>
-                                            <td style="float:right;"> 
+                                            <td>
                                                 <table>
                                                     <tr>
                                                         <td>
@@ -648,7 +792,6 @@
                                                                 <tr>
                                                                     <td valign="top">
                                                                         <table>
-                                                                            <%--Advanced Search Checkbox--%>
                                                                             <tr>
                                                                                 <td style="text-align: right;">
                                                                                     <asp:CheckBox runat="server" ID="chkShowAdvancedOptions" AutoPostBack="true" OnCheckedChanged="chkShowAdvancedOptions_OnCheckedChanged" />
@@ -659,21 +802,7 @@
                                                                                     <asp:HiddenField runat="server" ID="hfHideAdvancedOption" />
 
                                                                                 </td>
-                                                                            </tr>
-                                                                            <%--Show Deleted Records Checkbox--%>
-                                                                            <tr>
-                                                                                <td style="text-align: right">
-                                                                                    <asp:CheckBox ID="chkIsActive" Checked="false" runat="server" AutoPostBack="true" OnCheckedChanged="chkIsActive_CheckedChanged" />
-                                                                                </td>
-                                                                                <td style="text-align: left">Show Deleted Records
-                                                                                </td>
-                                                                            </tr>
-                                                                            <%--Show Only Warning Checkbox--%>
-                                                                            <tr id="trChkShowOnlyWarning">
-                                                                                <td style="text-align: right;">
-                                                                                    <asp:CheckBox ID="chkShowOnlyWarning" Checked="false" runat="server" AutoPostBack="true" OnCheckedChanged="chkShowOnlyWarning_CheckedChanged" />
-                                                                                </td>
-                                                                                <td style="text-align: left;">Show Only Warning</td>
+
                                                                             </tr>
                                                                         </table>
                                                                     </td>
@@ -798,11 +927,14 @@
                                                                                     </td>
 
 
-                                                                                    <%--<td style="width: 10px;"></td>
+                                                                                    <td style="width: 10px;"></td>
                                                                                     <td>
+                                                                                        <asp:CheckBox ID="chkIsActive" Checked="false" runat="server" AutoPostBack="true"
+                                                                                            Text="Show Deleted Records  " OnCheckedChanged="chkIsActive_CheckedChanged" />
+                                                                                        <br />
                                                                                         <asp:CheckBox ID="chkShowOnlyWarning" Checked="false" runat="server" AutoPostBack="true"
                                                                                             Text="Show Only Warning" OnCheckedChanged="chkShowOnlyWarning_CheckedChanged" />
-                                                                                    </td>--%>
+                                                                                    </td>
                                                                                 </tr>
                                                                             </table>
                                                                         </td>
@@ -818,12 +950,12 @@
                                                             <table width="120px">
                                                                 <tr>
                                                                     <td>
-                                                                        <%--<asp:LinkButton runat="server" ID="lnkSearch2" CssClass="btn" OnClick="lnkSearch_Click"
-                                                                            Style="display: none;" ValidationGroup="MKE"> <strong>Go</strong></asp:LinkButton>--%>
+                                                                        <asp:LinkButton runat="server" ID="lnkSearch2" CssClass="btn" OnClick="lnkSearch_Click"
+                                                                            Style="display: none;" ValidationGroup="MKE"> <strong>Go</strong></asp:LinkButton>
                                                                     </td>
                                                                     <td>
-                                                                        <%--<asp:LinkButton runat="server" ID="lnkReset2" CssClass="btn" OnClick="lnkReset_Click"
-                                                                            Style="display: none;" CausesValidation="false"> <strong>Reset</strong></asp:LinkButton>--%>
+                                                                        <asp:LinkButton runat="server" ID="lnkReset2" CssClass="btn" OnClick="lnkReset_Click"
+                                                                            Style="display: none;" CausesValidation="false"> <strong>Reset</strong></asp:LinkButton>
                                                                     </td>
                                                                 </tr>
                                                             </table>
@@ -860,6 +992,7 @@
                                     <Columns>
                                         <asp:TemplateField>
                                             <ItemStyle Width="20px" HorizontalAlign="Center" />
+                                            <HeaderStyle Width="20px" />
                                             <HeaderTemplate>
                                                 <%--<input id="chkAll" onclick="javascript:SelectAllCheckboxes(this);" runat="server"
                                                 type="checkbox" />--%>
@@ -870,20 +1003,28 @@
                                             </ItemTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField Visible="false">
-                                            <ItemStyle Width="20px" HorizontalAlign="Center" />
                                             <ItemTemplate>
                                                 <asp:Label ID="LblID" runat="server" Text='<%# Eval("DBGSystemRecordID") %>'></asp:Label>
                                             </ItemTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField Visible="false">
-                                            <ItemStyle Width="20px" HorizontalAlign="Center" />
+                                            <ItemStyle Width="30px" HorizontalAlign="Center" />
+                                            <HeaderStyle Width="30px" />
+
+                                            <HeaderTemplate>
+                                                <asp:Label runat="server" Width="30px"></asp:Label>
+                                            </HeaderTemplate>
                                             <ItemTemplate>
                                                 <asp:HyperLink ID="EditHyperLink" runat="server" ToolTip="Edit" ImageUrl="~/App_Themes/Default/Images/iconEdit.png" />
                                                 <%--NavigateUrl='<%# GetEditURL() + Cryptography.Encrypt(Eval("DBGSystemRecordID").ToString()) %>'--%>
                                             </ItemTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField SortExpression="DBGSystemRecordID" Visible="false">
-                                            <ItemStyle Width="20px" HorizontalAlign="Center" />
+                                            <ItemStyle Width="30px" HorizontalAlign="Center" />
+                                            <HeaderStyle Width="30px" />
+                                            <HeaderTemplate>
+                                                <asp:Label runat="server" Width="30px"></asp:Label>
+                                            </HeaderTemplate>
                                             <ItemTemplate>
                                                 <asp:HyperLink ID="viewHyperLink" runat="server" ToolTip="View" ImageUrl="~/App_Themes/Default/Images/iconShow.png" />
                                                 <%--NavigateUrl='<%# GetViewURL() + Cryptography.Encrypt(Eval("DBGSystemRecordID").ToString())  %>'--%>
@@ -925,22 +1066,46 @@
 
                         </div>
                         <div runat="server" id="divNoFilter" visible="false" style="padding-left: 100px;">
-                            <%--<asp:LinkButton runat="server" ID="lnkNoFilter" Style="text-decoration: none; color: Black;"
-                                OnClick="Pager_OnApplyFilter">
-                                <asp:Image runat="server" ID="Image1" ImageUrl="~/App_Themes/Default/images/BigFilter.png" />
-                                No records match that filter. <strong style="text-decoration: underline; color: Blue;">
-                                    Clear filter</strong>
-                            </asp:LinkButton>--%>
-                            No records matched your search. &nbsp<asp:LinkButton runat="server" ID="lnkNoFilter"
-                                OnClick="Pager_OnApplyFilter" Font-Bold="true" Text="Clear Search"> </asp:LinkButton>
-                            , &nbsp   
-                            <asp:HyperLink runat="server" ID="hlEditView" Text="Edit View" Font-Bold="true" CssClass="popuplink2"> </asp:HyperLink>
-                            &nbsp or &nbsp
-                            <asp:HyperLink runat="server" ID="hplNewDataFilter" Text="Add Record" Font-Bold="true"> </asp:HyperLink>
-                            <%--<asp:Label runat="server" ID="lblTableCaptionForFilter"></asp:Label>--%>
-                            <asp:HyperLink runat="server" ID="hplNewDataFilter2">
+                            <table>
+                                <tr>
+                                    <td>
+                                        No records matched your search. &nbsp<asp:LinkButton runat="server" ID="lnkNoFilter"
+                                        OnClick="Pager_OnApplyFilter" Font-Bold="true" Text="Clear Search"> </asp:LinkButton>
+
+                                    </td>
+                                    <td >
+                                        <div runat="server" id="divAddAndViewControls">
+                                            <table style="width: 100%; border-collapse: collapse; border-spacing: 0;">
+                                                <tr>
+                                                    <td>
+                                                        ,
+                                                    </td>
+                                                    <td>
+                                                        <asp:HyperLink runat="server" ID="hlEditView" Text="Edit View" Font-Bold="true" CssClass="popuplink2"> </asp:HyperLink>
+                                                    </td>
+                                                    <td>
+                                                        or
+                                                    </td>
+                                                    <td>
+                                                        <asp:HyperLink runat="server" ID="hplNewDataFilter" Text="Add Record" Font-Bold="true"> </asp:HyperLink>
+                                                    </td>
+                                                    <td>
+                                                         <asp:HyperLink runat="server" ID="hplNewDataFilter2">
                                 <asp:Image runat="server" ID="Image1" ImageUrl="~/Pages/Pager/Images/add.png" />
-                            </asp:HyperLink>
+                                            </asp:HyperLink>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                           
+                            
+
+                                           
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            </table>
+
                         </div>
                         <br />
                         <asp:Label runat="server" ID="lblMsg" ForeColor="Red"></asp:Label>
@@ -1013,7 +1178,7 @@
                             </td>
                         </tr>
                         <tr runat="server" id="trUndo" style="display: none;">
-                            <td colspan="2">
+                            <td colspan="2" style="padding-left: 10px;">
                                 <asp:CheckBox runat="server" ID="chkUndo" TextAlign="Right" Text="I will not be able to undo this action." />
                             </td>
                         </tr>
@@ -1407,6 +1572,4 @@
         <asp:PostBackTrigger ControlID="lnkExportRecords" />
     </Triggers>
 </asp:UpdatePanel>
-<script language="javascript" type="text/javascript">
-    //        ShowHide();
-</script>
+

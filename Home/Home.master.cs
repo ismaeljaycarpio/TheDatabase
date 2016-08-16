@@ -946,7 +946,7 @@ public partial class Home : System.Web.UI.MasterPage
         {
             MenuItem miUserName = new MenuItem();
             miUserName.Text = _objUser.FirstName + " " + _objUser.LastName;
-            miUserName.NavigateUrl = "~/Default.aspx";
+            //miUserName.NavigateUrl = "~/Default.aspx";
             miUserName.Value = "UserName";
             menuProfile.Items.Add(miUserName);
             //if (!Common.HaveAccess(Session["roletype"].ToString(), Common.UserRoleType.ReadOnly))
@@ -1004,7 +1004,7 @@ public partial class Home : System.Web.UI.MasterPage
             miSignOut.NavigateUrl = "~/Login.aspx?Logout=Yes";
             miUserName.ChildItems.Add(miSignOut);
 
-
+            //menuProfile.Attributes.Add("onclick", "alert('hello!')");
         }
     }
 
@@ -2063,5 +2063,10 @@ public partial class Home : System.Web.UI.MasterPage
     }
 
 
+    protected void menuProfile_MenuItemClick(object sender, MenuEventArgs e)
+    {
+        //show here
+
+    }
 }
 

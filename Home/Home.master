@@ -65,6 +65,7 @@
                       $("#loadingredirect").fadeIn();
                   }
 
+
                   $("#loadingredirect")               
                   .click(
                     function () {
@@ -349,7 +350,7 @@
                                                                                 <td align="left">
                                                                                     <asp:Menu ID="menuProfile" runat="server" Orientation="Horizontal" EnableViewState="false"
                                                                                         RenderingMode="Table" StaticEnableDefaultPopOutImage="false" StaticPopOutImageUrl="~/App_Themes/Default/Images/menu_popup3.gif"
-                                                                                        MaximumDynamicDisplayLevels="5" StaticDisplayLevels="1">
+                                                                                        MaximumDynamicDisplayLevels="5" StaticDisplayLevels="1" OnMenuItemClick="menuProfile_MenuItemClick">
                                                                                         <StaticMenuItemStyle CssClass="staticmenuitemtop" />
                                                                                         <StaticHoverStyle CssClass="staticmenuhover" />
                                                                                         <DynamicMenuStyle CssClass="dynamicmenu2" />
