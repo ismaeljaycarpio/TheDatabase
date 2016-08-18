@@ -1,0 +1,601 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Home.master.cs" Inherits="Home" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TheDatabase.net - Your database on the web</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <%--<meta http-equiv="X-UA-Compatible" content="IE=10,chrome=1" />--%>
+    <meta name="Description" content="TheDatabase.net is an online database development platform to make getting your database on the web quick and easy with no upfront costs." />
+    <meta name="Keywords" content="Database, online, web, data, development, platform" />
+    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="all" />
+    <meta name="revisit-after" content="7 days" />
+    <meta name="google" content="notranslate">
+    <meta http-equiv="Content-Language" content="en">
+
+    <link rel="shortcut icon" href="../Images/favicon.ico" />
+    <%--Ismael Code Change: Ticket 846 --%>
+    <%-- Add Bootstrap css --%>
+    <link href="~/Responsive/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/App_Themes/Default/StyleSheet.css?2" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+        .divrenew {
+            z-index: 100;
+            position: fixed;
+            top: 50%;
+            left: 30%;
+            background: #ffffff;
+        }
+
+        .ui-widget {
+            font-size: 12px !important;
+            line-height: 1.25 !important;
+            font-family: Verdana,Arial,Helvetica,sans-serif !important;
+        }
+    </style>
+
+    <asp:Literal ID="ltMasterStyles" runat="server"></asp:Literal>
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    </asp:ContentPlaceHolder>
+
+</head>
+<body>
+    <div id="loadingredirect" title="Click to hide!">
+        <img alt="loading..." src="../../Images/ajax.gif" />
+    </div>
+    <script type="text/javascript" src="<%=ResolveUrl("~/Responsive/js/jquery.js")%>"></script>
+    <script type="text/javascript" src="<%=ResolveUrl("~/JS/Common.js")%>"></script>
+    <script type="text/javascript" src="<%=ResolveUrl("~/JS/modernizr.custom.80028.js")%>"></script>
+    <link type="text/css" href="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.css")%>" rel="stylesheet" />
+    <script type="text/javascript" src="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.pack.js")%>"></script>
+
+    
+    <script type="text/javascript" src="<%=ResolveUrl("~/swfobject.js")%>"></script>
+    <script type="text/javascript">
+        $(window).load(function () {
+            $("#loadingredirect").fadeOut();
+        })
+
+        $(document).ready(function () {
+
+            //$("a:eq(0)", "#ctl00_menuProfilen0").mouseover(function (e) {
+            //    e.stopPropagation();
+            //})
+
+            function ShowLoadingContent() {
+                $("#loadingredirect").fadeIn();
+            }
+
+            //$("#ctl00_menuProfilen0").hover(function () {
+            //    $("#ctl00_menuProfilen0Items").css('visibility', 'hidden');
+            //    $("#ctl00_menuProfilen0Items").css('display', 'none');
+            //});
+
+            //$("#ctl00_menuProfilen0 a").hover(function () {
+            //    $(this).css('cursor', 'pointer');
+            //    $("#ctl00_menuProfilen0Items").css('visibility', 'hidden');
+            //    $("#ctl00_menuProfilen0Items").css('display', 'none');
+            //});
+
+            //$("#ctl00_menuProfilen0").click(function () {
+            //    $("#ctl00_menuProfilen0Items").css('visibility', 'visible');
+            //    $("#ctl00_menuProfilen0Items").css('display', 'inline');
+            //    $("#ctl00_menuProfilen0Items").css('top', '36px');
+            //    $("#ctl00_menuProfilen0Items").css('height', '100px');
+            //    $("#ctl00_menuProfilen0Items").css('clip', 'rect(auto auto auto auto)');
+            //    $("#ctl00_menuProfilen0Items").css('left', '1001px');
+            //    $("#ctl00_menuProfilen0Items").css('z-index', '1');
+            //});
+
+            //$("#ctl00_menuProfilen0 a").click(function () {
+            //    $("#ctl00_menuProfilen0Items").css("visibility", "visible");
+            //    $("#ctl00_menuProfilen0Items").css("display", "inline");
+            //    $("#ctl00_menuProfilen0Items").css('top', '36px');
+            //    $("#ctl00_menuProfilen0Items").css('height', '100px');
+            //    $("#ctl00_menuProfilen0Items").css('clip', 'rect(auto auto auto auto)');
+            //    $("#ctl00_menuProfilen0Items").css('left', '1001px');
+            //    $("#ctl00_menuProfilen0Items").css('z-index', '1');
+            //});
+
+            $("#loadingredirect")
+            .click(
+              function () {
+                  $("#loadingredirect").fadeOut();
+                  //alert('test');
+              }
+            );
+
+            $(".dynamicmenuitem a")
+           .click(
+             function () {
+                 if ($(this).attr("href").indexOf('lkLogout') > 0) {
+                     //
+                 }
+                 else {
+                     $("#loadingredirect").fadeIn();
+                 }
+
+             }
+           );
+
+            $(".staticmenuitem a")
+              .click(
+                function () {
+                    $("#loadingredirect").fadeIn();
+                }
+              );
+
+            $(".staticmenuitemtop a")
+             .click(
+               function () {
+                   if ($(this).attr("href") != "javascript:void(0)") {
+                       $("#loadingredirect").fadeIn();
+                   }
+               });
+
+            $(".gridview_row a")
+            .click(
+              function () {
+                  if (this.id.indexOf('EditHyperLink') > 0 || this.id.indexOf('viewHyperLink') > 0) {
+                      $("#loadingredirect").fadeIn();
+                  }
+              }
+            );
+
+
+            $(".pagertable a")
+           .click(
+             function () {
+                 if (this.id.indexOf('HyperAdd') > 0) {
+                     $("#loadingredirect").fadeIn();
+                 }
+             }
+           );
+
+            $(".ListConfigControl a")
+          .click(
+            function () {
+                if (this.id.indexOf('hlShowGraph') > 0 || this.id.indexOf('hlUpload') > 0
+                    || this.id.indexOf('hlConfig') > 0) {
+                    $("#loadingredirect").fadeIn();
+                }
+            }
+          );
+
+            $(".DetailPageControls a")
+           .click(
+             function () {
+                 if (this.id.indexOf('hlBack') > 0) {
+                     $("#loadingredirect").fadeIn();
+                 }
+
+             }
+           );
+
+            // $("#loadingredirect")
+            //.hover(
+            //  function () {
+            //      $("#loadingredirect").fadeOut();
+            //  }
+            //);
+
+            //.hover(
+            //  function () {
+            //      $(this).css('background', '#ff00ff');
+            //  },
+            //  function () {
+            //      $(this).css('background', '');
+            //  }
+            //);
+
+        });
+
+    </script>
+
+    <%-- <script type="text/javascript" src="<%=ResolveUrl("~/script/jquery-1.11.2.min.js")%>"></script>
+     <script type="text/javascript" src="<%=ResolveUrl("~/script/jquery-ui-1.11.2/jquery-ui.min.js")%>"></script>--%>
+    <%-- <link href="<%=ResolveUrl("~/fancybox/V2/jquery.fancybox.css?v=2.1.5")%>" rel="stylesheet" media="screen"  type="text/css" /> 
+    <script type="text/javascript" src="<%=ResolveUrl("~/fancybox/V2/jquery.fancybox.pack.js?v=2.1.5")%>"></script>--%>
+    <%--<script language="javascript" type="text/javascript">
+        $(document).ready(function () {
+
+            function IsFlashSupported() {
+                try
+                {
+                    var hfFlashSupport = document.getElementById('<%= hfFlashSupport.ClientID %>');
+                    if (swfobject.hasFlashPlayerVersion('1')) {
+                        hfFlashSupport.value = 'yes';
+                    }
+                    else {
+                        hfFlashSupport.value = 'no';
+                    }
+                    //alert(hfFlashSupport.value);
+
+                    $.ajax({
+                        url: '<%=ResolveUrl("~/Pages/DocGen/REST/SectionREST.ashx")%>?type=FlashSupport&hfFlashSupport=' + hfFlashSupport.value,
+                        cache: false,
+                        success: function (content) {
+                           //
+                        },
+                        error: function (a, b, c) {
+                           //
+                        }
+                    });
+                }
+                catch(err)
+                {
+                    //
+                }             
+
+
+            }
+            //IsFlashSupported();
+            //setTimeout(function () { IsFlashSupported(); }, 1000);
+        });
+    </script>--%>
+
+
+    <form id="form1" runat="server" enctype="multipart/form-data">
+
+        <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true" AsyncPostBackTimeout="36000">
+        </asp:ScriptManager>
+
+
+
+        <input id="Hidden1" type="hidden" />
+        <asp:HiddenField runat="server" ID="hfFlashSupport" Value="no" />
+        <asp:HiddenField runat="server" ID="hfIsAccountHolder" />
+        <%--<asp:HiddenField runat="server" ID="hfTopMessageDisplayNumberSeconds" ClientIDMode="Static" Value="3000" />--%>
+        <%--<ajaxToolkit:ToolkitScriptManager  ID="ScriptManager1" runat="server" EnablePageMethods="true"></ajaxToolkit:ToolkitScriptManager>--%>
+
+        <%--<div runat="server" id="divFirstTable" visible="false" style="position:fixed; right:400px; top:25px; z-index:100;">
+        <h4 style="color:#A0A0A0; line-height:normal;">Sign Up (done)</h4>   
+        <h3 style="color:#009BB5;">Set Up First Table</h3>
+    </div>--%>
+
+
+        <asp:UpdatePanel ID="upNotificationMessage" runat="server" UpdateMode="Always">
+            <ContentTemplate>
+                <div id="divNotificationMessage" style="position: fixed; top: 0px;">
+                    <asp:Label runat="server" ID="lblNotificationMessage"></asp:Label>
+                </div>
+            </ContentTemplate>
+        </asp:UpdatePanel>
+
+        <div class="container">
+
+            <div runat="server" id="divRenew" visible="false" class="divrenew">
+                <asp:Label runat="server" ID="lblRenewMessage" Text="" ForeColor="Red"></asp:Label>
+                <asp:HyperLink runat="server" ID="hlRenewNow">Contact us to renew</asp:HyperLink>
+            </div>
+
+            <div class="navbar navbar-default">
+                <div class="container-fluid">
+                    <%-- Toggles --%>
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#userMenuAccount" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span><span
+                                class="icon-bar"></span><span class="icon-bar"></span>
+                        </button>
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#userMenuOpen" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span><span
+                                class="icon-bar"></span><span class="icon-bar"></span>
+                        </button>
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#userMenuProfile" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span><span
+                                class="icon-bar"></span><span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand">
+                            <asp:Image ID="imgLogo" runat="server" ImageUrl="~/Images/logo.png" alt="The Database Logo" />
+                        </a>
+                    </div>
+
+                    <%-- Menu Account --%>
+                    <div class="collapse navbar-collapse navbar-right" id="userMenuAccount">
+                        <asp:Image ID="imgHouse" runat="server" ImageUrl="~/Images/House.png" />
+                        <asp:UpdatePanel ID="upMasterUpdatePanel1" runat="server" UpdateMode="Conditional">
+                            <ContentTemplate>
+                                <asp:Menu ID="menuAccount" Visible="false" runat="server" Orientation="Horizontal"
+                                    EnableViewState="false" RenderingMode="Table" StaticEnableDefaultPopOutImage="false"
+                                    StaticPopOutImageUrl="~/App_Themes/Default/Images/menu_popup3.gif" MaximumDynamicDisplayLevels="5"
+                                    StaticDisplayLevels="1">
+                                    <StaticMenuItemStyle CssClass="staticmenuitemtop" />
+                                    <StaticHoverStyle CssClass="staticmenuhover" />
+                                    <DynamicMenuStyle CssClass="dynamicmenu2" />
+                                    <DynamicHoverStyle CssClass="dynamicmenuhover" />
+                                    <DynamicMenuItemStyle CssClass="dynamicmenuitem" />
+                                    <StaticSelectedStyle CssClass="staticselecteditem" />
+                                    <DynamicSelectedStyle CssClass="staticselecteditem" />
+                                </asp:Menu>
+                                <asp:LinkButton ID="lkChangeAccount" runat="server" OnClick="lkChangeAccount_Click"
+                                    CausesValidation="false" Style="display: none;"></asp:LinkButton>
+
+                                <asp:HiddenField runat="server" ID="hfAccountIDToChangeAccount" Value="" ClientIDMode="Static" />
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
+                    </div>
+
+                    <%-- Menu Open --%>
+                    <div class="navbar-collapse collapse navbar-right" id="userMenuOpen">
+                        <asp:Image ID="imgMenuOpen" runat="server" ImageUrl="~/Images/Doc_Menu.png" />
+                        <asp:Menu ID="menuOpen" runat="server" Orientation="Horizontal" EnableViewState="false"
+                            RenderingMode="Table" StaticEnableDefaultPopOutImage="false" StaticPopOutImageUrl="~/App_Themes/Default/Images/menu_popup3.gif"
+                            MaximumDynamicDisplayLevels="5" StaticDisplayLevels="1">
+                            <StaticMenuItemStyle CssClass="staticmenuitemtop" />
+                            <StaticHoverStyle CssClass="staticmenuhover" />
+                            <DynamicMenuStyle CssClass="dynamicmenu2" />
+                            <DynamicHoverStyle CssClass="dynamicmenuhover" />
+                            <DynamicMenuItemStyle CssClass="dynamicmenuitem" />
+                            <StaticSelectedStyle CssClass="staticselecteditem" />
+                            <DynamicSelectedStyle CssClass="staticselecteditem" />
+                        </asp:Menu>
+                    </div>
+
+                    <%-- Menu Profile --%>
+                    <div class="navbar-collapse collapse navbar-right" id="userMenuProfile">
+                        <asp:Image ID="Image2" runat="server" ImageUrl="~/Images/Head_Blue.png" />
+                        <asp:Menu ID="menuProfile" 
+                            runat="server" 
+                            Orientation="Horizontal" 
+                            EnableViewState="false"
+                            RenderingMode="Table" 
+                            StaticEnableDefaultPopOutImage="false" 
+                            StaticPopOutImageUrl="~/App_Themes/Default/Images/menu_popup3.gif"
+                            MaximumDynamicDisplayLevels="5" StaticDisplayLevels="1">
+                            <StaticMenuItemStyle CssClass="staticmenuitemtop" />
+                            <StaticHoverStyle CssClass="staticmenuhover" />
+                            <DynamicMenuStyle CssClass="dynamicmenu2" />
+                            <DynamicHoverStyle CssClass="dynamicmenuhover" />
+                            <DynamicMenuItemStyle CssClass="dynamicmenuitem" />
+                            <StaticSelectedStyle CssClass="staticselecteditem" />
+                            <DynamicSelectedStyle CssClass="staticselecteditem" />
+                        </asp:Menu>
+                    </div>
+
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                        <tr>
+                            <td align="right" valign="top">
+
+                                <table width="100%" align="right">
+                                    <tr>
+                                        <td></td>
+                                        <td>
+                                            <table cellpadding="0" cellspacing="0" width="100%" align="right">
+                                                <tr valign="middle">
+                                                    <td style="width: 120px;">
+                                                        <table>
+                                                            <tr runat="server" id="trEndDemo" visible="false">
+                                                                <td>
+                                                                    <asp:LinkButton ID="lnkEndDemo" runat="server" OnClick="lnkEndDemo_Click" CssClass="btn"
+                                                                        CausesValidation="false"> <strong>End Demo </strong> </asp:LinkButton>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+
+                                                </tr>
+                                                <tr style="height: 25px;">
+                                                    <td></td>
+                                                    <td colspan="3"></td>
+                                                </tr>
+
+                                                <tr style="height: 20px;">
+                                                    <td></td>
+                                                    <td colspan="3"></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                            </td>
+                        </tr>
+                    </table>
+
+                    <%-- User Menu --%>
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#userMenuETS" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span><span
+                                class="icon-bar"></span><span class="icon-bar"></span>
+                        </button>
+                    </div>
+                    <div class="navbar-collapse collapse navbar-right" id="userMenuETS">
+                        <asp:Menu ID="menuETS" 
+                            runat="server" 
+                            Orientation="Horizontal" 
+                            RenderingMode="List"
+                            EnableViewState="false" 
+                            IncludeStyleBlock="false"
+                            StaticSelectedStyle-CssClass="active"
+                            DynamicSelectedStyle-CssClass="active"
+                            StaticMenuStyle-CssClass="nav navbar-nav"
+                            DynamicMenuStyle-CssClass="dropdown-menu">
+                        </asp:Menu>
+                    </div>
+                </div>
+            </div>
+
+            <asp:ContentPlaceHolder ID="HomeContentPlaceHolder" runat="server">
+            </asp:ContentPlaceHolder>
+
+            <%-- Footer --%>
+            <div id="footer">
+                <asp:Button ID="lkLogout" runat="server" OnClick="lkLogout_Click" CssClass="btn"
+                    CausesValidation="false" Style="display: none;" Text="Sign Out"></asp:Button>
+
+                <div runat="server" id="divMarketingMenu" visible="false">
+                    <ul>
+                        <li>
+                            <asp:HyperLink ID="HyperLink16" runat="server" NavigateUrl="~/Environmental-Monitoring-Management-Database-System.aspx"
+                                ToolTip="Home">
+                        Home</asp:HyperLink></li>
+                        <li>|</li>
+                        <li>
+                            <asp:HyperLink ID="HyperLink17" runat="server" NavigateUrl="~/Features-Include-Unlimited-Record-Types-Alerts-Warnings-Report-Generator.aspx"
+                                ToolTip="Features">Features</asp:HyperLink></li>
+                        <li>|</li>
+                        <li>
+                            <asp:HyperLink ID="HyperLink18" runat="server" NavigateUrl="~/StartDemo.aspx" ToolTip="Demo">Demo</asp:HyperLink></li>
+                        <li>|</li>
+                        <li>
+                            <asp:HyperLink ID="HyperLink19" runat="server" NavigateUrl="~/Pricing-Environmental-Monitoring-System.aspx"
+                                ToolTip="Packages">Packages</asp:HyperLink></li>
+                        <li>|</li>
+                        <li>
+                            <asp:HyperLink ID="HyperLink20" runat="server" NavigateUrl="~/Product-Development-Environmental-Monitoring-System.aspx"
+                                ToolTip="Development">
+                        Development</asp:HyperLink></li>
+                        <li>|</li>
+                        <li>
+                            <asp:HyperLink ID="HyperLink21" runat="server" NavigateUrl="~/Help-For-Environment-Tracking-System.aspx"
+                                ToolTip="Help">Help</asp:HyperLink></li>
+                        <li>|</li>
+                        <li>
+                            <asp:HyperLink ID="HyperLink22" runat="server" NavigateUrl="~/Site-Map-For-Environmental-Tracking-System.aspx"
+                                ToolTip="Site Map">Site
+                        Map</asp:HyperLink></li>
+                        <li>|</li>
+                        <li>
+                            <asp:HyperLink ID="HyperLink23" runat="server" NavigateUrl="~/Contact-Us-About-Envionmental-Monitoring-System.aspx"
+                                ToolTip="Contact Us">
+                        Contact Us</asp:HyperLink></li>
+                    </ul>
+                </div>
+                <div class="copyright-text" id="divCopyright" runat="server">
+                    © 2012-2016. All rights reserved. <a href="http://www.thedatabase.net/">www.TheDatabase.net</a>
+                </div>
+            </div>
+        </div>
+
+    </form>
+
+    <%--<script type="text/javascript">
+        $(document).ready(function () {
+            var close = document.getElementById("aNotificationMessageClose");
+            var iNoMS=3000;
+
+            try
+            {
+                var hfMS = document.getElementById("hfTopMessageDisplayNumberSeconds");
+                iNoMS = parseInt(hfMS.value);
+                alert(iNoMS);
+            }
+            catch(err)
+            {
+                iNoMS=3000;
+            }
+
+            if (close != null)
+            {
+                close.addEventListener('click', function () {
+                    var note = document.getElementById("divNotificationMessage");
+                    note.style.display = 'none';
+                }, false);
+            }
+
+            function HidedivNotificationMessage()
+            {
+                //var note = document.getElementById("divNotificationMessage");
+                //note.style.display = 'none';
+                $("#divNotificationMessage").fadeOut();
+            }
+            setTimeout(function () { HidedivNotificationMessage(); }, iNoMS);
+        });
+</script>--%>
+    <%--<script type="text/javascript">
+    var mouseX;
+    var mouseY;
+    $(document).mousemove(function (e) {
+        try
+        {
+            mouseX = e.pageX;
+            mouseY = e.pageY;
+        }
+        catch (err)
+        {
+           // alert(err.message)
+        }
+        
+    });
+    
+
+    $(function () {
+        
+        $(".js-tooltip-container").hover(function () {
+            //$(this).find(".js-tooltip").show();
+            try {
+                $(this).find(".js-tooltip").addClass("ajax-tooltip");
+                $(this).find(".ajax-tooltip").css({ 'top': mouseY, 'left': mouseX }).fadeIn('slow');
+            }
+            catch (err) {
+               // alert(err.message);
+            }
+        }, function () {
+            try {
+                $(this).find(".js-tooltip").hide();
+                $(this).find(".js-tooltip").removeClass("ajax-tooltip");
+                $(this).find(".ajax-tooltip").css({ 'top': mouseY, 'left': mouseX }).fadeOut('slow');
+            }
+            catch (err) {
+                //alert(err.message);
+            }
+        });
+       
+    });
+</script>--%>
+
+    <%-- Script for Toggle Menu to work--%>
+    <script type="text/javascript">
+        //Disable the default MouseOver functionality of ASP.Net Menu control.
+        Sys.WebForms.Menu._elementObjectMapper.getMappedObject = function () {
+            return false;
+        };
+
+        $(function () {
+            //to fix collapse mode width issue
+            $(".navbar-nav li,.navbar-nav a,.navbar-nav ul").removeAttr('style');
+
+            //for dropdown menu
+            $(".dropdown-menu").parent().removeClass().addClass('dropdown');
+            $(".dropdown>a").removeClass().addClass('dropdown-toggle').append('<b class="caret"></b>').attr('data-toggle', 'dropdown');
+
+            //remove default click redirect effect           
+            $('.dropdown-toggle').attr('onclick', '').off('click');
+
+            //apply the bootstrap "active" class to the selected Menu item.
+            $("a.selected").closest("li").addClass("active");
+            $("a.selected").closest(".dropdown-toggle").addClass("active");
+        });
+
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var close = document.getElementById('aNotificationMessageClose');
+
+            if (close != null) {
+                close.addEventListener('click', function () {
+                    var note = document.getElementById('divNotificationMessage');
+                    note.style.display = 'none';
+                }, false);
+            }
+
+            function HidedivNotificationMessage() {
+                $('#divNotificationMessage').fadeOut();
+                var note = document.getElementById('divNotificationMessage');
+                if (note != null)
+                    note.style.display = 'none';
+            }
+        });
+    </script>
+
+    <%--Ismael Code Change: Ticket 846 --%>
+    <%-- Add Reference to Bootstrap scripts --%>
+    <script type="text/javascript" src="<%=ResolveUrl("~/Responsive/js/bootstrap.js")%>"></script>
+
+</body>
+</html>
