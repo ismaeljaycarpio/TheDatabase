@@ -1058,8 +1058,6 @@ public partial class Home : System.Web.UI.MasterPage
                   menuAccount.Items.Add(miAccounts);
                   foreach (DataRow dr in dtTemp.Rows)
                   {
-                                         
-                      
                           MenuItem miTempChild = new MenuItem();
                           miTempChild.Text = dr["AccountName"].ToString();
                           miTempChild.NavigateUrl = "javascript:document.getElementById('hfAccountIDToChangeAccount').value = '" + dr["AccountID"].ToString() + "';__doPostBack('ctl00$lkChangeAccount','')"; ;
@@ -1084,11 +1082,7 @@ public partial class Home : System.Web.UI.MasterPage
                   {
                       miAccounts.Text = theAccountRoot.AccountName;
                   }
-
               }
-            
-
-
           }
       }
 
