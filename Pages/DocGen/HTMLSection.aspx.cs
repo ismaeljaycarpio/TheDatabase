@@ -29,7 +29,7 @@ namespace DocGen.Document.HTMLSection
             if (!IsPostBack)
             {
 
-                fckeTemplate.AssetManager = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Editor/assetmanager/assetmanager.aspx";
+                fckeTemplate.AssetManager = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Editor/assetmanager/assetmanager.aspx";
                 using (DAL.DocGenDataContext ctx = new DAL.DocGenDataContext())
                 {
                     //var dms = from sp in ctx.DataMaps

@@ -279,7 +279,7 @@ public partial class Pages_Schedule_DataReminder : SecurePage
     public string GetEditURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Schedule/DataReminderDetail.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&ColumnID=" + Request.QueryString["ColumnID"].ToString() + "&mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&DataReminderID=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Schedule/DataReminderDetail.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&ColumnID=" + Request.QueryString["ColumnID"].ToString() + "&mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&DataReminderID=";
 
     }
 
@@ -287,13 +287,13 @@ public partial class Pages_Schedule_DataReminder : SecurePage
     public string GetViewURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Schedule/DataReminderDetail.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&ColumnID=" + Request.QueryString["ColumnID"].ToString() + "&mode=" + Cryptography.Encrypt("view") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&DataReminderID=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Schedule/DataReminderDetail.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&ColumnID=" + Request.QueryString["ColumnID"].ToString() + "&mode=" + Cryptography.Encrypt("view") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&DataReminderID=";
 
     }
     public string GetAddURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Schedule/DataReminderDetail.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&ColumnID=" + Request.QueryString["ColumnID"].ToString() + "&mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Schedule/DataReminderDetail.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&ColumnID=" + Request.QueryString["ColumnID"].ToString() + "&mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
 
     }
 
@@ -301,7 +301,7 @@ public partial class Pages_Schedule_DataReminder : SecurePage
     //public string GetEditURL()
     //{
 
-    //    return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Schedule/DataReminderDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&DataReminderID=";
+    //    return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Schedule/DataReminderDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&DataReminderID=";
 
     //}
 
@@ -309,13 +309,13 @@ public partial class Pages_Schedule_DataReminder : SecurePage
     //public string GetViewURL()
     //{
 
-    //    return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Schedule/DataReminderDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&DataReminderID=";
+    //    return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Schedule/DataReminderDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&DataReminderID=";
 
     //}
     //public string GetAddURL()
     //{
 
-    //    return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Schedule/DataReminderDetail.aspx?mode=" + Cryptography.Encrypt("add");
+    //    return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Schedule/DataReminderDetail.aspx?mode=" + Cryptography.Encrypt("add");
 
     //}
 

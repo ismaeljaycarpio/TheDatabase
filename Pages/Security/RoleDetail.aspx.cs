@@ -119,7 +119,7 @@ public partial class Pages_Security_RoleDetail : SecurePage
             else if (_strActionMode == "view")
             {
                 divEdit.Visible = true;
-                hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/RoleDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&roleid=" + Cryptography.Encrypt(theRole.RoleID.ToString());
+                hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/RoleDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&roleid=" + Cryptography.Encrypt(theRole.RoleID.ToString());
             }
         }
         catch (Exception ex)
@@ -193,7 +193,7 @@ public partial class Pages_Security_RoleDetail : SecurePage
                 //user input is not ok
 
             }
-            Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Role.aspx", false);
+            Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Role.aspx", false);
 
         }
         catch (Exception ex)
@@ -208,6 +208,6 @@ public partial class Pages_Security_RoleDetail : SecurePage
     //protected void cmdBack_Click(object sender, ImageClickEventArgs e)
     protected void lnkBack_Click(object sender, EventArgs e)
     {
-        Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Role.aspx", false);
+        Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Role.aspx", false);
     }
 }

@@ -785,10 +785,16 @@
                                                                CssClass="NormalTextBox"></asp:DropDownList>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField Visible="true" HeaderText=" Mandatory" ItemStyle-Width="80px">
+                                                <asp:TemplateField Visible="true" HeaderText=" Importance" ItemStyle-Width="80px">
                                                     <ItemStyle HorizontalAlign="Center" />
                                                     <ItemTemplate>
-                                                        <asp:CheckBox ID="chkIsMandatory" runat="server" Checked='<%#  Eval("IsMandatory") %>' />
+                                                        <%--<asp:CheckBox ID="chkIsMandatory" runat="server" Checked='<%#  Eval("IsMandatory") %>' />--%>
+                                                         <asp:DropDownList runat="server" ID="ddlImportance" ToolTip="Required means it is important but you can still save the data without it. Mandatory will prevent the data being saved unless entered." CssClass="NormalTextBox">
+                                                                    <asp:ListItem Value="" Text="Optional" Selected="True"></asp:ListItem>
+                                                                    <asp:ListItem Value="r" Text="Required"></asp:ListItem>
+                                                                       <asp:ListItem Value="m" Text="Mandatory"></asp:ListItem>
+                                                                </asp:DropDownList>
+
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
                                                 <asp:TemplateField Visible="true" HeaderText=" Display on the Right" ItemStyle-Width="100px">
@@ -1813,13 +1819,15 @@
                                                                             </div>
                                                                         </ItemTemplate>
                                                                     </asp:TemplateField>
-                                                                    <asp:TemplateField HeaderText="Data Retriever">
+                                                                    <%--//oliver <begin> Jon asked me to hide this based on email 8/18/2016--%>
+                                                                    <asp:TemplateField HeaderText="Data Retriever" Visible="false">
                                                                         <ItemTemplate>
                                                                             <div style="padding-left: 10px;">
                                                                                 <asp:Label runat="server" ID="lblSPName" Text='<%# Eval("SPName")%>'></asp:Label>
                                                                             </div>
                                                                         </ItemTemplate>
                                                                     </asp:TemplateField>
+                                                                    <%--//oliver <end>--%>
                                                                 </Columns>
                                                                 <HeaderStyle CssClass="gridview_header" />
                                                             </asp:GridView>

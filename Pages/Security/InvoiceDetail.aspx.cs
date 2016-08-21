@@ -34,11 +34,11 @@ public partial class Pages_Security_InvoiceDetail : SecurePage
             PopulateAccountDDL();
             if (Request.QueryString["SearchCriteria"] != null)
             {
-                hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Invoice.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+                hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Invoice.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
             }
             else
             {
-                hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Invoice.aspx";
+                hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Invoice.aspx";
             }
         }
         if (Request.QueryString["mode"] == null)
@@ -272,11 +272,11 @@ public partial class Pages_Security_InvoiceDetail : SecurePage
                 divEdit.Visible = true;
                 if (Request.QueryString["SearchCriteria"] != null)
                 {
-                    hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/InvoiceDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&InvoiceID=" + Cryptography.Encrypt(theInvoice.InvoiceID.ToString()) + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+                    hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/InvoiceDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&InvoiceID=" + Cryptography.Encrypt(theInvoice.InvoiceID.ToString()) + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
                 }
                 else
                 {
-                    hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/InvoiceDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&InvoiceID=" + Cryptography.Encrypt(theInvoice.InvoiceID.ToString());
+                    hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/InvoiceDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&InvoiceID=" + Cryptography.Encrypt(theInvoice.InvoiceID.ToString());
                 }
             }
         }
@@ -582,7 +582,7 @@ public partial class Pages_Security_InvoiceDetail : SecurePage
     //protected void cmdBack_Click(object sender, ImageClickEventArgs e)
     protected void lnkBack_Click(object sender, EventArgs e)
     {
-        Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Invoice.aspx", false);
+        Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Invoice.aspx", false);
     }
 
 

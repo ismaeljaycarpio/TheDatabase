@@ -22,7 +22,7 @@
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs)
         
-        'hfRootURL.Value = "http://" + Request.Url.Authority + Request.ApplicationPath + "/UserFiles/Editor"
+        'hfRootURL.Value = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/UserFiles/Editor"
         
         hfRootURL.Value = CType(Session.Item("FilesLocation"), String) + "/UserFiles/Editor"
        Dim strFilesPhisicalPath as String = CType(Session.Item("FilesPhisicalPath"), String) 
@@ -363,13 +363,13 @@
 
         'Dim sProtocol As String = Request.ServerVariables("SERVER_PORT_SECURE")
         'If IsNothing(sProtocol) Or sProtocol = "0" Then
-        '    sProtocol = "http://"
+        '    sProtocol = Request.Url.Scheme +"://"
         'Else
         '    sProtocol = "https://"
         'End If
 
         'Return sProtocol & Request.ServerVariables("SERVER_NAME") & sPort
-        Return "http://" + Request.Url.Authority + Request.ApplicationPath
+        Return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
     End Function
 
     Protected Sub GridView1_PageIndexChanging(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewPageEventArgs)

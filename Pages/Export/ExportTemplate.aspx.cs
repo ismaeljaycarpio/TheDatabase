@@ -311,7 +311,7 @@ public partial class Pages_Export_ExportTemplate : SecurePage
     public string GetEditURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Export/ExportTemplateItem.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&ExportTemplateID=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Export/ExportTemplateItem.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&ExportTemplateID=";
 
     }
 
@@ -320,13 +320,13 @@ public partial class Pages_Export_ExportTemplate : SecurePage
     public string GetViewURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Export/ExportTemplateItem.aspx?mode=" + Cryptography.Encrypt("view") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&ExportTemplateID=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Export/ExportTemplateItem.aspx?mode=" + Cryptography.Encrypt("view") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&ExportTemplateID=";
 
     }
     public string GetAddURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Export/ExportTemplateItem.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Export/ExportTemplateItem.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
 
     }
 

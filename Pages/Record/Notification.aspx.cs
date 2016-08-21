@@ -218,7 +218,7 @@ public partial class Pages_Record_Notification : SecurePage
     //public string GetEditURL()
     //{
 
-    //    return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&DocumentID=";
+    //    return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&DocumentID=";
 
     //}
 
@@ -226,13 +226,13 @@ public partial class Pages_Record_Notification : SecurePage
     public string GetViewURL() //link with Record page
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?warning=yes&TableID=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?warning=yes&TableID=";
 
     }
     //public string GetAddURL()
     //{
 
-    //    return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentDetail.aspx?mode=" + Cryptography.Encrypt("add");
+    //    return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentDetail.aspx?mode=" + Cryptography.Encrypt("add");
 
     //}
 

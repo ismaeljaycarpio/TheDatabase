@@ -14,13 +14,13 @@ public partial class Pages_Document_ReportPublished :SecurePage
         
         if (Request.QueryString["ReportID"] != null)
         {
-            //hlReportAccount.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/DocReports/Document.aspx?AccountID=" + Session["AccountID"].ToString();
+            //hlReportAccount.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/DocReports/Document.aspx?AccountID=" + Session["AccountID"].ToString();
             //hlReportAccount.Text = hlReportAccount.NavigateUrl;
 
-            hlReportOne.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/DocReports/Report.aspx?ReportID=" + Request.QueryString["ReportID"].ToString();
+            hlReportOne.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/DocReports/Report.aspx?ReportID=" + Request.QueryString["ReportID"].ToString();
             hlReportOne.Text = hlReportOne.NavigateUrl;
 
-            hlProperties.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/ReportDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + "-1" + "&TableID=" + "-1" + "&SSearchCriteriaID=" + "-1" + "&DocumentID=" + Request.QueryString["ReportID"].ToString() + "&popup=yes";
+            hlProperties.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/ReportDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + "-1" + "&TableID=" + "-1" + "&SSearchCriteriaID=" + "-1" + "&DocumentID=" + Request.QueryString["ReportID"].ToString() + "&popup=yes";
         }
 
     }

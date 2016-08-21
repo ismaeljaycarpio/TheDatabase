@@ -626,8 +626,8 @@ public partial class HIS : System.Web.UI.MasterPage
             ScriptManager.RegisterStartupScript(this, this.GetType(), "strIsFlashSupportedJS", strIsFlashSupportedJS, true);
             //}
 
-            //hlReport.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
-            //hlDocuments.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+            //hlReport.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+            //hlDocuments.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
 
             string strRefSite = "";
 
@@ -738,7 +738,7 @@ public partial class HIS : System.Web.UI.MasterPage
       protected void BindMenuProfile()
     {
         menuProfile.Items.Clear();
-        string strAppPath = "http://" + Request.Url.Authority + Request.ApplicationPath;
+        string strAppPath = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
 
         User ObjUser = (User)Session["User"];
 
@@ -788,8 +788,8 @@ public partial class HIS : System.Web.UI.MasterPage
       protected void BindMenuReport()
       {
 
-          hlReport.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
-          hlDocuments.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+          hlReport.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+          hlDocuments.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
                    
       }
 
@@ -799,7 +799,7 @@ public partial class HIS : System.Web.UI.MasterPage
       protected void BindAccountMenu()
       {
           menuAccount.Items.Clear();
-          string strAppPath = "http://" + Request.Url.Authority + Request.ApplicationPath;
+          string strAppPath = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
 
           User ObjUser = (User)Session["User"];
 
@@ -1218,7 +1218,7 @@ public partial class HIS : System.Web.UI.MasterPage
     protected void BindMenu()
     {
         menuETS.Items.Clear();
-        string strAppPath = "http://" + Request.Url.Authority + Request.ApplicationPath;
+        string strAppPath = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
 
          int iTN=0;
          int iTempCount = 0;
@@ -1330,7 +1330,7 @@ public partial class HIS : System.Web.UI.MasterPage
                          MenuItem miAccounts = new MenuItem();
                          miAccounts.Text = "Add Account";
                          miAccounts.Value = "Admin";
-                         miAccounts.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/SystemSignUp.aspx";
+                         miAccounts.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/SystemSignUp.aspx";
                          miAdmin.ChildItems.Add(miAccounts);
                      }
 
@@ -1469,7 +1469,7 @@ public partial class HIS : System.Web.UI.MasterPage
                          MenuItem miReportNew = new MenuItem();
                          miReportNew.Text = "New";
                          miReportNew.Value = "Admin";
-                         miReportNew.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/ReportDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
+                         miReportNew.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/ReportDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
                          miReports.ChildItems.Add(miReportNew);
 
 
@@ -1477,7 +1477,7 @@ public partial class HIS : System.Web.UI.MasterPage
                          miDocGen.Text = "Reports";
                          miDocGen.Value = "Admin";
                          miDocGen.Selectable = true;
-                         miDocGen.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+                         miDocGen.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
                          miReports.ChildItems.Add(miDocGen);
 
                          MenuItem miSchedule = new MenuItem();

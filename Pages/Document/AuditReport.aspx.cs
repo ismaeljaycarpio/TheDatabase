@@ -69,11 +69,11 @@ public partial class Pages_Document_AuditReport : SecurePage
 
                 //if (Request.QueryString["SearchCriteria"] != null)
                 //{
-                //    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+                //    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
                 //}
                 //else
                 //{
-                //    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx";
+                //    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx";
                 //}
 
                 Common.PopulateAdminDropDown(ref ddlAdminArea);

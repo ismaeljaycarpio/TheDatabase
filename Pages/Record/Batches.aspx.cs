@@ -102,11 +102,11 @@ public partial class Pages_Record_Batches :SecurePage
     {
         if (Request.QueryString["menu"] != null &&  Cryptography.Decrypt(Request.QueryString["menu"]) == "yes")
         {
-            return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/UploadValidation.aspx?menu=" + Cryptography.Encrypt("yes") + "&TableID=" + Request.QueryString["TableID"] + "&BatchID=";
+            return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/UploadValidation.aspx?menu=" + Cryptography.Encrypt("yes") + "&TableID=" + Request.QueryString["TableID"] + "&BatchID=";
         }
         else
         {
-            return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/UploadValidation.aspx?TableID=" + Request.QueryString["TableID"] + "&BatchID=";
+            return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/UploadValidation.aspx?TableID=" + Request.QueryString["TableID"] + "&BatchID=";
         }
     }
 
@@ -415,7 +415,7 @@ public partial class Pages_Record_Batches :SecurePage
 
     protected void lnkBack_Click(object sender, EventArgs e)
     {
-        Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"], false);
+        Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"], false);
 
     }
 

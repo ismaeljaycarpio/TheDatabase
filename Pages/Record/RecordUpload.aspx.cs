@@ -71,7 +71,7 @@ public partial class Pages_Record_RecordUpload : SecurePage
             }
             if (_strRecordRightID == Common.UserRoleType.None) //none role
             {
-                Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Default.aspx", false);
+                Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Default.aspx", false);
                 return;
             }
 
@@ -190,7 +190,7 @@ public partial class Pages_Record_RecordUpload : SecurePage
                
 
                 //CheckLocationColumn();
-                hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
+                hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
             }
 
             if (_theTable.CustomUploadSheet != "")
@@ -1252,7 +1252,7 @@ public partial class Pages_Record_RecordUpload : SecurePage
                 string strFilePath = Cryptography.Encrypt(_strFilesLocation + "/UserFiles/AppFiles/" + theImprtTemplate.TemplateUniqueFileName);
                 string strFileName = theImprtTemplate.TemplateUniqueFileName.Substring(37);
 
-                lblImportTemplateFile.Text = "<a target='_blank' href='" + "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Filedownload.aspx?FilePath="
+                lblImportTemplateFile.Text = "<a target='_blank' href='" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Filedownload.aspx?FilePath="
                        + strFilePath + "&FileName=" + Cryptography.Encrypt(strFileName) + "'>" +
                          strFileName + "</a>";
             }

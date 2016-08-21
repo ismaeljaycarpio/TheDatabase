@@ -13,7 +13,23 @@
 </head>
 <body style="background-image: none; background-color: White;">
 
+
     <script type="text/javascript">
+
+        function ColumnTypeIn(sCT,sSCT)
+        {
+            var s_a = sSCT.split(',');
+            for(var i=0; i<s_a.length; i++)
+            {
+                if(s_a[i]==sCT)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        //alert(ColumnTypeIn('aa', 'ask,dskjfh,aa,sdjhg'));
         //$(function () {
         //    $("#tbAuto").autocomplete({
         //        source: function (request, response) {
@@ -98,6 +114,8 @@
 
         //    alert(document.getElementById('hfAccountID').value);
         //}
+
+
     </script>
 
     <form id="form1" runat="server">

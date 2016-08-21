@@ -349,7 +349,7 @@ namespace DocGen.Document
                     if (dtActiveTableList.Rows.Count == 0)
                     {
                         hfTableCount.Value = "";
-                        hlShowWelcomeTips.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Welcome.aspx?notable=yes";
+                        hlShowWelcomeTips.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Welcome.aspx?notable=yes";
                     }
                     else
                     {
@@ -369,7 +369,7 @@ namespace DocGen.Document
                     if (dtActiveTableList.Rows.Count == 0)
                     {
                         hfTableCount.Value = "";
-                        hlShowWelcomeTips.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Welcome.aspx?notable=yes";
+                        hlShowWelcomeTips.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Welcome.aspx?notable=yes";
                         //ScriptManager.RegisterStartupScript(this, this.GetType(), "AjaxNoTableTips", " setTimeout(function () { OpenWelcomeTips(); }, 100);", true);
 
                         Response.Redirect("~/Pages/Record/TableOption.aspx?FirstTime=yes&MenuID=kdUxjBEM5oo=&SearchCriteria=kdUxjBEM5oo=", false);

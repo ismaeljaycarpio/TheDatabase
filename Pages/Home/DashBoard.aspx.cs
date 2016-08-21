@@ -256,7 +256,7 @@ public partial class Pages_Home_DashBoard : SecurePage
     public string GetEditURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Home/DashBoardDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&DocumentID=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Home/DashBoardDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&DocumentID=";
 
     }
 
@@ -264,14 +264,14 @@ public partial class Pages_Home_DashBoard : SecurePage
     public string EditPropertyURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Default.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&DashboardID=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Default.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&DashboardID=";
 
     }
 
     public string ViewPropertyURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Default.aspx?Dashboard=ID";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Default.aspx?Dashboard=ID";
 
     }
 
@@ -279,7 +279,7 @@ public partial class Pages_Home_DashBoard : SecurePage
     public string GetAddURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Home/DashBoardDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Home/DashBoardDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
 
     }
 

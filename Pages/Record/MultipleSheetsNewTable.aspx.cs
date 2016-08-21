@@ -69,7 +69,7 @@ public partial class Pages_Record_MultipleSheetsNewTable : SecurePage
 
                 }
 
-                hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableSheet.aspx?MenuID=" + Request.QueryString["MenuID"].ToString() + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&FileInfo=" + Request.QueryString["FileInfo"].ToString(); 
+                hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableSheet.aspx?MenuID=" + Request.QueryString["MenuID"].ToString() + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&FileInfo=" + Request.QueryString["FileInfo"].ToString(); 
             }
 
             Title = "Multiple Sheets file upload";
@@ -749,7 +749,7 @@ public partial class Pages_Record_MultipleSheetsNewTable : SecurePage
             }
             else
             {
-                Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?fromsheet=yes&mode=" + Cryptography.Encrypt("edit") + "&MenuID=" + Cryptography.Encrypt(iParentMenuID.ToString()) + "&TableID=" + Cryptography.Encrypt(iTableID.ToString()) + "#topline", false);
+                Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?fromsheet=yes&mode=" + Cryptography.Encrypt("edit") + "&MenuID=" + Cryptography.Encrypt(iParentMenuID.ToString()) + "&TableID=" + Cryptography.Encrypt(iTableID.ToString()) + "#topline", false);
                 return;
             }
 

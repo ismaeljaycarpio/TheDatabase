@@ -71,7 +71,7 @@ public partial class UpdateData : System.Web.UI.Page
                 }
                 else
                 {
-                    Session["FilesLocation"] = "http://" + Request.Url.Authority + Request.ApplicationPath;
+                    Session["FilesLocation"] = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
                 }
 
                 if (strFilesPhisicalPath != "")

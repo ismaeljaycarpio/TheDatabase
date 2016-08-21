@@ -566,8 +566,8 @@ public partial class RRP : System.Web.UI.MasterPage
             ScriptManager.RegisterStartupScript(this, this.GetType(), "strIsFlashSupportedJS", strIsFlashSupportedJS, true);
             //}
 
-            //hlReport.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
-            //hlDocuments.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+            //hlReport.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+            //hlDocuments.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
 
             string strRefSite = "";
 
@@ -774,7 +774,7 @@ public partial class RRP : System.Web.UI.MasterPage
     protected void BindMenuProfile()
     {
         menuProfile.Items.Clear();
-        string strAppPath = "http://" + Request.Url.Authority + Request.ApplicationPath;
+        string strAppPath = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
 
         //User _objUser = (User)Session["User"];
 
@@ -831,8 +831,8 @@ public partial class RRP : System.Web.UI.MasterPage
     protected void BindMenuReport()
     {
 
-        //hlReport.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
-        //hlDocuments.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+        //hlReport.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+        //hlDocuments.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
 
     }
 
@@ -843,7 +843,7 @@ public partial class RRP : System.Web.UI.MasterPage
     {
         imgHouse.Visible = false;
         menuAccount.Items.Clear();
-        string strAppPath = "http://" + Request.Url.Authority + Request.ApplicationPath;
+        string strAppPath = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
 
         //User _objUser = (User)Session["User"];
         int? iAccountID = SecurityManager.GetPrimaryAccountID((int)_objUser.UserID);
@@ -916,17 +916,17 @@ public partial class RRP : System.Web.UI.MasterPage
 
             MenuItem miDocument = new MenuItem();
             miDocument.Text = "Documents";
-            miDocument.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+            miDocument.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
             miOpen.ChildItems.Add(miDocument);
 
             MenuItem miReports = new MenuItem();
             miReports.Text = "Reports";
-            miReports.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+            miReports.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
             miOpen.ChildItems.Add(miReports);
 
             //MenuItem miCalendar = new MenuItem();
             //miCalendar.Text = "Calendar";
-            //miCalendar.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Schedule/MonitorSchedules.aspx?SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1");
+            //miCalendar.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Schedule/MonitorSchedules.aspx?SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1");
             //miOpen.ChildItems.Add(miCalendar);
         }
         else
@@ -939,7 +939,7 @@ public partial class RRP : System.Web.UI.MasterPage
     public void BindMenu()
     {
         menuETS.Items.Clear();
-        string strAppPath = "http://" + Request.Url.Authority + Request.ApplicationPath;
+        string strAppPath = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
 
         //int iTN=0;
         //int iTempCount = 0;
@@ -1174,13 +1174,13 @@ public partial class RRP : System.Web.UI.MasterPage
 
                         if (theDocument.ReportType == "ssrs")
                         {
-                            strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/SSRS.aspx?DocumentID=" + Cryptography.Encrypt(theDocument.DocumentID.ToString()) + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
+                            strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/SSRS.aspx?DocumentID=" + Cryptography.Encrypt(theDocument.DocumentID.ToString()) + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
 
                         }
                         else if (theDocument.DocumentTypeID != null)
                         {
 
-                            strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/View.aspx?DocumentID=" + theDocument.DocumentID.ToString() + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
+                            strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/View.aspx?DocumentID=" + theDocument.DocumentID.ToString() + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
                         }
 
                     }
@@ -1240,7 +1240,7 @@ public partial class RRP : System.Web.UI.MasterPage
                         miTopReports.Text = "Reports";
                         miTopReports.Value = "Reports";
                         miTopReports.Selectable = true;
-                        miTopReports.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+                        miTopReports.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
                         menuETS.Items.Add(miTopReports);
                     }
                 }
@@ -1283,7 +1283,7 @@ public partial class RRP : System.Web.UI.MasterPage
                         MenuItem miAccounts = new MenuItem();
                         miAccounts.Text = "Add Account";
                         miAccounts.Value = "Admin";
-                        miAccounts.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/SystemSignUp.aspx";
+                        miAccounts.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/SystemSignUp.aspx";
                         miAdmin.ChildItems.Add(miAccounts);
                     }
 
@@ -1444,7 +1444,7 @@ public partial class RRP : System.Web.UI.MasterPage
                         MenuItem miReportNew = new MenuItem();
                         miReportNew.Text = "New";
                         miReportNew.Value = "Admin";
-                        miReportNew.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/ReportDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
+                        miReportNew.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/ReportDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
                         miReports.ChildItems.Add(miReportNew);
 
 
@@ -1452,7 +1452,7 @@ public partial class RRP : System.Web.UI.MasterPage
                         miDocGen.Text = "Reports";
                         miDocGen.Value = "Admin";
                         miDocGen.Selectable = true;
-                        miDocGen.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+                        miDocGen.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
                         miReports.ChildItems.Add(miDocGen);
 
                         MenuItem miSchedule = new MenuItem();

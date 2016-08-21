@@ -37,7 +37,7 @@ public class Handler : IHttpHandler
             context.Response.Write(strJSON);
             
             //context.Response.Write(strUniqueName);
-            //context.Response.Redirect("http://" + context.Request.Url.Authority + context.Request.ApplicationPath + "/Pages/Document/Document.aspx", false);
+            //context.Response.Redirect(context.Request.Url.Scheme +"://" + context.Request.Url.Authority + context.Request.ApplicationPath + "/Pages/Document/Document.aspx", false);
         }
         else
         {

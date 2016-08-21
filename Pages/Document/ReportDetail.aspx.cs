@@ -111,7 +111,7 @@ namespace DocGen.DocumentNS.ReportDetail
                 //if (!Common.HaveAccess(Session["roletype"].ToString(), "1,2,"))
                 //{ Response.Redirect("~/Default.aspx", false); }
 
-                hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SSearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString();
+                hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SSearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString();
 
 
 
@@ -326,8 +326,8 @@ namespace DocGen.DocumentNS.ReportDetail
                 {
                     chkPublished.Checked = true;
 
-                    lblPublishedAddress.Text = "<a href='" + "http://" + Request.Url.Authority + Request.ApplicationPath + "/DocReports/Report.aspx?ReportID=" + Cryptography.Encrypt(theDocument.DocumentID.ToString()) + "' target='_blank'>"
-                        + "http://" + Request.Url.Authority + Request.ApplicationPath + "/DocReports/Report.aspx?ReportID=" + Cryptography.Encrypt(theDocument.DocumentID.ToString()) + "</a>";
+                    lblPublishedAddress.Text = "<a href='" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/DocReports/Report.aspx?ReportID=" + Cryptography.Encrypt(theDocument.DocumentID.ToString()) + "' target='_blank'>"
+                        + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/DocReports/Report.aspx?ReportID=" + Cryptography.Encrypt(theDocument.DocumentID.ToString()) + "</a>";
                 }
                 else
                 {
@@ -481,7 +481,7 @@ namespace DocGen.DocumentNS.ReportDetail
                             if (optReportType.SelectedValue == "ssrs")
                             {
                                 //Response.Redirect(txtDocumentDescription.Text, true);
-                                string strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/SSRS.aspx?DocumentID=" + Cryptography.Encrypt(iDocumentID.ToString()) + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
+                                string strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/SSRS.aspx?DocumentID=" + Cryptography.Encrypt(iDocumentID.ToString()) + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
                                Response.Redirect(strURL, true);
                             }
                             else if (optReportType.SelectedValue == "webpage")
@@ -491,7 +491,7 @@ namespace DocGen.DocumentNS.ReportDetail
                                 Document theDoc = DocumentManager.ets_Document_Detail(iDocumentID);
                                 if (theDoc.TableID != null)
                                 {
-                                    strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/RRP/ReportView.aspx?TableID=" + Cryptography.Encrypt(theDoc.TableID.ToString()) ;
+                                    strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/RRP/ReportView.aspx?TableID=" + Cryptography.Encrypt(theDoc.TableID.ToString()) ;
                                 }
                                 
                                 Response.Redirect(strURL, true);
@@ -499,7 +499,7 @@ namespace DocGen.DocumentNS.ReportDetail
                             }
                             else
                             {
-                                Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Docgen/EditReport.aspx?DocumentID=" + iDocumentID.ToString() + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SSearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString(), false);
+                                Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Docgen/EditReport.aspx?DocumentID=" + iDocumentID.ToString() + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SSearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString(), false);
                             }
 
                             

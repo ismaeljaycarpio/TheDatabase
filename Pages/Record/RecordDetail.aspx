@@ -15,20 +15,13 @@
     <asp:Literal ID="ltTextStyles" runat="server"></asp:Literal>
 </asp:Content>
 <asp:Content ID="Content1" ContentPlaceHolderID="HomeContentPlaceHolder" runat="Server">
-    <%--<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/base/jquery-ui.css"
-        rel="stylesheet" type="text/css" />--%>
-    <%--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script>--%>
     <script src="../Document/Uploadify/jquery.uploadify.v2.1.4.js" type="text/javascript"></script>
     <script src="../Document/Uploadify/swfobject.js" type="text/javascript"></script>
     <link href="../Document/Uploadify/uploadify.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-    <%--<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
-    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/base/jquery-ui.css"
-        rel="stylesheet" type="text/css" />--%>
+        <script type="text/javascript" src="<%=Request.Url.Scheme+@"://maps.google.com/maps/api/js?sensor=false" %>"></script>
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
-    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/themes/base/jquery-ui.css"
-        rel="stylesheet" type="text/css" />
+    <script src="<%=Request.Url.Scheme+@"://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js" %>"></script>
+    <link href="<%=Request.Url.Scheme+@"://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/themes/base/jquery-ui.css" %>" rel="stylesheet" type="text/css" />
 
     <style type="text/css">
         .topview {
@@ -94,7 +87,11 @@
 
         function ShowHideMainDivs(divSelected, lnk) {
             var hfCurrentSelectedTabLink = document.getElementsByName('hfCurrentSelectedTabLink');
-
+            $(".showhidedivs_hide").hide();
+            if (divSelected == null)
+            {
+                return;
+            }
             if (lnk != null) {
                 hfCurrentSelectedTabLink.value = lnk.id;
                 //alert(hfCurrentSelectedTabLink.value);
@@ -109,6 +106,46 @@
             }
 
         }
+
+        function ShowHideMainDivsName(divSelectedN, lnkN) {
+            var hfCurrentSelectedTabLink = document.getElementsByName('hfCurrentSelectedTabLink');
+            var divSelected = document.getElementsByName(divSelectedN);
+            var lnk = document.getElementsByName(lnkN);
+           
+            if (divSelected == null) {
+                return;
+            }
+
+            if (divSelected.style == null) {
+                return;
+            }
+
+
+
+            if (lnk != null) {
+                hfCurrentSelectedTabLink.value = lnk.id;
+                //alert(hfCurrentSelectedTabLink.value);
+            }
+
+
+
+
+            $(".showhidedivs_hide").hide();
+            $(".showhidedivs").hide();
+            if (divSelected.style != null) {
+                divSelected.style.display = 'block';
+            }
+           
+
+            if ($(".TablLinkClass") != null && lnk != null) {
+                $(".TablLinkClass").css('font-weight', 'normal');
+            }
+            if (lnk != null && lnk.style != null) {
+                lnk.style.fontWeight = 'bold';
+            }
+
+        }
+
 
         function ChangeTab(index) {
             try {
@@ -213,8 +250,10 @@
 
 
         }
+
+      
     </script>
-    <%--<asp:UpdateProgress class="ajax-indicator-full" ID="UpdateProgress3" runat="server">
+    <asp:UpdateProgress class="ajax-indicator-full" ID="UpdateProgress3" runat="server">
         <ProgressTemplate>
             <table style="width: 100%; height: 100%; text-align: center;">
                 <tr valign="middle">
@@ -227,7 +266,7 @@
                 </tr>
             </table>
         </ProgressTemplate>
-    </asp:UpdateProgress>--%>
+    </asp:UpdateProgress>
 
     <asp:UpdatePanel ID="upDetailDynamic" runat="server" UpdateMode="Conditional">
         <ContentTemplate>
@@ -326,7 +365,7 @@
                                                                             <div runat="server" id="divWordExport" visible="false">
                                                                                 <asp:LinkButton runat="server" ID="lnkWordWxport" OnClick="lnkWordWxport_Click">
                                                                             <asp:Image runat="server" ID="Image3" ImageUrl="~/App_Themes/Default/images/WordExport.png"
-                                                                                ToolTip="Word Export" />
+                                                                                ToolTip="Document Generation" />
                                                                                 </asp:LinkButton>
                                                                             </div>
                                                                         </td>
@@ -627,6 +666,20 @@
                                                                                 </ajaxToolkit:TabPanel>
                                                                             </ajaxToolkit:TabContainer>
                                                                         </div>
+                                                                        <%--//oliver <begin> Ticket 1476--%>
+                                                                        <div style="margin: 10px;">
+                                                                            <div style="float:left; margin-left:-30px;">
+                                                                                <asp:LinkButton runat="server" ID="lnkShowHistory" ClientIDMode="Static" Text="Show Change History"
+                                                                                    OnClick="lnkShowHistory_Click" CausesValidation="false"></asp:LinkButton>
+                                                                                <asp:LinkButton runat="server" ID="lnkHideHistory" ClientIDMode="Static" Text="Hide Change History"
+                                                                                    Visible="false" CausesValidation="false" OnClick="lnkHideHistory_Click"></asp:LinkButton>
+                                                                            </div>
+                                                                            <div style="float:right; color: #C0C0C0;">
+                                                                                Record ID: <asp:Label ID="lblRecordID" runat="server" Text=""></asp:Label>
+                                                                            </div>
+                                                                            <div style="float:left;"></div>
+                                                                        </div>
+                                                                        <%--//oliver <end>--%>
                                                                     </td>
                                                                 </tr>
                                                             </table>
@@ -647,7 +700,11 @@
                     </table>
                 </div>
             </asp:Panel>
+        
         </ContentTemplate>
+        <Triggers>
+            <asp:PostBackTrigger ControlID="lnkWordWxport" />
+        </Triggers>
     </asp:UpdatePanel>
     <br />
     <div>
@@ -655,14 +712,14 @@
             <ContentTemplate>
                 <div id="divChangeHistory">
                     <table runat="server" id="tblChangeHistory" visible="false">
-                        <tr>
+                        <%--<tr>
                             <td colspan="3">
                                 <asp:LinkButton runat="server" ID="lnkShowHistory" ClientIDMode="Static" Text="Show Change History"
                                     OnClick="lnkShowHistory_Click" CausesValidation="false"></asp:LinkButton>
                                 <asp:LinkButton runat="server" ID="lnkHideHistory" ClientIDMode="Static" Text="Hide Change History"
                                     Visible="false" CausesValidation="false" OnClick="lnkHideHistory_Click"></asp:LinkButton>
                             </td>
-                        </tr>
+                        </tr>--%>
                         <tr runat="server" id="trTab" visible="false">
                             <td colspan="3">
                                 <div id="divHistory">
@@ -766,27 +823,27 @@
                 <table>
                     <tr>
                         <td colspan="2">
-                            <h3>Data Retriever</h3>
+                            <h3>Document Generation</h3>
                         </td>
                     </tr>
                     <tr>
                         <td align="right">
-                            <strong>Please select a Data Retriever.</strong>
+                            <strong>Template:</strong>
                         </td>
                         <td>
                             <asp:DropDownList runat="server" ID="ddlDataRetriever" DataTextField="FileName" DataValueField="DocTemplateID"
-                                AutoPostBack="false" CssClass="NormalTextBox">
+                                AutoPostBack="false" CssClass="NormalTextBox" Width="350px">
                             </asp:DropDownList>
                         </td>
                     </tr>
                     <tr>
                         <td></td>
                         <td>
-                            <table>
+                            <table style="padding: 50px 0 0 85px;">
                                 <tr>
                                     <td>
                                         <asp:LinkButton runat="server" ID="lnkWordExportOK" CssClass="btn" CausesValidation="false"
-                                            OnClick="lnkWordExportOK_Click"> <strong>Ok</strong></asp:LinkButton>
+                                            OnClick="lnkWordExportOK_Click"> <strong>OK</strong></asp:LinkButton>
                                     </td>
                                     <td>
                                         <asp:LinkButton runat="server" ID="lnkWordExportCancel" CssClass="btn" CausesValidation="false"> <strong>Cancel</strong></asp:LinkButton>

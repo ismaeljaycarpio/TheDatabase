@@ -479,12 +479,12 @@ public partial class Pages_Import_ImportTemplateItem : SecurePage
 
                 PopulateSearchCriteria(int.Parse(Cryptography.Decrypt(Request.QueryString["SearchCriteriaIT"].ToString())));
 
-                hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteriaIT=" + Request.QueryString["SearchCriteriaIT"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString();
+                hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteriaIT=" + Request.QueryString["SearchCriteriaIT"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString();
             }
             else
             {
 
-                Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteriaIT=" + Cryptography.Encrypt("-1") + "&TableID=" + Request.QueryString["TableID"].ToString(), false);//i think no need
+                Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteriaIT=" + Cryptography.Encrypt("-1") + "&TableID=" + Request.QueryString["TableID"].ToString(), false);//i think no need
             }
 
             if(Request.QueryString["fixedbackurl"]!=null)
@@ -704,7 +704,7 @@ public partial class Pages_Import_ImportTemplateItem : SecurePage
 
     public string GetAddImportTemplateItemURL(int iImportTemplateID)
     {
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Import/ImportTemplateItemDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&ImportTemplateID=" + Cryptography.Encrypt(iImportTemplateID.ToString());
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Import/ImportTemplateItemDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&ImportTemplateID=" + Cryptography.Encrypt(iImportTemplateID.ToString());
     }
 
 
@@ -918,11 +918,11 @@ public partial class Pages_Import_ImportTemplateItem : SecurePage
                     string strFilePath = Cryptography.Encrypt(_strFilesLocation + "/UserFiles/AppFiles/" + theImportTemplate.TemplateUniqueFileName);
                     string strFileName = theImportTemplate.TemplateUniqueFileName.Substring(37);
 
-                    lblImportTemplateFile.Text = "<a target='_blank' href='" + "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Filedownload.aspx?FilePath="
+                    lblImportTemplateFile.Text = "<a target='_blank' href='" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Filedownload.aspx?FilePath="
                            + strFilePath + "&FileName=" + Cryptography.Encrypt(strFileName) + "'>" +
                              strFileName + "</a>";
 
-                    lblImportTemplateFile.Text = "<img  title=\"Remove this file\" style=\"cursor:pointer;\"  id=\"dimg" + hfImportTemplateFileName.ID + "\" src=\"" + "http://" + Request.Url.Authority + Request.ApplicationPath
+                    lblImportTemplateFile.Text = "<img  title=\"Remove this file\" style=\"cursor:pointer;\"  id=\"dimg" + hfImportTemplateFileName.ID + "\" src=\"" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
                                + "/App_Themes/Default/Images/icon_delete.gif\" />" + lblImportTemplateFile.Text;
 
                     string strTempJS = @"  document.getElementById('dimg" + hfImportTemplateFileName.ID + @"').addEventListener('click', function (e) {
@@ -937,7 +937,7 @@ public partial class Pages_Import_ImportTemplateItem : SecurePage
             else if (_strActionMode == "view")
             {
                 divEdit.Visible = true;
-                hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Import/ImportTemplateItem.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString()
+                hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Import/ImportTemplateItem.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString()
                     + "&SearchCriteriaIT=" + Request.QueryString["SearchCriteriaIT"].ToString() + "&ImportTemplateID=" + Cryptography.Encrypt(theImportTemplate.ImportTemplateID.ToString());
             }
         }
@@ -1447,7 +1447,7 @@ public partial class Pages_Import_ImportTemplateItem : SecurePage
                        if (Request.QueryString["fixedbackurl"] != null)
                            strExtarQueryString =strExtarQueryString+ "&fixedbackurl=" + Request.QueryString["fixedbackurl"].ToString();
 
-                       strEditURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Import/ImportTemplateItem.aspx?popupitem=yes&mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&ImportTemplateID=" + Cryptography.Encrypt(iNewImportTemplateID.ToString()) + strExtarQueryString;
+                       strEditURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Import/ImportTemplateItem.aspx?popupitem=yes&mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&ImportTemplateID=" + Cryptography.Encrypt(iNewImportTemplateID.ToString()) + strExtarQueryString;
 
 
 

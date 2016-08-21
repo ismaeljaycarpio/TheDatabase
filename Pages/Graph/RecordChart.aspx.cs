@@ -31,11 +31,11 @@ public partial class Pages_Graph_RecordChart : SecurePage
 
         //if (!IsPostBack)
         //{
-            string strBackURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"] + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"];
+            string strBackURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"] + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"];
 
             if (Request.QueryString["fromhome"] != null)
             {
-                strBackURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Default.aspx";
+                strBackURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Default.aspx";
             }
 
             gcTest.BackURL = strBackURL;

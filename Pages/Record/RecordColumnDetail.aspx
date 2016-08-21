@@ -69,7 +69,7 @@
             var txtMaxValid = document.getElementById("ctl00_HomeContentPlaceHolder_txtMaxValid");
             var chkValidFormula = document.getElementById("chkValidFormula");
             var chkValidConditions = document.getElementById("chkValidConditions");
-            var chkMandatory = document.getElementById("ctl00_HomeContentPlaceHolder_chkMandatory");
+            var ddlImportance = document.getElementById("ctl00_HomeContentPlaceHolder_ddlImportance");
 
             var txtCalculation = document.getElementById("ctl00_HomeContentPlaceHolder_txtCalculation");
 
@@ -98,11 +98,11 @@
 
                 if (ColumnTypeIn(strTypeV, 'calculation')) {
                     var strCalType = $('#ctl00_HomeContentPlaceHolder_ddlCalculationType').val();
-                    if (ColumnTypeIn(strCalType, 'n,f')) { bShowValidationRoot = true; }
+                    if (ColumnTypeIn(strCalType, 'n,f,d')) { bShowValidationRoot = true; }
                 }
 
                 if (bShowValidationRoot) {
-                    $("#divchkValidationCanIgnore").fadeIn();
+                    //$("#divchkValidationCanIgnore").fadeIn();
                     $("#divValidationRoot").fadeIn();
                     $("#divGraphOptions").fadeIn();
                     ShowWarningMinMax();
@@ -113,7 +113,7 @@
                     ShowValidMinMax();
                 }
                 else {
-                    $("#divchkValidationCanIgnore").fadeOut();
+                    //$("#divchkValidationCanIgnore").fadeOut();
                     $("#divValidationRoot").fadeOut();
                     $("#divGraphOptions").fadeOut();
 
@@ -124,8 +124,7 @@
                     var chkMaximumValueat = document.getElementById("ctl00_HomeContentPlaceHolder_chkMaximumValueat");
                     chkMaximumValueat.checked = false;
 
-                    var chkValidationCanIgnore = document.getElementById("ctl00_HomeContentPlaceHolder_chkValidationCanIgnore");
-                    chkValidationCanIgnore.checked = false;
+                    
                     var txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtMinValid");
                     txt.value = '';
 
@@ -281,6 +280,8 @@
             function ddlCalculationTypeChange(bEvent) {
 
                 strCalType = $('#ctl00_HomeContentPlaceHolder_ddlCalculationType').val();
+                document.getElementById('ctl00_HomeContentPlaceHolder_hlCalculationEdit').href = document.getElementById('hfCalculationType').value ;
+
                 if (strCalType == 'n' || strCalType == 'f') {
                     $("#trGraphOption").fadeIn();
                     if (bEvent = true)
@@ -435,7 +436,7 @@
                     $("#trMandatory").fadeIn();
                 }
                 else {
-                    chkMandatory.checked = false;
+                    $(ddlImportance).val('');
                     $("#trMandatory").fadeOut();
 
                 }
@@ -461,6 +462,9 @@
                     chkExport.checked = false;
                     chkMobile.checked = false;
                     $("#divchkCompareOperator").fadeOut();
+                    $("#divchkValidationCanIgnore").fadeOut();
+                    var chkValidationCanIgnore = document.getElementById("ctl00_HomeContentPlaceHolder_chkValidationCanIgnore");
+                    chkValidationCanIgnore.checked = false;
 
                 }
                 else {
@@ -475,6 +479,7 @@
                     $("#trExportOption").fadeIn();
                     $("#trMobileSiteSummary").fadeIn();
                     $("#trSummaryPage1").fadeIn();
+                    $("#divchkValidationCanIgnore").fadeIn();
                     //chkSummaryPage.checked = true;
                     if (bEvent) {
                         chkImport.checked = true;
@@ -714,7 +719,7 @@
                     chkIgnoreSymbols.checked = false;
                     var chkCheckUnlikelyValue = document.getElementById("ctl00_HomeContentPlaceHolder_chkCheckUnlikelyValue");
                     chkCheckUnlikelyValue.checked = false;
-                    chkMandatory.checked = false;
+                    $(ddlImportance).val('');
 
                 }
 
@@ -985,7 +990,7 @@
                     $("#trMandatory").fadeIn();
                 }
                 else {
-                    chkMandatory.checked = false;
+                    $(ddlImportance).val('');
                     $("#trMandatory").fadeOut();
 
                 }
@@ -1415,7 +1420,7 @@
 
                 if (strTextType == "readonly") {
 
-                    chkMandatory.checked = false;
+                    $(ddlImportance).val('');
                     $("#trMandatory").fadeOut();
                 }
                 else {
@@ -1557,7 +1562,7 @@
                 }
                 else {
                     $("#trMandatory").fadeOut();
-                    chkMandatory.checked = false;
+                    $(ddlImportance).val('');
                 }
                 if (ColumnTypeIn(strNumberTypeV, '1,6,4')) {
                     $("#trRound").fadeIn(); chkRoundClick(false);
@@ -3317,10 +3322,18 @@
                                                             </td>
                                                         </tr>
                                                         <tr id="trMandatory">
-                                                            <td></td>
+                                                             <td align="right">
+                                                                 <strong>Importance</strong>
+                                                            </td>
                                                             <td align="left">
-                                                                <asp:CheckBox runat="server" ID="chkMandatory" Font-Bold="true" />
-                                                                <asp:Label runat="server" ID="lblMandatory" Text="Mandatory" Font-Bold="true"></asp:Label>
+                                                                   <asp:DropDownList runat="server" ID="ddlImportance" ToolTip="Required means it is important but you can still save the data without it. 
+                                                                       Mandatory will prevent the data being saved unless entered." CssClass="NormalTextBox">
+                                                                    <asp:ListItem Value="" Text="Optional" Selected="True"></asp:ListItem>
+                                                                    <asp:ListItem Value="r" Text="Required"></asp:ListItem>
+                                                                       <asp:ListItem Value="m" Text="Mandatory"></asp:ListItem>
+                                                                </asp:DropDownList>
+                                                                <%--<asp:CheckBox runat="server" ID="chkMandatory" Font-Bold="true" />--%>
+                                                                <%--<asp:Label runat="server" ID="lblMandatory" Text="Mandatory" Font-Bold="true"></asp:Label>--%>
                                                             </td>
 
                                                             <td align="left"></td>

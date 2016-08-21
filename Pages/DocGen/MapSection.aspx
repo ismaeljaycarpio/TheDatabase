@@ -4,8 +4,12 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="HomeContentPlaceHolder" runat="Server">
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false">
-    </script>
+   <%-- <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false">
+    </script>--%>
+
+    <script type="text/javascript" src="<%=Request.Url.Scheme+@"://maps.google.com/maps/api/js?sensor=false" %>"></script>
+
+
     <div>
         <div>
             <asp:HiddenField ID="hfMaptype" runat="server" Value="roadmap" ClientIDMode="Static" />

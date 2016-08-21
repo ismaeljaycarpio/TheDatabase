@@ -16,7 +16,7 @@ namespace DocGen.DocumentTextStyle
             {
                 ShowList();
 
-                hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/EditReport.aspx?mode=" + Request.QueryString["rmode"].ToString() + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SSearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString() + "&DocumentID=" +  Request.QueryString["DocumentID"].ToString();
+                hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/EditReport.aspx?mode=" + Request.QueryString["rmode"].ToString() + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SSearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString() + "&DocumentID=" +  Request.QueryString["DocumentID"].ToString();
                 lnkNew.NavigateUrl = "DocumentStypeEdit.aspx?rmode=" + Request.QueryString["rmode"].ToString() + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SSearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString() + "&DocumentID=" + Request.QueryString["DocumentID"].ToString() ;
 
             }

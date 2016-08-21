@@ -347,10 +347,10 @@ public partial class Pages_Record_FormSetWizard : SecurePage
                 }
             }
 
-            hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&Recordid=" + Request.QueryString["ParentRecordID"].ToString() + "&TableID=" + Request.QueryString["ParentTableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
+            hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&Recordid=" + Request.QueryString["ParentRecordID"].ToString() + "&TableID=" + Request.QueryString["ParentTableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
             hlBack2.NavigateUrl = hlBack.NavigateUrl;
 
-            hlPrint.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetPrint.aspx?ParentRecordID=" + Request.QueryString["ParentRecordID"].ToString() + "&ParentTableID=" + Request.QueryString["ParentTableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
+            hlPrint.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetPrint.aspx?ParentRecordID=" + Request.QueryString["ParentRecordID"].ToString() + "&ParentTableID=" + Request.QueryString["ParentTableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
 
 
             if (_theTable != null && Request.QueryString["veryfirst"]==null)

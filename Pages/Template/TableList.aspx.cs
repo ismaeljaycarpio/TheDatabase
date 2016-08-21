@@ -15,7 +15,7 @@ public partial class Pages_Template_TableList : SecurePage
     public string GetViewURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&MenuID=" + Cryptography.Encrypt("-1") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&MenuID=" + Cryptography.Encrypt("-1") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=";
     }
 
    
@@ -85,7 +85,7 @@ public partial class Pages_Template_TableList : SecurePage
                 }
                 if (Request.QueryString["SearchCriteria"] != null)
                 {
-                    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableOption.aspx?MenuID=" + Request.QueryString["MenuID"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+                    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableOption.aspx?MenuID=" + Request.QueryString["MenuID"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
                 }
 
                 PopulateAccountsDDL();
@@ -152,7 +152,7 @@ public partial class Pages_Template_TableList : SecurePage
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
             HyperLink hlView = (HyperLink)e.Row.FindControl("hlView");
-            hlView.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?template=true&mode=" + Cryptography.Encrypt("view") +  "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt((DataBinder.Eval(e.Row.DataItem, "TableID").ToString()));
+            hlView.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?template=true&mode=" + Cryptography.Encrypt("view") +  "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt((DataBinder.Eval(e.Row.DataItem, "TableID").ToString()));
         }
 
     }

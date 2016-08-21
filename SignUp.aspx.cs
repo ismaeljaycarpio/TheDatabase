@@ -373,7 +373,7 @@ public partial class Login : System.Web.UI.Page
 
 
                     Account theAccount = SecurityManager.Account_Details(AccountId);
-                    theContent.ContentP = theContent.ContentP.Replace("[URL]", "http://" + Request.Url.Authority + Request.ApplicationPath + "/SignUp.aspx?AccountID=" + AccountId.ToString() + "&ValidationCode=" + theAccount.ConfirmationCode.ToString());
+                    theContent.ContentP = theContent.ContentP.Replace("[URL]", Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/SignUp.aspx?AccountID=" + AccountId.ToString() + "&ValidationCode=" + theAccount.ConfirmationCode.ToString());
 
 
 
@@ -457,7 +457,7 @@ public partial class Login : System.Web.UI.Page
 
 
         Account theAccount = SecurityManager.Account_Details((int)iAccountID);
-        theContent.ContentP = theContent.ContentP.Replace("[URL]", "http://" + Request.Url.Authority + Request.ApplicationPath + "/SignUp.aspx?AccountID=" + iAccountID.ToString() + "&ValidationCode=" + theAccount.ConfirmationCode.ToString());
+        theContent.ContentP = theContent.ContentP.Replace("[URL]", Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/SignUp.aspx?AccountID=" + iAccountID.ToString() + "&ValidationCode=" + theAccount.ConfirmationCode.ToString());
 
         
         

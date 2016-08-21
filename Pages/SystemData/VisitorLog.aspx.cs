@@ -40,11 +40,11 @@ public partial class Pages_SystemData_VisitorLog : SecurePage
 
                 if (Request.QueryString["SearchCriteria"] != null)
                 {
-                    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/PageCount.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+                    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/PageCount.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
                 }
                 else
                 {
-                    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/PageCount.aspx";
+                    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/PageCount.aspx";
                 }
 
 

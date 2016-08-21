@@ -78,7 +78,7 @@ public partial class Pages_Record_TableFields :Page
 
                     Column newColumn = new Column(null, _iTableID,
                    strAutoSystemName, iDisplayOrder + 1, strDisplayName, strDisplayName, "", "", null, "",
-                    "", null, null, "", "", false, strDisplayName, null, "", null, null, false, "", "", false);
+                    "", null, null, "", "", false, strDisplayName, null, "", null, null, false, "", "", "");
 
                     newColumn.ColumnType = strColumnType;
 
@@ -151,7 +151,7 @@ public partial class Pages_Record_TableFields :Page
 
 
         Session["Fields"] = null;
-        Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&MenuID=" + Request.QueryString["MenuID"].ToString() + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString(), false);
+        Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&MenuID=" + Request.QueryString["MenuID"].ToString() + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString(), false);
 
     }
     protected void lnkAdd_Click(object sender, EventArgs e)

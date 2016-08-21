@@ -480,7 +480,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
     //public string GetViewURL()
     //{
 
-    //    return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=view&TableID=" + ddlTable.SelectedValue + "&Recordid=";
+    //    return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=view&TableID=" + ddlTable.SelectedValue + "&Recordid=";
 
     //}
 
@@ -610,7 +610,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
 
             if (_strRecordRightID == Common.UserRoleType.None) //none role
             {
-                Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Default.aspx", false);
+                Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Default.aspx", false);
                 return;
             }
 
@@ -748,7 +748,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                 //if (Common.HaveAccess(_strRecordRightID, "1,2"))
                 //{
 
-                //    hlChangeAccountType.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountTypeChange.aspx?AccountID=" + Cryptography.Encrypt(_qsTable.AccountID.ToString());
+                //    hlChangeAccountType.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountTypeChange.aspx?AccountID=" + Cryptography.Encrypt(_qsTable.AccountID.ToString());
 
                 //}
 
@@ -770,7 +770,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
 
                 if (Request.QueryString["menu"] != null && Cryptography.Decrypt(Request.QueryString["menu"]) == "yes")
                 {
-                    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Batches.aspx?menu=" + Cryptography.Encrypt("yes") + "&TableID=" + Cryptography.Encrypt(_qsBatch.TableID.ToString());
+                    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Batches.aspx?menu=" + Cryptography.Encrypt("yes") + "&TableID=" + Cryptography.Encrypt(_qsBatch.TableID.ToString());
                     
                 }
                 else
@@ -781,14 +781,14 @@ public partial class Pages_Record_UploadValidation : SecurePage
                     }
                     else
                     {
-                        hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordUpload.aspx?TableID=" + Cryptography.Encrypt(_qsBatch.TableID.ToString()) + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
+                        hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordUpload.aspx?TableID=" + Cryptography.Encrypt(_qsBatch.TableID.ToString()) + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
                     }
                     
                 }
 
                 if (Request.QueryString["FileInfo"] != null)
                 {
-                    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordUpload.aspx?TableID=" + Cryptography.Encrypt(_qsBatch.TableID.ToString()) + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"];
+                    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordUpload.aspx?TableID=" + Cryptography.Encrypt(_qsBatch.TableID.ToString()) + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"];
                 }
 
             }
@@ -1186,7 +1186,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
     public string GetViewURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&TableID=" + Cryptography.Encrypt(_qsBatch.TableID.ToString()) + "&Recordid=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&TableID=" + Cryptography.Encrypt(_qsBatch.TableID.ToString()) + "&Recordid=";
 
     }
 
@@ -1195,7 +1195,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
     //{
     //    if (Request.QueryString["menu"] != null && Cryptography.Decrypt(Request.QueryString["menu"]) == "yes")
     //    {
-    //        Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Batches.aspx?menu=" + Cryptography.Encrypt("yes") + "&TableID=" + Cryptography.Encrypt(_qsBatch.TableID.ToString()));
+    //        Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Batches.aspx?menu=" + Cryptography.Encrypt("yes") + "&TableID=" + Cryptography.Encrypt(_qsBatch.TableID.ToString()));
     //    }
     //    else
     //    {
@@ -1465,7 +1465,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                 if (_iImportTemplateID != null)
                     strExtra = "&ImportTemplateID=" + Cryptography.Encrypt(_iImportTemplateID.ToString());
 
-                string strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/UploadValidation.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&BatchID=" + Request.QueryString["BatchID"].ToString() + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+                string strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/UploadValidation.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&BatchID=" + Request.QueryString["BatchID"].ToString() + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
                 strURL = strURL + strExtra;
                 
                 strBody = strBody.Replace("[ViewBatch]", strURL);
@@ -1493,7 +1493,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
             {               
 
                     UploadManager.RecordsImportEmail(_qsBatch, ref strImportedRecords,
-                        "http://" + Request.Url.Authority + Request.ApplicationPath);              
+                        Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath);              
 
                 //SecurityManager.CheckRecordsExceeded(int.Parse(Session["AccountID"].ToString()));
             }
@@ -1547,7 +1547,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
 
         if (Request.QueryString["menu"] != null && Cryptography.Decrypt(Request.QueryString["menu"]) == "yes")
         {
-            Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Batches.aspx?menu=" + Cryptography.Encrypt("yes") + "&TableID=" + Cryptography.Encrypt(_qsBatch.TableID.ToString()));
+            Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Batches.aspx?menu=" + Cryptography.Encrypt("yes") + "&TableID=" + Cryptography.Encrypt(_qsBatch.TableID.ToString()));
         }
         else
         {

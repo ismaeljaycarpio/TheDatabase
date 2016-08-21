@@ -48,6 +48,67 @@ public class Common
 
     //public bool bUseSourceBacthForALS = true;
 
+
+    public static DateTime? GetDateTimeFromString(string strDateTime,string strFormat)
+    {
+        if (strFormat == "" || strFormat == "GB")
+        {
+            try
+            {
+                DateTime dateValue;
+                if (DateTime.TryParseExact(strDateTime, DateTimeformats, new CultureInfo("en-GB"), DateTimeStyles.None, out dateValue))
+                {
+                    return dateValue;
+                }
+                else
+                {
+                    //old
+                    DateTime? oDateTime = null;
+                    System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("en-GB");
+                    if (strDateTime.IndexOf(" ") > 0)
+                    {
+                        if (strDateTime.Substring(0, strDateTime.IndexOf(" ")).Length < 7)
+                        {
+                            string strTempDateTime = strDateTime.Substring(0, strDateTime.IndexOf(" ")) + "-" + DateTime.Now.Year.ToString() + " " + strDateTime.Substring(strDateTime.IndexOf(" ") + 1);
+                            oDateTime = Convert.ToDateTime(strTempDateTime, culture);
+                        }
+                        else
+                        {
+                            if (strDateTime.Length == 16)
+                            {
+                                //oDateTime = DateTime.ParseExact(strDateTime, "MM/dd/yyyy HH:mm", CultureInfo.InvariantCulture);
+                                oDateTime = DateTime.ParseExact(strDateTime, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
+                            }
+                            else
+                            {
+                                oDateTime = Convert.ToDateTime(strDateTime, culture);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        oDateTime = Convert.ToDateTime(strDateTime, culture);
+                    }
+                    return oDateTime;
+                }
+            }
+            catch
+            {
+                try
+                {
+                    return Convert.ToDateTime(strDateTime);
+                }
+                catch
+                {
+                    //
+                }
+            }
+            
+        }
+        return null;
+         
+    }
+
     public static void FindTheAccount()
     {
        
@@ -207,7 +268,7 @@ public class Common
                 }
                 else
                 {
-                    HttpContext.Current.Session["FilesLocation"] = "http://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath;
+                    HttpContext.Current.Session["FilesLocation"] = HttpContext.Current.Request.Url.Scheme +"://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath;
                 }
 
 
@@ -302,7 +363,8 @@ public class Common
             return null;
         try
         {
-            string strID = Common.GetValueFromSQL("SELECT  TOP 1 ImportTemplateID  FROM ImportTemplate WHERE TableID=" + iTableID.ToString() + " AND ImportTemplateName='Default' ORDER BY ImportTemplateName");
+            string strID = Common.GetValueFromSQL("SELECT  TOP 1 ImportTemplateID  FROM ImportTemplate WHERE TableID=" + iTableID.ToString() 
+                + " AND ImportTemplateName='Default' ORDER BY ImportTemplateName");
 
             if(strID=="")
             {
@@ -449,11 +511,34 @@ public class Common
     public static string[] Dateformats = {"d/M/yyyy",
                                     "dd/MM/yyyy","dd/M/yyyy","d/M/yy","dd/MM/yyyy","dd/M/yy","d/MM/yyyy","d/MM/yy"};
 
-    public static string[] DateTimeformats = {"d/M/yyyy HH:mm",
-                                    "dd/MM/yyyy HH:mm","dd/M/yyyy HH:mm","d/M/yy HH:mm","dd/MM/yyyy HH:mm","d/MM/yyyy HH:mm","d/MM/yy HH:mm",
-                                             "d/M/yyyy HH:mm:ss",
-                                    "dd/MM/yyyy HH:mm:ss","dd/M/yyyy HH:mm:ss","d/M/yy HH:mm:ss","dd/MM/yyyy HH:mm:ss","d/MM/yyyy HH:mm:ss","d/MM/yy HH:mm:ss"};
-
+    public static string[] DateTimeformats = {"d/M/yyyy hh:mm","dd/MM/yyyy hh:mm","dd/M/yyyy hh:mm","d/M/yy hh:mm","dd/MM/yyyy hh:mm","d/MM/yyyy hh:mm","d/MM/yy hh:mm",
+                                             "d/M/yyyy hh:mm:ss","dd/MM/yyyy hh:mm:ss","dd/M/yyyy hh:mm:ss","d/M/yy hh:mm:ss","dd/MM/yyyy hh:mm:ss",
+                                             "d/MM/yyyy hh:mm:ss","d/MM/yy hh:mm:ss",
+                                             "d/M/yyyy hh:mm tt","dd/MM/yyyy hh:mm tt","dd/M/yyyy hh:mm tt","d/M/yy hh:mm tt","dd/MM/yyyy hh:mm tt",
+                                             "d/MM/yyyy hh:mm tt","d/MM/yy hh:mm tt",
+                                             "d/M/yyyy hh:mm:ss tt","dd/MM/yyyy hh:mm:ss tt","dd/M/yyyy hh:mm:ss tt","d/M/yy hh:mm:ss","dd/MM/yyyy hh:mm:ss tt",
+                                             "d/MM/yyyy hh:mm:ss  tt","d/MM/yy hh:mm:ss tt",
+                                             "d/M/yyyy h:mm","dd/MM/yyyy h:mm","dd/M/yyyy h:mm","d/M/yy h:mm","dd/MM/yyyy h:mm","d/MM/yyyy h:mm","d/MM/yy h:mm",
+                                             "d/M/yyyy h:mm:ss","dd/MM/yyyy h:mm:ss","dd/M/yyyy h:mm:ss","d/M/yy h:mm:ss","dd/MM/yyyy h:mm:ss",
+                                             "d/MM/yyyy h:mm:ss","d/MM/yy h:mm:ss",
+                                             "d/M/yyyy h:mm tt","dd/MM/yyyy h:mm tt","dd/M/yyyy h:mm tt","d/M/yy h:mm tt","dd/MM/yyyy h:mm tt",
+                                             "d/MM/yyyy h:mm tt","d/MM/yy h:mm tt",
+                                             "d/M/yyyy h:mm:ss tt","dd/MM/yyyy h:mm:ss tt","dd/M/yyyy h:mm:ss tt","d/M/yy h:mm:ss","dd/MM/yyyy h:mm:ss tt",
+                                             "d/MM/yyyy h:mm:ss  tt","d/MM/yy h:mm:ss tt",
+                                             "d/M/yyyy hh:m","dd/MM/yyyy hh:m","dd/M/yyyy hh:m","d/M/yy hh:m","dd/MM/yyyy hh:m","d/MM/yyyy hh:m","d/MM/yy hh:m",
+                                             "d/M/yyyy hh:m:ss","dd/MM/yyyy hh:m:ss","dd/M/yyyy hh:m:ss","d/M/yy hh:m:ss","dd/MM/yyyy hh:m:ss",
+                                             "d/MM/yyyy hh:m:ss","d/MM/yy hh:m:ss",
+                                             "d/M/yyyy hh:m tt","dd/MM/yyyy hh:m tt","dd/M/yyyy hh:m tt","d/M/yy hh:m tt","dd/MM/yyyy hh:m tt",
+                                             "d/MM/yyyy hh:m tt","d/MM/yy hh:m tt",
+                                             "d/M/yyyy hh:m:ss tt","dd/MM/yyyy hh:m:ss tt","dd/M/yyyy hh:m:ss tt","d/M/yy hh:m:ss","dd/MM/yyyy hh:m:ss tt",
+                                             "d/MM/yyyy hh:m:ss  tt","d/MM/yy hh:m:ss tt",
+                                             "d/M/yyyy h:m","dd/MM/yyyy h:m","dd/M/yyyy h:m","d/M/yy h:m","dd/MM/yyyy h:m","d/MM/yyyy h:m","d/MM/yy h:m",
+                                             "d/M/yyyy h:m:ss","dd/MM/yyyy h:m:ss","dd/M/yyyy h:m:ss","d/M/yy h:m:ss","dd/MM/yyyy h:m:ss",
+                                             "d/MM/yyyy h:m:ss","d/MM/yy h:m:ss",
+                                             "d/M/yyyy h:m tt","dd/MM/yyyy h:m tt","dd/M/yyyy h:m tt","d/M/yy h:m tt","dd/MM/yyyy h:m tt",
+                                             "d/MM/yyyy h:m tt","d/MM/yy h:m tt",
+                                             "d/M/yyyy h:m:ss tt","dd/MM/yyyy h:m:ss tt","dd/M/yyyy h:m:ss tt","d/M/yy h:m:ss","dd/MM/yyyy h:m:ss tt",
+                                             "d/MM/yyyy h:m:ss  tt","d/MM/yy h:m:ss tt"};
 
     public static string DemoEmail="demo@carbonmonitoring.com.au";
     public static string DemoReadyOnlyMsg = "Demo user is read only.";
@@ -1878,6 +1963,20 @@ public class Common
     }
 
 
+    public static bool IsIn(string sEach, string sAll)
+    {
+        foreach (string sE in sAll.Split(','))
+        {
+            if (sE.Length > 0)
+            {
+                if (sE==sEach)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
     public static bool HaveAccess(string strUserRoleTypes, string strAllowedRoleTypes)
     {
        foreach (string strRoleType in strAllowedRoleTypes.Split(','))
@@ -3770,6 +3869,8 @@ public class Cryptography
 
         try
         {
+            if (text=="")
+                return "";
 
             key = Encoding.UTF8.GetBytes(stringKey.Substring(0, 8));
 

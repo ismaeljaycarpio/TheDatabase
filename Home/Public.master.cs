@@ -72,7 +72,7 @@ public partial class Home_Public : System.Web.UI.MasterPage
     //protected void BindMenu()
     //{
     //    menuMarketing.Items.Clear();
-    //    string strAppPath = "http://" + Request.Url.Authority + Request.ApplicationPath;
+    //    string strAppPath = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
 
 
 

@@ -217,7 +217,7 @@ public partial class Pages_RRP_RiskMatrix : SecurePage
                             string strTextSearch = " AND v016='Open' and   convert(datetime,Record." + _cDateIdentified.SystemName + ",103)<=convert(datetime,'" + txtLeftDate.Text + "',103) AND Record." +
                             _cConsequence.SystemName + "='" + i.ToString() + "' AND Record." + _cLikelihood.SystemName + "='" + j.ToString() + "'";
 
-                            string strListURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID="+Cryptography.Encrypt(_theTable.TableID.ToString())+"&TextSearch=" + Cryptography.Encrypt(strTextSearch);
+                            string strListURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID="+Cryptography.Encrypt(_theTable.TableID.ToString())+"&TextSearch=" + Cryptography.Encrypt(strTextSearch);
 
                             tdCell.Controls.Add(new LiteralControl("<a target='_blank' style='font-weight:bold;font-size:15px;' href='" + strListURL + "'>" + sCount + "</a>"));
                         }
@@ -271,7 +271,7 @@ public partial class Pages_RRP_RiskMatrix : SecurePage
                             string strTextSearch = " AND v016='Open' and convert(datetime,Record." + _cDateIdentified.SystemName + ",103)<=convert(datetime,'" + txtRightDate.Text + "',103) AND Record." +
                             _cConsequence.SystemName + "='" + i.ToString() + "' AND Record." + _cLikelihood.SystemName + "='" + j.ToString() + "'";
 
-                            string strListURL = "http://" + Request.Url.Authority + Request.ApplicationPath
+                            string strListURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
                                 + "/Pages/Record/RecordList.aspx?TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString() )+ "&TextSearch=" + Cryptography.Encrypt(strTextSearch);
 
                             tdCell.Controls.Add(new LiteralControl("<a target='_blank' style='font-weight:bold;font-size:15px;' href='" + strListURL + "'>" + sCount + "</a>"));

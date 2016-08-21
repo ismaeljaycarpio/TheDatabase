@@ -10,7 +10,7 @@ public partial class Test_ColorPicker : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         if(!IsPostBack)
-        hfPathForcolor.Value="http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/UserControl/";
+        hfPathForcolor.Value=Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/UserControl/";
         
         
         if (Request.QueryString["color"] != null)

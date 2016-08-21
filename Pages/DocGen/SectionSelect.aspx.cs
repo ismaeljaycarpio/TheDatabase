@@ -12,20 +12,20 @@ public partial class Pages_DocGen_SectionSelect : System.Web.UI.Page
 
         if (Request.QueryString["Position"] != null)
         {
-            hfTextPath.Value = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/TextSection.aspx?DocumentID=" + Request.QueryString["DocumentID"].ToString() + "&Position=" + Request.QueryString["Position"].ToString();
-            hfHTMLPath.Value = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/HTMLSection.aspx?DocumentID=" + Request.QueryString["DocumentID"].ToString() + "&Position=" + Request.QueryString["Position"].ToString();
-            hfTablePath.Value = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/TableSection.aspx?DocumentID=" + Request.QueryString["DocumentID"].ToString() + "&Position=" + Request.QueryString["Position"].ToString();
-            hfPhotoPath.Value = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/ImageSection.aspx?DocumentID=" + Request.QueryString["DocumentID"].ToString() + "&Position=" + Request.QueryString["Position"].ToString();
-            hfChartPath.Value = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/ChartSection.aspx?DocumentID=" + Request.QueryString["DocumentID"].ToString() + "&Position=" + Request.QueryString["Position"].ToString();
+            hfTextPath.Value = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/TextSection.aspx?DocumentID=" + Request.QueryString["DocumentID"].ToString() + "&Position=" + Request.QueryString["Position"].ToString();
+            hfHTMLPath.Value = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/HTMLSection.aspx?DocumentID=" + Request.QueryString["DocumentID"].ToString() + "&Position=" + Request.QueryString["Position"].ToString();
+            hfTablePath.Value = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/TableSection.aspx?DocumentID=" + Request.QueryString["DocumentID"].ToString() + "&Position=" + Request.QueryString["Position"].ToString();
+            hfPhotoPath.Value = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/ImageSection.aspx?DocumentID=" + Request.QueryString["DocumentID"].ToString() + "&Position=" + Request.QueryString["Position"].ToString();
+            hfChartPath.Value = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/ChartSection.aspx?DocumentID=" + Request.QueryString["DocumentID"].ToString() + "&Position=" + Request.QueryString["Position"].ToString();
 
         }
         else
         {
-            hfTextPath.Value = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/TextSection.aspx?DocumentID=" + Request.QueryString["DocumentID"].ToString();
-            hfHTMLPath.Value = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/HTMLSection.aspx?DocumentID=" + Request.QueryString["DocumentID"].ToString() ;
-            hfTablePath.Value = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/TableSection.aspx?DocumentID=" + Request.QueryString["DocumentID"].ToString();
-            hfPhotoPath.Value = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/ImageSection.aspx?DocumentID=" + Request.QueryString["DocumentID"].ToString() ;
-            hfChartPath.Value = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/ChartSection.aspx?DocumentID=" + Request.QueryString["DocumentID"].ToString() ;
+            hfTextPath.Value = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/TextSection.aspx?DocumentID=" + Request.QueryString["DocumentID"].ToString();
+            hfHTMLPath.Value = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/HTMLSection.aspx?DocumentID=" + Request.QueryString["DocumentID"].ToString() ;
+            hfTablePath.Value = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/TableSection.aspx?DocumentID=" + Request.QueryString["DocumentID"].ToString();
+            hfPhotoPath.Value = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/ImageSection.aspx?DocumentID=" + Request.QueryString["DocumentID"].ToString() ;
+            hfChartPath.Value = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/ChartSection.aspx?DocumentID=" + Request.QueryString["DocumentID"].ToString() ;
         }
 
 

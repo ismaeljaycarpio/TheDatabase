@@ -26,11 +26,11 @@ public partial class Pages_Document_DocumentTypeDetail : SecurePage
 
             if (Request.QueryString["SearchCriteria"] != null)
             {
-                hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentType.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+                hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentType.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
             }
             else
             {
-                hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentType.aspx";
+                hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentType.aspx";
             }
 
 
@@ -193,11 +193,11 @@ public partial class Pages_Document_DocumentTypeDetail : SecurePage
                 divEdit.Visible = true;
                 if (Request.QueryString["SearchCriteria"] != null)
                 {
-                    hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentTypeDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&DocumentTypeID=" + Cryptography.Encrypt(theDocumentType.DocumentTypeID.ToString()) + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+                    hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentTypeDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&DocumentTypeID=" + Cryptography.Encrypt(theDocumentType.DocumentTypeID.ToString()) + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
                 }
                 else
                 {
-                    hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentTypeDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&DocumentTypeID=" + Cryptography.Encrypt(theDocumentType.DocumentTypeID.ToString());
+                    hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentTypeDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&DocumentTypeID=" + Cryptography.Encrypt(theDocumentType.DocumentTypeID.ToString());
                 }
             }
         }
@@ -275,7 +275,7 @@ public partial class Pages_Document_DocumentTypeDetail : SecurePage
                 //user input is not ok
 
             }
-            Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentType.aspx", false);
+            Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentType.aspx", false);
 
         }
         catch (Exception ex)
@@ -293,6 +293,6 @@ public partial class Pages_Document_DocumentTypeDetail : SecurePage
     //protected void cmdBack_Click(object sender, ImageClickEventArgs e)
     protected void lnkBack_Click(object sender, EventArgs e)
     {
-        Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentType.aspx", false);
+        Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentType.aspx", false);
     }
 }

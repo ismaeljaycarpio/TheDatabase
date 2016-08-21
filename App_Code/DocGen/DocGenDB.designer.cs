@@ -22,7 +22,7 @@ namespace DocGen.DAL
 	using System;
 	
 	
-	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="thedatabase_dev_08-Dec-2015")]
+	[global::System.Data.Linq.Mapping.DatabaseAttribute(Name="thedatabase_dev_27-Jan-2016")]
 	public partial class DocGenDataContext : System.Data.Linq.DataContext
 	{
 		
@@ -48,9 +48,6 @@ namespace DocGen.DAL
     partial void InsertDocumentSectionStyle(DocumentSectionStyle instance);
     partial void UpdateDocumentSectionStyle(DocumentSectionStyle instance);
     partial void DeleteDocumentSectionStyle(DocumentSectionStyle instance);
-    partial void InsertColumn(Column instance);
-    partial void UpdateColumn(Column instance);
-    partial void DeleteColumn(Column instance);
     partial void InsertTable(Table instance);
     partial void UpdateTable(Table instance);
     partial void DeleteTable(Table instance);
@@ -63,6 +60,9 @@ namespace DocGen.DAL
     partial void InsertDocument(Document instance);
     partial void UpdateDocument(Document instance);
     partial void DeleteDocument(Document instance);
+    partial void InsertColumn(Column instance);
+    partial void UpdateColumn(Column instance);
+    partial void DeleteColumn(Column instance);
     #endregion
 		
 		public DocGenDataContext() : 
@@ -143,14 +143,6 @@ namespace DocGen.DAL
 			}
 		}
 		
-		public System.Data.Linq.Table<Column> Columns
-		{
-			get
-			{
-				return this.GetTable<Column>();
-			}
-		}
-		
 		public System.Data.Linq.Table<Table> Tables
 		{
 			get
@@ -180,6 +172,14 @@ namespace DocGen.DAL
 			get
 			{
 				return this.GetTable<Document>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Column> Columns
+		{
+			get
+			{
+				return this.GetTable<Column>();
 			}
 		}
 	}
@@ -547,9 +547,9 @@ namespace DocGen.DAL
 		
 		private bool _IsAdvancedSecurity;
 		
-		private EntitySet<Column> _Columns;
-		
 		private EntitySet<Document> _Documents;
+		
+		private EntitySet<Column> _Columns;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -583,8 +583,8 @@ namespace DocGen.DAL
 		
 		public User()
 		{
-			this._Columns = new EntitySet<Column>(new Action<Column>(this.attach_Columns), new Action<Column>(this.detach_Columns));
 			this._Documents = new EntitySet<Document>(new Action<Document>(this.attach_Documents), new Action<Document>(this.detach_Documents));
+			this._Columns = new EntitySet<Column>(new Action<Column>(this.attach_Columns), new Action<Column>(this.detach_Columns));
 			OnCreated();
 		}
 		
@@ -828,19 +828,6 @@ namespace DocGen.DAL
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Column", Storage="_Columns", ThisKey="UserID", OtherKey="LastUpdatedUserID")]
-		public EntitySet<Column> Columns
-		{
-			get
-			{
-				return this._Columns;
-			}
-			set
-			{
-				this._Columns.Assign(value);
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Document", Storage="_Documents", ThisKey="UserID", OtherKey="UserID")]
 		public EntitySet<Document> Documents
 		{
@@ -851,6 +838,19 @@ namespace DocGen.DAL
 			set
 			{
 				this._Documents.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Column", Storage="_Columns", ThisKey="UserID", OtherKey="LastUpdatedUserID")]
+		public EntitySet<Column> Columns
+		{
+			get
+			{
+				return this._Columns;
+			}
+			set
+			{
+				this._Columns.Assign(value);
 			}
 		}
 		
@@ -874,18 +874,6 @@ namespace DocGen.DAL
 			}
 		}
 		
-		private void attach_Columns(Column entity)
-		{
-			this.SendPropertyChanging();
-			entity.User = this;
-		}
-		
-		private void detach_Columns(Column entity)
-		{
-			this.SendPropertyChanging();
-			entity.User = null;
-		}
-		
 		private void attach_Documents(Document entity)
 		{
 			this.SendPropertyChanging();
@@ -893,6 +881,18 @@ namespace DocGen.DAL
 		}
 		
 		private void detach_Documents(Document entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = null;
+		}
+		
+		private void attach_Columns(Column entity)
+		{
+			this.SendPropertyChanging();
+			entity.User = this;
+		}
+		
+		private void detach_Columns(Column entity)
 		{
 			this.SendPropertyChanging();
 			entity.User = null;
@@ -1433,1299 +1433,6 @@ namespace DocGen.DAL
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Column")]
-	public partial class Column : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _ColumnID;
-		
-		private int _TableID;
-		
-		private string _SystemName;
-		
-		private System.Nullable<int> _DisplayOrder;
-		
-		private string _DisplayTextSummary;
-		
-		private string _DisplayTextDetail;
-		
-		private string _NameOnImport;
-		
-		private string _NameOnExport;
-		
-		private System.Nullable<int> _GraphTypeID;
-		
-		private string _ValidationOnWarning;
-		
-		private string _ValidationOnEntry;
-		
-		private bool _IsStandard;
-		
-		private System.DateTime _DateAdded;
-		
-		private System.DateTime _DateUpdated;
-		
-		private string _DisplayName;
-		
-		private System.Nullable<int> _PositionOnImport;
-		
-		private string _Constant;
-		
-		private string _Calculation;
-		
-		private bool _ShowTotal;
-		
-		private bool _IgnoreSymbols;
-		
-		private string _Notes;
-		
-		private bool _IsRound;
-		
-		private int _RoundNumber;
-		
-		private bool _CheckUnlikelyValue;
-		
-		private string _GraphLabel;
-		
-		private System.Nullable<int> _LastUpdatedUserID;
-		
-		private string _DropdownValues;
-		
-		private bool _IsMandatory;
-		
-		private string _Alignment;
-		
-		private System.Nullable<int> _NumberType;
-		
-		private string _DefaultValue;
-		
-		private System.Nullable<int> _AvgColumnID;
-		
-		private System.Nullable<int> _AvgNumberOfRecords;
-		
-		private string _MobileName;
-		
-		private bool _IsDateSingleColumn;
-		
-		private System.Nullable<decimal> _ShowGraphExceedance;
-		
-		private System.Nullable<decimal> _ShowGraphWarning;
-		
-		private System.Nullable<int> _FlatLineNumber;
-		
-		private System.Nullable<decimal> _MaxValueAt;
-		
-		private System.Nullable<int> _TextWidth;
-		
-		private System.Nullable<int> _TextHeight;
-		
-		private string _ColumnType;
-		
-		private string _DropDownType;
-		
-		private System.Nullable<int> _TableTableID;
-		
-		private string _DisplayColumn;
-		
-		private bool _DisplayRight;
-		
-		private EntitySet<Column> _Columns;
-		
-		private EntityRef<Column> _Column1;
-		
-		private EntityRef<User> _User;
-		
-		private EntityRef<Table> _Table;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnColumnIDChanging(int value);
-    partial void OnColumnIDChanged();
-    partial void OnTableIDChanging(int value);
-    partial void OnTableIDChanged();
-    partial void OnSystemNameChanging(string value);
-    partial void OnSystemNameChanged();
-    partial void OnDisplayOrderChanging(System.Nullable<int> value);
-    partial void OnDisplayOrderChanged();
-    partial void OnDisplayTextSummaryChanging(string value);
-    partial void OnDisplayTextSummaryChanged();
-    partial void OnDisplayTextDetailChanging(string value);
-    partial void OnDisplayTextDetailChanged();
-    partial void OnNameOnImportChanging(string value);
-    partial void OnNameOnImportChanged();
-    partial void OnNameOnExportChanging(string value);
-    partial void OnNameOnExportChanged();
-    partial void OnGraphTypeIDChanging(System.Nullable<int> value);
-    partial void OnGraphTypeIDChanged();
-    partial void OnValidationOnWarningChanging(string value);
-    partial void OnValidationOnWarningChanged();
-    partial void OnValidationOnEntryChanging(string value);
-    partial void OnValidationOnEntryChanged();
-    partial void OnIsStandardChanging(bool value);
-    partial void OnIsStandardChanged();
-    partial void OnDateAddedChanging(System.DateTime value);
-    partial void OnDateAddedChanged();
-    partial void OnDateUpdatedChanging(System.DateTime value);
-    partial void OnDateUpdatedChanged();
-    partial void OnDisplayNameChanging(string value);
-    partial void OnDisplayNameChanged();
-    partial void OnPositionOnImportChanging(System.Nullable<int> value);
-    partial void OnPositionOnImportChanged();
-    partial void OnConstantChanging(string value);
-    partial void OnConstantChanged();
-    partial void OnCalculationChanging(string value);
-    partial void OnCalculationChanged();
-    partial void OnShowTotalChanging(bool value);
-    partial void OnShowTotalChanged();
-    partial void OnIgnoreSymbolsChanging(bool value);
-    partial void OnIgnoreSymbolsChanged();
-    partial void OnNotesChanging(string value);
-    partial void OnNotesChanged();
-    partial void OnIsRoundChanging(bool value);
-    partial void OnIsRoundChanged();
-    partial void OnRoundNumberChanging(int value);
-    partial void OnRoundNumberChanged();
-    partial void OnCheckUnlikelyValueChanging(bool value);
-    partial void OnCheckUnlikelyValueChanged();
-    partial void OnGraphLabelChanging(string value);
-    partial void OnGraphLabelChanged();
-    partial void OnLastUpdatedUserIDChanging(System.Nullable<int> value);
-    partial void OnLastUpdatedUserIDChanged();
-    partial void OnDropdownValuesChanging(string value);
-    partial void OnDropdownValuesChanged();
-    partial void OnIsMandatoryChanging(bool value);
-    partial void OnIsMandatoryChanged();
-    partial void OnAlignmentChanging(string value);
-    partial void OnAlignmentChanged();
-    partial void OnNumberTypeChanging(System.Nullable<int> value);
-    partial void OnNumberTypeChanged();
-    partial void OnDefaultValueChanging(string value);
-    partial void OnDefaultValueChanged();
-    partial void OnAvgColumnIDChanging(System.Nullable<int> value);
-    partial void OnAvgColumnIDChanged();
-    partial void OnAvgNumberOfRecordsChanging(System.Nullable<int> value);
-    partial void OnAvgNumberOfRecordsChanged();
-    partial void OnMobileNameChanging(string value);
-    partial void OnMobileNameChanged();
-    partial void OnIsDateSingleColumnChanging(bool value);
-    partial void OnIsDateSingleColumnChanged();
-    partial void OnShowGraphExceedanceChanging(System.Nullable<decimal> value);
-    partial void OnShowGraphExceedanceChanged();
-    partial void OnShowGraphWarningChanging(System.Nullable<decimal> value);
-    partial void OnShowGraphWarningChanged();
-    partial void OnFlatLineNumberChanging(System.Nullable<int> value);
-    partial void OnFlatLineNumberChanged();
-    partial void OnMaxValueAtChanging(System.Nullable<decimal> value);
-    partial void OnMaxValueAtChanged();
-    partial void OnTextWidthChanging(System.Nullable<int> value);
-    partial void OnTextWidthChanged();
-    partial void OnTextHeightChanging(System.Nullable<int> value);
-    partial void OnTextHeightChanged();
-    partial void OnColumnTypeChanging(string value);
-    partial void OnColumnTypeChanged();
-    partial void OnDropDownTypeChanging(string value);
-    partial void OnDropDownTypeChanged();
-    partial void OnTableTableIDChanging(System.Nullable<int> value);
-    partial void OnTableTableIDChanged();
-    partial void OnDisplayColumnChanging(string value);
-    partial void OnDisplayColumnChanged();
-    partial void OnDisplayRightChanging(bool value);
-    partial void OnDisplayRightChanged();
-    #endregion
-		
-		public Column()
-		{
-			this._Columns = new EntitySet<Column>(new Action<Column>(this.attach_Columns), new Action<Column>(this.detach_Columns));
-			this._Column1 = default(EntityRef<Column>);
-			this._User = default(EntityRef<User>);
-			this._Table = default(EntityRef<Table>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ColumnID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int ColumnID
-		{
-			get
-			{
-				return this._ColumnID;
-			}
-			set
-			{
-				if ((this._ColumnID != value))
-				{
-					this.OnColumnIDChanging(value);
-					this.SendPropertyChanging();
-					this._ColumnID = value;
-					this.SendPropertyChanged("ColumnID");
-					this.OnColumnIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TableID", DbType="Int NOT NULL")]
-		public int TableID
-		{
-			get
-			{
-				return this._TableID;
-			}
-			set
-			{
-				if ((this._TableID != value))
-				{
-					if (this._Table.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnTableIDChanging(value);
-					this.SendPropertyChanging();
-					this._TableID = value;
-					this.SendPropertyChanged("TableID");
-					this.OnTableIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SystemName", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
-		public string SystemName
-		{
-			get
-			{
-				return this._SystemName;
-			}
-			set
-			{
-				if ((this._SystemName != value))
-				{
-					this.OnSystemNameChanging(value);
-					this.SendPropertyChanging();
-					this._SystemName = value;
-					this.SendPropertyChanged("SystemName");
-					this.OnSystemNameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DisplayOrder", DbType="Int")]
-		public System.Nullable<int> DisplayOrder
-		{
-			get
-			{
-				return this._DisplayOrder;
-			}
-			set
-			{
-				if ((this._DisplayOrder != value))
-				{
-					this.OnDisplayOrderChanging(value);
-					this.SendPropertyChanging();
-					this._DisplayOrder = value;
-					this.SendPropertyChanged("DisplayOrder");
-					this.OnDisplayOrderChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DisplayTextSummary", DbType="VarChar(50)")]
-		public string DisplayTextSummary
-		{
-			get
-			{
-				return this._DisplayTextSummary;
-			}
-			set
-			{
-				if ((this._DisplayTextSummary != value))
-				{
-					this.OnDisplayTextSummaryChanging(value);
-					this.SendPropertyChanging();
-					this._DisplayTextSummary = value;
-					this.SendPropertyChanged("DisplayTextSummary");
-					this.OnDisplayTextSummaryChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DisplayTextDetail", DbType="VarChar(50)")]
-		public string DisplayTextDetail
-		{
-			get
-			{
-				return this._DisplayTextDetail;
-			}
-			set
-			{
-				if ((this._DisplayTextDetail != value))
-				{
-					this.OnDisplayTextDetailChanging(value);
-					this.SendPropertyChanging();
-					this._DisplayTextDetail = value;
-					this.SendPropertyChanged("DisplayTextDetail");
-					this.OnDisplayTextDetailChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NameOnImport", DbType="VarChar(50)")]
-		public string NameOnImport
-		{
-			get
-			{
-				return this._NameOnImport;
-			}
-			set
-			{
-				if ((this._NameOnImport != value))
-				{
-					this.OnNameOnImportChanging(value);
-					this.SendPropertyChanging();
-					this._NameOnImport = value;
-					this.SendPropertyChanged("NameOnImport");
-					this.OnNameOnImportChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NameOnExport", DbType="VarChar(50)")]
-		public string NameOnExport
-		{
-			get
-			{
-				return this._NameOnExport;
-			}
-			set
-			{
-				if ((this._NameOnExport != value))
-				{
-					this.OnNameOnExportChanging(value);
-					this.SendPropertyChanging();
-					this._NameOnExport = value;
-					this.SendPropertyChanged("NameOnExport");
-					this.OnNameOnExportChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GraphTypeID", DbType="Int")]
-		public System.Nullable<int> GraphTypeID
-		{
-			get
-			{
-				return this._GraphTypeID;
-			}
-			set
-			{
-				if ((this._GraphTypeID != value))
-				{
-					this.OnGraphTypeIDChanging(value);
-					this.SendPropertyChanging();
-					this._GraphTypeID = value;
-					this.SendPropertyChanged("GraphTypeID");
-					this.OnGraphTypeIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ValidationOnWarning", DbType="NVarChar(4000)")]
-		public string ValidationOnWarning
-		{
-			get
-			{
-				return this._ValidationOnWarning;
-			}
-			set
-			{
-				if ((this._ValidationOnWarning != value))
-				{
-					this.OnValidationOnWarningChanging(value);
-					this.SendPropertyChanging();
-					this._ValidationOnWarning = value;
-					this.SendPropertyChanged("ValidationOnWarning");
-					this.OnValidationOnWarningChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ValidationOnEntry", DbType="NVarChar(4000)")]
-		public string ValidationOnEntry
-		{
-			get
-			{
-				return this._ValidationOnEntry;
-			}
-			set
-			{
-				if ((this._ValidationOnEntry != value))
-				{
-					this.OnValidationOnEntryChanging(value);
-					this.SendPropertyChanging();
-					this._ValidationOnEntry = value;
-					this.SendPropertyChanged("ValidationOnEntry");
-					this.OnValidationOnEntryChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsStandard", DbType="Bit NOT NULL")]
-		public bool IsStandard
-		{
-			get
-			{
-				return this._IsStandard;
-			}
-			set
-			{
-				if ((this._IsStandard != value))
-				{
-					this.OnIsStandardChanging(value);
-					this.SendPropertyChanging();
-					this._IsStandard = value;
-					this.SendPropertyChanged("IsStandard");
-					this.OnIsStandardChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateAdded", DbType="DateTime NOT NULL")]
-		public System.DateTime DateAdded
-		{
-			get
-			{
-				return this._DateAdded;
-			}
-			set
-			{
-				if ((this._DateAdded != value))
-				{
-					this.OnDateAddedChanging(value);
-					this.SendPropertyChanging();
-					this._DateAdded = value;
-					this.SendPropertyChanged("DateAdded");
-					this.OnDateAddedChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateUpdated", DbType="DateTime NOT NULL")]
-		public System.DateTime DateUpdated
-		{
-			get
-			{
-				return this._DateUpdated;
-			}
-			set
-			{
-				if ((this._DateUpdated != value))
-				{
-					this.OnDateUpdatedChanging(value);
-					this.SendPropertyChanging();
-					this._DateUpdated = value;
-					this.SendPropertyChanged("DateUpdated");
-					this.OnDateUpdatedChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DisplayName", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
-		public string DisplayName
-		{
-			get
-			{
-				return this._DisplayName;
-			}
-			set
-			{
-				if ((this._DisplayName != value))
-				{
-					this.OnDisplayNameChanging(value);
-					this.SendPropertyChanging();
-					this._DisplayName = value;
-					this.SendPropertyChanged("DisplayName");
-					this.OnDisplayNameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PositionOnImport", DbType="Int")]
-		public System.Nullable<int> PositionOnImport
-		{
-			get
-			{
-				return this._PositionOnImport;
-			}
-			set
-			{
-				if ((this._PositionOnImport != value))
-				{
-					this.OnPositionOnImportChanging(value);
-					this.SendPropertyChanging();
-					this._PositionOnImport = value;
-					this.SendPropertyChanged("PositionOnImport");
-					this.OnPositionOnImportChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Constant", DbType="VarChar(MAX)")]
-		public string Constant
-		{
-			get
-			{
-				return this._Constant;
-			}
-			set
-			{
-				if ((this._Constant != value))
-				{
-					this.OnConstantChanging(value);
-					this.SendPropertyChanging();
-					this._Constant = value;
-					this.SendPropertyChanged("Constant");
-					this.OnConstantChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Calculation", DbType="NVarChar(4000)")]
-		public string Calculation
-		{
-			get
-			{
-				return this._Calculation;
-			}
-			set
-			{
-				if ((this._Calculation != value))
-				{
-					this.OnCalculationChanging(value);
-					this.SendPropertyChanging();
-					this._Calculation = value;
-					this.SendPropertyChanged("Calculation");
-					this.OnCalculationChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowTotal", DbType="Bit NOT NULL")]
-		public bool ShowTotal
-		{
-			get
-			{
-				return this._ShowTotal;
-			}
-			set
-			{
-				if ((this._ShowTotal != value))
-				{
-					this.OnShowTotalChanging(value);
-					this.SendPropertyChanging();
-					this._ShowTotal = value;
-					this.SendPropertyChanged("ShowTotal");
-					this.OnShowTotalChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IgnoreSymbols", DbType="Bit NOT NULL")]
-		public bool IgnoreSymbols
-		{
-			get
-			{
-				return this._IgnoreSymbols;
-			}
-			set
-			{
-				if ((this._IgnoreSymbols != value))
-				{
-					this.OnIgnoreSymbolsChanging(value);
-					this.SendPropertyChanging();
-					this._IgnoreSymbols = value;
-					this.SendPropertyChanged("IgnoreSymbols");
-					this.OnIgnoreSymbolsChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Notes", DbType="NVarChar(MAX)")]
-		public string Notes
-		{
-			get
-			{
-				return this._Notes;
-			}
-			set
-			{
-				if ((this._Notes != value))
-				{
-					this.OnNotesChanging(value);
-					this.SendPropertyChanging();
-					this._Notes = value;
-					this.SendPropertyChanged("Notes");
-					this.OnNotesChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsRound", DbType="Bit NOT NULL")]
-		public bool IsRound
-		{
-			get
-			{
-				return this._IsRound;
-			}
-			set
-			{
-				if ((this._IsRound != value))
-				{
-					this.OnIsRoundChanging(value);
-					this.SendPropertyChanging();
-					this._IsRound = value;
-					this.SendPropertyChanged("IsRound");
-					this.OnIsRoundChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RoundNumber", DbType="Int NOT NULL")]
-		public int RoundNumber
-		{
-			get
-			{
-				return this._RoundNumber;
-			}
-			set
-			{
-				if ((this._RoundNumber != value))
-				{
-					this.OnRoundNumberChanging(value);
-					this.SendPropertyChanging();
-					this._RoundNumber = value;
-					this.SendPropertyChanged("RoundNumber");
-					this.OnRoundNumberChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CheckUnlikelyValue", DbType="Bit NOT NULL")]
-		public bool CheckUnlikelyValue
-		{
-			get
-			{
-				return this._CheckUnlikelyValue;
-			}
-			set
-			{
-				if ((this._CheckUnlikelyValue != value))
-				{
-					this.OnCheckUnlikelyValueChanging(value);
-					this.SendPropertyChanging();
-					this._CheckUnlikelyValue = value;
-					this.SendPropertyChanged("CheckUnlikelyValue");
-					this.OnCheckUnlikelyValueChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GraphLabel", DbType="VarChar(50)")]
-		public string GraphLabel
-		{
-			get
-			{
-				return this._GraphLabel;
-			}
-			set
-			{
-				if ((this._GraphLabel != value))
-				{
-					this.OnGraphLabelChanging(value);
-					this.SendPropertyChanging();
-					this._GraphLabel = value;
-					this.SendPropertyChanged("GraphLabel");
-					this.OnGraphLabelChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastUpdatedUserID", DbType="Int")]
-		public System.Nullable<int> LastUpdatedUserID
-		{
-			get
-			{
-				return this._LastUpdatedUserID;
-			}
-			set
-			{
-				if ((this._LastUpdatedUserID != value))
-				{
-					if (this._User.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnLastUpdatedUserIDChanging(value);
-					this.SendPropertyChanging();
-					this._LastUpdatedUserID = value;
-					this.SendPropertyChanged("LastUpdatedUserID");
-					this.OnLastUpdatedUserIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DropdownValues", DbType="VarChar(MAX)")]
-		public string DropdownValues
-		{
-			get
-			{
-				return this._DropdownValues;
-			}
-			set
-			{
-				if ((this._DropdownValues != value))
-				{
-					this.OnDropdownValuesChanging(value);
-					this.SendPropertyChanging();
-					this._DropdownValues = value;
-					this.SendPropertyChanged("DropdownValues");
-					this.OnDropdownValuesChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsMandatory", DbType="Bit NOT NULL")]
-		public bool IsMandatory
-		{
-			get
-			{
-				return this._IsMandatory;
-			}
-			set
-			{
-				if ((this._IsMandatory != value))
-				{
-					this.OnIsMandatoryChanging(value);
-					this.SendPropertyChanging();
-					this._IsMandatory = value;
-					this.SendPropertyChanged("IsMandatory");
-					this.OnIsMandatoryChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Alignment", DbType="VarChar(25)")]
-		public string Alignment
-		{
-			get
-			{
-				return this._Alignment;
-			}
-			set
-			{
-				if ((this._Alignment != value))
-				{
-					this.OnAlignmentChanging(value);
-					this.SendPropertyChanging();
-					this._Alignment = value;
-					this.SendPropertyChanged("Alignment");
-					this.OnAlignmentChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NumberType", DbType="Int")]
-		public System.Nullable<int> NumberType
-		{
-			get
-			{
-				return this._NumberType;
-			}
-			set
-			{
-				if ((this._NumberType != value))
-				{
-					this.OnNumberTypeChanging(value);
-					this.SendPropertyChanging();
-					this._NumberType = value;
-					this.SendPropertyChanged("NumberType");
-					this.OnNumberTypeChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DefaultValue", DbType="VarChar(MAX)")]
-		public string DefaultValue
-		{
-			get
-			{
-				return this._DefaultValue;
-			}
-			set
-			{
-				if ((this._DefaultValue != value))
-				{
-					this.OnDefaultValueChanging(value);
-					this.SendPropertyChanging();
-					this._DefaultValue = value;
-					this.SendPropertyChanged("DefaultValue");
-					this.OnDefaultValueChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AvgColumnID", DbType="Int")]
-		public System.Nullable<int> AvgColumnID
-		{
-			get
-			{
-				return this._AvgColumnID;
-			}
-			set
-			{
-				if ((this._AvgColumnID != value))
-				{
-					if (this._Column1.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnAvgColumnIDChanging(value);
-					this.SendPropertyChanging();
-					this._AvgColumnID = value;
-					this.SendPropertyChanged("AvgColumnID");
-					this.OnAvgColumnIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AvgNumberOfRecords", DbType="Int")]
-		public System.Nullable<int> AvgNumberOfRecords
-		{
-			get
-			{
-				return this._AvgNumberOfRecords;
-			}
-			set
-			{
-				if ((this._AvgNumberOfRecords != value))
-				{
-					this.OnAvgNumberOfRecordsChanging(value);
-					this.SendPropertyChanging();
-					this._AvgNumberOfRecords = value;
-					this.SendPropertyChanged("AvgNumberOfRecords");
-					this.OnAvgNumberOfRecordsChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MobileName", DbType="VarChar(50)")]
-		public string MobileName
-		{
-			get
-			{
-				return this._MobileName;
-			}
-			set
-			{
-				if ((this._MobileName != value))
-				{
-					this.OnMobileNameChanging(value);
-					this.SendPropertyChanging();
-					this._MobileName = value;
-					this.SendPropertyChanged("MobileName");
-					this.OnMobileNameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsDateSingleColumn", DbType="Bit NOT NULL")]
-		public bool IsDateSingleColumn
-		{
-			get
-			{
-				return this._IsDateSingleColumn;
-			}
-			set
-			{
-				if ((this._IsDateSingleColumn != value))
-				{
-					this.OnIsDateSingleColumnChanging(value);
-					this.SendPropertyChanging();
-					this._IsDateSingleColumn = value;
-					this.SendPropertyChanged("IsDateSingleColumn");
-					this.OnIsDateSingleColumnChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowGraphExceedance", DbType="Decimal(18,10)")]
-		public System.Nullable<decimal> ShowGraphExceedance
-		{
-			get
-			{
-				return this._ShowGraphExceedance;
-			}
-			set
-			{
-				if ((this._ShowGraphExceedance != value))
-				{
-					this.OnShowGraphExceedanceChanging(value);
-					this.SendPropertyChanging();
-					this._ShowGraphExceedance = value;
-					this.SendPropertyChanged("ShowGraphExceedance");
-					this.OnShowGraphExceedanceChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowGraphWarning", DbType="Decimal(18,10)")]
-		public System.Nullable<decimal> ShowGraphWarning
-		{
-			get
-			{
-				return this._ShowGraphWarning;
-			}
-			set
-			{
-				if ((this._ShowGraphWarning != value))
-				{
-					this.OnShowGraphWarningChanging(value);
-					this.SendPropertyChanging();
-					this._ShowGraphWarning = value;
-					this.SendPropertyChanged("ShowGraphWarning");
-					this.OnShowGraphWarningChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FlatLineNumber", DbType="Int")]
-		public System.Nullable<int> FlatLineNumber
-		{
-			get
-			{
-				return this._FlatLineNumber;
-			}
-			set
-			{
-				if ((this._FlatLineNumber != value))
-				{
-					this.OnFlatLineNumberChanging(value);
-					this.SendPropertyChanging();
-					this._FlatLineNumber = value;
-					this.SendPropertyChanged("FlatLineNumber");
-					this.OnFlatLineNumberChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MaxValueAt", DbType="Decimal(18,10)")]
-		public System.Nullable<decimal> MaxValueAt
-		{
-			get
-			{
-				return this._MaxValueAt;
-			}
-			set
-			{
-				if ((this._MaxValueAt != value))
-				{
-					this.OnMaxValueAtChanging(value);
-					this.SendPropertyChanging();
-					this._MaxValueAt = value;
-					this.SendPropertyChanged("MaxValueAt");
-					this.OnMaxValueAtChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TextWidth", DbType="Int")]
-		public System.Nullable<int> TextWidth
-		{
-			get
-			{
-				return this._TextWidth;
-			}
-			set
-			{
-				if ((this._TextWidth != value))
-				{
-					this.OnTextWidthChanging(value);
-					this.SendPropertyChanging();
-					this._TextWidth = value;
-					this.SendPropertyChanged("TextWidth");
-					this.OnTextWidthChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TextHeight", DbType="Int")]
-		public System.Nullable<int> TextHeight
-		{
-			get
-			{
-				return this._TextHeight;
-			}
-			set
-			{
-				if ((this._TextHeight != value))
-				{
-					this.OnTextHeightChanging(value);
-					this.SendPropertyChanging();
-					this._TextHeight = value;
-					this.SendPropertyChanged("TextHeight");
-					this.OnTextHeightChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ColumnType", DbType="VarChar(15) NOT NULL", CanBeNull=false)]
-		public string ColumnType
-		{
-			get
-			{
-				return this._ColumnType;
-			}
-			set
-			{
-				if ((this._ColumnType != value))
-				{
-					this.OnColumnTypeChanging(value);
-					this.SendPropertyChanging();
-					this._ColumnType = value;
-					this.SendPropertyChanged("ColumnType");
-					this.OnColumnTypeChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DropDownType", DbType="VarChar(15)")]
-		public string DropDownType
-		{
-			get
-			{
-				return this._DropDownType;
-			}
-			set
-			{
-				if ((this._DropDownType != value))
-				{
-					this.OnDropDownTypeChanging(value);
-					this.SendPropertyChanging();
-					this._DropDownType = value;
-					this.SendPropertyChanged("DropDownType");
-					this.OnDropDownTypeChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TableTableID", DbType="Int")]
-		public System.Nullable<int> TableTableID
-		{
-			get
-			{
-				return this._TableTableID;
-			}
-			set
-			{
-				if ((this._TableTableID != value))
-				{
-					this.OnTableTableIDChanging(value);
-					this.SendPropertyChanging();
-					this._TableTableID = value;
-					this.SendPropertyChanged("TableTableID");
-					this.OnTableTableIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DisplayColumn", DbType="VarChar(MAX)")]
-		public string DisplayColumn
-		{
-			get
-			{
-				return this._DisplayColumn;
-			}
-			set
-			{
-				if ((this._DisplayColumn != value))
-				{
-					this.OnDisplayColumnChanging(value);
-					this.SendPropertyChanging();
-					this._DisplayColumn = value;
-					this.SendPropertyChanged("DisplayColumn");
-					this.OnDisplayColumnChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DisplayRight", DbType="Bit NOT NULL")]
-		public bool DisplayRight
-		{
-			get
-			{
-				return this._DisplayRight;
-			}
-			set
-			{
-				if ((this._DisplayRight != value))
-				{
-					this.OnDisplayRightChanging(value);
-					this.SendPropertyChanging();
-					this._DisplayRight = value;
-					this.SendPropertyChanged("DisplayRight");
-					this.OnDisplayRightChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Column", Storage="_Columns", ThisKey="ColumnID", OtherKey="AvgColumnID")]
-		public EntitySet<Column> Columns
-		{
-			get
-			{
-				return this._Columns;
-			}
-			set
-			{
-				this._Columns.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Column", Storage="_Column1", ThisKey="AvgColumnID", OtherKey="ColumnID", IsForeignKey=true)]
-		public Column Column1
-		{
-			get
-			{
-				return this._Column1.Entity;
-			}
-			set
-			{
-				Column previousValue = this._Column1.Entity;
-				if (((previousValue != value) 
-							|| (this._Column1.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Column1.Entity = null;
-						previousValue.Columns.Remove(this);
-					}
-					this._Column1.Entity = value;
-					if ((value != null))
-					{
-						value.Columns.Add(this);
-						this._AvgColumnID = value.ColumnID;
-					}
-					else
-					{
-						this._AvgColumnID = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("Column1");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Column", Storage="_User", ThisKey="LastUpdatedUserID", OtherKey="UserID", IsForeignKey=true)]
-		public User User
-		{
-			get
-			{
-				return this._User.Entity;
-			}
-			set
-			{
-				User previousValue = this._User.Entity;
-				if (((previousValue != value) 
-							|| (this._User.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._User.Entity = null;
-						previousValue.Columns.Remove(this);
-					}
-					this._User.Entity = value;
-					if ((value != null))
-					{
-						value.Columns.Add(this);
-						this._LastUpdatedUserID = value.UserID;
-					}
-					else
-					{
-						this._LastUpdatedUserID = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("User");
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Table_Column", Storage="_Table", ThisKey="TableID", OtherKey="TableID", IsForeignKey=true)]
-		public Table Table
-		{
-			get
-			{
-				return this._Table.Entity;
-			}
-			set
-			{
-				Table previousValue = this._Table.Entity;
-				if (((previousValue != value) 
-							|| (this._Table.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Table.Entity = null;
-						previousValue.Columns.Remove(this);
-					}
-					this._Table.Entity = value;
-					if ((value != null))
-					{
-						value.Columns.Add(this);
-						this._TableID = value.TableID;
-					}
-					else
-					{
-						this._TableID = default(int);
-					}
-					this.SendPropertyChanged("Table");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_Columns(Column entity)
-		{
-			this.SendPropertyChanging();
-			entity.Column1 = this;
-		}
-		
-		private void detach_Columns(Column entity)
-		{
-			this.SendPropertyChanging();
-			entity.Column1 = null;
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Table")]
 	public partial class Table : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -2764,9 +1471,11 @@ namespace DocGen.DAL
 		
 		private string _DateFormat;
 		
+		private EntitySet<Document> _Documents;
+		
 		private EntitySet<Column> _Columns;
 		
-		private EntitySet<Document> _Documents;
+		private EntitySet<Column> _Columns1;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -2808,8 +1517,9 @@ namespace DocGen.DAL
 		
 		public Table()
 		{
-			this._Columns = new EntitySet<Column>(new Action<Column>(this.attach_Columns), new Action<Column>(this.detach_Columns));
 			this._Documents = new EntitySet<Document>(new Action<Document>(this.attach_Documents), new Action<Document>(this.detach_Documents));
+			this._Columns = new EntitySet<Column>(new Action<Column>(this.attach_Columns), new Action<Column>(this.detach_Columns));
+			this._Columns1 = new EntitySet<Column>(new Action<Column>(this.attach_Columns1), new Action<Column>(this.detach_Columns1));
 			OnCreated();
 		}
 		
@@ -3133,6 +1843,19 @@ namespace DocGen.DAL
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Table_Document", Storage="_Documents", ThisKey="TableID", OtherKey="TableID")]
+		public EntitySet<Document> Documents
+		{
+			get
+			{
+				return this._Documents;
+			}
+			set
+			{
+				this._Documents.Assign(value);
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Table_Column", Storage="_Columns", ThisKey="TableID", OtherKey="TableID")]
 		public EntitySet<Column> Columns
 		{
@@ -3146,16 +1869,16 @@ namespace DocGen.DAL
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Table_Document", Storage="_Documents", ThisKey="TableID", OtherKey="TableID")]
-		public EntitySet<Document> Documents
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Table_Column1", Storage="_Columns1", ThisKey="TableID", OtherKey="DefaultRelatedTableID")]
+		public EntitySet<Column> Columns1
 		{
 			get
 			{
-				return this._Documents;
+				return this._Columns1;
 			}
 			set
 			{
-				this._Documents.Assign(value);
+				this._Columns1.Assign(value);
 			}
 		}
 		
@@ -3179,6 +1902,18 @@ namespace DocGen.DAL
 			}
 		}
 		
+		private void attach_Documents(Document entity)
+		{
+			this.SendPropertyChanging();
+			entity.Table = this;
+		}
+		
+		private void detach_Documents(Document entity)
+		{
+			this.SendPropertyChanging();
+			entity.Table = null;
+		}
+		
 		private void attach_Columns(Column entity)
 		{
 			this.SendPropertyChanging();
@@ -3191,16 +1926,16 @@ namespace DocGen.DAL
 			entity.Table = null;
 		}
 		
-		private void attach_Documents(Document entity)
+		private void attach_Columns1(Column entity)
 		{
 			this.SendPropertyChanging();
-			entity.Table = this;
+			entity.Table1 = this;
 		}
 		
-		private void detach_Documents(Document entity)
+		private void detach_Columns1(Column entity)
 		{
 			this.SendPropertyChanging();
-			entity.Table = null;
+			entity.Table1 = null;
 		}
 	}
 	
@@ -3813,7 +2548,7 @@ namespace DocGen.DAL
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Photo", DbType="Image", UpdateCheck=UpdateCheck.Never)]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Photo", DbType="Image", CanBeNull=true, UpdateCheck=UpdateCheck.Never)]
 		public System.Data.Linq.Binary Photo
 		{
 			get
@@ -4721,6 +3456,2972 @@ namespace DocGen.DAL
 		{
 			this.SendPropertyChanging();
 			entity.Document = null;
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.[Column]")]
+	public partial class Column : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _ColumnID;
+		
+		private int _TableID;
+		
+		private string _SystemName;
+		
+		private string _DisplayName;
+		
+		private string _DisplayTextSummary;
+		
+		private string _DisplayTextDetail;
+		
+		private string _NameOnImport;
+		
+		private string _NameOnExport;
+		
+		private string _MobileName;
+		
+		private System.Nullable<int> _DisplayOrder;
+		
+		private bool _DisplayRight;
+		
+		private string _Alignment;
+		
+		private System.Nullable<int> _TextWidth;
+		
+		private System.Nullable<int> _TextHeight;
+		
+		private bool _IsStandard;
+		
+		private System.Nullable<int> _GraphTypeID;
+		
+		private string _GraphLabel;
+		
+		private string _ValidationOnWarning;
+		
+		private string _ValidationOnEntry;
+		
+		private bool _CheckUnlikelyValue;
+		
+		private System.Nullable<int> _PositionOnImport;
+		
+		private string _Constant;
+		
+		private string _Calculation;
+		
+		private bool _ShowTotal;
+		
+		private bool _IgnoreSymbols;
+		
+		private bool _IsRound;
+		
+		private int _RoundNumber;
+		
+		private string _Notes;
+		
+		private string _DropdownValues;
+		
+		private System.Nullable<int> _NumberType;
+		
+		private string _DefaultValue;
+		
+		private System.Nullable<int> _AvgColumnID;
+		
+		private System.Nullable<int> _AvgNumberOfRecords;
+		
+		private bool _IsDateSingleColumn;
+		
+		private System.Nullable<decimal> _ShowGraphExceedance;
+		
+		private System.Nullable<decimal> _ShowGraphWarning;
+		
+		private System.Nullable<int> _FlatLineNumber;
+		
+		private System.Nullable<decimal> _MaxValueAt;
+		
+		private string _ColumnType;
+		
+		private string _DropDownType;
+		
+		private System.Nullable<int> _TableTableID;
+		
+		private string _DisplayColumn;
+		
+		private string _SummaryCellBackColor;
+		
+		private System.Nullable<int> _FormVerticalPosition;
+		
+		private System.Nullable<int> _FormHorizontalPosition;
+		
+		private System.Nullable<int> _ParentColumnID;
+		
+		private string _TextType;
+		
+		private string _RegEx;
+		
+		private System.Nullable<int> _HideColumnID;
+		
+		private string _HideColumnValue;
+		
+		private string _DateCalculationType;
+		
+		private System.Nullable<int> _OnlyForAdmin;
+		
+		private bool _IsSystemColumn;
+		
+		private System.Nullable<int> _LinkedParentColumnID;
+		
+		private System.Nullable<int> _DataRetrieverID;
+		
+		private System.Nullable<bool> _VerticalList;
+		
+		private System.Nullable<bool> _SummarySearch;
+		
+		private System.Nullable<bool> _QuickAddLink;
+		
+		private string _HideOperator;
+		
+		private System.Nullable<bool> _CalculationIsActive;
+		
+		private System.DateTime _DateAdded;
+		
+		private System.DateTime _DateUpdated;
+		
+		private System.Nullable<int> _LastUpdatedUserID;
+		
+		private System.Nullable<int> _TableTabID;
+		
+		private string _ViewName;
+		
+		private string _SPDefaultValue;
+		
+		private string _DefaultType;
+		
+		private System.Nullable<int> _DefaultColumnID;
+		
+		private string _ShowViewLink;
+		
+		private System.Nullable<int> _FilterParentColumnID;
+		
+		private System.Nullable<int> _FilterOtherColumnID;
+		
+		private string _FilterValue;
+		
+		private System.Nullable<int> _MapPinHoverColumnID;
+		
+		private System.Nullable<int> _CompareColumnID;
+		
+		private string _CompareOperator;
+		
+		private string _MapPopup;
+		
+		private System.Nullable<int> _TrafficLightColumnID;
+		
+		private string _TrafficLightValues;
+		
+		private System.Nullable<int> _DefaultRelatedTableID;
+		
+		private System.Nullable<bool> _DefaultUpdateValues;
+		
+		private System.Nullable<bool> _ValidationCanIgnore;
+		
+		private System.Nullable<int> _DefaultGraphDefinitionID;
+		
+		private System.Nullable<bool> _ImageOnSummary;
+		
+		private System.Nullable<bool> _AllowCopy;
+		
+		private string _ValidationOnExceedance;
+		
+		private System.Nullable<bool> _ColourCells;
+		
+		private System.Nullable<int> _OldJoinColumn;
+		
+		private System.Nullable<int> _NewJoinColumn;
+		
+		private string _ButtonInfo;
+		
+		private string _FilterOperator;
+		
+		private System.Nullable<char> _Importance;
+		
+		private EntitySet<Column> _Columns;
+		
+		private EntitySet<Column> _Columns1;
+		
+		private EntitySet<Column> _Columns2;
+		
+		private EntitySet<Column> _Columns3;
+		
+		private EntitySet<Column> _Columns4;
+		
+		private EntitySet<Column> _Columns5;
+		
+		private EntitySet<Column> _Columns6;
+		
+		private EntitySet<Column> _Columns7;
+		
+		private EntitySet<Column> _Columns8;
+		
+		private EntityRef<Column> _Column1;
+		
+		private EntityRef<Column> _Column2;
+		
+		private EntityRef<Column> _Column3;
+		
+		private EntityRef<Column> _Column4;
+		
+		private EntityRef<Column> _Column5;
+		
+		private EntityRef<Column> _Column6;
+		
+		private EntityRef<Column> _Column7;
+		
+		private EntityRef<Column> _Column8;
+		
+		private EntityRef<Column> _Column9;
+		
+		private EntityRef<Table> _Table;
+		
+		private EntityRef<Table> _Table1;
+		
+		private EntityRef<User> _User;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnColumnIDChanging(int value);
+    partial void OnColumnIDChanged();
+    partial void OnTableIDChanging(int value);
+    partial void OnTableIDChanged();
+    partial void OnSystemNameChanging(string value);
+    partial void OnSystemNameChanged();
+    partial void OnDisplayNameChanging(string value);
+    partial void OnDisplayNameChanged();
+    partial void OnDisplayTextSummaryChanging(string value);
+    partial void OnDisplayTextSummaryChanged();
+    partial void OnDisplayTextDetailChanging(string value);
+    partial void OnDisplayTextDetailChanged();
+    partial void OnNameOnImportChanging(string value);
+    partial void OnNameOnImportChanged();
+    partial void OnNameOnExportChanging(string value);
+    partial void OnNameOnExportChanged();
+    partial void OnMobileNameChanging(string value);
+    partial void OnMobileNameChanged();
+    partial void OnDisplayOrderChanging(System.Nullable<int> value);
+    partial void OnDisplayOrderChanged();
+    partial void OnDisplayRightChanging(bool value);
+    partial void OnDisplayRightChanged();
+    partial void OnAlignmentChanging(string value);
+    partial void OnAlignmentChanged();
+    partial void OnTextWidthChanging(System.Nullable<int> value);
+    partial void OnTextWidthChanged();
+    partial void OnTextHeightChanging(System.Nullable<int> value);
+    partial void OnTextHeightChanged();
+    partial void OnIsStandardChanging(bool value);
+    partial void OnIsStandardChanged();
+    partial void OnGraphTypeIDChanging(System.Nullable<int> value);
+    partial void OnGraphTypeIDChanged();
+    partial void OnGraphLabelChanging(string value);
+    partial void OnGraphLabelChanged();
+    partial void OnValidationOnWarningChanging(string value);
+    partial void OnValidationOnWarningChanged();
+    partial void OnValidationOnEntryChanging(string value);
+    partial void OnValidationOnEntryChanged();
+    partial void OnCheckUnlikelyValueChanging(bool value);
+    partial void OnCheckUnlikelyValueChanged();
+    partial void OnPositionOnImportChanging(System.Nullable<int> value);
+    partial void OnPositionOnImportChanged();
+    partial void OnConstantChanging(string value);
+    partial void OnConstantChanged();
+    partial void OnCalculationChanging(string value);
+    partial void OnCalculationChanged();
+    partial void OnShowTotalChanging(bool value);
+    partial void OnShowTotalChanged();
+    partial void OnIgnoreSymbolsChanging(bool value);
+    partial void OnIgnoreSymbolsChanged();
+    partial void OnIsRoundChanging(bool value);
+    partial void OnIsRoundChanged();
+    partial void OnRoundNumberChanging(int value);
+    partial void OnRoundNumberChanged();
+    partial void OnNotesChanging(string value);
+    partial void OnNotesChanged();
+    partial void OnDropdownValuesChanging(string value);
+    partial void OnDropdownValuesChanged();
+    partial void OnNumberTypeChanging(System.Nullable<int> value);
+    partial void OnNumberTypeChanged();
+    partial void OnDefaultValueChanging(string value);
+    partial void OnDefaultValueChanged();
+    partial void OnAvgColumnIDChanging(System.Nullable<int> value);
+    partial void OnAvgColumnIDChanged();
+    partial void OnAvgNumberOfRecordsChanging(System.Nullable<int> value);
+    partial void OnAvgNumberOfRecordsChanged();
+    partial void OnIsDateSingleColumnChanging(bool value);
+    partial void OnIsDateSingleColumnChanged();
+    partial void OnShowGraphExceedanceChanging(System.Nullable<decimal> value);
+    partial void OnShowGraphExceedanceChanged();
+    partial void OnShowGraphWarningChanging(System.Nullable<decimal> value);
+    partial void OnShowGraphWarningChanged();
+    partial void OnFlatLineNumberChanging(System.Nullable<int> value);
+    partial void OnFlatLineNumberChanged();
+    partial void OnMaxValueAtChanging(System.Nullable<decimal> value);
+    partial void OnMaxValueAtChanged();
+    partial void OnColumnTypeChanging(string value);
+    partial void OnColumnTypeChanged();
+    partial void OnDropDownTypeChanging(string value);
+    partial void OnDropDownTypeChanged();
+    partial void OnTableTableIDChanging(System.Nullable<int> value);
+    partial void OnTableTableIDChanged();
+    partial void OnDisplayColumnChanging(string value);
+    partial void OnDisplayColumnChanged();
+    partial void OnSummaryCellBackColorChanging(string value);
+    partial void OnSummaryCellBackColorChanged();
+    partial void OnFormVerticalPositionChanging(System.Nullable<int> value);
+    partial void OnFormVerticalPositionChanged();
+    partial void OnFormHorizontalPositionChanging(System.Nullable<int> value);
+    partial void OnFormHorizontalPositionChanged();
+    partial void OnParentColumnIDChanging(System.Nullable<int> value);
+    partial void OnParentColumnIDChanged();
+    partial void OnTextTypeChanging(string value);
+    partial void OnTextTypeChanged();
+    partial void OnRegExChanging(string value);
+    partial void OnRegExChanged();
+    partial void OnHideColumnIDChanging(System.Nullable<int> value);
+    partial void OnHideColumnIDChanged();
+    partial void OnHideColumnValueChanging(string value);
+    partial void OnHideColumnValueChanged();
+    partial void OnDateCalculationTypeChanging(string value);
+    partial void OnDateCalculationTypeChanged();
+    partial void OnOnlyForAdminChanging(System.Nullable<int> value);
+    partial void OnOnlyForAdminChanged();
+    partial void OnIsSystemColumnChanging(bool value);
+    partial void OnIsSystemColumnChanged();
+    partial void OnLinkedParentColumnIDChanging(System.Nullable<int> value);
+    partial void OnLinkedParentColumnIDChanged();
+    partial void OnDataRetrieverIDChanging(System.Nullable<int> value);
+    partial void OnDataRetrieverIDChanged();
+    partial void OnVerticalListChanging(System.Nullable<bool> value);
+    partial void OnVerticalListChanged();
+    partial void OnSummarySearchChanging(System.Nullable<bool> value);
+    partial void OnSummarySearchChanged();
+    partial void OnQuickAddLinkChanging(System.Nullable<bool> value);
+    partial void OnQuickAddLinkChanged();
+    partial void OnHideOperatorChanging(string value);
+    partial void OnHideOperatorChanged();
+    partial void OnCalculationIsActiveChanging(System.Nullable<bool> value);
+    partial void OnCalculationIsActiveChanged();
+    partial void OnDateAddedChanging(System.DateTime value);
+    partial void OnDateAddedChanged();
+    partial void OnDateUpdatedChanging(System.DateTime value);
+    partial void OnDateUpdatedChanged();
+    partial void OnLastUpdatedUserIDChanging(System.Nullable<int> value);
+    partial void OnLastUpdatedUserIDChanged();
+    partial void OnTableTabIDChanging(System.Nullable<int> value);
+    partial void OnTableTabIDChanged();
+    partial void OnViewNameChanging(string value);
+    partial void OnViewNameChanged();
+    partial void OnSPDefaultValueChanging(string value);
+    partial void OnSPDefaultValueChanged();
+    partial void OnDefaultTypeChanging(string value);
+    partial void OnDefaultTypeChanged();
+    partial void OnDefaultColumnIDChanging(System.Nullable<int> value);
+    partial void OnDefaultColumnIDChanged();
+    partial void OnShowViewLinkChanging(string value);
+    partial void OnShowViewLinkChanged();
+    partial void OnFilterParentColumnIDChanging(System.Nullable<int> value);
+    partial void OnFilterParentColumnIDChanged();
+    partial void OnFilterOtherColumnIDChanging(System.Nullable<int> value);
+    partial void OnFilterOtherColumnIDChanged();
+    partial void OnFilterValueChanging(string value);
+    partial void OnFilterValueChanged();
+    partial void OnMapPinHoverColumnIDChanging(System.Nullable<int> value);
+    partial void OnMapPinHoverColumnIDChanged();
+    partial void OnCompareColumnIDChanging(System.Nullable<int> value);
+    partial void OnCompareColumnIDChanged();
+    partial void OnCompareOperatorChanging(string value);
+    partial void OnCompareOperatorChanged();
+    partial void OnMapPopupChanging(string value);
+    partial void OnMapPopupChanged();
+    partial void OnTrafficLightColumnIDChanging(System.Nullable<int> value);
+    partial void OnTrafficLightColumnIDChanged();
+    partial void OnTrafficLightValuesChanging(string value);
+    partial void OnTrafficLightValuesChanged();
+    partial void OnDefaultRelatedTableIDChanging(System.Nullable<int> value);
+    partial void OnDefaultRelatedTableIDChanged();
+    partial void OnDefaultUpdateValuesChanging(System.Nullable<bool> value);
+    partial void OnDefaultUpdateValuesChanged();
+    partial void OnValidationCanIgnoreChanging(System.Nullable<bool> value);
+    partial void OnValidationCanIgnoreChanged();
+    partial void OnDefaultGraphDefinitionIDChanging(System.Nullable<int> value);
+    partial void OnDefaultGraphDefinitionIDChanged();
+    partial void OnImageOnSummaryChanging(System.Nullable<bool> value);
+    partial void OnImageOnSummaryChanged();
+    partial void OnAllowCopyChanging(System.Nullable<bool> value);
+    partial void OnAllowCopyChanged();
+    partial void OnValidationOnExceedanceChanging(string value);
+    partial void OnValidationOnExceedanceChanged();
+    partial void OnColourCellsChanging(System.Nullable<bool> value);
+    partial void OnColourCellsChanged();
+    partial void OnOldJoinColumnChanging(System.Nullable<int> value);
+    partial void OnOldJoinColumnChanged();
+    partial void OnNewJoinColumnChanging(System.Nullable<int> value);
+    partial void OnNewJoinColumnChanged();
+    partial void OnButtonInfoChanging(string value);
+    partial void OnButtonInfoChanged();
+    partial void OnFilterOperatorChanging(string value);
+    partial void OnFilterOperatorChanged();
+    partial void OnImportanceChanging(System.Nullable<char> value);
+    partial void OnImportanceChanged();
+    #endregion
+		
+		public Column()
+		{
+			this._Columns = new EntitySet<Column>(new Action<Column>(this.attach_Columns), new Action<Column>(this.detach_Columns));
+			this._Columns1 = new EntitySet<Column>(new Action<Column>(this.attach_Columns1), new Action<Column>(this.detach_Columns1));
+			this._Columns2 = new EntitySet<Column>(new Action<Column>(this.attach_Columns2), new Action<Column>(this.detach_Columns2));
+			this._Columns3 = new EntitySet<Column>(new Action<Column>(this.attach_Columns3), new Action<Column>(this.detach_Columns3));
+			this._Columns4 = new EntitySet<Column>(new Action<Column>(this.attach_Columns4), new Action<Column>(this.detach_Columns4));
+			this._Columns5 = new EntitySet<Column>(new Action<Column>(this.attach_Columns5), new Action<Column>(this.detach_Columns5));
+			this._Columns6 = new EntitySet<Column>(new Action<Column>(this.attach_Columns6), new Action<Column>(this.detach_Columns6));
+			this._Columns7 = new EntitySet<Column>(new Action<Column>(this.attach_Columns7), new Action<Column>(this.detach_Columns7));
+			this._Columns8 = new EntitySet<Column>(new Action<Column>(this.attach_Columns8), new Action<Column>(this.detach_Columns8));
+			this._Column1 = default(EntityRef<Column>);
+			this._Column2 = default(EntityRef<Column>);
+			this._Column3 = default(EntityRef<Column>);
+			this._Column4 = default(EntityRef<Column>);
+			this._Column5 = default(EntityRef<Column>);
+			this._Column6 = default(EntityRef<Column>);
+			this._Column7 = default(EntityRef<Column>);
+			this._Column8 = default(EntityRef<Column>);
+			this._Column9 = default(EntityRef<Column>);
+			this._Table = default(EntityRef<Table>);
+			this._Table1 = default(EntityRef<Table>);
+			this._User = default(EntityRef<User>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ColumnID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int ColumnID
+		{
+			get
+			{
+				return this._ColumnID;
+			}
+			set
+			{
+				if ((this._ColumnID != value))
+				{
+					this.OnColumnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ColumnID = value;
+					this.SendPropertyChanged("ColumnID");
+					this.OnColumnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TableID", DbType="Int NOT NULL")]
+		public int TableID
+		{
+			get
+			{
+				return this._TableID;
+			}
+			set
+			{
+				if ((this._TableID != value))
+				{
+					if (this._Table.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnTableIDChanging(value);
+					this.SendPropertyChanging();
+					this._TableID = value;
+					this.SendPropertyChanged("TableID");
+					this.OnTableIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SystemName", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string SystemName
+		{
+			get
+			{
+				return this._SystemName;
+			}
+			set
+			{
+				if ((this._SystemName != value))
+				{
+					this.OnSystemNameChanging(value);
+					this.SendPropertyChanging();
+					this._SystemName = value;
+					this.SendPropertyChanged("SystemName");
+					this.OnSystemNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DisplayName", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
+		public string DisplayName
+		{
+			get
+			{
+				return this._DisplayName;
+			}
+			set
+			{
+				if ((this._DisplayName != value))
+				{
+					this.OnDisplayNameChanging(value);
+					this.SendPropertyChanging();
+					this._DisplayName = value;
+					this.SendPropertyChanged("DisplayName");
+					this.OnDisplayNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DisplayTextSummary", DbType="VarChar(50)")]
+		public string DisplayTextSummary
+		{
+			get
+			{
+				return this._DisplayTextSummary;
+			}
+			set
+			{
+				if ((this._DisplayTextSummary != value))
+				{
+					this.OnDisplayTextSummaryChanging(value);
+					this.SendPropertyChanging();
+					this._DisplayTextSummary = value;
+					this.SendPropertyChanged("DisplayTextSummary");
+					this.OnDisplayTextSummaryChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DisplayTextDetail", DbType="VarChar(255)")]
+		public string DisplayTextDetail
+		{
+			get
+			{
+				return this._DisplayTextDetail;
+			}
+			set
+			{
+				if ((this._DisplayTextDetail != value))
+				{
+					this.OnDisplayTextDetailChanging(value);
+					this.SendPropertyChanging();
+					this._DisplayTextDetail = value;
+					this.SendPropertyChanged("DisplayTextDetail");
+					this.OnDisplayTextDetailChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NameOnImport", DbType="VarChar(50)")]
+		public string NameOnImport
+		{
+			get
+			{
+				return this._NameOnImport;
+			}
+			set
+			{
+				if ((this._NameOnImport != value))
+				{
+					this.OnNameOnImportChanging(value);
+					this.SendPropertyChanging();
+					this._NameOnImport = value;
+					this.SendPropertyChanged("NameOnImport");
+					this.OnNameOnImportChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NameOnExport", DbType="VarChar(50)")]
+		public string NameOnExport
+		{
+			get
+			{
+				return this._NameOnExport;
+			}
+			set
+			{
+				if ((this._NameOnExport != value))
+				{
+					this.OnNameOnExportChanging(value);
+					this.SendPropertyChanging();
+					this._NameOnExport = value;
+					this.SendPropertyChanged("NameOnExport");
+					this.OnNameOnExportChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MobileName", DbType="VarChar(50)")]
+		public string MobileName
+		{
+			get
+			{
+				return this._MobileName;
+			}
+			set
+			{
+				if ((this._MobileName != value))
+				{
+					this.OnMobileNameChanging(value);
+					this.SendPropertyChanging();
+					this._MobileName = value;
+					this.SendPropertyChanged("MobileName");
+					this.OnMobileNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DisplayOrder", DbType="Int")]
+		public System.Nullable<int> DisplayOrder
+		{
+			get
+			{
+				return this._DisplayOrder;
+			}
+			set
+			{
+				if ((this._DisplayOrder != value))
+				{
+					this.OnDisplayOrderChanging(value);
+					this.SendPropertyChanging();
+					this._DisplayOrder = value;
+					this.SendPropertyChanged("DisplayOrder");
+					this.OnDisplayOrderChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DisplayRight", DbType="Bit NOT NULL")]
+		public bool DisplayRight
+		{
+			get
+			{
+				return this._DisplayRight;
+			}
+			set
+			{
+				if ((this._DisplayRight != value))
+				{
+					this.OnDisplayRightChanging(value);
+					this.SendPropertyChanging();
+					this._DisplayRight = value;
+					this.SendPropertyChanged("DisplayRight");
+					this.OnDisplayRightChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Alignment", DbType="VarChar(25)")]
+		public string Alignment
+		{
+			get
+			{
+				return this._Alignment;
+			}
+			set
+			{
+				if ((this._Alignment != value))
+				{
+					this.OnAlignmentChanging(value);
+					this.SendPropertyChanging();
+					this._Alignment = value;
+					this.SendPropertyChanged("Alignment");
+					this.OnAlignmentChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TextWidth", DbType="Int")]
+		public System.Nullable<int> TextWidth
+		{
+			get
+			{
+				return this._TextWidth;
+			}
+			set
+			{
+				if ((this._TextWidth != value))
+				{
+					this.OnTextWidthChanging(value);
+					this.SendPropertyChanging();
+					this._TextWidth = value;
+					this.SendPropertyChanged("TextWidth");
+					this.OnTextWidthChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TextHeight", DbType="Int")]
+		public System.Nullable<int> TextHeight
+		{
+			get
+			{
+				return this._TextHeight;
+			}
+			set
+			{
+				if ((this._TextHeight != value))
+				{
+					this.OnTextHeightChanging(value);
+					this.SendPropertyChanging();
+					this._TextHeight = value;
+					this.SendPropertyChanged("TextHeight");
+					this.OnTextHeightChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsStandard", DbType="Bit NOT NULL")]
+		public bool IsStandard
+		{
+			get
+			{
+				return this._IsStandard;
+			}
+			set
+			{
+				if ((this._IsStandard != value))
+				{
+					this.OnIsStandardChanging(value);
+					this.SendPropertyChanging();
+					this._IsStandard = value;
+					this.SendPropertyChanged("IsStandard");
+					this.OnIsStandardChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GraphTypeID", DbType="Int")]
+		public System.Nullable<int> GraphTypeID
+		{
+			get
+			{
+				return this._GraphTypeID;
+			}
+			set
+			{
+				if ((this._GraphTypeID != value))
+				{
+					this.OnGraphTypeIDChanging(value);
+					this.SendPropertyChanging();
+					this._GraphTypeID = value;
+					this.SendPropertyChanged("GraphTypeID");
+					this.OnGraphTypeIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GraphLabel", DbType="VarChar(50)")]
+		public string GraphLabel
+		{
+			get
+			{
+				return this._GraphLabel;
+			}
+			set
+			{
+				if ((this._GraphLabel != value))
+				{
+					this.OnGraphLabelChanging(value);
+					this.SendPropertyChanging();
+					this._GraphLabel = value;
+					this.SendPropertyChanged("GraphLabel");
+					this.OnGraphLabelChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ValidationOnWarning", DbType="NVarChar(4000)")]
+		public string ValidationOnWarning
+		{
+			get
+			{
+				return this._ValidationOnWarning;
+			}
+			set
+			{
+				if ((this._ValidationOnWarning != value))
+				{
+					this.OnValidationOnWarningChanging(value);
+					this.SendPropertyChanging();
+					this._ValidationOnWarning = value;
+					this.SendPropertyChanged("ValidationOnWarning");
+					this.OnValidationOnWarningChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ValidationOnEntry", DbType="NVarChar(4000)")]
+		public string ValidationOnEntry
+		{
+			get
+			{
+				return this._ValidationOnEntry;
+			}
+			set
+			{
+				if ((this._ValidationOnEntry != value))
+				{
+					this.OnValidationOnEntryChanging(value);
+					this.SendPropertyChanging();
+					this._ValidationOnEntry = value;
+					this.SendPropertyChanged("ValidationOnEntry");
+					this.OnValidationOnEntryChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CheckUnlikelyValue", DbType="Bit NOT NULL")]
+		public bool CheckUnlikelyValue
+		{
+			get
+			{
+				return this._CheckUnlikelyValue;
+			}
+			set
+			{
+				if ((this._CheckUnlikelyValue != value))
+				{
+					this.OnCheckUnlikelyValueChanging(value);
+					this.SendPropertyChanging();
+					this._CheckUnlikelyValue = value;
+					this.SendPropertyChanged("CheckUnlikelyValue");
+					this.OnCheckUnlikelyValueChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PositionOnImport", DbType="Int")]
+		public System.Nullable<int> PositionOnImport
+		{
+			get
+			{
+				return this._PositionOnImport;
+			}
+			set
+			{
+				if ((this._PositionOnImport != value))
+				{
+					this.OnPositionOnImportChanging(value);
+					this.SendPropertyChanging();
+					this._PositionOnImport = value;
+					this.SendPropertyChanged("PositionOnImport");
+					this.OnPositionOnImportChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Constant", DbType="VarChar(MAX)")]
+		public string Constant
+		{
+			get
+			{
+				return this._Constant;
+			}
+			set
+			{
+				if ((this._Constant != value))
+				{
+					this.OnConstantChanging(value);
+					this.SendPropertyChanging();
+					this._Constant = value;
+					this.SendPropertyChanged("Constant");
+					this.OnConstantChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Calculation", DbType="NVarChar(4000)")]
+		public string Calculation
+		{
+			get
+			{
+				return this._Calculation;
+			}
+			set
+			{
+				if ((this._Calculation != value))
+				{
+					this.OnCalculationChanging(value);
+					this.SendPropertyChanging();
+					this._Calculation = value;
+					this.SendPropertyChanged("Calculation");
+					this.OnCalculationChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowTotal", DbType="Bit NOT NULL")]
+		public bool ShowTotal
+		{
+			get
+			{
+				return this._ShowTotal;
+			}
+			set
+			{
+				if ((this._ShowTotal != value))
+				{
+					this.OnShowTotalChanging(value);
+					this.SendPropertyChanging();
+					this._ShowTotal = value;
+					this.SendPropertyChanged("ShowTotal");
+					this.OnShowTotalChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IgnoreSymbols", DbType="Bit NOT NULL")]
+		public bool IgnoreSymbols
+		{
+			get
+			{
+				return this._IgnoreSymbols;
+			}
+			set
+			{
+				if ((this._IgnoreSymbols != value))
+				{
+					this.OnIgnoreSymbolsChanging(value);
+					this.SendPropertyChanging();
+					this._IgnoreSymbols = value;
+					this.SendPropertyChanged("IgnoreSymbols");
+					this.OnIgnoreSymbolsChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsRound", DbType="Bit NOT NULL")]
+		public bool IsRound
+		{
+			get
+			{
+				return this._IsRound;
+			}
+			set
+			{
+				if ((this._IsRound != value))
+				{
+					this.OnIsRoundChanging(value);
+					this.SendPropertyChanging();
+					this._IsRound = value;
+					this.SendPropertyChanged("IsRound");
+					this.OnIsRoundChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RoundNumber", DbType="Int NOT NULL")]
+		public int RoundNumber
+		{
+			get
+			{
+				return this._RoundNumber;
+			}
+			set
+			{
+				if ((this._RoundNumber != value))
+				{
+					this.OnRoundNumberChanging(value);
+					this.SendPropertyChanging();
+					this._RoundNumber = value;
+					this.SendPropertyChanged("RoundNumber");
+					this.OnRoundNumberChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Notes", DbType="NVarChar(MAX)")]
+		public string Notes
+		{
+			get
+			{
+				return this._Notes;
+			}
+			set
+			{
+				if ((this._Notes != value))
+				{
+					this.OnNotesChanging(value);
+					this.SendPropertyChanging();
+					this._Notes = value;
+					this.SendPropertyChanged("Notes");
+					this.OnNotesChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DropdownValues", DbType="VarChar(MAX)")]
+		public string DropdownValues
+		{
+			get
+			{
+				return this._DropdownValues;
+			}
+			set
+			{
+				if ((this._DropdownValues != value))
+				{
+					this.OnDropdownValuesChanging(value);
+					this.SendPropertyChanging();
+					this._DropdownValues = value;
+					this.SendPropertyChanged("DropdownValues");
+					this.OnDropdownValuesChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NumberType", DbType="Int")]
+		public System.Nullable<int> NumberType
+		{
+			get
+			{
+				return this._NumberType;
+			}
+			set
+			{
+				if ((this._NumberType != value))
+				{
+					this.OnNumberTypeChanging(value);
+					this.SendPropertyChanging();
+					this._NumberType = value;
+					this.SendPropertyChanged("NumberType");
+					this.OnNumberTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DefaultValue", DbType="VarChar(MAX)")]
+		public string DefaultValue
+		{
+			get
+			{
+				return this._DefaultValue;
+			}
+			set
+			{
+				if ((this._DefaultValue != value))
+				{
+					this.OnDefaultValueChanging(value);
+					this.SendPropertyChanging();
+					this._DefaultValue = value;
+					this.SendPropertyChanged("DefaultValue");
+					this.OnDefaultValueChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AvgColumnID", DbType="Int")]
+		public System.Nullable<int> AvgColumnID
+		{
+			get
+			{
+				return this._AvgColumnID;
+			}
+			set
+			{
+				if ((this._AvgColumnID != value))
+				{
+					if (this._Column9.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnAvgColumnIDChanging(value);
+					this.SendPropertyChanging();
+					this._AvgColumnID = value;
+					this.SendPropertyChanged("AvgColumnID");
+					this.OnAvgColumnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AvgNumberOfRecords", DbType="Int")]
+		public System.Nullable<int> AvgNumberOfRecords
+		{
+			get
+			{
+				return this._AvgNumberOfRecords;
+			}
+			set
+			{
+				if ((this._AvgNumberOfRecords != value))
+				{
+					this.OnAvgNumberOfRecordsChanging(value);
+					this.SendPropertyChanging();
+					this._AvgNumberOfRecords = value;
+					this.SendPropertyChanged("AvgNumberOfRecords");
+					this.OnAvgNumberOfRecordsChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsDateSingleColumn", DbType="Bit NOT NULL")]
+		public bool IsDateSingleColumn
+		{
+			get
+			{
+				return this._IsDateSingleColumn;
+			}
+			set
+			{
+				if ((this._IsDateSingleColumn != value))
+				{
+					this.OnIsDateSingleColumnChanging(value);
+					this.SendPropertyChanging();
+					this._IsDateSingleColumn = value;
+					this.SendPropertyChanged("IsDateSingleColumn");
+					this.OnIsDateSingleColumnChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowGraphExceedance", DbType="Decimal(18,10)")]
+		public System.Nullable<decimal> ShowGraphExceedance
+		{
+			get
+			{
+				return this._ShowGraphExceedance;
+			}
+			set
+			{
+				if ((this._ShowGraphExceedance != value))
+				{
+					this.OnShowGraphExceedanceChanging(value);
+					this.SendPropertyChanging();
+					this._ShowGraphExceedance = value;
+					this.SendPropertyChanged("ShowGraphExceedance");
+					this.OnShowGraphExceedanceChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowGraphWarning", DbType="Decimal(18,10)")]
+		public System.Nullable<decimal> ShowGraphWarning
+		{
+			get
+			{
+				return this._ShowGraphWarning;
+			}
+			set
+			{
+				if ((this._ShowGraphWarning != value))
+				{
+					this.OnShowGraphWarningChanging(value);
+					this.SendPropertyChanging();
+					this._ShowGraphWarning = value;
+					this.SendPropertyChanged("ShowGraphWarning");
+					this.OnShowGraphWarningChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FlatLineNumber", DbType="Int")]
+		public System.Nullable<int> FlatLineNumber
+		{
+			get
+			{
+				return this._FlatLineNumber;
+			}
+			set
+			{
+				if ((this._FlatLineNumber != value))
+				{
+					this.OnFlatLineNumberChanging(value);
+					this.SendPropertyChanging();
+					this._FlatLineNumber = value;
+					this.SendPropertyChanged("FlatLineNumber");
+					this.OnFlatLineNumberChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MaxValueAt", DbType="Decimal(18,10)")]
+		public System.Nullable<decimal> MaxValueAt
+		{
+			get
+			{
+				return this._MaxValueAt;
+			}
+			set
+			{
+				if ((this._MaxValueAt != value))
+				{
+					this.OnMaxValueAtChanging(value);
+					this.SendPropertyChanging();
+					this._MaxValueAt = value;
+					this.SendPropertyChanged("MaxValueAt");
+					this.OnMaxValueAtChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ColumnType", DbType="VarChar(15) NOT NULL", CanBeNull=false)]
+		public string ColumnType
+		{
+			get
+			{
+				return this._ColumnType;
+			}
+			set
+			{
+				if ((this._ColumnType != value))
+				{
+					this.OnColumnTypeChanging(value);
+					this.SendPropertyChanging();
+					this._ColumnType = value;
+					this.SendPropertyChanged("ColumnType");
+					this.OnColumnTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DropDownType", DbType="VarChar(15)")]
+		public string DropDownType
+		{
+			get
+			{
+				return this._DropDownType;
+			}
+			set
+			{
+				if ((this._DropDownType != value))
+				{
+					this.OnDropDownTypeChanging(value);
+					this.SendPropertyChanging();
+					this._DropDownType = value;
+					this.SendPropertyChanged("DropDownType");
+					this.OnDropDownTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TableTableID", DbType="Int")]
+		public System.Nullable<int> TableTableID
+		{
+			get
+			{
+				return this._TableTableID;
+			}
+			set
+			{
+				if ((this._TableTableID != value))
+				{
+					this.OnTableTableIDChanging(value);
+					this.SendPropertyChanging();
+					this._TableTableID = value;
+					this.SendPropertyChanged("TableTableID");
+					this.OnTableTableIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DisplayColumn", DbType="VarChar(MAX)")]
+		public string DisplayColumn
+		{
+			get
+			{
+				return this._DisplayColumn;
+			}
+			set
+			{
+				if ((this._DisplayColumn != value))
+				{
+					this.OnDisplayColumnChanging(value);
+					this.SendPropertyChanging();
+					this._DisplayColumn = value;
+					this.SendPropertyChanged("DisplayColumn");
+					this.OnDisplayColumnChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SummaryCellBackColor", DbType="VarChar(50)")]
+		public string SummaryCellBackColor
+		{
+			get
+			{
+				return this._SummaryCellBackColor;
+			}
+			set
+			{
+				if ((this._SummaryCellBackColor != value))
+				{
+					this.OnSummaryCellBackColorChanging(value);
+					this.SendPropertyChanging();
+					this._SummaryCellBackColor = value;
+					this.SendPropertyChanged("SummaryCellBackColor");
+					this.OnSummaryCellBackColorChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FormVerticalPosition", DbType="Int")]
+		public System.Nullable<int> FormVerticalPosition
+		{
+			get
+			{
+				return this._FormVerticalPosition;
+			}
+			set
+			{
+				if ((this._FormVerticalPosition != value))
+				{
+					this.OnFormVerticalPositionChanging(value);
+					this.SendPropertyChanging();
+					this._FormVerticalPosition = value;
+					this.SendPropertyChanged("FormVerticalPosition");
+					this.OnFormVerticalPositionChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FormHorizontalPosition", DbType="Int")]
+		public System.Nullable<int> FormHorizontalPosition
+		{
+			get
+			{
+				return this._FormHorizontalPosition;
+			}
+			set
+			{
+				if ((this._FormHorizontalPosition != value))
+				{
+					this.OnFormHorizontalPositionChanging(value);
+					this.SendPropertyChanging();
+					this._FormHorizontalPosition = value;
+					this.SendPropertyChanged("FormHorizontalPosition");
+					this.OnFormHorizontalPositionChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ParentColumnID", DbType="Int")]
+		public System.Nullable<int> ParentColumnID
+		{
+			get
+			{
+				return this._ParentColumnID;
+			}
+			set
+			{
+				if ((this._ParentColumnID != value))
+				{
+					this.OnParentColumnIDChanging(value);
+					this.SendPropertyChanging();
+					this._ParentColumnID = value;
+					this.SendPropertyChanged("ParentColumnID");
+					this.OnParentColumnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TextType", DbType="VarChar(50)")]
+		public string TextType
+		{
+			get
+			{
+				return this._TextType;
+			}
+			set
+			{
+				if ((this._TextType != value))
+				{
+					this.OnTextTypeChanging(value);
+					this.SendPropertyChanging();
+					this._TextType = value;
+					this.SendPropertyChanged("TextType");
+					this.OnTextTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_RegEx", DbType="VarChar(MAX)")]
+		public string RegEx
+		{
+			get
+			{
+				return this._RegEx;
+			}
+			set
+			{
+				if ((this._RegEx != value))
+				{
+					this.OnRegExChanging(value);
+					this.SendPropertyChanging();
+					this._RegEx = value;
+					this.SendPropertyChanged("RegEx");
+					this.OnRegExChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HideColumnID", DbType="Int")]
+		public System.Nullable<int> HideColumnID
+		{
+			get
+			{
+				return this._HideColumnID;
+			}
+			set
+			{
+				if ((this._HideColumnID != value))
+				{
+					if (this._Column1.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnHideColumnIDChanging(value);
+					this.SendPropertyChanging();
+					this._HideColumnID = value;
+					this.SendPropertyChanged("HideColumnID");
+					this.OnHideColumnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HideColumnValue", DbType="NVarChar(250)")]
+		public string HideColumnValue
+		{
+			get
+			{
+				return this._HideColumnValue;
+			}
+			set
+			{
+				if ((this._HideColumnValue != value))
+				{
+					this.OnHideColumnValueChanging(value);
+					this.SendPropertyChanging();
+					this._HideColumnValue = value;
+					this.SendPropertyChanged("HideColumnValue");
+					this.OnHideColumnValueChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateCalculationType", DbType="VarChar(15)")]
+		public string DateCalculationType
+		{
+			get
+			{
+				return this._DateCalculationType;
+			}
+			set
+			{
+				if ((this._DateCalculationType != value))
+				{
+					this.OnDateCalculationTypeChanging(value);
+					this.SendPropertyChanging();
+					this._DateCalculationType = value;
+					this.SendPropertyChanged("DateCalculationType");
+					this.OnDateCalculationTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OnlyForAdmin", DbType="Int")]
+		public System.Nullable<int> OnlyForAdmin
+		{
+			get
+			{
+				return this._OnlyForAdmin;
+			}
+			set
+			{
+				if ((this._OnlyForAdmin != value))
+				{
+					this.OnOnlyForAdminChanging(value);
+					this.SendPropertyChanging();
+					this._OnlyForAdmin = value;
+					this.SendPropertyChanged("OnlyForAdmin");
+					this.OnOnlyForAdminChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsSystemColumn", DbType="Bit NOT NULL")]
+		public bool IsSystemColumn
+		{
+			get
+			{
+				return this._IsSystemColumn;
+			}
+			set
+			{
+				if ((this._IsSystemColumn != value))
+				{
+					this.OnIsSystemColumnChanging(value);
+					this.SendPropertyChanging();
+					this._IsSystemColumn = value;
+					this.SendPropertyChanged("IsSystemColumn");
+					this.OnIsSystemColumnChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LinkedParentColumnID", DbType="Int")]
+		public System.Nullable<int> LinkedParentColumnID
+		{
+			get
+			{
+				return this._LinkedParentColumnID;
+			}
+			set
+			{
+				if ((this._LinkedParentColumnID != value))
+				{
+					if (this._Column5.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnLinkedParentColumnIDChanging(value);
+					this.SendPropertyChanging();
+					this._LinkedParentColumnID = value;
+					this.SendPropertyChanged("LinkedParentColumnID");
+					this.OnLinkedParentColumnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DataRetrieverID", DbType="Int")]
+		public System.Nullable<int> DataRetrieverID
+		{
+			get
+			{
+				return this._DataRetrieverID;
+			}
+			set
+			{
+				if ((this._DataRetrieverID != value))
+				{
+					this.OnDataRetrieverIDChanging(value);
+					this.SendPropertyChanging();
+					this._DataRetrieverID = value;
+					this.SendPropertyChanged("DataRetrieverID");
+					this.OnDataRetrieverIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_VerticalList", DbType="Bit")]
+		public System.Nullable<bool> VerticalList
+		{
+			get
+			{
+				return this._VerticalList;
+			}
+			set
+			{
+				if ((this._VerticalList != value))
+				{
+					this.OnVerticalListChanging(value);
+					this.SendPropertyChanging();
+					this._VerticalList = value;
+					this.SendPropertyChanged("VerticalList");
+					this.OnVerticalListChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SummarySearch", DbType="Bit")]
+		public System.Nullable<bool> SummarySearch
+		{
+			get
+			{
+				return this._SummarySearch;
+			}
+			set
+			{
+				if ((this._SummarySearch != value))
+				{
+					this.OnSummarySearchChanging(value);
+					this.SendPropertyChanging();
+					this._SummarySearch = value;
+					this.SendPropertyChanged("SummarySearch");
+					this.OnSummarySearchChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_QuickAddLink", DbType="Bit")]
+		public System.Nullable<bool> QuickAddLink
+		{
+			get
+			{
+				return this._QuickAddLink;
+			}
+			set
+			{
+				if ((this._QuickAddLink != value))
+				{
+					this.OnQuickAddLinkChanging(value);
+					this.SendPropertyChanging();
+					this._QuickAddLink = value;
+					this.SendPropertyChanged("QuickAddLink");
+					this.OnQuickAddLinkChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HideOperator", DbType="VarChar(25)")]
+		public string HideOperator
+		{
+			get
+			{
+				return this._HideOperator;
+			}
+			set
+			{
+				if ((this._HideOperator != value))
+				{
+					this.OnHideOperatorChanging(value);
+					this.SendPropertyChanging();
+					this._HideOperator = value;
+					this.SendPropertyChanged("HideOperator");
+					this.OnHideOperatorChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CalculationIsActive", DbType="Bit")]
+		public System.Nullable<bool> CalculationIsActive
+		{
+			get
+			{
+				return this._CalculationIsActive;
+			}
+			set
+			{
+				if ((this._CalculationIsActive != value))
+				{
+					this.OnCalculationIsActiveChanging(value);
+					this.SendPropertyChanging();
+					this._CalculationIsActive = value;
+					this.SendPropertyChanged("CalculationIsActive");
+					this.OnCalculationIsActiveChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateAdded", DbType="DateTime NOT NULL")]
+		public System.DateTime DateAdded
+		{
+			get
+			{
+				return this._DateAdded;
+			}
+			set
+			{
+				if ((this._DateAdded != value))
+				{
+					this.OnDateAddedChanging(value);
+					this.SendPropertyChanging();
+					this._DateAdded = value;
+					this.SendPropertyChanged("DateAdded");
+					this.OnDateAddedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateUpdated", DbType="DateTime NOT NULL")]
+		public System.DateTime DateUpdated
+		{
+			get
+			{
+				return this._DateUpdated;
+			}
+			set
+			{
+				if ((this._DateUpdated != value))
+				{
+					this.OnDateUpdatedChanging(value);
+					this.SendPropertyChanging();
+					this._DateUpdated = value;
+					this.SendPropertyChanged("DateUpdated");
+					this.OnDateUpdatedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastUpdatedUserID", DbType="Int")]
+		public System.Nullable<int> LastUpdatedUserID
+		{
+			get
+			{
+				return this._LastUpdatedUserID;
+			}
+			set
+			{
+				if ((this._LastUpdatedUserID != value))
+				{
+					if (this._User.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnLastUpdatedUserIDChanging(value);
+					this.SendPropertyChanging();
+					this._LastUpdatedUserID = value;
+					this.SendPropertyChanged("LastUpdatedUserID");
+					this.OnLastUpdatedUserIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TableTabID", DbType="Int")]
+		public System.Nullable<int> TableTabID
+		{
+			get
+			{
+				return this._TableTabID;
+			}
+			set
+			{
+				if ((this._TableTabID != value))
+				{
+					this.OnTableTabIDChanging(value);
+					this.SendPropertyChanging();
+					this._TableTabID = value;
+					this.SendPropertyChanged("TableTabID");
+					this.OnTableTabIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ViewName", DbType="VarChar(50)")]
+		public string ViewName
+		{
+			get
+			{
+				return this._ViewName;
+			}
+			set
+			{
+				if ((this._ViewName != value))
+				{
+					this.OnViewNameChanging(value);
+					this.SendPropertyChanging();
+					this._ViewName = value;
+					this.SendPropertyChanged("ViewName");
+					this.OnViewNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SPDefaultValue", DbType="VarChar(200)")]
+		public string SPDefaultValue
+		{
+			get
+			{
+				return this._SPDefaultValue;
+			}
+			set
+			{
+				if ((this._SPDefaultValue != value))
+				{
+					this.OnSPDefaultValueChanging(value);
+					this.SendPropertyChanging();
+					this._SPDefaultValue = value;
+					this.SendPropertyChanged("SPDefaultValue");
+					this.OnSPDefaultValueChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DefaultType", DbType="VarChar(20)")]
+		public string DefaultType
+		{
+			get
+			{
+				return this._DefaultType;
+			}
+			set
+			{
+				if ((this._DefaultType != value))
+				{
+					this.OnDefaultTypeChanging(value);
+					this.SendPropertyChanging();
+					this._DefaultType = value;
+					this.SendPropertyChanged("DefaultType");
+					this.OnDefaultTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DefaultColumnID", DbType="Int")]
+		public System.Nullable<int> DefaultColumnID
+		{
+			get
+			{
+				return this._DefaultColumnID;
+			}
+			set
+			{
+				if ((this._DefaultColumnID != value))
+				{
+					if (this._Column6.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnDefaultColumnIDChanging(value);
+					this.SendPropertyChanging();
+					this._DefaultColumnID = value;
+					this.SendPropertyChanged("DefaultColumnID");
+					this.OnDefaultColumnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowViewLink", DbType="VarChar(10)")]
+		public string ShowViewLink
+		{
+			get
+			{
+				return this._ShowViewLink;
+			}
+			set
+			{
+				if ((this._ShowViewLink != value))
+				{
+					this.OnShowViewLinkChanging(value);
+					this.SendPropertyChanging();
+					this._ShowViewLink = value;
+					this.SendPropertyChanged("ShowViewLink");
+					this.OnShowViewLinkChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FilterParentColumnID", DbType="Int")]
+		public System.Nullable<int> FilterParentColumnID
+		{
+			get
+			{
+				return this._FilterParentColumnID;
+			}
+			set
+			{
+				if ((this._FilterParentColumnID != value))
+				{
+					if (this._Column8.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnFilterParentColumnIDChanging(value);
+					this.SendPropertyChanging();
+					this._FilterParentColumnID = value;
+					this.SendPropertyChanged("FilterParentColumnID");
+					this.OnFilterParentColumnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FilterOtherColumnID", DbType="Int")]
+		public System.Nullable<int> FilterOtherColumnID
+		{
+			get
+			{
+				return this._FilterOtherColumnID;
+			}
+			set
+			{
+				if ((this._FilterOtherColumnID != value))
+				{
+					if (this._Column7.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnFilterOtherColumnIDChanging(value);
+					this.SendPropertyChanging();
+					this._FilterOtherColumnID = value;
+					this.SendPropertyChanged("FilterOtherColumnID");
+					this.OnFilterOtherColumnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FilterValue", DbType="VarChar(MAX)")]
+		public string FilterValue
+		{
+			get
+			{
+				return this._FilterValue;
+			}
+			set
+			{
+				if ((this._FilterValue != value))
+				{
+					this.OnFilterValueChanging(value);
+					this.SendPropertyChanging();
+					this._FilterValue = value;
+					this.SendPropertyChanged("FilterValue");
+					this.OnFilterValueChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MapPinHoverColumnID", DbType="Int")]
+		public System.Nullable<int> MapPinHoverColumnID
+		{
+			get
+			{
+				return this._MapPinHoverColumnID;
+			}
+			set
+			{
+				if ((this._MapPinHoverColumnID != value))
+				{
+					if (this._Column3.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnMapPinHoverColumnIDChanging(value);
+					this.SendPropertyChanging();
+					this._MapPinHoverColumnID = value;
+					this.SendPropertyChanged("MapPinHoverColumnID");
+					this.OnMapPinHoverColumnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CompareColumnID", DbType="Int")]
+		public System.Nullable<int> CompareColumnID
+		{
+			get
+			{
+				return this._CompareColumnID;
+			}
+			set
+			{
+				if ((this._CompareColumnID != value))
+				{
+					if (this._Column2.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnCompareColumnIDChanging(value);
+					this.SendPropertyChanging();
+					this._CompareColumnID = value;
+					this.SendPropertyChanged("CompareColumnID");
+					this.OnCompareColumnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CompareOperator", DbType="VarChar(50)")]
+		public string CompareOperator
+		{
+			get
+			{
+				return this._CompareOperator;
+			}
+			set
+			{
+				if ((this._CompareOperator != value))
+				{
+					this.OnCompareOperatorChanging(value);
+					this.SendPropertyChanging();
+					this._CompareOperator = value;
+					this.SendPropertyChanged("CompareOperator");
+					this.OnCompareOperatorChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MapPopup", DbType="VarChar(MAX)")]
+		public string MapPopup
+		{
+			get
+			{
+				return this._MapPopup;
+			}
+			set
+			{
+				if ((this._MapPopup != value))
+				{
+					this.OnMapPopupChanging(value);
+					this.SendPropertyChanging();
+					this._MapPopup = value;
+					this.SendPropertyChanged("MapPopup");
+					this.OnMapPopupChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TrafficLightColumnID", DbType="Int")]
+		public System.Nullable<int> TrafficLightColumnID
+		{
+			get
+			{
+				return this._TrafficLightColumnID;
+			}
+			set
+			{
+				if ((this._TrafficLightColumnID != value))
+				{
+					if (this._Column4.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnTrafficLightColumnIDChanging(value);
+					this.SendPropertyChanging();
+					this._TrafficLightColumnID = value;
+					this.SendPropertyChanged("TrafficLightColumnID");
+					this.OnTrafficLightColumnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TrafficLightValues", DbType="VarChar(MAX)")]
+		public string TrafficLightValues
+		{
+			get
+			{
+				return this._TrafficLightValues;
+			}
+			set
+			{
+				if ((this._TrafficLightValues != value))
+				{
+					this.OnTrafficLightValuesChanging(value);
+					this.SendPropertyChanging();
+					this._TrafficLightValues = value;
+					this.SendPropertyChanged("TrafficLightValues");
+					this.OnTrafficLightValuesChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DefaultRelatedTableID", DbType="Int")]
+		public System.Nullable<int> DefaultRelatedTableID
+		{
+			get
+			{
+				return this._DefaultRelatedTableID;
+			}
+			set
+			{
+				if ((this._DefaultRelatedTableID != value))
+				{
+					if (this._Table1.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnDefaultRelatedTableIDChanging(value);
+					this.SendPropertyChanging();
+					this._DefaultRelatedTableID = value;
+					this.SendPropertyChanged("DefaultRelatedTableID");
+					this.OnDefaultRelatedTableIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DefaultUpdateValues", DbType="Bit")]
+		public System.Nullable<bool> DefaultUpdateValues
+		{
+			get
+			{
+				return this._DefaultUpdateValues;
+			}
+			set
+			{
+				if ((this._DefaultUpdateValues != value))
+				{
+					this.OnDefaultUpdateValuesChanging(value);
+					this.SendPropertyChanging();
+					this._DefaultUpdateValues = value;
+					this.SendPropertyChanged("DefaultUpdateValues");
+					this.OnDefaultUpdateValuesChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ValidationCanIgnore", DbType="Bit")]
+		public System.Nullable<bool> ValidationCanIgnore
+		{
+			get
+			{
+				return this._ValidationCanIgnore;
+			}
+			set
+			{
+				if ((this._ValidationCanIgnore != value))
+				{
+					this.OnValidationCanIgnoreChanging(value);
+					this.SendPropertyChanging();
+					this._ValidationCanIgnore = value;
+					this.SendPropertyChanged("ValidationCanIgnore");
+					this.OnValidationCanIgnoreChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DefaultGraphDefinitionID", DbType="Int")]
+		public System.Nullable<int> DefaultGraphDefinitionID
+		{
+			get
+			{
+				return this._DefaultGraphDefinitionID;
+			}
+			set
+			{
+				if ((this._DefaultGraphDefinitionID != value))
+				{
+					this.OnDefaultGraphDefinitionIDChanging(value);
+					this.SendPropertyChanging();
+					this._DefaultGraphDefinitionID = value;
+					this.SendPropertyChanged("DefaultGraphDefinitionID");
+					this.OnDefaultGraphDefinitionIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ImageOnSummary", DbType="Bit")]
+		public System.Nullable<bool> ImageOnSummary
+		{
+			get
+			{
+				return this._ImageOnSummary;
+			}
+			set
+			{
+				if ((this._ImageOnSummary != value))
+				{
+					this.OnImageOnSummaryChanging(value);
+					this.SendPropertyChanging();
+					this._ImageOnSummary = value;
+					this.SendPropertyChanged("ImageOnSummary");
+					this.OnImageOnSummaryChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AllowCopy", DbType="Bit")]
+		public System.Nullable<bool> AllowCopy
+		{
+			get
+			{
+				return this._AllowCopy;
+			}
+			set
+			{
+				if ((this._AllowCopy != value))
+				{
+					this.OnAllowCopyChanging(value);
+					this.SendPropertyChanging();
+					this._AllowCopy = value;
+					this.SendPropertyChanged("AllowCopy");
+					this.OnAllowCopyChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ValidationOnExceedance", DbType="NVarChar(4000)")]
+		public string ValidationOnExceedance
+		{
+			get
+			{
+				return this._ValidationOnExceedance;
+			}
+			set
+			{
+				if ((this._ValidationOnExceedance != value))
+				{
+					this.OnValidationOnExceedanceChanging(value);
+					this.SendPropertyChanging();
+					this._ValidationOnExceedance = value;
+					this.SendPropertyChanged("ValidationOnExceedance");
+					this.OnValidationOnExceedanceChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ColourCells", DbType="Bit")]
+		public System.Nullable<bool> ColourCells
+		{
+			get
+			{
+				return this._ColourCells;
+			}
+			set
+			{
+				if ((this._ColourCells != value))
+				{
+					this.OnColourCellsChanging(value);
+					this.SendPropertyChanging();
+					this._ColourCells = value;
+					this.SendPropertyChanged("ColourCells");
+					this.OnColourCellsChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_OldJoinColumn", DbType="Int")]
+		public System.Nullable<int> OldJoinColumn
+		{
+			get
+			{
+				return this._OldJoinColumn;
+			}
+			set
+			{
+				if ((this._OldJoinColumn != value))
+				{
+					this.OnOldJoinColumnChanging(value);
+					this.SendPropertyChanging();
+					this._OldJoinColumn = value;
+					this.SendPropertyChanged("OldJoinColumn");
+					this.OnOldJoinColumnChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NewJoinColumn", DbType="Int")]
+		public System.Nullable<int> NewJoinColumn
+		{
+			get
+			{
+				return this._NewJoinColumn;
+			}
+			set
+			{
+				if ((this._NewJoinColumn != value))
+				{
+					this.OnNewJoinColumnChanging(value);
+					this.SendPropertyChanging();
+					this._NewJoinColumn = value;
+					this.SendPropertyChanged("NewJoinColumn");
+					this.OnNewJoinColumnChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ButtonInfo", DbType="VarChar(1000)")]
+		public string ButtonInfo
+		{
+			get
+			{
+				return this._ButtonInfo;
+			}
+			set
+			{
+				if ((this._ButtonInfo != value))
+				{
+					this.OnButtonInfoChanging(value);
+					this.SendPropertyChanging();
+					this._ButtonInfo = value;
+					this.SendPropertyChanged("ButtonInfo");
+					this.OnButtonInfoChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FilterOperator", DbType="VarChar(25)")]
+		public string FilterOperator
+		{
+			get
+			{
+				return this._FilterOperator;
+			}
+			set
+			{
+				if ((this._FilterOperator != value))
+				{
+					this.OnFilterOperatorChanging(value);
+					this.SendPropertyChanging();
+					this._FilterOperator = value;
+					this.SendPropertyChanged("FilterOperator");
+					this.OnFilterOperatorChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Importance", DbType="Char(1)")]
+		public System.Nullable<char> Importance
+		{
+			get
+			{
+				return this._Importance;
+			}
+			set
+			{
+				if ((this._Importance != value))
+				{
+					this.OnImportanceChanging(value);
+					this.SendPropertyChanging();
+					this._Importance = value;
+					this.SendPropertyChanged("Importance");
+					this.OnImportanceChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Column", Storage="_Columns", ThisKey="ColumnID", OtherKey="HideColumnID")]
+		public EntitySet<Column> Columns
+		{
+			get
+			{
+				return this._Columns;
+			}
+			set
+			{
+				this._Columns.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Column1", Storage="_Columns1", ThisKey="ColumnID", OtherKey="CompareColumnID")]
+		public EntitySet<Column> Columns1
+		{
+			get
+			{
+				return this._Columns1;
+			}
+			set
+			{
+				this._Columns1.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Column2", Storage="_Columns2", ThisKey="ColumnID", OtherKey="MapPinHoverColumnID")]
+		public EntitySet<Column> Columns2
+		{
+			get
+			{
+				return this._Columns2;
+			}
+			set
+			{
+				this._Columns2.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Column3", Storage="_Columns3", ThisKey="ColumnID", OtherKey="TrafficLightColumnID")]
+		public EntitySet<Column> Columns3
+		{
+			get
+			{
+				return this._Columns3;
+			}
+			set
+			{
+				this._Columns3.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Column4", Storage="_Columns4", ThisKey="ColumnID", OtherKey="LinkedParentColumnID")]
+		public EntitySet<Column> Columns4
+		{
+			get
+			{
+				return this._Columns4;
+			}
+			set
+			{
+				this._Columns4.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Column5", Storage="_Columns5", ThisKey="ColumnID", OtherKey="DefaultColumnID")]
+		public EntitySet<Column> Columns5
+		{
+			get
+			{
+				return this._Columns5;
+			}
+			set
+			{
+				this._Columns5.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Column6", Storage="_Columns6", ThisKey="ColumnID", OtherKey="FilterOtherColumnID")]
+		public EntitySet<Column> Columns6
+		{
+			get
+			{
+				return this._Columns6;
+			}
+			set
+			{
+				this._Columns6.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Column7", Storage="_Columns7", ThisKey="ColumnID", OtherKey="FilterParentColumnID")]
+		public EntitySet<Column> Columns7
+		{
+			get
+			{
+				return this._Columns7;
+			}
+			set
+			{
+				this._Columns7.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Column8", Storage="_Columns8", ThisKey="ColumnID", OtherKey="AvgColumnID")]
+		public EntitySet<Column> Columns8
+		{
+			get
+			{
+				return this._Columns8;
+			}
+			set
+			{
+				this._Columns8.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Column", Storage="_Column1", ThisKey="HideColumnID", OtherKey="ColumnID", IsForeignKey=true)]
+		public Column Column1
+		{
+			get
+			{
+				return this._Column1.Entity;
+			}
+			set
+			{
+				Column previousValue = this._Column1.Entity;
+				if (((previousValue != value) 
+							|| (this._Column1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Column1.Entity = null;
+						previousValue.Columns.Remove(this);
+					}
+					this._Column1.Entity = value;
+					if ((value != null))
+					{
+						value.Columns.Add(this);
+						this._HideColumnID = value.ColumnID;
+					}
+					else
+					{
+						this._HideColumnID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Column1");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Column1", Storage="_Column2", ThisKey="CompareColumnID", OtherKey="ColumnID", IsForeignKey=true)]
+		public Column Column2
+		{
+			get
+			{
+				return this._Column2.Entity;
+			}
+			set
+			{
+				Column previousValue = this._Column2.Entity;
+				if (((previousValue != value) 
+							|| (this._Column2.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Column2.Entity = null;
+						previousValue.Columns1.Remove(this);
+					}
+					this._Column2.Entity = value;
+					if ((value != null))
+					{
+						value.Columns1.Add(this);
+						this._CompareColumnID = value.ColumnID;
+					}
+					else
+					{
+						this._CompareColumnID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Column2");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Column2", Storage="_Column3", ThisKey="MapPinHoverColumnID", OtherKey="ColumnID", IsForeignKey=true)]
+		public Column Column3
+		{
+			get
+			{
+				return this._Column3.Entity;
+			}
+			set
+			{
+				Column previousValue = this._Column3.Entity;
+				if (((previousValue != value) 
+							|| (this._Column3.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Column3.Entity = null;
+						previousValue.Columns2.Remove(this);
+					}
+					this._Column3.Entity = value;
+					if ((value != null))
+					{
+						value.Columns2.Add(this);
+						this._MapPinHoverColumnID = value.ColumnID;
+					}
+					else
+					{
+						this._MapPinHoverColumnID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Column3");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Column3", Storage="_Column4", ThisKey="TrafficLightColumnID", OtherKey="ColumnID", IsForeignKey=true)]
+		public Column Column4
+		{
+			get
+			{
+				return this._Column4.Entity;
+			}
+			set
+			{
+				Column previousValue = this._Column4.Entity;
+				if (((previousValue != value) 
+							|| (this._Column4.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Column4.Entity = null;
+						previousValue.Columns3.Remove(this);
+					}
+					this._Column4.Entity = value;
+					if ((value != null))
+					{
+						value.Columns3.Add(this);
+						this._TrafficLightColumnID = value.ColumnID;
+					}
+					else
+					{
+						this._TrafficLightColumnID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Column4");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Column4", Storage="_Column5", ThisKey="LinkedParentColumnID", OtherKey="ColumnID", IsForeignKey=true)]
+		public Column Column5
+		{
+			get
+			{
+				return this._Column5.Entity;
+			}
+			set
+			{
+				Column previousValue = this._Column5.Entity;
+				if (((previousValue != value) 
+							|| (this._Column5.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Column5.Entity = null;
+						previousValue.Columns4.Remove(this);
+					}
+					this._Column5.Entity = value;
+					if ((value != null))
+					{
+						value.Columns4.Add(this);
+						this._LinkedParentColumnID = value.ColumnID;
+					}
+					else
+					{
+						this._LinkedParentColumnID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Column5");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Column5", Storage="_Column6", ThisKey="DefaultColumnID", OtherKey="ColumnID", IsForeignKey=true)]
+		public Column Column6
+		{
+			get
+			{
+				return this._Column6.Entity;
+			}
+			set
+			{
+				Column previousValue = this._Column6.Entity;
+				if (((previousValue != value) 
+							|| (this._Column6.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Column6.Entity = null;
+						previousValue.Columns5.Remove(this);
+					}
+					this._Column6.Entity = value;
+					if ((value != null))
+					{
+						value.Columns5.Add(this);
+						this._DefaultColumnID = value.ColumnID;
+					}
+					else
+					{
+						this._DefaultColumnID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Column6");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Column6", Storage="_Column7", ThisKey="FilterOtherColumnID", OtherKey="ColumnID", IsForeignKey=true)]
+		public Column Column7
+		{
+			get
+			{
+				return this._Column7.Entity;
+			}
+			set
+			{
+				Column previousValue = this._Column7.Entity;
+				if (((previousValue != value) 
+							|| (this._Column7.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Column7.Entity = null;
+						previousValue.Columns6.Remove(this);
+					}
+					this._Column7.Entity = value;
+					if ((value != null))
+					{
+						value.Columns6.Add(this);
+						this._FilterOtherColumnID = value.ColumnID;
+					}
+					else
+					{
+						this._FilterOtherColumnID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Column7");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Column7", Storage="_Column8", ThisKey="FilterParentColumnID", OtherKey="ColumnID", IsForeignKey=true)]
+		public Column Column8
+		{
+			get
+			{
+				return this._Column8.Entity;
+			}
+			set
+			{
+				Column previousValue = this._Column8.Entity;
+				if (((previousValue != value) 
+							|| (this._Column8.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Column8.Entity = null;
+						previousValue.Columns7.Remove(this);
+					}
+					this._Column8.Entity = value;
+					if ((value != null))
+					{
+						value.Columns7.Add(this);
+						this._FilterParentColumnID = value.ColumnID;
+					}
+					else
+					{
+						this._FilterParentColumnID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Column8");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Column8", Storage="_Column9", ThisKey="AvgColumnID", OtherKey="ColumnID", IsForeignKey=true)]
+		public Column Column9
+		{
+			get
+			{
+				return this._Column9.Entity;
+			}
+			set
+			{
+				Column previousValue = this._Column9.Entity;
+				if (((previousValue != value) 
+							|| (this._Column9.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Column9.Entity = null;
+						previousValue.Columns8.Remove(this);
+					}
+					this._Column9.Entity = value;
+					if ((value != null))
+					{
+						value.Columns8.Add(this);
+						this._AvgColumnID = value.ColumnID;
+					}
+					else
+					{
+						this._AvgColumnID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Column9");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Table_Column", Storage="_Table", ThisKey="TableID", OtherKey="TableID", IsForeignKey=true)]
+		public Table Table
+		{
+			get
+			{
+				return this._Table.Entity;
+			}
+			set
+			{
+				Table previousValue = this._Table.Entity;
+				if (((previousValue != value) 
+							|| (this._Table.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Table.Entity = null;
+						previousValue.Columns.Remove(this);
+					}
+					this._Table.Entity = value;
+					if ((value != null))
+					{
+						value.Columns.Add(this);
+						this._TableID = value.TableID;
+					}
+					else
+					{
+						this._TableID = default(int);
+					}
+					this.SendPropertyChanged("Table");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Table_Column1", Storage="_Table1", ThisKey="DefaultRelatedTableID", OtherKey="TableID", IsForeignKey=true)]
+		public Table Table1
+		{
+			get
+			{
+				return this._Table1.Entity;
+			}
+			set
+			{
+				Table previousValue = this._Table1.Entity;
+				if (((previousValue != value) 
+							|| (this._Table1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Table1.Entity = null;
+						previousValue.Columns1.Remove(this);
+					}
+					this._Table1.Entity = value;
+					if ((value != null))
+					{
+						value.Columns1.Add(this);
+						this._DefaultRelatedTableID = value.TableID;
+					}
+					else
+					{
+						this._DefaultRelatedTableID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Table1");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Column", Storage="_User", ThisKey="LastUpdatedUserID", OtherKey="UserID", IsForeignKey=true)]
+		public User User
+		{
+			get
+			{
+				return this._User.Entity;
+			}
+			set
+			{
+				User previousValue = this._User.Entity;
+				if (((previousValue != value) 
+							|| (this._User.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._User.Entity = null;
+						previousValue.Columns.Remove(this);
+					}
+					this._User.Entity = value;
+					if ((value != null))
+					{
+						value.Columns.Add(this);
+						this._LastUpdatedUserID = value.UserID;
+					}
+					else
+					{
+						this._LastUpdatedUserID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("User");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Columns(Column entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column1 = this;
+		}
+		
+		private void detach_Columns(Column entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column1 = null;
+		}
+		
+		private void attach_Columns1(Column entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column2 = this;
+		}
+		
+		private void detach_Columns1(Column entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column2 = null;
+		}
+		
+		private void attach_Columns2(Column entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column3 = this;
+		}
+		
+		private void detach_Columns2(Column entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column3 = null;
+		}
+		
+		private void attach_Columns3(Column entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column4 = this;
+		}
+		
+		private void detach_Columns3(Column entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column4 = null;
+		}
+		
+		private void attach_Columns4(Column entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column5 = this;
+		}
+		
+		private void detach_Columns4(Column entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column5 = null;
+		}
+		
+		private void attach_Columns5(Column entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column6 = this;
+		}
+		
+		private void detach_Columns5(Column entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column6 = null;
+		}
+		
+		private void attach_Columns6(Column entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column7 = this;
+		}
+		
+		private void detach_Columns6(Column entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column7 = null;
+		}
+		
+		private void attach_Columns7(Column entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column8 = this;
+		}
+		
+		private void detach_Columns7(Column entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column8 = null;
+		}
+		
+		private void attach_Columns8(Column entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column9 = this;
+		}
+		
+		private void detach_Columns8(Column entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column9 = null;
 		}
 	}
 }

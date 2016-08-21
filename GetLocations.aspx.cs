@@ -137,8 +137,8 @@ public partial class GetLocations : System.Web.UI.Page
 //                                            sb.Append(",{");
 
 //                                            sb.Append(String.Format("\"lat\":{0}, \"lon\":{1}, \"title\":\"{2}\", \"pin\":\"{3}\", \"ssid\":\"{4}\", \"url\":\"{5}\"", theLocationColumn.Latitude.ToString(), theLocationColumn.Longitude.ToString(),
-//                                                    HttpUtility.HtmlEncode(strTT), "http://" + Request.Url.Authority + Request.ApplicationPath + "/" +
-//                                                    theTable.PinImage, drRecord[1].ToString(), "http://" + Request.Url.Authority +
+//                                                    HttpUtility.HtmlEncode(strTT), Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/" +
+//                                                    theTable.PinImage, drRecord[1].ToString(), Request.Url.Scheme +"://" + Request.Url.Authority +
 //                                                    Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("view") +
 //                                                    "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt(drSys["TableID"].ToString()) + "&Recordid=" +
 //                                                    Cryptography.Encrypt(drRecord[1].ToString())));

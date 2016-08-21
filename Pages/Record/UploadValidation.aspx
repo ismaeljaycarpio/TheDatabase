@@ -299,7 +299,7 @@
                             </div>
                             <br />
                             <div style="background-color: Blue; font-size: 14px; width: 100%; color: White;">
-                                <strong id="stWarnings" name="stWarnings">Warnings</strong>
+                                <strong id="stWarnings" name="stWarnings">Valid Data with Warnings</strong>
                                 <asp:Image runat="server" ImageUrl="~/Images/warning.png" AlternateText="This data will be imported"
                                     ToolTip="This data will be imported" />
                             </div>

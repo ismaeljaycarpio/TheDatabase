@@ -758,7 +758,7 @@
                                                     </table>
                                                 </div>
                                             </td>
-                                            <td>
+                                            <td style="float: right;">
                                                 <table>
                                                     <tr>
                                                         <td>
@@ -792,6 +792,8 @@
                                                                 <tr>
                                                                     <td valign="top">
                                                                         <table>
+
+                                                                            <%-- Advanced Search Checkbox --%>
                                                                             <tr>
                                                                                 <td style="text-align: right;">
                                                                                     <asp:CheckBox runat="server" ID="chkShowAdvancedOptions" AutoPostBack="true" OnCheckedChanged="chkShowAdvancedOptions_OnCheckedChanged" />
@@ -803,6 +805,22 @@
 
                                                                                 </td>
 
+                                                                            </tr>
+
+                                                                            <%-- Show Deleted Records Checkbox--%>
+                                                                            <tr>
+                                                                                <td style="text-align: right;">
+                                                                                    <asp:CheckBox ID="chkIsActive" Checked="false" runat="server" AutoPostBack="true" OnCheckedChanged="chkIsActive_CheckedChanged" />
+                                                                                </td>
+                                                                                <td style="text-align: left;">Show Deleted Records
+                                                                                </td>
+                                                                            </tr>
+
+                                                                            <%-- Show Warning Only checkbox --%>
+                                                                            <tr id="trChkShowOnlyWarning">
+                                                                                <td style="text-align: right;">
+                                                                                    <asp:CheckBox ID="chkShowOnlyWarning" Checked="false" runat="server" AutoPostBack="true" OnCheckedChanged="chkShowOnlyWarning_CheckedChanged" /></td>
+                                                                                <td style="text-align: left;">Show Only Warning</td>
                                                                             </tr>
                                                                         </table>
                                                                     </td>
@@ -929,11 +947,8 @@
 
                                                                                     <td style="width: 10px;"></td>
                                                                                     <td>
-                                                                                        <asp:CheckBox ID="chkIsActive" Checked="false" runat="server" AutoPostBack="true"
-                                                                                            Text="Show Deleted Records  " OnCheckedChanged="chkIsActive_CheckedChanged" />
-                                                                                        <br />
-                                                                                        <asp:CheckBox ID="chkShowOnlyWarning" Checked="false" runat="server" AutoPostBack="true"
-                                                                                            Text="Show Only Warning" OnCheckedChanged="chkShowOnlyWarning_CheckedChanged" />
+
+                                                                                        <%-- Moved checboxes here --%>
                                                                                     </td>
                                                                                 </tr>
                                                                             </table>
@@ -949,14 +964,14 @@
                                                         <td style="padding-left: 10px">
                                                             <table width="120px">
                                                                 <tr>
-                                                                    <td>
+                                                                    <%--<td>
                                                                         <asp:LinkButton runat="server" ID="lnkSearch2" CssClass="btn" OnClick="lnkSearch_Click"
                                                                             Style="display: none;" ValidationGroup="MKE"> <strong>Go</strong></asp:LinkButton>
                                                                     </td>
                                                                     <td>
                                                                         <asp:LinkButton runat="server" ID="lnkReset2" CssClass="btn" OnClick="lnkReset_Click"
                                                                             Style="display: none;" CausesValidation="false"> <strong>Reset</strong></asp:LinkButton>
-                                                                    </td>
+                                                                    </td>--%>
                                                                 </tr>
                                                             </table>
                                                         </td>
@@ -975,7 +990,7 @@
                         <%--   <div style="overflow: scroll;" onscroll="OnScrollDiv(this)" id="DivMainContent">--%>
 
 
-
+                      
                         <div id="DivRoot">
                             <div id="DivPagerRow">
                             </div>
@@ -1052,6 +1067,7 @@
                             <div id="DivFooterRow" style="overflow: hidden">
                             </div>
                         </div>
+                           
 
                         <%--</asp:Panel>--%>
 
@@ -1068,38 +1084,35 @@
                         <div runat="server" id="divNoFilter" visible="false" style="padding-left: 100px;">
                             <table>
                                 <tr>
-                                    <td>
-                                        No records matched your search. &nbsp<asp:LinkButton runat="server" ID="lnkNoFilter"
+                                    <td>No records matched your search. &nbsp<asp:LinkButton runat="server" ID="lnkNoFilter"
                                         OnClick="Pager_OnApplyFilter" Font-Bold="true" Text="Clear Search"> </asp:LinkButton>
 
                                     </td>
-                                    <td >
+                                    <td>
                                         <div runat="server" id="divAddAndViewControls">
                                             <table style="width: 100%; border-collapse: collapse; border-spacing: 0;">
                                                 <tr>
-                                                    <td>
-                                                        ,
+                                                    <td>,
                                                     </td>
                                                     <td>
                                                         <asp:HyperLink runat="server" ID="hlEditView" Text="Edit View" Font-Bold="true" CssClass="popuplink2"> </asp:HyperLink>
                                                     </td>
-                                                    <td>
-                                                        or
+                                                    <td>or
                                                     </td>
                                                     <td>
                                                         <asp:HyperLink runat="server" ID="hplNewDataFilter" Text="Add Record" Font-Bold="true"> </asp:HyperLink>
                                                     </td>
                                                     <td>
-                                                         <asp:HyperLink runat="server" ID="hplNewDataFilter2">
+                                                        <asp:HyperLink runat="server" ID="hplNewDataFilter2">
                                 <asp:Image runat="server" ID="Image1" ImageUrl="~/Pages/Pager/Images/add.png" />
-                                            </asp:HyperLink>
+                                                        </asp:HyperLink>
                                                     </td>
                                                 </tr>
                                             </table>
-                                           
-                            
 
-                                           
+
+
+
                                         </div>
 
                                     </td>
@@ -1178,7 +1191,7 @@
                             </td>
                         </tr>
                         <tr runat="server" id="trUndo" style="display: none;">
-                            <td colspan="2" style="padding-left: 10px;">
+                            <td colspan="2">
                                 <asp:CheckBox runat="server" ID="chkUndo" TextAlign="Right" Text="I will not be able to undo this action." />
                             </td>
                         </tr>

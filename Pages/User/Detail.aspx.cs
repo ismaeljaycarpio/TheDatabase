@@ -278,12 +278,12 @@ public partial class User_Detail : SecurePage
         if (Request.QueryString["SearchCriteria"] != null)
         {
 
-            hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/List.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+            hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/List.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
         }
         else
         {
 
-            hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/List.aspx";
+            hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/List.aspx";
         }
 
 
@@ -905,7 +905,7 @@ public partial class User_Detail : SecurePage
                 if (theRole.RoleType == "1")
                 {
                     //global user
-                    Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/List.aspx", false);
+                    Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/List.aspx", false);
                     return;
                 }
 
@@ -934,11 +934,11 @@ public partial class User_Detail : SecurePage
                 divEdit.Visible = true;
                 if (Request.QueryString["SearchCriteria"] != null)
                 {
-                    hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/Detail.aspx?mode=" + Cryptography.Encrypt("edit") + "&userid=" + Cryptography.Encrypt(theUser.UserID.ToString()) + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+                    hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/Detail.aspx?mode=" + Cryptography.Encrypt("edit") + "&userid=" + Cryptography.Encrypt(theUser.UserID.ToString()) + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
                 }
                 else
                 {
-                    hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/Detail.aspx?mode=" + Cryptography.Encrypt("edit") + "&userid=" + Cryptography.Encrypt(theUser.UserID.ToString());
+                    hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/Detail.aspx?mode=" + Cryptography.Encrypt("edit") + "&userid=" + Cryptography.Encrypt(theUser.UserID.ToString());
                 }
 
 
@@ -1459,11 +1459,11 @@ public partial class User_Detail : SecurePage
 
                         //if (Request.QueryString["SearchCriteria"] != null)
                         //{
-                        //    hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/Detail.aspx?mode=" + Cryptography.Encrypt("edit") + "&userid=" + Cryptography.Encrypt(iTheUserID.ToString()) + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&fromadd=yes";
+                        //    hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/Detail.aspx?mode=" + Cryptography.Encrypt("edit") + "&userid=" + Cryptography.Encrypt(iTheUserID.ToString()) + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&fromadd=yes";
                         //}
                         //else
                         //{
-                        //    hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/Detail.aspx?mode=" + Cryptography.Encrypt("edit") + "&userid=" + Cryptography.Encrypt(iTheUserID.ToString()) + "&fromadd=yes";
+                        //    hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/Detail.aspx?mode=" + Cryptography.Encrypt("edit") + "&userid=" + Cryptography.Encrypt(iTheUserID.ToString()) + "&fromadd=yes";
                         //}
 
                         Session["tdbmsg"] = txtEmail.Text + " user has been added";
@@ -1715,7 +1715,7 @@ public partial class User_Detail : SecurePage
 
             }
 
-            // Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/List.aspx", false);
+            // Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/List.aspx", false);
 
 
             if (chkNotifyUser.Checked)
@@ -1728,7 +1728,7 @@ public partial class User_Detail : SecurePage
                     DataTable theSPTable = SystemData.Run_ContentSP("ets_UserAccountDetails", iTheUserID.ToString());
                     string strBody = Common.ReplaceDataFiledByValue(theSPTable, theConent.ContentP);
 
-                    strBody = strBody.Replace("[URL]", "http://" + Request.Url.Authority + Request.ApplicationPath);
+                    strBody = strBody.Replace("[URL]", Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath);
 
                     string strTo = txtEmail.Text.Trim();
 
@@ -2025,7 +2025,7 @@ public partial class User_Detail : SecurePage
 
     //protected void lnkBack_Click(object sender, EventArgs e)
     //{
-    //  Response.Redirect ("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/List.aspx",false );
+    //  Response.Redirect (Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/List.aspx",false );
     //}
 
 
@@ -2340,7 +2340,7 @@ Cryptography.Encrypt("Do you want to reset dashboard of all users of the role " 
             //}
             Session["tdbmsg"] = txtEmail.Text + " user has been deactivated.";
             SecurityManager.User_Delete((int)_iUserID);
-            //Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/List.aspx", false);
+            //Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/List.aspx", false);
             Response.Redirect(hlBack.NavigateUrl, false);
 
         }
@@ -2389,7 +2389,7 @@ Cryptography.Encrypt("Do you want to reset dashboard of all users of the role " 
 
 
             SecurityManager.User_UnDelete((int)_iUserID);
-            //Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/List.aspx", false);
+            //Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/List.aspx", false);
 
             Session["tdbmsg"] = txtEmail.Text + " user has been activated.";
 
@@ -3113,13 +3113,13 @@ Cryptography.Encrypt("Do you want to reset dashboard of all users of the role " 
     //            HyperLink hlUploadEmail = (HyperLink)e.Row.FindControl("hlUploadEmail");
     //            Content xContent = SystemData.Content_Details_ByKey("DataUploadEmail",int.Parse(Session["AccountID"].ToString()));
     //            if (xContent != null)
-    //                hlUploadEmail.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(xContent.ContentID.ToString());
+    //                hlUploadEmail.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(xContent.ContentID.ToString());
 
     //            HyperLink hlUploadSMS = (HyperLink)e.Row.FindControl("hlUploadSMS");
     //            Content yContent = SystemData.Content_Details_ByKey("DataUploadSMS",int.Parse( Session["AccountID"].ToString()));
 
     //            if (yContent != null)
-    //                hlUploadSMS.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(yContent.ContentID.ToString());
+    //                hlUploadSMS.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(yContent.ContentID.ToString());
 
 
 
@@ -3130,26 +3130,26 @@ Cryptography.Encrypt("Do you want to reset dashboard of all users of the role " 
     //            Content cContent = SystemData.Content_Details_ByKey("LateWarningEmail",int.Parse(Session["AccountID"].ToString()));
 
     //            if (cContent != null)
-    //                hlLateWarningEmail.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(cContent.ContentID.ToString());
+    //                hlLateWarningEmail.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(cContent.ContentID.ToString());
 
 
     //            HyperLink hlLateWarningSMS = (HyperLink)e.Row.FindControl("hlLateWarningSMS");
     //            Content dContent = SystemData.Content_Details_ByKey("LateWarningSMS",int.Parse(Session["AccountID"].ToString()));
 
     //            if (dContent != null)
-    //                hlLateWarningSMS.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(dContent.ContentID.ToString());
+    //                hlLateWarningSMS.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(dContent.ContentID.ToString());
 
 
     //            HyperLink hlUploadWarningEmail = (HyperLink)e.Row.FindControl("hlUploadWarningEmail");
     //            Content pContent = SystemData.Content_Details_ByKey("DataUploadWarningEmail",int.Parse(Session["AccountID"].ToString()));
     //            if (pContent != null)
-    //                hlUploadWarningEmail.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(pContent.ContentID.ToString());
+    //                hlUploadWarningEmail.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(pContent.ContentID.ToString());
 
     //            HyperLink hlUploadWarningSMS = (HyperLink)e.Row.FindControl("hlUploadWarningSMS");
     //            Content qContent = SystemData.Content_Details_ByKey("DataUploadWarningSMS",int.Parse(Session["AccountID"].ToString()));
 
     //            if (qContent != null)
-    //                hlUploadWarningSMS.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(qContent.ContentID.ToString());
+    //                hlUploadWarningSMS.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(qContent.ContentID.ToString());
 
 
 

@@ -105,7 +105,7 @@ public class WebService : System.Web.Services.WebService {
 
 
          DataTable dtSC = Common.DataTableFromText(@"SELECT     [Column].ColumnID, [Column].TableID, [Column].DisplayOrder, [Column].DisplayName, [Column].IsNumeric, 
-                      ISNULL([Column].DropdownValues,'') DropdownValues, [Column].IsMandatory, [Column].DateUpdated, '' as MinValue, '' as MaxValue,ValidationOnEntry
+                      ISNULL([Column].DropdownValues,'') DropdownValues, [Column].Importance, [Column].DateUpdated, '' as MinValue, '' as MaxValue,ValidationOnEntry
                     FROM         [Table] INNER JOIN [Column] ON [Table].TableID = [Column].TableID
                     WHERE [Table].IsActive=1 AND  [Table].AccountID=" + theAccount.AccountID.ToString());
          dtSC.TableName = "SC";

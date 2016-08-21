@@ -857,7 +857,7 @@ public class UploadManager
                                         {
 
                                             string strRecordIDSQL = "SELECT RecordID FROM [Record] WHERE IsActive=1 AND TableID=" + dtRecordTypleColumns.Rows[i]["TableTableID"]
-                                                 + " AND CHARINDEX (';' +'" + dtImportFileTable.Rows[r][dc.ColumnName].ToString() 
+                                                 + " AND CHARINDEX (';' +'" + dtImportFileTable.Rows[r][dc.ColumnName].ToString().Replace("'", "''").Trim() 
                                                                      + "'+ ';',';' + " 
                                                                      + dtRecordTypleColumns.Rows[i]["ParentColumnSystemName"] + " + ';')>0";
                                                 
@@ -878,11 +878,11 @@ public class UploadManager
                                     }                               
                                 }
 
-                                if (dtRecordTypleColumns.Rows[i]["IsMandatory"].ToString().ToLower() == "true")
+                                if (dtRecordTypleColumns.Rows[i]["Importance"].ToString().ToLower() == "m")
                                 {
                                     if (dtImportFileTable.Rows[r][dc.ColumnName].ToString() == "")
                                     {
-                                        strRejectReason = strRejectReason + " REQUIRED:" + dtRecordTypleColumns.Rows[i]["DisplayName"].ToString();
+                                        strRejectReason = strRejectReason + " MANDATORY:" + dtRecordTypleColumns.Rows[i]["DisplayName"].ToString();
 
                                     }
 
@@ -2181,11 +2181,11 @@ public class UploadManager
 //                                //else
 //                                //{
 
-//                                if (dtRecordTypleColumns.Rows[i]["IsMandatory"].ToString().ToLower() == "true")
+    //                                if (dtRecordTypleColumns.Rows[i]["Importance"].ToString().ToLower() == "m")
 //                                {
 //                                    if (dtImportFileTable.Rows[r][dc.ColumnName].ToString() == "")
 //                                    {
-//                                        strRejectReason = strRejectReason + " REQUIRED:" + dtRecordTypleColumns.Rows[i]["DisplayName"].ToString();
+//                                        strRejectReason = strRejectReason + " MANDATORY:" + dtRecordTypleColumns.Rows[i]["DisplayName"].ToString();
 
 //                                    }
 
@@ -3292,11 +3292,11 @@ public class UploadManager
 //                                    //else
 //                                    //{
 
-//                                    if (dtRecordTypleColumns.Rows[i]["IsMandatory"].ToString().ToLower() == "true")
+    //                                    if (dtRecordTypleColumns.Rows[i]["Importance"].ToString().ToLower() == "m")
 //                                    {
 //                                        if (dtImportFileTable.Rows[r][dc.ColumnName].ToString() == "")
 //                                        {
-//                                            strRejectReason = strRejectReason + " REQUIRED:" + dtRecordTypleColumns.Rows[i]["DisplayName"].ToString();
+//                                            strRejectReason = strRejectReason + " MANDATORY:" + dtRecordTypleColumns.Rows[i]["DisplayName"].ToString();
 
 //                                        }
 
@@ -4003,11 +4003,11 @@ public class UploadManager
 ////                                    }
 ////                                    //else
 ////                                    //{
-////                                    if (dtRecordTypleColumns.Rows[i]["IsMandatory"].ToString().ToLower() == "true")
+    ////                                    if (dtRecordTypleColumns.Rows[i]["Importance"].ToString().ToLower() == "m")
 ////                                    {
 ////                                        if (dtImportFileTable.Rows[r][dc.ColumnName].ToString() == "")
 ////                                        {
-////                                            strRejectReason = strRejectReason + " REQUIRED:" + dtRecordTypleColumns.Rows[i]["DisplayName"].ToString();
+////                                            strRejectReason = strRejectReason + " MANDATORY:" + dtRecordTypleColumns.Rows[i]["DisplayName"].ToString();
 
 ////                                        }
 
@@ -5649,7 +5649,7 @@ public class UploadManager
         //{
             //if(HttpContext.Current!=null)
             //{
-                //string strURL = "http://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath + "/Pages/Record/UploadValidation.aspx?menu=" + Cryptography.Encrypt("yes") + "&TableID=" + Cryptography.Encrypt(theTable.TableID.ToString()) + "&BatchID=" + Cryptography.Encrypt(theBatch.BatchID.ToString());
+                //string strURL = HttpContext.Current.Request.Url.Scheme +"://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath + "/Pages/Record/UploadValidation.aspx?menu=" + Cryptography.Encrypt("yes") + "&TableID=" + Cryptography.Encrypt(theTable.TableID.ToString()) + "&BatchID=" + Cryptography.Encrypt(theBatch.BatchID.ToString());
             string strURL = strBaseURL+ "/Pages/Record/UploadValidation.aspx?menu=" + Cryptography.Encrypt("yes") + "&TableID=" + Cryptography.Encrypt(theTable.TableID.ToString()) + "&BatchID=" + Cryptography.Encrypt(theBatch.BatchID.ToString());
                 strBody = strBody.Replace("[URL]", strURL);
                 strBodySMS = strBodySMS.Replace("[URL]", strURL);
@@ -11300,31 +11300,9 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
 
                         default:
 
-                            System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("en-GB");
-                            if (objValue.ToString().IndexOf(" ") > 0)
-                            {
-                                if (objValue.ToString().Substring(0, objValue.ToString().IndexOf(" ")).Length < 7)
-                                {
-                                    string strTempDateTime = objValue.ToString().Substring(0, objValue.ToString().IndexOf(" ")) + "-" + DateTime.Now.Year.ToString() + " " + objValue.ToString().Substring(objValue.ToString().IndexOf(" ") + 1);
-                                    objTempRecord.DateTimeRecorded = Convert.ToDateTime(strTempDateTime, culture);
-                                }
-                                else
-                                {
-                                    if (objValue.ToString().Length == 16)
-                                    {
-                                        //objTempRecord.DateTimeRecorded = DateTime.ParseExact(objValue.ToString(), "MM/dd/yyyy HH:mm", CultureInfo.InvariantCulture);
-                                        objTempRecord.DateTimeRecorded = DateTime.ParseExact(objValue.ToString(), "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture);
-                                    }
-                                    else
-                                    {
-                                        objTempRecord.DateTimeRecorded = Convert.ToDateTime(objValue.ToString(), culture);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                objTempRecord.DateTimeRecorded = Convert.ToDateTime(objValue.ToString(), culture);
-                            }
+                            objTempRecord.DateTimeRecorded = Common.GetDateTimeFromString(objValue.ToString(), "");
+                            if (objTempRecord.DateTimeRecorded == null)
+                                objTempRecord.DateTimeRecorded = DateTime.Now;
 
                             break;
                     }

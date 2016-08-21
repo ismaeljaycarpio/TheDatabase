@@ -15,7 +15,7 @@ public partial class Pages_Document_SSRS : SecurePage
     {
         if (!Page.IsPostBack)
         {
-            hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SearchCriteria="
+            hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SearchCriteria="
                 + Request.QueryString["SearchCriteria"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() 
                 + "&SSearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString();
 

@@ -43,11 +43,11 @@ public partial class Pages_Security_Usage : SecurePage
 
                 if (Request.QueryString["SearchCriteria"] != null)
                 {
-                    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountList.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+                    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountList.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
                 }
                 else
                 {
-                    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountList.aspx";
+                    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountList.aspx";
                 }
 
                 if (Request.QueryString["Type"] != null)

@@ -6,8 +6,11 @@
             <link href="~/App_Themes/Default/StyleSheet.css" rel="stylesheet" type="text/css" />
 
     <title></title>
-     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false">
-     </script>
+   <%--  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false">
+     </script>--%>
+            <script type="text/javascript" src="<%=Request.Url.Scheme+@"://maps.google.com/maps/api/js?sensor=false" %>"></script>
+
+
     <script type="text/javascript" src="../../script/jquery.js"></script>
 
  

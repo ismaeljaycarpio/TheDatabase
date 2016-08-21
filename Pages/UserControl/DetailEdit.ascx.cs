@@ -274,7 +274,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
         if (_strRecordRightID == Common.UserRoleType.None) //none role -- 
         {
-            //Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Default.aspx", false);
+            //Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Default.aspx", false);
             divDynamic.Visible = false;
             return;
         }
@@ -459,7 +459,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
         _dtDBTableTab = Common.DataTableFromText("SELECT * FROM TableTab WHERE TableID=" + _theTable.TableID.ToString() + " ORDER BY DisplayOrder");
-
+        string strHiddenTableTabID = "-1";
         if (_dtDBTableTab != null)
         {
             if (_dtDBTableTab.Rows.Count > 1)
@@ -510,7 +510,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 	                                            WHERE TT.TableID=" + childRecord.TableID.ToString());
                         if (strHaveShowWhen != "")
                         {
-                            string strHiddenTableTabID = "-1";
+                            
                             for (int t = 0; t < _dtDBTableTab.Rows.Count; t++)
                             {
                                 DataTable dtTabShowWhen = RecordManager.dbg_ShowWhen_ForGrid(null, null, int.Parse(_dtDBTableTab.Rows[t]["TableTabID"].ToString()));
@@ -567,11 +567,11 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                             }
 
 
-                            if (strHiddenTableTabID != "-1")
-                            {
-                                _dtDBTableTab = Common.DataTableFromText("SELECT * FROM TableTab WHERE TableID=" +
-                                    _theTable.TableID.ToString() + " AND TableTabID NOT IN (" + strHiddenTableTabID + ")  ORDER BY DisplayOrder");
-                            }
+                            //if (strHiddenTableTabID != "-1")
+                            //{
+                            //    _dtDBTableTab = Common.DataTableFromText("SELECT * FROM TableTab WHERE TableID=" +
+                            //        _theTable.TableID.ToString() + " AND TableTabID NOT IN (" + strHiddenTableTabID + ")  ORDER BY DisplayOrder");
+                            //}
 
 
                         }
@@ -633,7 +633,13 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                         lnkDetialTabD.CssClass = "TablLinkClass" + _theTable.TableID.ToString();
                         lnkDetialTabD.CausesValidation = false;
+                        if (Common.IsIn(_dtDBTableTab.Rows[t]["TableTabID"].ToString(), strHiddenTableTabID))
+                        {
+                            _pnlDetailTabD[t].CssClass = "showhidedivs_hide";
 
+                            _pnlDetailTabD[t].Style.Add("display", "none");
+                            lnkDetialTabD.Style.Add("display", "none");
+                        }
 
                         pnlTabHeading.Controls.Add(lnkDetialTabD);
                         pnlTabHeading.Controls.Add(new LiteralControl("&nbsp&nbsp&nbsp&nbsp"));
@@ -668,6 +674,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                 string strTableTabsJS = @" function ShowHideMainDivs" + _theTable.TableID.ToString() + @"(divSelected,lnk,ttID) {
                                         var divSelectedO = document.getElementsByName(divSelected.toString());
+                                            $('.showhidedivs_hide').hide();
                                             if (divSelectedO != null) 
                                             {
                                               
@@ -719,9 +726,15 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
             _lbl[i] = new Label();
             _lbl[i].ID = "lbl" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
-            if (bool.Parse(_dtRecordTypleColumlns.Rows[i]["IsMandatory"].ToString()))
+            if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
             {
                 _lbl[i].Text = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + "*";
+                _lbl[i].ForeColor = System.Drawing.Color.Red;
+            }
+            else if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "r")
+            {
+                _lbl[i].Text = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() ;
+                _lbl[i].ForeColor = System.Drawing.Color.Red;
             }
             else
             {
@@ -932,14 +945,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                    if (bool.Parse(_dtRecordTypleColumlns.Rows[i]["IsMandatory"].ToString()))
+                    if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
                     {
 
                         _rfvValue[i] = new RequiredFieldValidator();
                         _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
                         _rfvValue[i].Display = ValidatorDisplay.None;//
                         _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
-                        _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                        _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                         if (ContentPage == "record")
                         _rfvValue[i].ValidationGroup = _strDynamictabPart;
 
@@ -1041,14 +1054,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     cell[(i * 2) + 1].Controls.Add(_txtValue[i]);
 
 
-                    if (bool.Parse(_dtRecordTypleColumlns.Rows[i]["IsMandatory"].ToString()))
+                    if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
                     {
 
                         _rfvValue[i] = new RequiredFieldValidator();
                         _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
                         _rfvValue[i].Display = ValidatorDisplay.None;
                         _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
-                        _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                        _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                         if (ContentPage == "record")
                         _rfvValue[i].ValidationGroup = _strDynamictabPart;
 
@@ -1196,14 +1209,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         cell[(i * 2) + 1].Controls.Add(_rvDate[i]);
                         cell[(i * 2) + 1].Controls.Add(_twmValue[i]);
 
-                        if (bool.Parse(_dtRecordTypleColumlns.Rows[i]["IsMandatory"].ToString()))
+                        if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
                         {
                             //_txtValue[i].Text = DateTime.Now.Day.ToString("00") + "/" + DateTime.Now.Month.ToString("00") + "/" + DateTime.Now.Year.ToString();
                             _rfvValue[i] = new RequiredFieldValidator();
                             _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
                             _rfvValue[i].Display = ValidatorDisplay.None;
                             _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
-                            _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                            _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
                             if (ContentPage == "record")
                             _rfvValue[i].ValidationGroup = _strDynamictabPart;
@@ -1270,14 +1283,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                        if (bool.Parse(_dtRecordTypleColumlns.Rows[i]["IsMandatory"].ToString()))
+                        if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
                         {
                             //_txtValue[i].Text = "00:00:00";
                             _rfvValue[i] = new RequiredFieldValidator();
                             _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
                             _rfvValue[i].Display = ValidatorDisplay.None;
                             _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
-                            _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                            _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                             if (ContentPage == "record")
                             _rfvValue[i].ValidationGroup = _strDynamictabPart;
 
@@ -1437,7 +1450,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         cell[(i * 2) + 1].Controls.Add(_lblTime[i]);
                         cell[(i * 2) + 1].Controls.Add(_txtTime[i]);
 
-                        if (bool.Parse(_dtRecordTypleColumlns.Rows[i]["IsMandatory"].ToString()))
+                        if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
                         {
                             //_txtValue[i].Text = DateTime.Now.Day.ToString("00") + "/" + DateTime.Now.Month.ToString("00") + "/" + DateTime.Now.Year.ToString();
                             //_txtTime[i].Text = "00:00";
@@ -1445,7 +1458,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                             _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
                             _rfvValue[i].Display = ValidatorDisplay.None;
                             _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
-                            _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                            _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                             if (ContentPage == "record")
                             _rfvValue[i].ValidationGroup = _strDynamictabPart;
 
@@ -1646,7 +1659,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         //    _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
                         //    _rfvValue[i].Display = ValidatorDisplay.None;//
                         //    _rfvValue[i].ControlToValidate = _fuValue[i].ClientID;
-                        //    _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                        //    _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
 
                         //    cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
@@ -1693,7 +1706,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                         string strValidatorT = "";
                         string strValidatorF = "";
-                        if (bool.Parse(_dtRecordTypleColumlns.Rows[i]["IsMandatory"].ToString())
+                        if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m"
                 && _rfvValue[i] != null)
                         {
                             strValidatorT = "if(document.getElementById('" + _strDynamictabPart + _rfvValue[i].ID.ToString() + "')!=null){ValidatorEnable(document.getElementById('" + _strDynamictabPart + _rfvValue[i].ID.ToString() + "'), true)};";
@@ -1705,7 +1718,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                             }
                         }
 
-                        string strScriptPath = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/"+_strRecordFolder+"/Handler.ashx";
+                        string strScriptPath = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/"+_strRecordFolder+"/Handler.ashx";
 
                         if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "image")
                         {
@@ -1716,7 +1729,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                             }
                             string strFilePath = _strFilesLocation + "/UserFiles/AppFiles/";
 
-                            string strInnerHTML = "<img  title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + _strDynamictabPart + _hfValue[i].ID + "\" src=\"" + "http://" + Request.Url.Authority + Request.ApplicationPath
+                            string strInnerHTML = "<img  title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + _strDynamictabPart + _hfValue[i].ID + "\" src=\"" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
                                 + "/App_Themes/Default/Images/icon_delete.gif\" />" +
                                 "<a id=\"a" + _strDynamictabPart + _hfValue[i].ID + "\" target=\"_blank\" >"
                             + " <img style=\"padding-bottom:7px; max-height:"
@@ -1783,7 +1796,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         }
                         else
                         {
-                            string strInnerHTML = "<img  title=\"Remove this file\" style=\"cursor:pointer;\"  id=\"dimg" + _strDynamictabPart + _hfValue[i].ID + "\" src=\"" + "http://" + Request.Url.Authority + Request.ApplicationPath
+                            string strInnerHTML = "<img  title=\"Remove this file\" style=\"cursor:pointer;\"  id=\"dimg" + _strDynamictabPart + _hfValue[i].ID + "\" src=\"" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
                                + "/App_Themes/Default/Images/icon_delete.gif\" />";
 
                             _strJSPostBack = _strJSPostBack + @" $(document).ready(function () {
@@ -1932,7 +1945,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                         SearchCriteria theSearchCriteria = new SearchCriteria(null, xml);
                                         int iSearchCriteriaID = SystemData.SearchCriteria_Insert(theSearchCriteria);
 
-                                        _hlValue[i].NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" +
+                                        _hlValue[i].NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" +
                                             Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(_dtRecordTypleColumlns.Rows[i]["TableTableID"].ToString())
                                             + "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&quickadd=" + Cryptography.Encrypt(iSearchCriteriaID.ToString());
 
@@ -1945,14 +1958,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                                if (bool.Parse(_dtRecordTypleColumlns.Rows[i]["IsMandatory"].ToString()))
+                                if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
                                 {
 
                                     _rfvValue[i] = new RequiredFieldValidator();
                                     _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
                                     _rfvValue[i].Display = ValidatorDisplay.None;
                                     _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
-                                    _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                                    _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                                     if (ContentPage == "record")
                                     _rfvValue[i].ValidationGroup = _strDynamictabPart;
 
@@ -2096,7 +2109,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                         SearchCriteria theSearchCriteria = new SearchCriteria(null, xml);
                                         int iSearchCriteriaID = SystemData.SearchCriteria_Insert(theSearchCriteria);
 
-                                        _hlValue[i].NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" +
+                                        _hlValue[i].NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" +
                                             Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(_dtRecordTypleColumlns.Rows[i]["TableTableID"].ToString())
                                             + "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&quickadd=" + Cryptography.Encrypt(iSearchCriteriaID.ToString());
 
@@ -2106,14 +2119,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 }
 
 
-                                if (bool.Parse(_dtRecordTypleColumlns.Rows[i]["IsMandatory"].ToString()))
+                                if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
                                 {
 
                                     _rfvValue[i] = new RequiredFieldValidator();
                                     _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
                                     _rfvValue[i].Display = ValidatorDisplay.None;
                                     _rfvValue[i].ControlToValidate = _ddlValue[i].ClientID;
-                                    _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                                    _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                                     if (ContentPage == "record")
                                     _rfvValue[i].ValidationGroup = _strDynamictabPart;
 
@@ -2227,14 +2240,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                             cell[(i * 2) + 1].Controls.Add(_ccddl[i]);
 
-                            if (bool.Parse(_dtRecordTypleColumlns.Rows[i]["IsMandatory"].ToString()))
+                            if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
                             {
 
                                 _rfvValue[i] = new RequiredFieldValidator();
                                 _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
                                 _rfvValue[i].Display = ValidatorDisplay.None;
                                 _rfvValue[i].ControlToValidate = _ddlValue[i].ClientID;
-                                _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                                _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                                 if (ContentPage == "record")
                                 _rfvValue[i].ValidationGroup = _strDynamictabPart;
 
@@ -2337,14 +2350,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                             }
                         }
 
-                        if (bool.Parse(_dtRecordTypleColumlns.Rows[i]["IsMandatory"].ToString()))
+                        if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
                         {
 
                             _rfvValue[i] = new RequiredFieldValidator();
                             _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
                             _rfvValue[i].Display = ValidatorDisplay.None;
                             _rfvValue[i].ControlToValidate = _radioList[i].ClientID;
-                            _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                            _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                             if (ContentPage == "record")
                             _rfvValue[i].ValidationGroup = _strDynamictabPart;
 
@@ -2625,7 +2638,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                         _htmValue[i] = new WYSIWYGEditor();
                         _htmValue[i].ID = "htm" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
-                        _htmValue[i].AssetManager = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Editor/assetmanager/assetmanager.aspx";
+                        _htmValue[i].AssetManager = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Editor/assetmanager/assetmanager.aspx";
                         _htmValue[i].ButtonFeatures = new string[] { "FullScreen", "XHTMLFullSource", "RemoveFormat", "Undo", "Redo", "|", "Paragraph", "FontName", "FontSize", "|", "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyFull", "Bold", "Italic", "Underline", "Hyperlink" };
                         _htmValue[i].scriptPath = "../../Editor/scripts/";
                         _htmValue[i].ToolbarMode = 0;
@@ -2694,14 +2707,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         cell[(i * 2) + 1].Controls.Add(_lstValue[i]);
 
 
-                        if (bool.Parse(_dtRecordTypleColumlns.Rows[i]["IsMandatory"].ToString()))
+                        if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
                         {
 
                             _rfvValue[i] = new RequiredFieldValidator();
                             _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
                             _rfvValue[i].Display = ValidatorDisplay.None;
                             _rfvValue[i].ControlToValidate = _lstValue[i].ClientID;
-                            _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                            _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                             if (ContentPage == "record")
                             _rfvValue[i].ValidationGroup = _strDynamictabPart;
                             
@@ -2780,7 +2793,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         //    _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
                         //    _rfvValue[i].Display = ValidatorDisplay.None;
                         //    _rfvValue[i].ControlToValidate = _cblValue[i].ClientID;
-                        //    _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                        //    _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                         //    cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
 
                         //}
@@ -2856,14 +2869,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         cell[(i * 2) + 1].Controls.Add(_pnlDIV[i]);
 
 
-                        if (bool.Parse(_dtRecordTypleColumlns.Rows[i]["IsMandatory"].ToString()))
+                        if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
                         {
 
                             _rfvValue[i] = new RequiredFieldValidator();
                             _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
                             _rfvValue[i].Display = ValidatorDisplay.None;
                             _rfvValue[i].ControlToValidate = _ddlValue[i].ClientID;
-                            _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                            _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                             if (ContentPage == "record")
                             _rfvValue[i].ValidationGroup = _strDynamictabPart;
 
@@ -3269,14 +3282,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         }
 
 
-                        if (bool.Parse(_dtRecordTypleColumlns.Rows[i]["IsMandatory"].ToString()))
+                        if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
                         {
 
                             _rfvValue[i] = new RequiredFieldValidator();
                             _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
                             _rfvValue[i].Display = ValidatorDisplay.None;
                             _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
-                            _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                            _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                             if (ContentPage == "record")
                             _rfvValue[i].ValidationGroup = _strDynamictabPart;
 
@@ -3751,7 +3764,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 }
                 else
                 {
-                    Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Public.aspx?ParentRecordID=" + Request.QueryString["ParentRecordID"].ToString() + "&TableID=" + TableID.ToString(), true);
+                    Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Public.aspx?ParentRecordID=" + Request.QueryString["ParentRecordID"].ToString() + "&TableID=" + TableID.ToString(), true);
                     return;
 
                 }
@@ -4474,7 +4487,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     string targetID = "#" + _strDynamictabPart + trX[i].ID;
                     string strOnlyAdminJS = @"$('" + targetID + @"').fadeOut();";
 
-                    if (bool.Parse(_dtRecordTypleColumlns.Rows[i]["IsMandatory"].ToString())
+                    if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m"
                         && _rfvValue[i] != null)
                     {
                         strOnlyAdminJS = strOnlyAdminJS + "if(document.getElementById('" + _strDynamictabPart + _rfvValue[i].ID.ToString() + "')!=null){ValidatorEnable(document.getElementById('" + _strDynamictabPart + _rfvValue[i].ID.ToString() + "'), false)};";
@@ -4508,7 +4521,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 string strValidatorT = "";
                 string strValidatorF = "";
                 string strBeforeShowHideFunction = "";
-                if (bool.Parse(_dtRecordTypleColumlns.Rows[i]["IsMandatory"].ToString()) && _rfvValue[i] != null)
+                 if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m" && _rfvValue[i] != null)
                 {
                     strValidatorT = "if(document.getElementById('" + _strDynamictabPart + _rfvValue[i].ID.ToString() + "')!=null){ValidatorEnable(document.getElementById('" + _strDynamictabPart + _rfvValue[i].ID.ToString() + "'), true)};";
                     strValidatorF = "if(document.getElementById('" + _strDynamictabPart + _rfvValue[i].ID.ToString() + "')!=null){ValidatorEnable(document.getElementById('" + _strDynamictabPart + _rfvValue[i].ID.ToString() + "'), false)};";
@@ -4849,6 +4862,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                         {
                                             strAllLogic = strAllLogic + strEachPreJoinOperator + " (strEachValue" + m.ToString() + @".indexOf('" + strEachHideColumnValue + "')<0) ";
                                         }
+                                        else if (strEachHideOperator == "empty")
+                                        {
+                                            strAllLogic = strAllLogic + strEachPreJoinOperator + " (strEachValue" + m.ToString() + @"=='') ";
+                                        }
+                                        else if (strEachHideOperator == "notempty")
+                                        {
+                                            strAllLogic = strAllLogic + strEachPreJoinOperator + " (strEachValue" + m.ToString() + @"!='') ";
+                                        }
                                         else
                                         {
                                             string strCY = _dtRecordTypleColumlns.Rows[m]["ColumnType"].ToString();
@@ -4975,13 +4996,19 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                                                " + strBeforeShowHideFunction + @"
                                                         function  ShowHideFunction" + _strDynamictabPart + i.ToString() + @"()
                                                             {
+                                                                    try {
+
                                                                                                     " + strAllDriverValue + @"
-                                                                if (" + strAllLogic + @") {
-                                                                   $('" + strTargetTRID + @"').stop(true,true); $('" + strTargetTRID + @"').fadeIn();" + strValidatorT + @"
-                                                                }
-                                                                else {
-                                                                    $('" + strTargetTRID + @"').fadeOut();" + strValidatorF + @"
-                                                                }
+                                                                            if (" + strAllLogic + @") {
+                                                                               $('" + strTargetTRID + @"').stop(true,true); $('" + strTargetTRID + @"').fadeIn();" + strValidatorT + @"
+                                                                            }
+                                                                            else {
+                                                                                $('" + strTargetTRID + @"').fadeOut();" + strValidatorF + @"
+                                                                            }
+                                                                         }
+                                                                        catch(err) {
+                                                                                    //email developer
+                                                                            }
                                                             }
 
                                                                 " + strAllDriverTrigger + @"
@@ -6022,7 +6049,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
         }
 
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?tabindex=" + DetailTabIndex.ToString() + "&backurl=" + Cryptography.Encrypt(Request.RawUrl.ToString()) + "&onlyback=yes&mode=" + Cryptography.Encrypt("edit") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&Recordid=" + Cryptography.Encrypt(RecordID.ToString()) + "&parentRecordid=" + strparentRecordid;
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?tabindex=" + DetailTabIndex.ToString() + "&backurl=" + Cryptography.Encrypt(Request.RawUrl.ToString()) + "&onlyback=yes&mode=" + Cryptography.Encrypt("edit") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&Recordid=" + Cryptography.Encrypt(RecordID.ToString()) + "&parentRecordid=" + strparentRecordid;
 
     }
 
@@ -6035,7 +6062,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
         }
         else
         {
-            return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?tabindex=" + DetailTabIndex.ToString() + "&backurl=" + Cryptography.Encrypt(Request.RawUrl.ToString()) + "&onlyback=yes&parentRecordid=" + Request.QueryString["Recordid"].ToString() + "&mode=" + Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+            return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?tabindex=" + DetailTabIndex.ToString() + "&backurl=" + Cryptography.Encrypt(Request.RawUrl.ToString()) + "&onlyback=yes&parentRecordid=" + Request.QueryString["Recordid"].ToString() + "&mode=" + Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
         }
 
 
@@ -6512,7 +6539,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-        _strURL = "http://" + Request.Url.Authority + Request.RawUrl;
+        _strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.RawUrl;
 
         if (!IsPostBack)
         {
@@ -6805,7 +6832,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
         if (!IsPostBack)
         {
 
-            //hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&Recordid=" + Request.QueryString["ParentRecordID"].ToString() + "&TableID=" + Request.QueryString["ParentTableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
+            //hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&Recordid=" + Request.QueryString["ParentRecordID"].ToString() + "&TableID=" + Request.QueryString["ParentTableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
 
 
 
@@ -6813,7 +6840,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
             {
                 if (!IsPostBack)
                 {
-                    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Public.aspx?TableID=" + TableID.ToString();
+                    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Public.aspx?TableID=" + TableID.ToString();
                 }
             }
 
@@ -6830,13 +6857,13 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                         if (xmlDoc.FirstChild["RecordID"].InnerText == "-1")
                         {
-                            hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode="
+                            hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode="
                                 + xmlDoc.FirstChild["mode"].InnerText + "&TableID=" + xmlDoc.FirstChild["TableID"].InnerText
                                 + "&SearchCriteriaID=" + xmlDoc.FirstChild["SearchCriteriaID"].InnerText;
                         }
                         else
                         {
-                            hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode="
+                            hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode="
                               + xmlDoc.FirstChild["mode"].InnerText + "&TableID=" + xmlDoc.FirstChild["TableID"].InnerText
                               + "&SearchCriteriaID=" + xmlDoc.FirstChild["SearchCriteriaID"].InnerText + "&RecordID=" + xmlDoc.FirstChild["RecordID"].InnerText;
                         }
@@ -6998,12 +7025,12 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                             string strFilePath = Cryptography.Encrypt(_strFilesLocation + "/UserFiles/AppFiles/" + _hfValue[i].Value);
                             string strFileName = Cryptography.Encrypt(_hfValue[i].Value.Substring(37));
 
-                            _lblValue[i].Text = "<a target='_blank' href='" + "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Filedownload.aspx?FilePath="
+                            _lblValue[i].Text = "<a target='_blank' href='" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Filedownload.aspx?FilePath="
                                 + strFilePath + "&FileName=" + strFileName + "'>" +
                                   _hfValue[i].Value.Substring(37) + "</a>";
 
 
-                            _lblValue[i].Text = "<img  title=\"Remove this file\" style=\"cursor:pointer;\"  id=\"dimg" + _strDynamictabPart + _hfValue[i].ID + "\" src=\"" + "http://" + Request.Url.Authority + Request.ApplicationPath
+                            _lblValue[i].Text = "<img  title=\"Remove this file\" style=\"cursor:pointer;\"  id=\"dimg" + _strDynamictabPart + _hfValue[i].ID + "\" src=\"" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
                                + "/App_Themes/Default/Images/icon_delete.gif\" />" + _lblValue[i].Text;
 
                             string strTempJS = @" if(document.getElementById('dimg" + _strDynamictabPart + _hfValue[i].ID + @"')!=null){  document.getElementById('dimg" + _strDynamictabPart + _hfValue[i].ID + @"').addEventListener('click', function (e) {
@@ -7036,7 +7063,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 + "' src='" + strFilePath + "' title='" + _hfValue[i].Value.Substring(37) + "'  />" + "</a><br/>";
 
 
-                            _lblValue[i].Text = "<img title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + _strDynamictabPart + _hfValue[i].ID + "\" src=\"" + "http://" + Request.Url.Authority + Request.ApplicationPath
+                            _lblValue[i].Text = "<img title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + _strDynamictabPart + _hfValue[i].ID + "\" src=\"" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
                                + "/App_Themes/Default/Images/icon_delete.gif\" />" + _lblValue[i].Text;
 
 
@@ -7697,7 +7724,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     string strFilePath = Cryptography.Encrypt(_strFilesLocation + "/UserFiles/AppFiles/" + _dtRecordedetail.Rows[0][i].ToString());
                     string strFileName = Cryptography.Encrypt(_dtRecordedetail.Rows[0][i].ToString().Substring(37));
 
-                    _lblValue[i].Text = "<a target='_blank' href='" + "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Filedownload.aspx?FilePath="
+                    _lblValue[i].Text = "<a target='_blank' href='" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Filedownload.aspx?FilePath="
                         + strFilePath + "&FileName=" + strFileName + "'>" +
                           _dtRecordedetail.Rows[0][i].ToString().Substring(37) + "</a>";
 
@@ -7709,7 +7736,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     {
                         _hfValue[i].Value = _dtRecordedetail.Rows[0][i].ToString();
 
-                        _lblValue[i].Text = "<img  title=\"Remove this file\" style=\"cursor:pointer;\"  id=\"dimg" + _strDynamictabPart + _hfValue[i].ID + "\" src=\"" + "http://" + Request.Url.Authority + Request.ApplicationPath
+                        _lblValue[i].Text = "<img  title=\"Remove this file\" style=\"cursor:pointer;\"  id=\"dimg" + _strDynamictabPart + _hfValue[i].ID + "\" src=\"" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
                            + "/App_Themes/Default/Images/icon_delete.gif\" />" + _lblValue[i].Text;
 
                         string strTempJS = @" if(document.getElementById('dimg" + _strDynamictabPart + _hfValue[i].ID + @"')!=null){  document.getElementById('dimg" + _strDynamictabPart + _hfValue[i].ID + @"').addEventListener('click', function (e) {
@@ -7764,7 +7791,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     else
                     {
 
-                        _lblValue[i].Text = "<img title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + _strDynamictabPart + _hfValue[i].ID + "\" src=\"" + "http://" + Request.Url.Authority + Request.ApplicationPath
+                        _lblValue[i].Text = "<img title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + _strDynamictabPart + _hfValue[i].ID + "\" src=\"" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
                            + "/App_Themes/Default/Images/icon_delete.gif\" />" + _lblValue[i].Text;
 
                         _hfValue[i].Value = _dtRecordedetail.Rows[0][i].ToString();
@@ -8089,7 +8116,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                             if (strLinkURL.IndexOf("http") == -1)
                             {
-                                strLinkURL = "http://" + strLinkURL;
+                                strLinkURL = Request.Url.Scheme +"://" + strLinkURL;
                             }
                             _hlValue[i].NavigateUrl = strLinkURL;
                             _hlValue[i].Text = "Go";
@@ -9650,7 +9677,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 DataTable theSPTable = SystemData.Run_ContentSP("ets_UserAccountDetails", iNewUserID.ToString());
                                 string strBody = Common.ReplaceDataFiledByValue(theSPTable, theConent.ContentP);
 
-                                strBody = strBody.Replace("[URL]", "http://" + Request.Url.Authority + Request.ApplicationPath);
+                                strBody = strBody.Replace("[URL]", Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath);
 
                                 string strTo = newUser.Email;
 
@@ -10645,9 +10672,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                         AutoCreateUser();
 
-                        _strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() + "&TableID=" + TableID.ToString() + "&Recordid=" + Cryptography.Encrypt(iNewRecordID.ToString());
+                        _strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() + "&TableID=" + TableID.ToString() + "&Recordid=" + Cryptography.Encrypt(iNewRecordID.ToString());
 
-                        //hlEdit.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + TableID.ToString() + "&Recordid=" + Cryptography.Encrypt(iNewRecordID.ToString()) + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() + "&FromAdd=yes";
+                        //hlEdit.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + TableID.ToString() + "&Recordid=" + Cryptography.Encrypt(iNewRecordID.ToString()) + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() + "&FromAdd=yes";
                         //now send emails
 
                         if (bMaxTime)
@@ -10751,7 +10778,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         //{
                         //    Session["DoNotAllow"] = "true";
                         //    //if (!IsPostBack)
-                        //    //ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "Problem" + _strDynamictabPart, "alert('Sorry you have reached the limit of your account.');window.location.href='" + "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountTypeChange.aspx?type=renew" + "'", true);
+                        //    //ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "Problem" + _strDynamictabPart, "alert('Sorry you have reached the limit of your account.');window.location.href='" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountTypeChange.aspx?type=renew" + "'", true);
                         //    ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "DoNotAllow" + _strDynamictabPart, "alert('" + Common.RecordExceededMessage.Replace("'", "''") + "');", true);
 
                         //    return false;
@@ -10782,7 +10809,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                        _strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() + "&TableID=" + TableID.ToString() + "&Recordid=" + Cryptography.Encrypt(RecordID.ToString());
+                        _strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() + "&TableID=" + TableID.ToString() + "&Recordid=" + Cryptography.Encrypt(RecordID.ToString());
 
                         for (int i = 0; i < _dtRecordTypleColumlns.Rows.Count; i++)
                         {

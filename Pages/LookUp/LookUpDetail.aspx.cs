@@ -34,11 +34,11 @@ public partial class Pages_LookUp_LookUpDetail : SecurePage
 
             if (Request.QueryString["SearchCriteria"] != null)
             {
-                hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/LookUp/LookUp.aspx" + "?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&LookupTypeID=" + Request.QueryString["LookupTypeID"].ToString();
+                hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/LookUp/LookUp.aspx" + "?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&LookupTypeID=" + Request.QueryString["LookupTypeID"].ToString();
             }
             else
             {
-                hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/LookUp/LookUp.aspx?LookupTypeID=" + Request.QueryString["LookupTypeID"].ToString();
+                hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/LookUp/LookUp.aspx?LookupTypeID=" + Request.QueryString["LookupTypeID"].ToString();
             }
            
             

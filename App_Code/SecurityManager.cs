@@ -2352,7 +2352,7 @@ public class SecurityManager
 //    {
 //        Account theAccount = SecurityManager.Account_Details(iAccountID);
 
-//        string strURL = "http://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath; 
+//        string strURL = HttpContext.Current.Request.Url.Scheme +"://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath; 
 //        string strDeveloperEmail = System.Configuration.ConfigurationManager.AppSettings["Coder"];
 //        bool bSentEmailToClient = true;
 

@@ -263,9 +263,9 @@ public class GetLocation : IHttpHandler, System.Web.SessionState.IRequiresSessio
                                              aPin.lat = theLocationColumn.Latitude.ToString();
                                              aPin.lon = theLocationColumn.Longitude.ToString();
                                              aPin.title = strTT;
-                                             aPin.pin = "http://" + context.Request.Url.Authority + context.Request.ApplicationPath + "/" + theTable.PinImage;
+                                             aPin.pin = context.Request.Url.Scheme + "://" + context.Request.Url.Authority + context.Request.ApplicationPath + "/" + theTable.PinImage;
                                              aPin.ssid = drRecord["RecordID"].ToString();
-                                             aPin.url = "http://" + context.Request.Url.Authority + context.Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?fixedurl=" + Cryptography.Encrypt("~/Default.aspx") + "&stackzero=yes&mode=" + Cryptography.Encrypt("view") +
+                                             aPin.url = context.Request.Url.Scheme + "://" + context.Request.Url.Authority + context.Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?fixedurl=" + Cryptography.Encrypt("~/Default.aspx") + "&stackzero=yes&mode=" + Cryptography.Encrypt("view") +
                                                  "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt(drSys["TableID"].ToString()) + "&Recordid=" +
                                                  Cryptography.Encrypt(drRecord["RecordID"].ToString());
                                              aPin.mappopup = strPopup;
@@ -276,8 +276,8 @@ public class GetLocation : IHttpHandler, System.Web.SessionState.IRequiresSessio
                                             //sb.Append(",{");
 
                                             //sb.Append(String.Format("\"lat\":{0}, \"lon\":{1}, \"title\":\"{2}\", \"pin\":\"{3}\", \"ssid\":\"{4}\", \"url\":\"{5}\", \"mappopup\":\"{6}\"", theLocationColumn.Latitude.ToString(), theLocationColumn.Longitude.ToString(),
-                                            //       HttpUtility.JavaScriptStringEncode(strTT),HttpUtility.JavaScriptStringEncode( "http://" + context.Request.Url.Authority + context.Request.ApplicationPath + "/" +
-                                            //       theTable.PinImage),HttpUtility.JavaScriptStringEncode( drRecord["RecordID"].ToString()),HttpUtility.JavaScriptStringEncode( "http://" + context.Request.Url.Authority +
+                                            //       HttpUtility.JavaScriptStringEncode(strTT),HttpUtility.JavaScriptStringEncode( Request.Url.Scheme +"://" + context.Request.Url.Authority + context.Request.ApplicationPath + "/" +
+                                            //       theTable.PinImage),HttpUtility.JavaScriptStringEncode( drRecord["RecordID"].ToString()),HttpUtility.JavaScriptStringEncode( Request.Url.Scheme +"://" + context.Request.Url.Authority +
                                             //       context.Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?fixedurl=" + Cryptography.Encrypt("~/Default.aspx") + "&stackzero=yes&mode=" + Cryptography.Encrypt("view") +
                                             //       "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt(drSys["TableID"].ToString()) + "&Recordid=" +
                                             //       Cryptography.Encrypt(drRecord["RecordID"].ToString())), HttpUtility.JavaScriptStringEncode(strPopup)));

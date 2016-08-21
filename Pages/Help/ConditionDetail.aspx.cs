@@ -77,11 +77,11 @@ public partial class Pages_Schedule_ConditionDetail : SecurePage
            
             //if (Request.QueryString["SearchCriteria"] != null)
             //{
-            //    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/Condition.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&ColumnID=" + Request.QueryString["ColumnID"].ToString() + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+            //    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/Condition.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&ColumnID=" + Request.QueryString["ColumnID"].ToString() + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
             //}
             //else
             //{
-            hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/Condition.aspx?ConditionType=" + Request.QueryString["ConditionType"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + "&ColumnID=" + Request.QueryString["ColumnID"].ToString();//i think no need
+            hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/Condition.aspx?ConditionType=" + Request.QueryString["ConditionType"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + "&ColumnID=" + Request.QueryString["ColumnID"].ToString();//i think no need
             //}
 
             lblValidation.Text = "Data " + _strConTypeDisplay + " if outside the range";
@@ -251,7 +251,7 @@ public partial class Pages_Schedule_ConditionDetail : SecurePage
             else if (_strActionMode == "view")
             {
                 divEdit.Visible = true;
-                hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/ConditionDetail.aspx?ColumnID=" + Request.QueryString["ColumnID"].ToString() + "&mode=" + Cryptography.Encrypt("edit") + "&ConditionID=" + Cryptography.Encrypt(theCondition.ConditionID.ToString());
+                hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/ConditionDetail.aspx?ColumnID=" + Request.QueryString["ColumnID"].ToString() + "&mode=" + Cryptography.Encrypt("edit") + "&ConditionID=" + Cryptography.Encrypt(theCondition.ConditionID.ToString());
             }
         }
         catch (Exception ex)

@@ -30,7 +30,7 @@ public class Handler : IHttpHandler
             file.SaveAs(strPath);
 
             context.Response.Write(strUniqueName + "," + file.ContentLength.ToString());
-            //context.Response.Redirect("http://" + context.Request.Url.Authority + context.Request.ApplicationPath + "/Pages/Document/Document.aspx", false);
+            //context.Response.Redirect(context.Request.Url.Scheme +"://" + context.Request.Url.Authority + context.Request.ApplicationPath + "/Pages/Document/Document.aspx", false);
         }
         else
         {
@@ -152,7 +152,7 @@ public class Handler : IHttpHandler
 
 
     //            context.Response.Write("ok");
-    //            //context.Response.Redirect("http://" + context.Request.Url.Authority + context.Request.ApplicationPath + "/Pages/Document/Document.aspx", false);
+    //            //context.Response.Redirect(context.Request.Url.Scheme +"://" + context.Request.Url.Authority + context.Request.ApplicationPath + "/Pages/Document/Document.aspx", false);
     //        }
     //        else
     //        {

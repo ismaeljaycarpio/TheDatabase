@@ -469,7 +469,7 @@ public partial class Pages_Schedule_Condition : SecurePage
     public string GetEditURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/ConditionDetail.aspx?ConditionType=" + ViewState["ConditionType"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + "&ColumnID=" + Request.QueryString["ColumnID"].ToString() + "&mode=" + Cryptography.Encrypt("edit") + "&ConditionID=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/ConditionDetail.aspx?ConditionType=" + ViewState["ConditionType"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + "&ColumnID=" + Request.QueryString["ColumnID"].ToString() + "&mode=" + Cryptography.Encrypt("edit") + "&ConditionID=";
 
     }
 
@@ -477,13 +477,13 @@ public partial class Pages_Schedule_Condition : SecurePage
     public string GetViewURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/ConditionDetail.aspx?ConditionType=" + ViewState["ConditionType"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + "&ColumnID=" + Request.QueryString["ColumnID"].ToString() + "&mode=" + Cryptography.Encrypt("view") + "&ConditionID=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/ConditionDetail.aspx?ConditionType=" + ViewState["ConditionType"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + "&ColumnID=" + Request.QueryString["ColumnID"].ToString() + "&mode=" + Cryptography.Encrypt("view") + "&ConditionID=";
 
     }
     public string GetAddURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/ConditionDetail.aspx?ConditionType=" + ViewState["ConditionType"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + "&ColumnID=" + Request.QueryString["ColumnID"].ToString() + "&mode=" + Cryptography.Encrypt("add");
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/ConditionDetail.aspx?ConditionType=" + ViewState["ConditionType"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + "&ColumnID=" + Request.QueryString["ColumnID"].ToString() + "&mode=" + Cryptography.Encrypt("add");
 
     }
 

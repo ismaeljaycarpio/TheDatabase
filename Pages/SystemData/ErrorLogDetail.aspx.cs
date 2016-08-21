@@ -25,7 +25,7 @@ public partial class Pages_Security_AccountDetail : SecurePage
             if (!Common.HaveAccess(Session["roletype"].ToString(), "1"))
             { Response.Redirect("~/Default.aspx", false); }
 
-            hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ErrorLog.aspx";
+            hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ErrorLog.aspx";
         }
 
         if (Request.QueryString["mode"] == null)

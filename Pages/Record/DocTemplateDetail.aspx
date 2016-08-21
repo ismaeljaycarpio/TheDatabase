@@ -22,15 +22,26 @@
                     <strong>Word Document:</strong>
                 </td>
                 <td>
-                    <asp:FileUpload ID="fuWordDocument" runat="server" Style="width: 300px;" size="70"
-                        Font-Size="11px" />
-                        <br />
+                    <div style="float:left;">
+                        <asp:FileUpload ID="fuWordDocument" runat="server" Style="width: 300px;" size="70"
+                            Font-Size="11px" />
+                            <br />
                     
-                       <asp:Label runat="server" ID="Label1" Font-Size="Smaller" Text="Please select a .docx or .dotx (Word 2007 or later)"></asp:Label>
-                    <br />
-                    <asp:Label runat="server" ID="lblWordDocument"></asp:Label>
-                    <%--<asp:RequiredFieldValidator ID="rfvWordDocument" runat="server" ControlToValidate="fuWordDocument"
-                        ErrorMessage="Required" Display="Dynamic"></asp:RequiredFieldValidator>--%>
+                           <asp:Label runat="server" ID="Label1" Font-Size="Smaller" Text="Please select a .docx or .dotx (Word 2007 or later)"></asp:Label>
+                        <br />
+                        <asp:Label runat="server" ID="lblWordDocument"></asp:Label>
+                        <%--<asp:RequiredFieldValidator ID="rfvWordDocument" runat="server" ControlToValidate="fuWordDocument"
+                            ErrorMessage="Required" Display="Dynamic"></asp:RequiredFieldValidator>--%>
+                    </div>
+                    <%--//oliver <begin> Ticket 1451 cosmetic changes asked by Jon through skype (8/17/2016)--%>
+                    <div style="float:left;  padding: 0 0 0 80px;">
+                                <div runat="server" id="div1" style="padding-left: 10px;">
+                                    <asp:LinkButton runat="server" ID="lnkSave" CssClass="btn" CausesValidation="true"
+                                        OnClick="lnkSave_Click"> <strong>Save</strong></asp:LinkButton>
+                                </div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <%--//oliver </end>--%>
                 </td>
             </tr>
             <tr align="left">
@@ -52,7 +63,8 @@
                         <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="Conditional">
                             <ContentTemplate>
                                 <table>
-                                    <tr>
+                                    <%--//oliver <begin> Jon asked me to hide this based on email 8/18/2016--%>
+                                    <tr style="display:none;">
                                         <td align="right" style="width:150px;">
                                             <strong>Data Retriever:</strong>
                                         </td>
@@ -64,8 +76,12 @@
                                                 ErrorMessage="Required" Display="Dynamic"></asp:RequiredFieldValidator>
                                         </td>
                                     </tr>
+                                    <%--//oliver <end>--%>
                                     <tr>
                                         <td colspan="2" style="padding-left: 10px;">
+                                            <br />
+                                            <hr />
+
                                             Below is a list of data fields you can put into your Word Document 
                                             – note that you must include these symbols « »!
                                         </td>
@@ -95,16 +111,20 @@
                     <table cellpadding="0" cellspacing="0">
                         <tr>
                             <td>
-                                <div runat="server" id="div1" style="padding-left: 10px;">
+                                 <%--//oliver <begin> Ticket 1451 cosmetic changes asked by Jon through skype (8/17/2016)--%>
+                                <%--<div runat="server" id="div1" style="padding-left: 10px;">
                                     <asp:LinkButton runat="server" ID="lnkSave" CssClass="btn" CausesValidation="true"
                                         OnClick="lnkSave_Click"> <strong>Save</strong></asp:LinkButton>
-                                </div>
+                                </div>--%>
+                                <%--//oliver <end>--%>
                             </td>
                             <td>
-                                <div runat="server" id="div2" style="padding-left: 10px;">
+                                <%--//oliver <begin> Ticket 1451 cosmetic changes asked by Jon through skype (8/17/2016)--%>
+                                <div runat="server" id="div2" style="padding-left: 10px; display:none;">
                                     <asp:LinkButton runat="server" ID="lnkBack" OnClientClick="javascript:  parent.$.fancybox.close();"
                                         CssClass="btn" CausesValidation="false"> <strong>Cancel</strong></asp:LinkButton>
                                 </div>
+                                <%--//oliver <end>--%>
                             </td>
                         </tr>
                     </table>

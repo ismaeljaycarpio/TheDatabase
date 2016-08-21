@@ -245,7 +245,7 @@ public partial class Pages_LookUp_LookUp : SecurePage
     public string GetEditURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/LookUp/LookUpDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&LookupTypeID=" + Request.QueryString["LookupTypeID"].ToString() + "&LookupDataID=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/LookUp/LookUpDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&LookupTypeID=" + Request.QueryString["LookupTypeID"].ToString() + "&LookupDataID=";
 
     }
 
@@ -253,7 +253,7 @@ public partial class Pages_LookUp_LookUp : SecurePage
     public string GetAddURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/LookUp/LookUpDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&LookupTypeID=" + Request.QueryString["LookupTypeID"].ToString();
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/LookUp/LookUpDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&LookupTypeID=" + Request.QueryString["LookupTypeID"].ToString();
 
     }
 

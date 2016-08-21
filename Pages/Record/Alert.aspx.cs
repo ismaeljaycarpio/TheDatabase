@@ -58,7 +58,7 @@ public partial class Pages_Record_Alert : SecurePage
     public string GetWarningViewURL() //link with Record page
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?warning=yes&TableID=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?warning=yes&TableID=";
 
     }
     protected void chkDoNotShowMe_CheckedChanged(object sender, EventArgs e)

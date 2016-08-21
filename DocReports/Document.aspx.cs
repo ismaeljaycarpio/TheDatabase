@@ -218,7 +218,7 @@ public partial class Pages_Reports_Document : System.Web.UI.Page
             }
             else
             {
-                return "http://" + Request.Url.Authority + Request.ApplicationPath + "/DocReports/Report.aspx?ReportID=" + theDocument.DocumentID.ToString();
+                return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/DocReports/Report.aspx?ReportID=" + theDocument.DocumentID.ToString();
             }
 
         }

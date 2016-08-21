@@ -13,7 +13,7 @@ public partial class Pages_DocGen_EachMap : System.Web.UI.Page
         {
             if (!IsPostBack)
             {
-                //hfGunPoints.Value = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Images/gun_points.png";
+                //hfGunPoints.Value = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Images/gun_points.png";
 
                 PopulateAllTableDDL();
 

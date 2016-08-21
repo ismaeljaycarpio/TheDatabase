@@ -22,6 +22,8 @@ public class EcotechBlastDataImport
     {
         //Table theTable = RecordManager.ets_Table_Details((int)ecotechSiteRec.TableID);
         string strAccountID = Common.GetValueFromSQL("SELECT AccountID FROM Account Where AccountName='" + ecotechSiteRec.EMD.Replace("'", "''") + "'");
+        if (strAccountID == "")
+            return "";
 
         bool fetchValidShotsOnly = (ecotechSiteRec.OnlyImportValidShots.ToLower() == "yes") ? true : false;
         int accountID = int.Parse(strAccountID);
@@ -139,15 +141,48 @@ public class EcotechBlastDataImport
         }
 
         Batch newSourceBatch=null;
+        User theUser = null;
         if (ecotechBlastDataRecords.Count>0)
         {
             int? iTableID=null;
+
+            
+
+            string strDBName = Common.GetDatabaseName();
+
+            if (accountID == 24916)//Bulga
+                iTableID = 2955;
+            if (accountID == 24931)//Clermont
+                iTableID = 2956;
+            if (accountID == 24934)//Collinsville
+                iTableID = 2957;
+            if (accountID == 24918)//Liddell
+                iTableID = 2958;
+            if (accountID == 24919)//Mangoola
+                iTableID = 2959;
+            if (accountID == 24920)//Mt.Owen
+                iTableID = 2960;
+            if (accountID == 24933)//Newlands
+                iTableID = 2961;
+            if (accountID == 24938)//OCAL
+                iTableID = 2962;
             if (accountID == 24928)//Rolleston
                 iTableID = 2551;
-            if (accountID == 24920)//Mt.Owen
-                iTableID = 2751;
-            if (accountID == 24918) //Liddell
-                iTableID = 2613;
+            if (accountID == 24936)//Ulan
+                iTableID = 2964;
+
+            //LOCAL
+            if (strDBName == "thedatabase_dev_27-Jan-2016")
+            {
+                if (accountID == 25981) //Liddell Local - Site 2970
+                    iTableID = 2969;
+            }
+            //dev
+            if (strDBName == "thedatabase_dev")
+            {
+                if (accountID == 25049) //Liddell - Site 3411
+                    iTableID = 3410;
+            }
 
             if(iTableID==null)
             {
@@ -155,16 +190,18 @@ public class EcotechBlastDataImport
                 return WriteLog();
             }
 
-            User theUser=SecurityManager.User_AccountHolder(accountID);
+            theUser=SecurityManager.User_AccountHolder(accountID);
             newSourceBatch = new Batch(null, (int)iTableID,
               "NA",
-              "NA", null, null, theUser.UserID, accountID, false);
+              "NA", null, Guid.NewGuid(), theUser.UserID, accountID, false);
             int iBatchID = UploadManager.ets_Batch_Insert(newSourceBatch);
             newSourceBatch.BatchID = iBatchID;
-
+            if (iBatchID<0)
+            {
+                return "";
+            }
             foreach (EcotechBlastData rec in ecotechBlastDataRecords)
             {
-
                 using (SqlConnection connection = new SqlConnection(DBGurus.strGlobalConnectionString))
                 {
                     using (SqlCommand command = new SqlCommand("ImportDynamasterBlastData", connection))
@@ -177,7 +214,7 @@ public class EcotechBlastDataImport
                         command.Parameters.Add(new SqlParameter("@EventDateTime", rec.EventDateTime));
                         command.Parameters.Add(new SqlParameter("@Overpressure", rec.Overpressure));
                         command.Parameters.Add(new SqlParameter("@Vibration", rec.Vibration));
-                        command.Parameters.Add(new SqlParameter("@UserID", theUser.UserID));
+                        //command.Parameters.Add(new SqlParameter("@UserID", theUser.UserID));
                         command.Parameters.Add(new SqlParameter("@BatchID", iBatchID));
 
                         SqlParameter pRV = new SqlParameter("@Status", SqlDbType.Int);
@@ -202,10 +239,7 @@ public class EcotechBlastDataImport
                         //int.Parse(pRV.Value.ToString());
                     }
                 }
-
-
             }
-
         }
 
        
@@ -213,7 +247,9 @@ public class EcotechBlastDataImport
         {
             string strOutMsg="";
             int iFinalBatchID=0;
-            UploadManager.UploadCSV(null, null, "", "", null, "", out strOutMsg, out iFinalBatchID, "", "", 
+            Table theTable = RecordManager.ets_Table_Details((int)newSourceBatch.TableID);
+            UploadManager.UploadCSV(theUser.UserID, theTable, newSourceBatch.BatchDescription, newSourceBatch.UploadedFileName,
+                null, "", out strOutMsg, out iFinalBatchID, "", "", 
                 newSourceBatch.AccountID, null, null, newSourceBatch.BatchID);
             Batch theBatch = UploadManager.ets_Batch_Details(iFinalBatchID);
 
@@ -260,7 +296,11 @@ public class EcotechBlastDataImport
  
             foreach (var rec in listDynamasterConfig)
             {
-                if (rec.ImportData == "Yes" && Convert.ToInt32(rec.NumberEventsToFetch) > 0 && Common.DaysBetween(DateTime.Parse(rec.LastDataImportedOn), DateTime.Now) > 0)
+
+                DateTime? dtLastDataImportedOn = Common.GetDateTimeFromString(rec.LastDataImportedOn,"");
+
+                if (dtLastDataImportedOn!=null && rec.ImportData == "Yes" &&
+                    Convert.ToInt32(rec.NumberEventsToFetch) > 0 && Common.DaysBetween((DateTime)dtLastDataImportedOn, DateTime.Now) > 0)
                 {
                     try
                     {

@@ -62,9 +62,9 @@ FROM         [Column] INNER JOIN
 
                 string strDefaultPin = "Pages/Record/PINImages/DefaultPin.png";
 
-                hfImage.Value = "http://" + Request.Url.Authority + Request.ApplicationPath + "/" + strDefaultPin;
-                hfFlag.Value = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Images/Flag.png";
-                hfGunPoints.Value = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Images/gun_points.png";
+                hfImage.Value = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/" + strDefaultPin;
+                hfFlag.Value = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Images/Flag.png";
+                hfGunPoints.Value = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Images/gun_points.png";
                 //gun_points.png
 
 

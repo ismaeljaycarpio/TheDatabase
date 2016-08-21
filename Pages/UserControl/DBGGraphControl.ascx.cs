@@ -140,11 +140,11 @@ public partial class DBGGraphControl : UserControl
         {
             if (Session["LoginAccount"] == null)
             {
-                Response.Redirect("http://" + base.Request.Url.Authority + base.Request.ApplicationPath + "/Login.aspx");
+                Response.Redirect(base.Request.Url.Scheme +"://" + base.Request.Url.Authority + base.Request.ApplicationPath + "/Login.aspx");
             }
             else
             {
-                Response.Redirect("http://" + base.Request.Url.Authority + base.Request.ApplicationPath + "/Login.aspx?" + Session["LoginAccount"].ToString());
+                Response.Redirect(base.Request.Url.Scheme +"://" + base.Request.Url.Authority + base.Request.ApplicationPath + "/Login.aspx?" + Session["LoginAccount"].ToString());
             }
             return;
         }
@@ -152,7 +152,7 @@ public partial class DBGGraphControl : UserControl
 
         if (!IsPostBack)
         {
-            hlAddNewDetail.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath +
+            hlAddNewDetail.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath +
                 "/Pages/UserControl/GraphOptionDetail.aspx?GraphOptionDetailID=-1&ModeDetail=add";
             hlFolderOpen.NavigateUrl = "~/Pages/Graph/GraphPopup.aspx?graphbase=control";
 
@@ -1308,7 +1308,7 @@ public partial class DBGGraphControl : UserControl
     //        strAxis = "Left";
     //    }
 
-    //    hlAddNewDetail.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath +
+    //    hlAddNewDetail.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath +
     //        "/Pages/UserControl/GraphOptionDetail.aspx?GraphOptionDetailID=-1&ModeDetail=add&Axis=" + strAxis +
     //        "&TableID=" + strTableID + "&ColumnID=" + strColumnID;
     //}
@@ -3188,7 +3188,7 @@ public partial class DBGGraphControl : UserControl
     //                if (DataBinder.Eval(e.Row.DataItem, "Label") != DBNull.Value)
     //                    strLabel = DataBinder.Eval(e.Row.DataItem, "Label").ToString();
 
-    //                hlEditDetail.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath +
+    //                hlEditDetail.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath +
     //                    "/Pages/UserControl/GraphOptionDetail.aspx?ModeDetail=edit&TableID=" +
     //                    ddlEachTable.Text + "&GraphOptionDetailID=" + DataBinder.Eval(e.Row.DataItem, "GraphOptionDetailID").ToString() +
     //                    "&ColumnID=" + DataBinder.Eval(e.Row.DataItem, "ColumnID").ToString() +
@@ -5385,7 +5385,7 @@ public partial class DBGGraphControl : UserControl
 
                 if (ParentPage == "main")
                 {
-                    Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/SendEmail.aspx?Source=" + Cryptography.Encrypt("graph") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&FileName=" + Cryptography.Encrypt(fileName) + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() + "&SearchCriteriaID2=" + Cryptography.Encrypt(iSearchCriteriaID2.ToString()), false);
+                    Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/SendEmail.aspx?Source=" + Cryptography.Encrypt("graph") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&FileName=" + Cryptography.Encrypt(fileName) + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() + "&SearchCriteriaID2=" + Cryptography.Encrypt(iSearchCriteriaID2.ToString()), false);
                 }
 
                 if (ParentPage == "list")
@@ -5393,14 +5393,14 @@ public partial class DBGGraphControl : UserControl
                     if (Request.QueryString["GraphOptionID"] != null)
                     {
 
-                        Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/SendEmail.aspx?Source=" + Cryptography.Encrypt("graphlist") +
+                        Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/SendEmail.aspx?Source=" + Cryptography.Encrypt("graphlist") +
                             "&FileName=" + Cryptography.Encrypt(fileName) + "&SearchCriteriaID2=" + Cryptography.Encrypt(iSearchCriteriaID2.ToString()) + "&page=list&mode=" + Request.QueryString["mode"].ToString() +
                         "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() +
                         "&GraphOptionID=" + Request.QueryString["GraphOptionID"].ToString(), false);
                     }
                     else
                     {
-                        Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/SendEmail.aspx?Source=" + Cryptography.Encrypt("graphlist") +
+                        Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/SendEmail.aspx?Source=" + Cryptography.Encrypt("graphlist") +
                           "&FileName=" + Cryptography.Encrypt(fileName) + "&SearchCriteriaID2=" + Cryptography.Encrypt(iSearchCriteriaID2.ToString()) + "&page=list&mode=" + Request.QueryString["mode"].ToString() +
                       "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString(), false);
 
@@ -5920,7 +5920,7 @@ public partial class DBGGraphControl : UserControl
                     strColumnGraphLabel = ddlEachAnalyte_Simple.SelectedItem.Text;
 
 
-                //hlMoreGraphAlt.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Graph/RecordChart.aspx?SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt(ddlGraphOption.SelectedValue) + "&fromhome=yes";
+                //hlMoreGraphAlt.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Graph/RecordChart.aspx?SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt(ddlGraphOption.SelectedValue) + "&fromhome=yes";
                 //hlMoreGraph.NavigateUrl = hlMoreGraphAlt.NavigateUrl;
 
                 string strGraphPage = "home"; //"home"
@@ -7119,7 +7119,7 @@ public partial class DBGGraphControl : UserControl
         {
             string fileFullName = hfGraphImageURL.Value;
 
-            Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/SendEmail.aspx?Source=" + Cryptography.Encrypt("jsgraph") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&FileName=" + Cryptography.Encrypt(fileFullName) + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() , false);
+            Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/SendEmail.aspx?Source=" + Cryptography.Encrypt("jsgraph") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&FileName=" + Cryptography.Encrypt(fileFullName) + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() , false);
 
         }
     }
@@ -7131,7 +7131,7 @@ public partial class DBGGraphControl : UserControl
 
         if (DocumentID == null)
         {
-            string aspxPath = "http://" + Request.Url.Authority + Request.ApplicationPath + "Pages/Graph/TableGraphConfig.aspx" +
+            string aspxPath = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "Pages/Graph/TableGraphConfig.aspx" +
                 "?TableID=" + Cryptography.Encrypt(OneTableID.ToString());
 
             int iNT = 0;

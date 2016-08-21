@@ -53,7 +53,7 @@ public partial class Page_Security_DemoEmail : SecurePage
 
         if (theContent != null)
         {
-            DataTable theSPTable = SystemData.Run_ContentSP("ets_DemoEmail", Cryptography.Decrypt(Request.QueryString["AccountID"].ToString()), "http://" + Request.Url.Authority + Request.ApplicationPath);
+            DataTable theSPTable = SystemData.Run_ContentSP("ets_DemoEmail", Cryptography.Decrypt(Request.QueryString["AccountID"].ToString()), Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath);
             theContent.ContentP = Common.ReplaceDataFiledByValue(theSPTable, theContent.ContentP);
 
             lblHeading.Text = theContent.Heading;
@@ -66,13 +66,13 @@ public partial class Page_Security_DemoEmail : SecurePage
 
         
 
-//        string strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Login.aspx";
+//        string strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Login.aspx";
 //        DataTable dtUser = Common.DataTableFromText(@"SELECT     Email, Password, IsAccountHolder, UserID
 //            FROM         [User] WHERE  IsAccountHolder=1 AND  AccountID=" + theAccount.AccountID.ToString(), null, null);
 
 //        if (dtUser.Rows.Count > 0)
 //        {
-//            strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Login.aspx?Email="+dtUser.Rows[0]["Email"].ToString()
+//            strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Login.aspx?Email="+dtUser.Rows[0]["Email"].ToString()
 //                + "&Password=" + dtUser.Rows[0]["Password"].ToString() + "&RememberMe=Yes";
 
 //        }

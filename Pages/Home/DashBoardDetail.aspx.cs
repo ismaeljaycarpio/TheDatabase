@@ -27,13 +27,13 @@ public partial class Pages_Home_DashBoardDetail : SecurePage
             if (Request.QueryString["SearchCriteria"] != null)
             {
 
-                hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Home/Dashboard.aspx?SearchCriteria=" 
+                hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Home/Dashboard.aspx?SearchCriteria=" 
                     + Request.QueryString["SearchCriteria"].ToString();
             }
             else
             {
 
-                Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Home/Dashboard.aspx", false);//i think no need
+                Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Home/Dashboard.aspx", false);//i think no need
             }
 
 
@@ -141,7 +141,7 @@ ON U.UserID=UR.UserID WHERE UR.DashBoardDocumentID=" + iDocumentID.ToString());
 
             Document theDocument = DocumentManager.ets_Document_Detail((int)_iDocumentID);
 
-            string strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Default.aspx?DashboardID=" + Cryptography.Encrypt(_iDocumentID.ToString());
+            string strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Default.aspx?DashboardID=" + Cryptography.Encrypt(_iDocumentID.ToString());
             lblLink.Text = "<a href='" + strURL + "' target='_blank'>" + strURL + "</a>";
 
             PopulateUserGrid((int)_iDocumentID);
@@ -155,7 +155,7 @@ ON U.UserID=UR.UserID WHERE UR.DashBoardDocumentID=" + iDocumentID.ToString());
             else if (_strActionMode == "view")
             {
                 divEdit.Visible = true;
-                hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath 
+                hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath 
                     + "/Pages/Home/DashBoardDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() 
                     + "&DocumentID=" + Cryptography.Encrypt(theDocument.DocumentID.ToString());
             }

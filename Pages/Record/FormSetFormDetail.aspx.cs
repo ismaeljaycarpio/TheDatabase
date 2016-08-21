@@ -64,12 +64,12 @@ public partial class Pages_Record_FormSetFormDetail : SecurePage
             //if (Request.QueryString["SearchCriteria"] != null)
             //{
 
-            //    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/FormSetForm.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+            //    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/FormSetForm.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
             //}
             //else
             //{
 
-            //    Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/FormSetForm.aspx", false);//i think no need
+            //    Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/FormSetForm.aspx", false);//i think no need
             //}
 
 
@@ -226,7 +226,7 @@ public partial class Pages_Record_FormSetFormDetail : SecurePage
             //else if (_strActionMode == "view")
             //{
             //    divEdit.Visible = true;
-            //    hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/FormSetFormDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&FormSetFormID=" + Cryptography.Encrypt(theFormSetForm.FormSetFormID.ToString());
+            //    hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/FormSetFormDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&FormSetFormID=" + Cryptography.Encrypt(theFormSetForm.FormSetFormID.ToString());
             //}
         }
         catch (Exception ex)

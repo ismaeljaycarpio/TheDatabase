@@ -33,7 +33,7 @@ public partial class Page_Reports_Report : System.Web.UI.Page
                      //}
                      //else
                      //{
-                     //    Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Uploads/" + theDocument.FileUniqename, false);
+                     //    Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Uploads/" + theDocument.FileUniqename, false);
                      //}
                  }
                  else

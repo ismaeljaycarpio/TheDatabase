@@ -169,7 +169,7 @@ namespace DocGen.DAL
                         section.SectionName,
                         imageStyle.Width > 0 ? imageStyle.Width.ToString() : "100%",
                         section.Content,
-                            "http://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath 
+                            HttpContext.Current.Request.Url.Scheme +"://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath 
                         ));
                     break;
                 case "center":
@@ -179,7 +179,7 @@ namespace DocGen.DAL
                     section.SectionName,
                     imageStyle.Width > 0 ? imageStyle.Width.ToString() : "100%",
                     section.Content,
-                        "http://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath 
+                        HttpContext.Current.Request.Url.Scheme +"://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath 
                     ));
                     break;
                 case "right":
@@ -189,7 +189,7 @@ namespace DocGen.DAL
                     section.SectionName,
                     imageStyle.Width > 0 ? imageStyle.Width.ToString() : "100%",
                     section.Content,
-                        "http://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath 
+                        HttpContext.Current.Request.Url.Scheme +"://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath 
                     ));
                     break;
             }
@@ -203,7 +203,7 @@ namespace DocGen.DAL
                 content = "";
 
             Regex rResourceFile = new Regex("\"/Uploaded/");
-            content = rResourceFile.Replace(content, "\"" + "http://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath + "/Uploaded/");
+            content = rResourceFile.Replace(content, "\"" + HttpContext.Current.Request.Url.Scheme +"://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath + "/Uploaded/");
             if (!String.IsNullOrEmpty(section.Filter))
             {
                 //THIS PART IS NOT NEEDED
@@ -620,7 +620,7 @@ namespace DocGen.DAL
                                         {
                                             if (c.SystemName == "BatchID")
                                             {
-                                                string strBase = "http://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath;
+                                                string strBase = HttpContext.Current.Request.Url.Scheme +"://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath;
 
                                                 string strLink = "<a title='View' href='" + strBase +
                                                     "/Pages/Record/UploadValidation.aspx?TableID=" + Cryptography.Encrypt(drSource["TableID"].ToString())
@@ -747,7 +747,7 @@ namespace DocGen.DAL
                                         {
                                             if (c.SystemName == "WarningCount")
                                             {
-                                                string strLink = "http://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath + "/Pages/Record/RecordList.aspx?warning=yes&TableID=" + Cryptography.Encrypt(drSource["TableID"].ToString());
+                                                string strLink = HttpContext.Current.Request.Url.Scheme +"://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath + "/Pages/Record/RecordList.aspx?warning=yes&TableID=" + Cryptography.Encrypt(drSource["TableID"].ToString());
                                                 FieldValue = "<a href='"+strLink+"'>" + FieldValue + "</a>";
 
                                             }
@@ -764,12 +764,12 @@ namespace DocGen.DAL
                     }
                     if (tblOtherInfo.TableType == "system" && tblOtherInfo.SystemTableName == "alerts")
                     {
-                        string strLink = "<a  href='" + "http://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath + "/Pages/Record/Notification.aspx'>...More</a>";
+                        string strLink = "<a  href='" + HttpContext.Current.Request.Url.Scheme +"://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath + "/Pages/Record/Notification.aspx'>...More</a>";
                         sb.Append("<tr><td colspan='3' align='right'>" + strLink + "</td></tr>");
                     }
                     if (tblOtherInfo.TableType == "system" && tblOtherInfo.SystemTableName == "uploads")
                     {
-                        string strLink = "<a  href='" + "http://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath + "/Pages/Record/Batches.aspx?menu=" + Cryptography.Encrypt("yes") + "&TableID=" + Cryptography.Encrypt("-1") + "'>...More</a>";
+                        string strLink = "<a  href='" + HttpContext.Current.Request.Url.Scheme +"://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath + "/Pages/Record/Batches.aspx?menu=" + Cryptography.Encrypt("yes") + "&TableID=" + Cryptography.Encrypt("-1") + "'>...More</a>";
                         sb.Append("<tr><td colspan='6' align='right'>" + strLink + "</td></tr>");
                     }
                 }
@@ -797,7 +797,7 @@ namespace DocGen.DAL
 
 
             string retVal = String.Format("<p style=\"text-align:center\"><img alt=\"" + section.SectionName + "\" src=\"{0}/Pages/DocGen/ChartSectionImage.aspx?DocumentSectionID={1}&SearchCriteria={2}\"/></p>",
-                "http://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath,
+                HttpContext.Current.Request.Url.Scheme +"://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath,
                 section.DocumentSectionID, iSearchCriteria
                 );
 
@@ -834,7 +834,7 @@ namespace DocGen.DAL
                         }
 
                         //string retVal = String.Format("<table width='100%' style='min-width:490px;'><tr><td align='center'><iframe frameBorder='0' width='100%' height='" + strHeight + "' scrolling='no'  src=\"{0}/Pages/DocGen/EachRecordTable.aspx?RecordTable=Yes&Dashboard=Yes" + strExtraParam + "&TableID={1}&SearchCriteriaID={2}\"></iframe></td></tr></table>",
-                        //    "http://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath,
+                        //    HttpContext.Current.Request.Url.Scheme +"://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath,
                         //    Cryptography.Encrypt(rtDetail.TableID.ToString()),Cryptography.Encrypt(rtDetail.SearchCriteriaID.ToString())
                         //    );
 
@@ -875,7 +875,7 @@ namespace DocGen.DAL
 
                         //string retVal = String.Format("<table width='100%' style='min-width:400px;'><tr><td align='left'><iframe id='iframe" + section.DocumentSectionID.ToString() + "' onLoad='autoResize(\"iframe" + section.DocumentSectionID.ToString()
                         //    + "\")'; frameBorder='0'  scrolling='no'  src=\"{0}/Pages/DocGen/EachRecordTable.aspx?RecordTable=Yes&Dashboard=Yes" + strExtraParam + "&TableID={1}&ViewID={2}\"></iframe></td></tr></table>",
-                        //   "http://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath,
+                        //   HttpContext.Current.Request.Url.Scheme +"://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath,
                         //   Cryptography.Encrypt(rtDetail.TableID.ToString()), Cryptography.Encrypt(rtDetail.ViewID.ToString())
                         //   );
 
@@ -883,7 +883,7 @@ namespace DocGen.DAL
                         string retVal = String.Format("<table width='100%' style='min-width:400px;'><tr><td align='left'><iframe id='iframe" + section.DocumentSectionID.ToString() 
                             + "' frameBorder='0'  scrolling='no'  src=\"{0}/Pages/DocGen/EachRecordTable.aspx?RecordTable=Yes&Dashboard=Yes" + strExtraParam 
                             + "&TableID={1}&ViewID={2}&DocumentSectionID={3}\"></iframe></td></tr></table>",
-                           "http://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath,
+                           HttpContext.Current.Request.Url.Scheme +"://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath,
                            Cryptography.Encrypt(rtDetail.TableID.ToString()), Cryptography.Encrypt(rtDetail.ViewID.ToString()),
                            Cryptography.Encrypt(section.DocumentSectionID.ToString())
                            );
@@ -936,7 +936,7 @@ namespace DocGen.DAL
 
                         string retVal = String.Format("<table width='100%' style='min-width:400px;'><tr><td align='left'><iframe id='iframe" + section.DocumentSectionID.ToString() + "'" + strWidthStuff
                             + " frameBorder='0'  scrolling='no'  src=\"{0}/Pages/DocGen/EachCalendar.aspx?DocumentSectionID={1}\"></iframe></td></tr></table>",
-                           "http://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath, section.DocumentSectionID.ToString()
+                           HttpContext.Current.Request.Url.Scheme +"://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath, section.DocumentSectionID.ToString()
                            );
 
 
@@ -977,7 +977,7 @@ namespace DocGen.DAL
             iWidth = iWidth + 10;
             iHeight = iHeight + 60;
             string retVal = String.Format("<table width='100%'><tr><td align='left'><iframe frameBorder='0' width='" + iWidth.ToString() + "px' height='" + iHeight.ToString() + "px' scrolling='no'  src=\"{0}/Pages/DocGen/EachMap.aspx?DocumentSectionID={1}\"></iframe></td></tr></table>",
-                "http://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath,
+                HttpContext.Current.Request.Url.Scheme +"://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath,
                 section.DocumentSectionID
                 );
            
@@ -1013,7 +1013,7 @@ namespace DocGen.DAL
             iHeight = iHeight + 10;
 
             string retVal = String.Format("<iframe frameBorder='0' width='"+iWidth.ToString()+"px' height='"+iHeight.ToString()+"px' scrolling='no'  src=\"{0}/Pages/DocGen/EachDial.aspx?DocumentSectionID={1}\"></iframe>",
-                "http://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath,
+                HttpContext.Current.Request.Url.Scheme +"://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath,
                 section.DocumentSectionID
                 );
 
@@ -1039,7 +1039,7 @@ namespace DocGen.DAL
             iWidth = iWidth + 25;
 
             string retVal = String.Format("<iframe frameBorder='0' width='" + iWidth.ToString() + "px' height='" + iHeight.ToString() + "px' scrolling='no'  src=\"{0}/Pages/DocGen/EachDashChart.aspx?DocumentSectionID={1}\"></iframe>",
-                "http://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath,
+                HttpContext.Current.Request.Url.Scheme +"://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath,
                 section.DocumentSectionID
                 );
 

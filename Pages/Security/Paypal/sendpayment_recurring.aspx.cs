@@ -18,17 +18,17 @@ public partial class sendpayment_recurring : System.Web.UI.Page
     public string GetReturnURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Paypal/thanks.aspx";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Paypal/thanks.aspx";
     }
     public string Getcancel_returnURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Paypal/cancel.aspx";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Paypal/cancel.aspx";
     }
     public string Getnotify_urlURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Paypal/paypal.aspx";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Paypal/paypal.aspx";
     }
 
 }

@@ -339,7 +339,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
         if (_strRecordRightID == Common.UserRoleType.None) //none role
         {
-            Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Default.aspx", false);
+            Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Default.aspx", false);
             return;
         }
 
@@ -530,7 +530,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
         //                //FormSetManager.StartProgressHistory(int.Parse(strFormSetID), iNewRecordID);
 
-        //                string strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetWizard.aspx?SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString()
+        //                string strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetWizard.aspx?SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString()
         //            + "&FormSetID=" + Cryptography.Encrypt(strFormSetID)
         //            + "&ParentTableID=" + Cryptography.Encrypt(strParentTable)
         //            + "&ParentRecordID=" + Cryptography.Encrypt(iNewRecordID.ToString()) + "&showparent=yes&ps=0&veryfirst=yes";
@@ -630,7 +630,11 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             _dtRecordedetail = RecordManager.ets_Record_Details(_iRecordID).Tables[1];
             _theRecord = RecordManager.ets_Record_Detail_Full(_iRecordID);
 
+            //oliver <begin> Ticket 1476
+            lblRecordID.Text = _qsRecordID;
+            //oliver <end>
         }
+
 
 
 
@@ -646,6 +650,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                
                 //Tab Show When
+                string strHiddenTableTabID = "-1";
                 if (_theRecord!=null)
                 {
                     try
@@ -655,7 +660,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 	                                            WHERE TT.TableID=" + _theRecord.TableID.ToString());
                         if(strHaveShowWhen!="")
                         {
-                            string strHiddenTableTabID = "-1";
+                           
                              for (int t = 0; t < _dtDBTableTab.Rows.Count; t++)
                              {
                                  DataTable dtTabShowWhen = RecordManager.dbg_ShowWhen_ForGrid(null, null, int.Parse(_dtDBTableTab.Rows[t]["TableTabID"].ToString()));
@@ -712,11 +717,11 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                              }
 
 
-                            if(strHiddenTableTabID!="-1")
-                            {
-                                _dtDBTableTab = Common.DataTableFromText("SELECT * FROM TableTab WHERE TableID=" +
-                                    _theTable.TableID.ToString() + " AND TableTabID NOT IN (" + strHiddenTableTabID + ")  ORDER BY DisplayOrder");
-                            }
+                            //if(strHiddenTableTabID!="-1")
+                            //{
+                            //    _dtDBTableTab = Common.DataTableFromText("SELECT * FROM TableTab WHERE TableID=" +
+                            //        _theTable.TableID.ToString() + " AND TableTabID NOT IN (" + strHiddenTableTabID + ")  ORDER BY DisplayOrder");
+                            //}
 
 
                         }
@@ -760,14 +765,20 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         _pnlDetailTabD[t] = new Panel();
                         _pnlDetailTabD[t].ID = "pnlDetailTabD" + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
                         _pnlDetailTabD[t].CssClass = "showhidedivs";
-
+                       
 
                         LinkButton lnkDetialTabD = new LinkButton();
                         lnkDetialTabD.ID = "lnkDetialTabD" + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
                         lnkDetialTabD.Text = _dtDBTableTab.Rows[t]["TabName"].ToString();
                         lnkDetialTabD.OnClientClick = "ShowHideMainDivs(" + "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + _pnlDetailTabD[t].ClientID + ",this); return false";
                         lnkDetialTabD.CssClass = "TablLinkClass";
+                        if (Common.IsIn(_dtDBTableTab.Rows[t]["TableTabID"].ToString(), strHiddenTableTabID))
+                        {
+                            _pnlDetailTabD[t].CssClass = "showhidedivs_hide";
 
+                            _pnlDetailTabD[t].Style.Add("display", "none");
+                            lnkDetialTabD.Style.Add("display", "none");
+                        }
                         pnlTabHeading.Controls.Add(lnkDetialTabD);
                         pnlTabHeading.Controls.Add(new LiteralControl("&nbsp&nbsp&nbsp&nbsp"));
 
@@ -828,7 +839,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                             if (strPanelID != "" && strLnk != "")
                             {
-                                ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab", "ShowHideMainDivs(" + strPanelID + "," + strLnk + ");", true);
+                                ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab", " ShowHideMainDivs(" + strPanelID + "," + strLnk + ");", true);
 
                                 //ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab", "alert('hhh');", true);
                             }
@@ -854,9 +865,15 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
             _lbl[i] = new Label();
             _lbl[i].ID = "lbl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-            if (bool.Parse(_dtColumnsDetail.Rows[i]["IsMandatory"].ToString()))
+            if (_dtColumnsDetail.Rows[i]["Importance"].ToString().ToLower() == "m")
             {
                 _lbl[i].Text = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "*";
+                _lbl[i].ForeColor = System.Drawing.Color.Red;
+            }
+            else if (_dtColumnsDetail.Rows[i]["Importance"].ToString().ToLower() == "r")
+            {
+                _lbl[i].Text = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() ;
+                _lbl[i].ForeColor = System.Drawing.Color.Red;
             }
             else
             {
@@ -1041,14 +1058,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
 
-                    if (bool.Parse(_dtColumnsDetail.Rows[i]["IsMandatory"].ToString()))
+                    if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                     {
 
                         _rfvValue[i] = new RequiredFieldValidator();
                         _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _rfvValue[i].Display = ValidatorDisplay.None;//
                         _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
-                        _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                        _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
 
                         cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
@@ -1162,14 +1179,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     cell[(i * 2) + 1].Controls.Add(_txtValue[i]);
 
 
-                    if (bool.Parse(_dtColumnsDetail.Rows[i]["IsMandatory"].ToString()))
+                    if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                     {
 
                         _rfvValue[i] = new RequiredFieldValidator();
                         _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _rfvValue[i].Display = ValidatorDisplay.None;
                         _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
-                        _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                        _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
 
                         cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
@@ -1238,7 +1255,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                 //        _hlSSAdd.Text = "Add";
                 //        _hlSSAdd.CssClass = "NormalTextBox";
-                //        _hlSSAdd.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Site/LocationDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&MenuID=" + Cryptography.Encrypt("-1") + "&GoBack=yes";
+                //        _hlSSAdd.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Site/LocationDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&MenuID=" + Cryptography.Encrypt("-1") + "&GoBack=yes";
                 //        cell[(i * 2) + 1].Controls.Add(_hlSSAdd);
                 //    }
 
@@ -1262,7 +1279,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 //        _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                 //        _rfvValue[i].Display = ValidatorDisplay.None;
                 //        _rfvValue[i].ControlToValidate = _ddlLocation.ClientID;
-                //        _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                //        _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
 
                 //        cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
@@ -1395,14 +1412,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         cell[(i * 2) + 1].Controls.Add(_twmValue[i]);
                         cell[(i * 2) + 1].Controls.Add(_rvDate[i]);
 
-                        if (bool.Parse(_dtColumnsDetail.Rows[i]["IsMandatory"].ToString()))
+                        if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                         {
                             //_txtValue[i].Text = DateTime.Now.Day.ToString("00") + "/" + DateTime.Now.Month.ToString("00") + "/" + DateTime.Now.Year.ToString();
                             _rfvValue[i] = new RequiredFieldValidator();
                             _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                             _rfvValue[i].Display = ValidatorDisplay.None;
                             _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
-                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
 
                             cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
@@ -1490,14 +1507,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
 
-                        if (bool.Parse(_dtColumnsDetail.Rows[i]["IsMandatory"].ToString()))
+                        if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                         {
                             //_txtValue[i].Text = "00:00:00";
                             _rfvValue[i] = new RequiredFieldValidator();
                             _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                             _rfvValue[i].Display = ValidatorDisplay.None;
                             _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
-                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
 
                             cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
@@ -1672,7 +1689,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         cell[(i * 2) + 1].Controls.Add(_lblTime[i]);
                         cell[(i * 2) + 1].Controls.Add(_txtTime[i]);
 
-                        if (bool.Parse(_dtColumnsDetail.Rows[i]["IsMandatory"].ToString()))
+                        if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                         {
                             //_txtValue[i].Text = DateTime.Now.Day.ToString("00") + "/" + DateTime.Now.Month.ToString("00") + "/" + DateTime.Now.Year.ToString();
                             //_txtTime[i].Text = "00:00";
@@ -1680,7 +1697,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                             _rfvValue[i].Display = ValidatorDisplay.None;
                             _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
-                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
 
                             cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
@@ -1929,14 +1946,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                         string strUserBasicMandatory = "";
 
-                        if (bool.Parse(_dtColumnsDetail.Rows[i]["IsMandatory"].ToString()))
+                        if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                         {
 
                             _rfvValue[i] = new RequiredFieldValidator();
                             _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                             _rfvValue[i].Display = ValidatorDisplay.None;//
                             _rfvValue[i].ControlToValidate = _fuValue[i].ClientID;
-                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
 
                             cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
@@ -2008,7 +2025,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                         string strValidatorT = "";
                         string strValidatorF = "";
-                        if (bool.Parse(_dtColumnsDetail.Rows[i]["IsMandatory"].ToString())
+                        if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m"
                 && _rfvValue[i] != null)
                         {
                             strValidatorT = "ValidatorEnable(document.getElementById('ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + _rfvValue[i].ID.ToString() + "'), true);";
@@ -2020,7 +2037,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             }
                         }
 
-                        string strScriptPath = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Handler.ashx";
+                        string strScriptPath = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Handler.ashx";
 
                         if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image")
                         {
@@ -2031,7 +2048,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             }
                             string strFilePath = _strFilesLocation + "/UserFiles/AppFiles/";
 
-                            string strInnerHTML = "<img  title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + _hfValue[i].ID + "\" src=\"" + "http://" + Request.Url.Authority + Request.ApplicationPath
+                            string strInnerHTML = "<img  title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + _hfValue[i].ID + "\" src=\"" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
                                 + "/App_Themes/Default/Images/icon_delete.gif\" />" +
                                 "<a id=\"a" + _hfValue[i].ID + "\" target=\"_blank\" >"
                             + " <img style=\"padding-bottom:7px; max-height:"
@@ -2096,7 +2113,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         }
                         else
                         {
-                            string strInnerHTML = "<img  title=\"Remove this file\" style=\"cursor:pointer;\"  id=\"dimg" + _hfValue[i].ID + "\" src=\"" + "http://" + Request.Url.Authority + Request.ApplicationPath
+                            string strInnerHTML = "<img  title=\"Remove this file\" style=\"cursor:pointer;\"  id=\"dimg" + _hfValue[i].ID + "\" src=\"" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
                                + "/App_Themes/Default/Images/icon_delete.gif\" />";
 
                             _strJSPostBack = _strJSPostBack + @" $(document).ready(function () {
@@ -2246,7 +2263,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                         SearchCriteria theSearchCriteria = new SearchCriteria(null, xml);
                                         int iSearchCriteriaID = SystemData.SearchCriteria_Insert(theSearchCriteria);
 
-                                        _hlValue[i].NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" +
+                                        _hlValue[i].NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" +
                                             Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(_dtColumnsDetail.Rows[i]["TableTableID"].ToString())
                                             + "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&quickadd=" + Cryptography.Encrypt(iSearchCriteriaID.ToString());
 
@@ -2267,7 +2284,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                         _hlValue2[i].ID = "hl2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                         _hlValue2[i].Text = "View";
 
-                                        _hlValue2[i].NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" +
+                                        _hlValue2[i].NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" +
                                             Cryptography.Encrypt(_qsMode.ToString()) + "&TableID=" + Cryptography.Encrypt(_dtColumnsDetail.Rows[i]["TableTableID"].ToString())
                                             + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
 
@@ -2284,14 +2301,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
 
-                                if (bool.Parse(_dtColumnsDetail.Rows[i]["IsMandatory"].ToString()))
+                                if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                                 {
 
                                     _rfvValue[i] = new RequiredFieldValidator();
                                     _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                     _rfvValue[i].Display = ValidatorDisplay.None;
                                     _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
-                                    _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                                    _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
 
                                     cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
@@ -2427,7 +2444,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                         SearchCriteria theSearchCriteria = new SearchCriteria(null, xml);
                                         int iSearchCriteriaID = SystemData.SearchCriteria_Insert(theSearchCriteria);
 
-                                        _hlValue[i].NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" +
+                                        _hlValue[i].NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" +
                                             Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(_dtColumnsDetail.Rows[i]["TableTableID"].ToString())
                                             + "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&quickadd=" + Cryptography.Encrypt(iSearchCriteriaID.ToString());
 
@@ -2447,7 +2464,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                         _hlValue2[i].ID = "hl2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                         _hlValue2[i].Text = "View";
 
-                                        _hlValue2[i].NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" +
+                                        _hlValue2[i].NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" +
                                             Cryptography.Encrypt(_qsMode.ToString()) + "&TableID=" + Cryptography.Encrypt(_dtColumnsDetail.Rows[i]["TableTableID"].ToString())
                                             + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
 
@@ -2462,14 +2479,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                     }
                                 }
 
-                                if (bool.Parse(_dtColumnsDetail.Rows[i]["IsMandatory"].ToString()))
+                                if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                                 {
 
                                     _rfvValue[i] = new RequiredFieldValidator();
                                     _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                     _rfvValue[i].Display = ValidatorDisplay.None;
                                     _rfvValue[i].ControlToValidate = _ddlValue[i].ClientID;
-                                    _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                                    _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
 
                                     cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
@@ -2604,14 +2621,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                             cell[(i * 2) + 1].Controls.Add(_ccddl[i]);
 
-                            if (bool.Parse(_dtColumnsDetail.Rows[i]["IsMandatory"].ToString()))
+                            if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                             {
 
                                 _rfvValue[i] = new RequiredFieldValidator();
                                 _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                 _rfvValue[i].Display = ValidatorDisplay.None;
                                 _rfvValue[i].ControlToValidate = _ddlValue[i].ClientID;
-                                _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                                _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
 
                                 cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
@@ -2801,14 +2818,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
 
-                        if (bool.Parse(_dtColumnsDetail.Rows[i]["IsMandatory"].ToString()))
+                        if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                         {
 
                             _rfvValue[i] = new RequiredFieldValidator();
                             _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                             _rfvValue[i].Display = ValidatorDisplay.None;
                             _rfvValue[i].ControlToValidate = _radioList[i].ClientID;
-                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
 
                             cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
@@ -3133,7 +3150,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                         _htmValue[i] = new WYSIWYGEditor();
                         _htmValue[i].ID = "htm" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-                        _htmValue[i].AssetManager = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Editor/assetmanager/assetmanager.aspx";
+                        _htmValue[i].AssetManager = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Editor/assetmanager/assetmanager.aspx";
                         _htmValue[i].ButtonFeatures = new string[] { "FullScreen", "XHTMLFullSource", "RemoveFormat", "Undo", "Redo", "|", "Paragraph", "FontName", "FontSize", "|", "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyFull", "Bold", "Italic", "Underline", "Hyperlink" };
                         _htmValue[i].scriptPath = "../../Editor/scripts/";
                         _htmValue[i].ToolbarMode = 0;
@@ -3230,14 +3247,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         //cell[(i * 2) + 1] = new HtmlTableCell();
                         cell[(i * 2) + 1].Controls.Add(_lstValue[i]);
 
-                        if (bool.Parse(_dtColumnsDetail.Rows[i]["IsMandatory"].ToString()))
+                        if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                         {
 
                             _rfvValue[i] = new RequiredFieldValidator();
                             _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                             _rfvValue[i].Display = ValidatorDisplay.None;
                             _rfvValue[i].ControlToValidate = _lstValue[i].ClientID;
-                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                             cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
 
                         }
@@ -3328,7 +3345,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         //    _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         //    _rfvValue[i].Display = ValidatorDisplay.None;
                         //    _rfvValue[i].ControlToValidate = _cblValue[i].ClientID;
-                        //    _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                        //    _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                         //    cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
 
                         //}
@@ -3466,14 +3483,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         cell[(i * 2) + 1].Controls.Add(_pnlDIV[i]);
 
 
-                        if (bool.Parse(_dtColumnsDetail.Rows[i]["IsMandatory"].ToString()))
+                        if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                         {
 
                             _rfvValue[i] = new RequiredFieldValidator();
                             _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                             _rfvValue[i].Display = ValidatorDisplay.None;
                             _rfvValue[i].ControlToValidate = _ddlValue[i].ClientID;
-                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
                             cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
 
@@ -4016,14 +4033,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         }
 
 
-                        if (bool.Parse(_dtColumnsDetail.Rows[i]["IsMandatory"].ToString()))
+                        if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                         {
 
                             _rfvValue[i] = new RequiredFieldValidator();
                             _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                             _rfvValue[i].Display = ValidatorDisplay.None;
                             _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
-                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Required";
+                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
 
                             cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
@@ -4481,7 +4498,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 }
                 else
                 {
-                    Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Public.aspx?ParentRecordID=" + _iParentRecordID.ToString() + "&TableID=" + _qsTableID, true);
+                    Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Public.aspx?ParentRecordID=" + _iParentRecordID.ToString() + "&TableID=" + _qsTableID, true);
                     return;
 
                 }
@@ -4839,7 +4856,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         string strFilePath = Cryptography.Encrypt(_strFilesLocation + "/UserFiles/AppFiles/" + _dtRecordedetail.Rows[0][i].ToString());
                         string strFileName = Cryptography.Encrypt(_dtRecordedetail.Rows[0][i].ToString().Substring(37));
 
-                        _lblValue[i].Text = "<a target='_blank' href='" + "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Filedownload.aspx?FilePath="
+                        _lblValue[i].Text = "<a target='_blank' href='" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Filedownload.aspx?FilePath="
                             + strFilePath + "&FileName=" + strFileName + "'>" +
                               _dtRecordedetail.Rows[0][i].ToString().Substring(37) + "</a>";
 
@@ -4851,7 +4868,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         {
                             _hfValue[i].Value = _dtRecordedetail.Rows[0][i].ToString();
 
-                            _lblValue[i].Text = "<img  title=\"Remove this file\" style=\"cursor:pointer;\"  id=\"dimg" + _hfValue[i].ID + "\" src=\"" + "http://" + Request.Url.Authority + Request.ApplicationPath
+                            _lblValue[i].Text = "<img  title=\"Remove this file\" style=\"cursor:pointer;\"  id=\"dimg" + _hfValue[i].ID + "\" src=\"" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
                                + "/App_Themes/Default/Images/icon_delete.gif\" />" + _lblValue[i].Text;
 
                             string strTempJS = @"  document.getElementById('dimg" + _hfValue[i].ID + @"').addEventListener('click', function (e) {
@@ -4903,7 +4920,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         else
                         {
 
-                            _lblValue[i].Text = "<img title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + _hfValue[i].ID + "\" src=\"" + "http://" + Request.Url.Authority + Request.ApplicationPath
+                            _lblValue[i].Text = "<img title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + _hfValue[i].ID + "\" src=\"" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
                                + "/App_Themes/Default/Images/icon_delete.gif\" />" + _lblValue[i].Text;
 
                             _hfValue[i].Value = _dtRecordedetail.Rows[0][i].ToString();
@@ -5449,7 +5466,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                                 if (strLinkURL.IndexOf("http") == -1)
                                 {
-                                    strLinkURL = "http://" + strLinkURL;
+                                    strLinkURL = Request.Url.Scheme +"://" + strLinkURL;
                                 }
                                 _hlValue[i].NavigateUrl = strLinkURL;
                                 _hlValue[i].Text = "Go";
@@ -6858,7 +6875,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     string targetID = "#ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + trX[i].ID;
                     string strOnlyAdminJS = @"$('" + targetID + @"').fadeOut();";
 
-                    if (bool.Parse(_dtColumnsDetail.Rows[i]["IsMandatory"].ToString())
+                    if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m"
                         && _rfvValue[i] != null)
                     {
                         strOnlyAdminJS = strOnlyAdminJS + "ValidatorEnable(document.getElementById('" + _rfvValue[i].ClientID.ToString() + "'), false);";
@@ -6890,7 +6907,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 string strValidatorT = "";
                 string strValidatorF = "";
                 string strBeforeShowHideFunction = "";
-                if (bool.Parse(_dtColumnsDetail.Rows[i]["IsMandatory"].ToString()) && _rfvValue[i] != null)
+                 if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m" && _rfvValue[i] != null)
                 {
                     strValidatorT = "ValidatorEnable(document.getElementById('" + _rfvValue[i].ClientID.ToString() + "'), true);";
                     strValidatorF = "ValidatorEnable(document.getElementById('" + _rfvValue[i].ClientID.ToString() + "'), false);";
@@ -7220,6 +7237,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                         {
                                             strAllLogic = strAllLogic + strEachPreJoinOperator + " (strEachValue" + m.ToString() + @".indexOf('" + strEachHideColumnValue + "')>=0) ";
                                         }
+                                        else if (strEachHideOperator == "empty")
+                                        {
+                                            strAllLogic = strAllLogic + strEachPreJoinOperator + " (strEachValue" + m.ToString() + @"=='') ";
+                                        }
+                                        else if (strEachHideOperator == "notempty")
+                                        {
+                                            strAllLogic = strAllLogic + strEachPreJoinOperator + " (strEachValue" + m.ToString() + @"!='') ";
+                                        }
                                         else if (strEachHideOperator == "notcontains")
                                         {
                                             strAllLogic = strAllLogic + strEachPreJoinOperator + " (strEachValue" + m.ToString() + @".indexOf('" + strEachHideColumnValue + "')<0) ";
@@ -7350,16 +7375,22 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                                " + strBeforeShowHideFunction + @"
                                                         function  ShowHideFunction" + i.ToString() + @"()
                                                             {
-                                                                                                    " + strAllDriverValue + @"
-                                                                if (" + strAllLogic + @") {
-                                                                   $('" + strTargetTRID + @"').stop(true,true); $('" + strTargetTRID + @"').fadeIn();" + strValidatorT + @"
-                                                                }
-                                                                else {
-                                                                    $('" + strTargetTRID + @"').fadeOut();" + strValidatorF + @"
-                                                                }
-                                                            }
+                                                                try { 
+                                                                                                                " + strAllDriverValue + @"
+                                                                            if (" + strAllLogic + @") {
+                                                                               $('" + strTargetTRID + @"').stop(true,true); $('" + strTargetTRID + @"').fadeIn();" + strValidatorT + @"
+                                                                            }
+                                                                            else {
+                                                                                $('" + strTargetTRID + @"').fadeOut();" + strValidatorF + @"
+                                                                            }
 
-                                                                " + strAllDriverTrigger + @"
+                                                                    }
+                                                                    catch(err) {
+                                                                                //email developer
+                                                                        }
+                                                                }
+
+                                                                 " + strAllDriverTrigger + @"
 
                                                         }
                                                     catch(err) {
@@ -8532,8 +8563,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
             _iRowCount = _iRowCount + 1;
-            string strWWWRoot = "http://" + Request.Url.Authority + Request.ApplicationPath;
-            string strRootURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/App_Themes/Default/Images/";
+            string strWWWRoot = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
+            string strRootURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/App_Themes/Default/Images/";
 
             string strEmpty = strRootURL + "empty.png";
             string strComplete = strRootURL + "complete.png";
@@ -8550,7 +8581,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 {
 
                     string strImageURL = strEmpty;
-                    string strWizardURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetWizard.aspx?SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString()
+                    string strWizardURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetWizard.aspx?SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString()
                             + "&ParentTableID=" + Cryptography.Encrypt(_qsTableID)
                             + "&ParentRecordID=" + Cryptography.Encrypt(_qsRecordID);
 
@@ -8704,7 +8735,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
         //    if (hlProgressColumnID != null && chkProgressStatus != null && lblFormSetName!=null)
         //    {
-        //        hlProgressColumnID.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetWizard.aspx?SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() 
+        //        hlProgressColumnID.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetWizard.aspx?SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() 
         //            + "&ProgressColumnID=" + Cryptography.Encrypt( DataBinder.Eval(e.Row.DataItem, "ProgressColumnID").ToString())
         //            + "&ParentTableID=" + Cryptography.Encrypt(_qsTableID)
         //            + "&ParentRecordID=" + Cryptography.Encrypt(_qsRecordID);
@@ -8952,18 +8983,20 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         }
                     }
 
-                    if (strPanelID != "" && strLnk != "")
+                    if (strPanelID != "" )
                     {
-                        if (strTableTabLink == "")
+
+                        if (strLnk != "")
                         {
                             ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab", "ShowHideMainDivs(" + strPanelID + "," + strLnk + ");", true);
+
                         }
-                        else
+                        else if (strTableTabLink != "")
                         {
                             ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab", "ShowHideMainDivs(" + strPanelID + "," + strTableTabLink + ");", true);
 
                         }
-                        //ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab", "alert('hhh');", true);
+                        
                     }
 
                 }
@@ -9142,7 +9175,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         //}
 
 
-        _strURL = "http://" + Request.Url.Authority + Request.RawUrl;
+        _strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.RawUrl;
 
 
         _strSaveAndStay = SystemData.SystemOption_ValueByKey_Account("SaveAndStay", _iSessionAccountID, int.Parse(_qsTableID));
@@ -9194,7 +9227,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         if (strShowPrintOnRecordDetail.ToLower() == "yes")
                         {
                             divPrint.Visible = true;
-                            hlPrint.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetPrint.aspx?NoFormSet=yes&ParentRecordID=" + Cryptography.Encrypt(_qsRecordID) + "&ParentTableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
+                            hlPrint.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetPrint.aspx?NoFormSet=yes&ParentRecordID=" + Cryptography.Encrypt(_qsRecordID) + "&ParentTableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
                         }
                     }
                 }
@@ -9445,9 +9478,6 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 //Record theLinkedRecord = RecordManager.ets_Record_Detail_Full(iTableRecordID);
                                 //string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
 
-
-
-
                                 _hfValue.Value = strLinkedColumnValue;
                                 DataTable dtTableTableSC = Common.DataTableFromText(@"SELECT SystemName,DisplayName 
                                 FROM [Column] WHERE   TableID ="
@@ -9472,20 +9502,15 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                     strFilterSQL = "'" + strLinkedColumnValue.Replace("'", "''") + "'";
                                 }
 
-
-
                                 //DataTable dtTheRecord = Common.DataTableFromText("SELECT * FROM Record WHERE RecordID=" + _dtRecordedetail.Rows[0][i].ToString());
 
                                 DataTable dtTheRecord = Common.DataTableFromText("SELECT * FROM Record WHERE TableID=" + theLinkedColumn.TableID.ToString() + " AND " + theLinkedColumn.SystemName + "=" + strFilterSQL);
 
                                 if (dtTheRecord.Rows.Count > 0)
                                 {
-
                                     foreach (DataColumn dc in dtTheRecord.Columns)
                                     {
-
                                         //strDisplayColumn = strDisplayColumn.Replace("[" + dc.ColumnName + "]", dtTheRecord.Rows[0][dc.ColumnName].ToString());
-
                                         Column theColumn = RecordManager.ets_Column_Details_By_Sys((int)theLinkedColumn.TableID, dc.ColumnName);
                                         if (theColumn != null)
                                         {
@@ -9505,7 +9530,6 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                 strDisplayColumn = strDisplayColumn.Replace("[" + dc.ColumnName + "]", dtTheRecord.Rows[0][dc.ColumnName].ToString());
                                             }
                                         }
-
                                     }
                                 }
                                 if (sstrDisplayColumnOrg != strDisplayColumn)
@@ -9873,7 +9897,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         if (!IsPostBack)
         {
 
-            //hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
+            //hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
 
             //if (Request.QueryString["onlyback"] != null)
             //{
@@ -9930,7 +9954,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             {
                 if (!IsPostBack)
                 {
-                    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Public.aspx?TableID=" + _qsTableID;
+                    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Public.aspx?TableID=" + _qsTableID;
                 }
             }
 
@@ -9949,13 +9973,13 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                         if (xmlDoc.FirstChild["RecordID"].InnerText == "-1")
                         {
-                            hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode="
+                            hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode="
                                 + xmlDoc.FirstChild["mode"].InnerText + "&TableID=" + xmlDoc.FirstChild["TableID"].InnerText
                                 + "&SearchCriteriaID=" + xmlDoc.FirstChild["SearchCriteriaID"].InnerText;
                         }
                         else
                         {
-                            hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode="
+                            hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode="
                               + xmlDoc.FirstChild["mode"].InnerText + "&TableID=" + xmlDoc.FirstChild["TableID"].InnerText
                               + "&SearchCriteriaID=" + xmlDoc.FirstChild["SearchCriteriaID"].InnerText + "&RecordID=" + xmlDoc.FirstChild["RecordID"].InnerText;
                         }
@@ -10003,7 +10027,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         if (_strRecordRightID == Common.UserRoleType.EditRecordSite || _strRecordRightID == Common.UserRoleType.AddEditRecord)
                         {
                             divEdit.Visible = true;
-                            hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&Recordid=" + Request.QueryString["RecordID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
+                            hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&Recordid=" + Request.QueryString["RecordID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
                         }
                         if (_strRecordRightID == Common.UserRoleType.None)
                         {
@@ -10016,7 +10040,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         if (Common.HaveAccess(_strRecordRightID, "1,2,3,4"))
                         {
                             divEdit.Visible = true;
-                            hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&Recordid=" + Request.QueryString["RecordID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
+                            hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&Recordid=" + Request.QueryString["RecordID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
                         }
                     }
                     //added and updated part
@@ -10189,14 +10213,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             string strFilePath = Cryptography.Encrypt(_strFilesLocation + "/UserFiles/AppFiles/" + _hfValue[i].Value);
                             string strFileName = Cryptography.Encrypt(_hfValue[i].Value.Substring(37));
 
-                            _lblValue[i].Text = "<a target='_blank' href='" + "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Filedownload.aspx?FilePath="
+                            _lblValue[i].Text = "<a target='_blank' href='" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Filedownload.aspx?FilePath="
                                 + strFilePath + "&FileName=" + strFileName + "'>" +
                                   _hfValue[i].Value.Substring(37) + "</a>";
 
 
 
 
-                            _lblValue[i].Text = "<img  title=\"Remove this file\" style=\"cursor:pointer;\"  id=\"dimg" + _hfValue[i].ID + "\" src=\"" + "http://" + Request.Url.Authority + Request.ApplicationPath
+                            _lblValue[i].Text = "<img  title=\"Remove this file\" style=\"cursor:pointer;\"  id=\"dimg" + _hfValue[i].ID + "\" src=\"" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
                                + "/App_Themes/Default/Images/icon_delete.gif\" />" + _lblValue[i].Text;
 
                             string strTempJS = @"  document.getElementById('dimg" + _hfValue[i].ID + @"').addEventListener('click', function (e) {
@@ -10228,7 +10252,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 + "' src='" + strFilePath + "' title='" + _hfValue[i].Value.Substring(37) + "'  />" + "</a><br/>";
 
 
-                            _lblValue[i].Text = "<img title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + _hfValue[i].ID + "\" src=\"" + "http://" + Request.Url.Authority + Request.ApplicationPath
+                            _lblValue[i].Text = "<img title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + _hfValue[i].ID + "\" src=\"" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
                                + "/App_Themes/Default/Images/icon_delete.gif\" />" + _lblValue[i].Text;
 
 
@@ -10334,7 +10358,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 strBodySMS = strBodySMS.Replace("[AddedBy]", _objUser.FirstName + " " + _objUser.LastName);
 
                 //RecordURL
-                string strRecordURL = "http://" + Request.Url.Authority + Request.ApplicationPath
+                string strRecordURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
                     + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteriaID="
                     + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&Recordid=" + Cryptography.Encrypt(newRecord.RecordID.ToString());
 
@@ -10724,7 +10748,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         {
             if (PerformSave())
             {
-                //string strEditURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + "&Recordid=" + Cryptography.Encrypt(_iNewRecordID.ToString()) + "&edittab=" + tabDetail.ActiveTabIndex.ToString();
+                //string strEditURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + "&Recordid=" + Cryptography.Encrypt(_iNewRecordID.ToString()) + "&edittab=" + tabDetail.ActiveTabIndex.ToString();
 
                 Response.Redirect(GetEditURLAfterAdd(), false);
             }
@@ -10812,14 +10836,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 //System.Threading.Thread.Sleep(5000);
 
                 //oliver <begin> Ticket 1451
-                Page.Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Temp/" + sFileName, false);
+                Page.Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Temp/" + sFileName, false);
                 //oliver <end>
 
-                //Page.Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Temp/" + theDocTemplate.FileUniqueName, false);
+                //Page.Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Temp/" + theDocTemplate.FileUniqueName, false);
 
                 //Response.Flush();
                 //System.Threading.Thread.Sleep(5000);
-                //Server.Transfer( Server.MapPath( "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Temp/" + theDocTemplate.FileUniqueName));
+                //Server.Transfer( Server.MapPath( Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Temp/" + theDocTemplate.FileUniqueName));
             }
             mpeModalWordExport.Hide();
         }
@@ -10977,7 +11001,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
     }
     protected void BuildFreshStack()
     {
-        hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
+        hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
         if (Request.QueryString["View"] != null)
         {
             hlBack.NavigateUrl = hlBack.NavigateUrl + "&View=" + Request.QueryString["View"].ToString();
@@ -11012,7 +11036,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 //        Session["stack"] = stack;
                 //    }
                 //}
-                string strURL = "http://" + Request.Url.Authority + Request.RawUrl;
+                string strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.RawUrl;
                 strURL = strURL.Replace("&stack=n", "");
                 strURL = strURL.Replace("&stackzero=y", "");
                 //strURL = strURL.Replace("&stackhault=y", ""); //onlyback=yes
@@ -11057,7 +11081,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                     if (_bPrivate == false)
                     {
-                        Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Login.aspx" + "?frompublic=yes", false);
+                        Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Login.aspx" + "?frompublic=yes", false);
                     }
                     else
                     {
@@ -11396,7 +11420,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 DataTable theSPTable = SystemData.Run_ContentSP("ets_UserAccountDetails", iNewUserID.ToString());
                                 string strBody = Common.ReplaceDataFiledByValue(theSPTable, theConent.ContentP);
 
-                                strBody = strBody.Replace("[URL]", "http://" + Request.Url.Authority + Request.ApplicationPath);
+                                strBody = strBody.Replace("[URL]", Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath);
 
                                 string strTo = newUser.Email;
 
@@ -12707,9 +12731,9 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                         AutoCreateUser();
 
-                        _strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + "&Recordid=" + Cryptography.Encrypt(iNewRecordID.ToString());
+                        _strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + "&Recordid=" + Cryptography.Encrypt(iNewRecordID.ToString());
 
-                        //hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&Recordid=" + Cryptography.Encrypt(iNewRecordID.ToString()) + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() + "&FromAdd=yes";
+                        //hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&Recordid=" + Cryptography.Encrypt(iNewRecordID.ToString()) + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() + "&FromAdd=yes";
                         //now send emails
 
                         //Check SPDefaultValue
@@ -12917,7 +12941,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         //if (SecurityManager.IsRecordsExceeded(_iSessionAccountID))
                         //{
                         //    Session["DoNotAllow"] = "true";
-                        //    ScriptManager.RegisterStartupScript(this, this.GetType(), "Problem", "alert('Sorry you have reached the limit of your account.');window.location.href='" + "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountTypeChange.aspx?type=renew" + "'", true);
+                        //    ScriptManager.RegisterStartupScript(this, this.GetType(), "Problem", "alert('Sorry you have reached the limit of your account.');window.location.href='" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountTypeChange.aspx?type=renew" + "'", true);
 
                         //    return false;
                         //}
@@ -12954,7 +12978,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
 
-                        _strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + "&Recordid=" + Cryptography.Encrypt(_iRecordID.ToString());
+                        _strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + "&Recordid=" + Cryptography.Encrypt(_iRecordID.ToString());
 
                         for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
                         {

@@ -514,7 +514,7 @@ public partial class Pages_UserControl_MessageList : System.Web.UI.UserControl
     //public string GetEditURL()
     //{
 
-    //    return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Import/MessageItem.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaIT=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&MessageID=";
+    //    return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Import/MessageItem.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaIT=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&MessageID=";
 
     //}
 
@@ -524,12 +524,12 @@ public partial class Pages_UserControl_MessageList : System.Web.UI.UserControl
     {
 
        // return "http://www.gmail.com/#search/rfc822msgid:";
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/MessageDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&MessageID="; 
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/MessageDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&MessageID="; 
     }
     //public string GetAddURL()
     //{
 
-    //    return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Import/MessageItem.aspx?mode=" + Cryptography.Encrypt("add") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaIT=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
+    //    return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Import/MessageItem.aspx?mode=" + Cryptography.Encrypt("add") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaIT=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
 
     //}
 

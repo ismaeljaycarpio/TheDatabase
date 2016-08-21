@@ -315,7 +315,7 @@ public partial class Pages_SystemData_SystemOption : SecurePage
     public string GetEditURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/SystemOptionDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&SystemOptionID=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/SystemOptionDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&SystemOptionID=";
 
     }
 
@@ -323,13 +323,13 @@ public partial class Pages_SystemData_SystemOption : SecurePage
     public string GetViewURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/SystemOptionDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&SystemOptionID=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/SystemOptionDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&SystemOptionID=";
 
     }
     public string GetAddURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/SystemOptionDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/SystemOptionDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
 
     }
 
@@ -337,7 +337,7 @@ public partial class Pages_SystemData_SystemOption : SecurePage
     //public string GetEditURL()
     //{
 
-    //    return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/SystemOptionDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SystemOptionID=";
+    //    return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/SystemOptionDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SystemOptionID=";
 
     //}
 
@@ -345,13 +345,13 @@ public partial class Pages_SystemData_SystemOption : SecurePage
     //public string GetViewURL()
     //{
 
-    //    return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/SystemOptionDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SystemOptionID=";
+    //    return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/SystemOptionDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SystemOptionID=";
 
     //}
     //public string GetAddURL()
     //{
 
-    //    return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/SystemOptionDetail.aspx?mode=" + Cryptography.Encrypt("add");
+    //    return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/SystemOptionDetail.aspx?mode=" + Cryptography.Encrypt("add");
 
     //}
 

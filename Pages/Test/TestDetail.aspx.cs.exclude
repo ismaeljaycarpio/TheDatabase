@@ -199,7 +199,7 @@ public partial class Pages_Test_TestDetail : SecurePage
 
             }
 
-            Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Test/TestList.aspx", false);
+            Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Test/TestList.aspx", false);
 
         }
         catch (Exception ex)
@@ -214,11 +214,11 @@ public partial class Pages_Test_TestDetail : SecurePage
     }
     //protected void cmdBack_Click(object sender, ImageClickEventArgs e)
     //{
-    //    Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Test/TestList.aspx", false);
+    //    Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Test/TestList.aspx", false);
     //}
     protected void lnkBack_Click(object sender, EventArgs e)
     {
-        Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Test/TestList.aspx", false);
+        Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Test/TestList.aspx", false);
     }
     //protected void lnkSave_Click(object sender, EventArgs e)
     //{

@@ -2832,7 +2832,7 @@ function checkAllHR(objRef,GridView) {
 
 
 
-            hlBatches.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Batches.aspx?TableID=" + Cryptography.Encrypt(TableID.ToString());
+            hlBatches.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Batches.aspx?TableID=" + Cryptography.Encrypt(TableID.ToString());
 
 
 
@@ -2877,7 +2877,7 @@ function checkAllHR(objRef,GridView) {
 
             if (_strRecordRightID == Common.UserRoleType.None) //none role
             {
-                Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Empty.aspx", false);
+                Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Empty.aspx", false);
                 return;
             }
 
@@ -2976,7 +2976,7 @@ function checkAllHR(objRef,GridView) {
                     }
 
 
-                    hlConfig.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "#topline";
+                    hlConfig.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "#topline";
 
                     if (Common.HaveAccess(_strRecordRightID, "1,2"))
                     {
@@ -3470,6 +3470,10 @@ function checkAllHR(objRef,GridView) {
             mpeExportRecords.Hide();
         }
 
+
+
+
+
         //put speed test here       
         if (Session["RunSpeedLog"] != null && _theTable != null)
         {
@@ -3482,6 +3486,144 @@ function checkAllHR(objRef,GridView) {
     EndSub:
         int iFXX;
 
+    }
+
+    protected void EnsureSecurity()
+    {
+        GridViewRow gvr = gvTheGrid.TopPagerRow;
+        if (_strRecordRightID == Common.UserRoleType.ReadOnly)
+        {
+            //gvTheGrid.Columns[0].Visible = false;//delete check
+            gvTheGrid.Columns[2].Visible = false;//edit   
+            gvTheGrid.Columns[3].Visible = true;//view
+            divAddAndViewControls.Visible = false;
+            if (_theView != null)
+            {
+                if ((bool)_theView.ShowViewIcon == false)
+                    gvTheGrid.Columns[3].Visible = false;//view
+            }
+
+            divEmptyData.Visible = false;
+            //_bReadOnly = true;
+            divUpload.Visible = false;
+
+            if (gvr != null)
+            {
+                _gvPager = (Common_Pager)gvr.FindControl("Pager");
+                _gvPager.HideAdd = true;
+                _gvPager.HideDelete = true;
+            }
+        }
+        else if (_strRecordRightID == Common.UserRoleType.None)
+        {
+            Response.Redirect("~/Empty.aspx", true);
+            return;
+        }
+        else if (_strRecordRightID == Common.UserRoleType.OwnData)
+        {
+            //gvTheGrid.Columns[0].Visible = false;//delete check
+            gvTheGrid.Columns[2].Visible = true;//edit   
+            gvTheGrid.Columns[3].Visible = true;//view
+            divEmptyData.Visible = false;
+            divAddAndViewControls.Visible = false;
+            if (_theView != null)
+            {
+                if ((bool)_theView.ShowViewIcon == false)
+                    gvTheGrid.Columns[3].Visible = false;//view
+                if ((bool)_theView.ShowEditIcon == false)
+                    gvTheGrid.Columns[2].Visible = false;//edit
+            }
+
+            //_bReadOnly = false;
+            divUpload.Visible = true;
+            //hlLocations.Visible = false;
+            divEmail.Visible = true;
+
+            if (_bShowGraphIcon)
+                divShowGraph.Visible = true;
+
+            if (gvr != null)
+            {
+                _gvPager = (Common_Pager)gvr.FindControl("Pager");
+                _gvPager.HideAdd = true;
+                _gvPager.HideDelete = true;
+            }
+        }
+        else if (_strRecordRightID == Common.UserRoleType.EditOwnViewOther)
+        {
+            //gvTheGrid.Columns[0].Visible = false;//delete check
+            gvTheGrid.Columns[2].Visible = true;//edit   
+            gvTheGrid.Columns[3].Visible = true;//view
+            //divEmptyData.Visible = false;
+            //divAddAndViewControls.Visible = false;
+            if (_theView != null)
+            {
+                if ((bool)_theView.ShowViewIcon == false)
+                    gvTheGrid.Columns[3].Visible = false;//view
+                if ((bool)_theView.ShowEditIcon == false)
+                    gvTheGrid.Columns[2].Visible = false;//edit
+            }
+            divUpload.Visible = true;
+
+            divEmail.Visible = true;
+            if (_bShowGraphIcon)
+                divShowGraph.Visible = true;
+            if (gvr != null)
+            {
+                _gvPager = (Common_Pager)gvr.FindControl("Pager");
+                //_gvPager.HideAdd = true;
+                _gvPager.HideDelete = true;
+            }
+        }
+        else if (_strRecordRightID == Common.UserRoleType.AddRecord)
+        {
+            //gvTheGrid.Columns[0].Visible = false;//delete check
+
+
+            gvTheGrid.Columns[2].Visible = false;//edit   
+            gvTheGrid.Columns[3].Visible = true;//view
+
+            if (_theView != null)
+            {
+                if ((bool)_theView.ShowViewIcon == false)
+                    gvTheGrid.Columns[3].Visible = false;//view
+            }
+            //_bReadOnly = true;
+            divUpload.Visible = true;
+
+            if (gvr != null)
+            {
+                _gvPager = (Common_Pager)gvr.FindControl("Pager");
+
+                _gvPager.HideDelete = true;
+            }
+
+           
+
+
+        }
+        else
+        {
+            gvTheGrid.Columns[2].Visible = true;//edit   
+            gvTheGrid.Columns[3].Visible = false;//view
+
+            if (_theView != null)
+            {
+                if ((bool)_theView.ShowEditIcon == false)
+                    gvTheGrid.Columns[2].Visible = false;//edit
+            }
+            
+
+            if (_theView != null)
+            {
+                if ((bool)_theView.ShowAddIcon == false)
+                {
+                    divEmptyData.Visible = false;
+
+                }
+            }
+
+        }
     }
 
     protected string GetRecursiveDataScope(int iParentTableID, int iScopeTableID, string strReocrdIDs)
@@ -3829,35 +3971,7 @@ function checkAllHR(objRef,GridView) {
                _dtDateFrom, _dtDateTo, sParentColumnSortSQL, "", _strViewName, int.Parse(hfViewID.Value), ref strReturnSQL, ref strReturnSQL);
 
 
-            if (_dtDataSource == null)
-            {
-                //divEmptyData.Visible = true;
-
-                if (IsFiltered())
-                {
-                    divNoFilter.Visible = true;
-                    divEmptyData.Visible = false;
-
-                }
-                else
-                {
-                    if (_strRecordRightID == Common.UserRoleType.ReadOnly)
-                    {
-                        divEmptyData.Visible = false;
-                    }
-                    else
-                    {
-                        divEmptyData.Visible = true;
-                    }
-                    divNoFilter.Visible = false;
-                }
-                hplNewData.NavigateUrl = GetAddURL();
-
-                hplNewDataFilter.NavigateUrl = GetAddURL();
-                hplNewDataFilter2.NavigateUrl = hplNewDataFilter.NavigateUrl;
-
-                return;
-            }
+           
 
             //put speed test here       
 
@@ -3900,211 +4014,175 @@ function checkAllHR(objRef,GridView) {
                 //ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "Key", "<script>SetStyleEvent();MakeStaticHeader('" + gvTheGrid.ClientID + "', 600, 1100 , 90 ,false); </script>", false);
                 string strStaticheaderJS = @"
 
-     $(document).ready(function () {
+                             $(document).ready(function () {
         
 
 
 
-                $.fn.visibleHeight = function () {
-                    var elBottom, elTop, scrollBot, scrollTop, visibleBottom, visibleTop;
-                    scrollTop = $(window).scrollTop();
-                    scrollBot = scrollTop + $(window).height();
-                    elTop = this.offset().top;
-                    elBottom = elTop + this.outerHeight();
-                    visibleTop = elTop < scrollTop ? scrollTop : elTop;
-                    visibleBottom = elBottom > scrollBot ? scrollBot : elBottom;
-                    return visibleBottom - visibleTop
-                }
+                                        $.fn.visibleHeight = function () {
+                                            var elBottom, elTop, scrollBot, scrollTop, visibleBottom, visibleTop;
+                                            scrollTop = $(window).scrollTop();
+                                            scrollBot = scrollTop + $(window).height();
+                                            elTop = this.offset().top;
+                                            elBottom = elTop + this.outerHeight();
+                                            visibleTop = elTop < scrollTop ? scrollTop : elTop;
+                                            visibleBottom = elBottom > scrollBot ? scrollBot : elBottom;
+                                            return visibleBottom - visibleTop
+                                        }
 
 
 
 
-        function SetStyleEvent() {
+                                function SetStyleEvent() {
 
-            $('#ctl00_HomeContentPlaceHolder_rlOne_UpdateProgress1').fadeIn();
+                                    $('#ctl00_HomeContentPlaceHolder_rlOne_UpdateProgress1').fadeIn();
 
-            var DivPR = document.getElementById('DivPagerRow');
-            var DivHR = document.getElementById('DivHeaderRow');
-            var DivMC = document.getElementById('DivMainContent');
-            var DivFR = document.getElementById('DivFooterRow');
-            var DivR = document.getElementById('DivRoot');
+                                    var DivPR = document.getElementById('DivPagerRow');
+                                    var DivHR = document.getElementById('DivHeaderRow');
+                                    var DivMC = document.getElementById('DivMainContent');
+                                    var DivFR = document.getElementById('DivFooterRow');
+                                    var DivR = document.getElementById('DivRoot');
 
-            DivMC.style.overflowY = 'auto';
-            DivMC.style.overflowX = 'hidden';
-            DivMC.style.minWidth = '1000px';
+                                    DivMC.style.overflowY = 'auto';
+                                    DivMC.style.overflowX = 'hidden';
+                                  
 
-            DivPR.style.minWidth = '980px';
-            DivHR.style.minWidth = '1000px';
-            DivFR.style.minWidth = '1000px';
-            DivR.style.minWidth = '980px';
-
-            DivMC.style.paddingRight = '17px';
-            DivHR.style.paddingRight = '17px';
-            DivR.style.overflow = 'hidden';
+                                    DivMC.style.paddingRight = '17px';
+                                    DivHR.style.paddingRight = '17px'; 
+                                   DivPR.style.paddingRight = '17px';
+//                                   DivMC.style.marginRight=-17px;
 
 
-            var tbl = document.getElementById('ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid');
+                                    var tbl = document.getElementById('ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid');
 
 
-            var chkAll = $(tbl.rows[1]).find('#ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid_ctl02_chkAll');
-            $(chkAll).attr('onclick', 'javascript: SelectAllCheckboxesHR(this,ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid);');
+                                    var chkAll = $(tbl.rows[1]).find('#ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid_ctl02_chkAll');
+                                    $(chkAll).attr('onclick', 'javascript: SelectAllCheckboxesHR(this,ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid);');
+                    
+
+                                }
 
 
-//            var iTD0 = 0;
-//            $(tbl.rows[1]).find('th').each(function () {
-//
-//                var aTH = $(tbl.rows[1]).find('th').eq(iTD0);
-//                var aTD = $(tbl.rows[2]).find('td').eq(iTD0);                
-//                var iFirstWidth=$(tbl.rows[2]).find('td').eq(iTD0).width()
-//              
-//                $(aTD).width(iFirstWidth);
-//                $(aTH).width(iFirstWidth);
-//
-//                iTD0 = iTD0 + 1;
-//            });          
+                                 function MakeStaticHeader(gridId, height, width, headerHeight, isFooter) {
+                                    var tbl = document.getElementById(gridId);
+                                    height = $('#DivMainContent').visibleHeight();
+                                    height = height - 65;
+                                    if (tbl) {
+                                        var DivPR = document.getElementById('DivPagerRow');
+                                        var DivHR = document.getElementById('DivHeaderRow');
+                                        var DivMC = document.getElementById('DivMainContent');
+                                        var DivFR = document.getElementById('DivFooterRow');
+                                        var DivR = document.getElementById('DivRoot');
 
-        }
+                                        //*** Set divheaderRow Properties ****
+                                        var oWidth = $(tbl).outerWidth();
+                                        width = $(tbl).width();
+                                       var iWidth = $(tbl).innerWidth();
+                                        headerHeight = DivHR.style.height;
+                                        var paregHeight = 45;
 
+                                        //pager
+                                        DivPR.style.height = paregHeight + 'px'; // headerHeight / 2
 
-         function MakeStaticHeader(gridId, height, width, headerHeight, isFooter) {
-            var tbl = document.getElementById(gridId);
-            //alert($('#DivMainContent').visibleHeight());
-            height = $('#DivMainContent').visibleHeight();
-            height = height - 65;
-            if (tbl) {
-                var DivPR = document.getElementById('DivPagerRow');
-                var DivHR = document.getElementById('DivHeaderRow');
-                var DivMC = document.getElementById('DivMainContent');
-                var DivFR = document.getElementById('DivFooterRow');
-                var DivR = document.getElementById('DivRoot');
-                //var scrollbarWidth = DivMC.offsetWidth - DivMC.clientWidth;
+                                        DivPR.style.position = 'relative';
+                                        DivPR.style.top = '0px';
+                                        //DivPR.style.verticalAlign = 'top';
 
-                //*** Set divheaderRow Properties ****
-                var oWidth = $(tbl).outerWidth();
-                width = $(tbl).width();
-                var iWidth = $(tbl).innerWidth();
-                headerHeight = DivHR.style.height;
-                var paregHeight = 45;
-                $(DivR).width(width - 20);
+                                        DivHR.style.height = headerHeight + 'px';// headerHeight/2
 
-                //pager
-                DivPR.style.height = paregHeight + 'px'; // headerHeight / 2
-                //DivPR.style.width = (parseInt(width)) + 'px';
-                //$(DivPR).outerWidth(oWidth - 20);
-                $(DivPR).width(width - 20);
-                //$(DivPR).innerWidth(iWidth - 20);
-
-                DivPR.style.position = 'relative';
-                DivPR.style.top = '0px';
-                //DivPR.style.verticalAlign = 'top';
-
-                DivHR.style.height = headerHeight + 'px';// headerHeight/2
-                //$(DivHR).outerWidth(oWidth - 20 );
-                $(DivHR).width(width);
-                //$(DivHR).innerWidth(iWidth - 20 );
+                                        DivHR.style.position = 'relative';
+                                        DivHR.style.top = '0px';
+                                        // DivHR.style.verticalAlign = 'top';
+                                        //DivHR.rules = 'none';
 
 
-                DivHR.style.position = 'relative';
-                DivHR.style.top = '0px';
-                // DivHR.style.verticalAlign = 'top';
-                //DivHR.rules = 'none';
-
-
-                //*** Set divMainContent Properties ****
-                //$(DivMC).outerWidth(oWidth);
-                $(DivMC).width(width);
-                //$(DivMC).innerWidth(iWidth);
-
-                DivMC.style.height = height + 'px';
-                DivMC.style.position = 'relative';
-                DivMC.style.top = '0px'; //(headerHeight) + 'px';// //
-                DivMC.style.zIndex = '0';
+                                        //*** Set divMainContent Properties ****
+                                        DivMC.style.height = height + 'px';
+                                        DivMC.style.position = 'relative';
+                                        DivMC.style.top = '0px'; //(headerHeight) + 'px';// //
+                                        DivMC.style.zIndex = '0';
 
 
 
 
-                if (isFooter) {
-                    //*** Set divFooterRow Properties ****
-                    DivFR.style.width = (parseInt(width)) + 'px';
-                    DivFR.style.position = 'relative';
-                    DivFR.style.top = -(headerHeight) + 'px';
-                    DivFR.style.verticalAlign = 'top';
-                    DivFR.style.paddingtop = '2px';
+                                        if (isFooter) {
+                                            //*** Set divFooterRow Properties ****
+                                            DivFR.style.width = (parseInt(width)) + 'px';
+                                            DivFR.style.position = 'relative';
+                                            DivFR.style.top = -(headerHeight) + 'px';
+                                            DivFR.style.verticalAlign = 'top';
+                                            DivFR.style.paddingtop = '2px';
 
 
-                    var tblfr = tbl.cloneNode(true);
-                    tblfr.removeChild(tblfr.getElementsByTagName('tbody')[0]);
-                    var tblBody = document.createElement('tbody');
-                    tblfr.style.width = '100%';
-                    tblfr.cellSpacing = '0';
-                    tblfr.border = '0px';
-                    tblfr.rules = 'none';
-                    //*****In the case of Footer Row *******
-                    tblBody.appendChild(tbl.rows[tbl.rows.length - 1]);
-                    tblfr.appendChild(tblBody);
-                    DivFR.appendChild(tblfr);
-                }
-                //****Copy Header in divHeaderRow****
+                                            var tblfr = tbl.cloneNode(true);
+                                            tblfr.removeChild(tblfr.getElementsByTagName('tbody')[0]);
+                                            var tblBody = document.createElement('tbody');
+                                            tblfr.style.width = '100%';
+                                            tblfr.cellSpacing = '0';
+                                            tblfr.border = '0px';
+                                            tblfr.rules = 'none';
+                                            //*****In the case of Footer Row *******
+                                            tblBody.appendChild(tbl.rows[tbl.rows.length - 1]);
+                                            tblfr.appendChild(tblBody);
+                                            DivFR.appendChild(tblfr);
+                                        }
+                                        //****Copy Header in divHeaderRow****
 
-                var tblPR = tbl.cloneNode(true);
-                tblPR.removeChild(tblPR.getElementsByTagName('tbody')[0]);
-                $(tblPR).attr('id', gridId + 'PR');
-                $(tblPR).css({ minWidth: '980px' });
+                                        var tblPR = tbl.cloneNode(true);
+                                        tblPR.removeChild(tblPR.getElementsByTagName('tbody')[0]);
+                                        $(tblPR).attr('id', gridId + 'PR');
 
-                var tblHR = tbl.cloneNode(true);
-                tblHR.removeChild(tblHR.getElementsByTagName('tbody')[0]);
-                $(tblHR).attr('id', gridId + 'HR');
-                //$(tblHR).css({ table-layout: fixed });
+                                        var tblHR = tbl.cloneNode(true);
+                                        tblHR.removeChild(tblHR.getElementsByTagName('tbody')[0]);
+                                        $(tblHR).attr('id', gridId + 'HR');
 
 
-                var tblBodyPR = document.createElement('tbody');
-                var tblBodyHR = document.createElement('tbody');
+                                        var tblBodyPR = document.createElement('tbody');
+                                        var tblBodyHR = document.createElement('tbody');
 
 
-                tblBodyPR.appendChild(tbl.rows[0]);
-                tblBodyHR.appendChild(tbl.rows[0]);
+                                        tblBodyPR.appendChild(tbl.rows[0]);
+                                        tblBodyHR.appendChild(tbl.rows[0]);
                
 
-                tblPR.appendChild(tblBodyPR);
-                tblHR.appendChild(tblBodyHR);
+                                        tblPR.appendChild(tblBodyPR);
+                                        tblHR.appendChild(tblBodyHR);
 
-                DivPR.appendChild(tblPR);
-                DivHR.appendChild(tblHR);
+                                        DivPR.appendChild(tblPR);
+                                        DivHR.appendChild(tblHR);
+                                       
+                                    var iTD0 = 0;
+                                    $(tbl.rows[0]).find('td').each(function () {
 
-            var iTD0 = 0;
-            $(tbl.rows[0]).find('td').each(function () {
+                                        var aTH = $(tblHR.rows[0]).find('th').eq(iTD0);
+                                        var aTD = $(tbl.rows[0]).find('td').eq(iTD0);                
+                                        var iFirstWidth=$(tbl.rows[0]).find('td').eq(iTD0).width();
+                                        var iColumnWidth=$(tblHR.rows[0]).find('th').eq(iTD0).width();
+                                        if(iColumnWidth>iFirstWidth)
+                                            {iFirstWidth=iColumnWidth;}
 
-                var aTH = $(tblHR.rows[0]).find('th').eq(iTD0);
-                var aTD = $(tbl.rows[0]).find('td').eq(iTD0);                
-                var iFirstWidth=$(tbl.rows[0]).find('td').eq(iTD0).width();
-                var iColumnWidth=$(tblHR.rows[0]).find('th').eq(iTD0).width();
-                if(iColumnWidth>iFirstWidth)
-                    {iFirstWidth=iColumnWidth;}
+                                        $(aTD).css({ minWidth: iFirstWidth+'px' });
+                                        $(aTD).css({ maxWidth: iFirstWidth+'px' });
+                                        $(aTH).css({ minWidth: iFirstWidth+'px' });
+                                        $(aTH).css({ maxWidth: iFirstWidth+'px' });
 
-                //$(aTD).width(iFirstWidth);
-                $(aTD).css({ minWidth: iFirstWidth+'px' });
-                $(aTD).css({ maxWidth: iFirstWidth+'px' });
-                $(aTH).css({ minWidth: iFirstWidth+'px' });
-                $(aTH).css({ maxWidth: iFirstWidth+'px' });
-                //$(aTH).width=iFirstWidth;
-
-                iTD0 = iTD0 + 1;
-            }); 
-
-                $('#ctl00_HomeContentPlaceHolder_rlOne_UpdateProgress1').fadeOut();
-            }
-        }
+                                        iTD0 = iTD0 + 1;
+                                    }); 
+                                       
+                                        $('#ctl00_HomeContentPlaceHolder_rlOne_UpdateProgress1').fadeOut();
+                                    }
+                                }
 
 
 
-             $('#loadingredirect').fadeIn();
-            SetStyleEvent();
-            MakeStaticHeader('" + gvTheGrid.ClientID + @"', 600, 1100 , 90 ,false);
-            $('#loadingredirect').fadeOut();
+                                     $('#loadingredirect').fadeIn();
+                                    SetStyleEvent();
+                                    MakeStaticHeader('" + gvTheGrid.ClientID + @"', 600, 1100 , 90 ,false);
+                                    $('#loadingredirect').fadeOut();
 
-    });
+                            });
  
-";
+                        ";
 
 
                 ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strStaticheaderJS_key", strStaticheaderJS, true);
@@ -4126,7 +4204,35 @@ function checkAllHR(objRef,GridView) {
 
             ////
 
+            if (_dtDataSource == null)
+            {
+                //divEmptyData.Visible = true;
 
+                if (IsFiltered())
+                {
+                    divNoFilter.Visible = true;
+                    divEmptyData.Visible = false;
+
+                }
+                else
+                {
+                    if (_strRecordRightID == Common.UserRoleType.ReadOnly)
+                    {
+                        divEmptyData.Visible = false;
+                    }
+                    else
+                    {
+                        divEmptyData.Visible = true;
+                    }
+                    divNoFilter.Visible = false;
+                }
+                hplNewData.NavigateUrl = GetAddURL();
+
+                hplNewDataFilter.NavigateUrl = GetAddURL();
+                hplNewDataFilter2.NavigateUrl = hplNewDataFilter.NavigateUrl;
+
+                return;
+            }
 
             if (gvTheGrid.TopPagerRow != null)
                 gvTheGrid.TopPagerRow.Visible = true;
@@ -4167,7 +4273,7 @@ function checkAllHR(objRef,GridView) {
 
                     }
                     //_gvPager.EditViewURL = "#";
-                    //_gvPager.EditViewOnClick = "window.parent.callMe('" + "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/ViewEditPage.aspx?TableID=" + Cryptography.Encrypt(_qsTableID) + "&ViewID=" + iViewID.ToString() + "');return false;";
+                    //_gvPager.EditViewOnClick = "window.parent.callMe('" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/ViewEditPage.aspx?TableID=" + Cryptography.Encrypt(_qsTableID) + "&ViewID=" + iViewID.ToString() + "');return false;";
 
                 }
 
@@ -4311,8 +4417,8 @@ function checkAllHR(objRef,GridView) {
                 //gvTheGrid.Columns[0].Visible = false;//delete check
                 gvTheGrid.Columns[2].Visible = true;//edit   
                 gvTheGrid.Columns[3].Visible = true;//view
-                divEmptyData.Visible = false;
-                divAddAndViewControls.Visible = false;
+                //divEmptyData.Visible = false;
+                //divAddAndViewControls.Visible = false;
                 if (_theView != null)
                 {
                     if ((bool)_theView.ShowViewIcon == false)
@@ -4328,7 +4434,7 @@ function checkAllHR(objRef,GridView) {
                 if (gvr != null)
                 {
                     _gvPager = (Common_Pager)gvr.FindControl("Pager");
-                    _gvPager.HideAdd = true;
+                    //_gvPager.HideAdd = true;
                     _gvPager.HideDelete = true;
                 }
             }
@@ -4653,7 +4759,10 @@ function checkAllHR(objRef,GridView) {
             {
                 _gvPager.TableID = TableID;
             }
-
+            if(divEmptyData.Visible==true & divNoFilter.Visible==true)
+            {
+                divEmptyData.Visible = false;
+            }
 
 
         }
@@ -6814,7 +6923,7 @@ function checkAllHR(objRef,GridView) {
 
                                     if (strLinkURL.IndexOf("http") == -1)
                                     {
-                                        strLinkURL = "http://" + strLinkURL;
+                                        strLinkURL = Request.Url.Scheme +"://" + strLinkURL;
                                     }
 
                                     e.Row.Cells[j + 4].Text = "<a target='_blank' href='" + strLinkURL + "'>"
@@ -7063,7 +7172,7 @@ function checkAllHR(objRef,GridView) {
 
                                     if (strImageURL != "")
                                     {
-                                        e.Row.Cells[j + 4].Text = "<img alt='Traffic Light' src='" + "http://" + Request.Url.Authority + Request.ApplicationPath + strImageURL + "' />";
+                                        e.Row.Cells[j + 4].Text = "<img alt='Traffic Light' src='" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + strImageURL + "' />";
                                     }
 
                                 }
@@ -8222,7 +8331,7 @@ function checkAllHR(objRef,GridView) {
 
     protected void Pager_DeleteAction(object sender, EventArgs e)
     {
-
+        EnsureSecurity();
         bool bIsAllCheckeD = false;
 
         bool bHeaderChecked = ((CheckBox)gvTheGrid.HeaderRow.FindControl("chkAll")).Checked;
@@ -8478,7 +8587,7 @@ function checkAllHR(objRef,GridView) {
 
     protected void Pager_AllExport(object sender, EventArgs e)
     {
-
+        EnsureSecurity();
         if (ddlTemplate.Items.Count == 0)
         {
             //no template, so lets create one
@@ -8524,7 +8633,7 @@ function checkAllHR(objRef,GridView) {
 
 
             lblExportRecords.Text = "";
-
+            PopulateSearchParams();
             switch (ddlExportFiletype.SelectedValue)
             {
                 case "e":
@@ -8904,6 +9013,7 @@ function checkAllHR(objRef,GridView) {
 
     protected void Pager_CopyRecordAction(object sender, EventArgs e)
     {
+        EnsureSecurity();
         string sCheck = "";
         for (int i = 0; i < gvTheGrid.Rows.Count; i++)
         {
@@ -8941,6 +9051,7 @@ function checkAllHR(objRef,GridView) {
     }
     protected void Pager_EditManyAction(object sender, EventArgs e)
     {
+        EnsureSecurity();
         string sCheck = "";
         for (int i = 0; i < gvTheGrid.Rows.Count; i++)
         {
@@ -9009,6 +9120,7 @@ function checkAllHR(objRef,GridView) {
 
     protected void Pager_OnSendEmailAction(object sender, EventArgs e)
     {
+        EnsureSecurity();
         string sCheck = "";
 
         bool bHeaderChecked = ((CheckBox)gvTheGrid.HeaderRow.FindControl("chkAll")).Checked;
@@ -9095,7 +9207,7 @@ function checkAllHR(objRef,GridView) {
 
         if (strSendEmailURl != "")
         {
-            strSendEmailURl = "http://" + Request.Url.Authority + Request.ApplicationPath + strSendEmailURl;
+            strSendEmailURl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + strSendEmailURl;
             if (_bOpenInParent == false)
             {
                 Response.Redirect(strSendEmailURl, false);
@@ -9111,7 +9223,7 @@ function checkAllHR(objRef,GridView) {
     }
     protected void Pager_UnDeleteAction(object sender, EventArgs e)
     {
-
+        EnsureSecurity();
         bool bIsAllCheckeD = false;
 
         bool bHeaderChecked = ((CheckBox)gvTheGrid.HeaderRow.FindControl("chkAll")).Checked;
@@ -10656,6 +10768,8 @@ function checkAllHR(objRef,GridView) {
             HtmlTextWriter hw = new HtmlTextWriter(sw);
 
 
+           
+
             int iTN = 0;
             gvTheGrid.PageIndex = 0;
 
@@ -10677,32 +10791,32 @@ function checkAllHR(objRef,GridView) {
 
 
 
-            TextSearch = TextSearch + hfTextSearch.Value;
-            if ((bool)_theUserRole.IsAdvancedSecurity)
-            {
-                if (_strRecordRightID == Common.UserRoleType.OwnData)
-                {
-                    TextSearch = TextSearch + " AND (Record.OwnerUserID=" + _ObjUser.UserID.ToString() + " OR Record.EnteredBy=" + _ObjUser.UserID.ToString() + ")";
-                }
-            }
-            else
-            {
-                if (Session["roletype"].ToString() == Common.UserRoleType.OwnData)
-                {
-                    TextSearch = TextSearch + " AND (Record.OwnerUserID=" + _ObjUser.UserID.ToString() + " OR Record.EnteredBy=" + _ObjUser.UserID.ToString() + ")";
-                }
-            }
-            PopulateDateAddedSearch();
+            //TextSearch = TextSearch + hfTextSearch.Value;
+            //if ((bool)_theUserRole.IsAdvancedSecurity)
+            //{
+            //    if (_strRecordRightID == Common.UserRoleType.OwnData)
+            //    {
+            //        TextSearch = TextSearch + " AND (Record.OwnerUserID=" + _ObjUser.UserID.ToString() + " OR Record.EnteredBy=" + _ObjUser.UserID.ToString() + ")";
+            //    }
+            //}
+            //else
+            //{
+            //    if (Session["roletype"].ToString() == Common.UserRoleType.OwnData)
+            //    {
+            //        TextSearch = TextSearch + " AND (Record.OwnerUserID=" + _ObjUser.UserID.ToString() + " OR Record.EnteredBy=" + _ObjUser.UserID.ToString() + ")";
+            //    }
+            //}
+            //PopulateDateAddedSearch();
 
             //if (chkShowAdvancedOptions.Checked && ddlUploadedBatch.SelectedValue != "")
             //{
             //    TextSearch = TextSearch + "  AND Record.TempRecordID IN  (SELECT TempRecord.RecordID FROM TempRecord WHERE TempRecord.BatchID=" + ddlUploadedBatch.SelectedValue + ")";
             //}
 
-            if (chkShowAdvancedOptions.Checked && ddlUploadedBatch.SelectedValue != "")
-            {
-                TextSearch = TextSearch + "  AND Record.BatchID=" + ddlUploadedBatch.SelectedValue + " ";
-            }
+            //if (chkShowAdvancedOptions.Checked && ddlUploadedBatch.SelectedValue != "")
+            //{
+            //    TextSearch = TextSearch + "  AND Record.BatchID=" + ddlUploadedBatch.SelectedValue + " ";
+            //}
 
             string strHeaderXML = "";
             if (rdbRecords.SelectedValue == "a" && strExportType != "email")
@@ -10972,10 +11086,10 @@ function checkAllHR(objRef,GridView) {
 
             }
 
-            if (_theView != null && _theView.FixedFilter != "")
-            {
-                TextSearch = TextSearch + " " + _theView.FixedFilter;
-            }
+            //if (_theView != null && _theView.FixedFilter != "")
+            //{
+            //    TextSearch = TextSearch + " " + _theView.FixedFilter;
+            //}
 
 
             DataTable dt = new DataTable();

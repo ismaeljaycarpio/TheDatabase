@@ -26,11 +26,11 @@ public partial class User_List : SecurePage
 
         if (SecurityManager.CanThisAccountAddUser(int.Parse(ddlAccount.Text)))
         {
-            return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/Detail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
+            return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/Detail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
         }
         else
         {
-            return "javascript:alert('You have reached the maximum number of users allowed for your account type.  In order to add a new user you must either delete an existing user or upgrade your account. See My Account page for options.');window.location.href='" + "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountTypeChange.aspx?type=renew" + "'";
+            return "javascript:alert('You have reached the maximum number of users allowed for your account type.  In order to add a new user you must either delete an existing user or upgrade your account. See My Account page for options.');window.location.href='" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountTypeChange.aspx?type=renew" + "'";
                         
         }
         
@@ -41,7 +41,7 @@ public partial class User_List : SecurePage
     public string GetEditURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/Detail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&userid=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/Detail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&userid=";
 
     }
 
@@ -49,14 +49,14 @@ public partial class User_List : SecurePage
     public string GetViewURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/Detail.aspx?mode=" + Cryptography.Encrypt("view") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&userid=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/Detail.aspx?mode=" + Cryptography.Encrypt("view") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&userid=";
 
     }
 
     public string GetAccountViewURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&accountid=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&accountid=";
 
     }
   

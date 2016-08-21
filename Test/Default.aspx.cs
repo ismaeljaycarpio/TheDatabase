@@ -15,6 +15,7 @@ public partial class Test_Default : System.Web.UI.Page
         {
             //lblMsg.Text = Request.PhysicalPath;
             //lnkRefresh_Click(null, null);
+            lblMsg.Text = Request.Url.Scheme;
         }
     }
 

@@ -317,11 +317,11 @@ public partial class SystemSignUp : SecurePage
                 Account theAccount = SecurityManager.Account_Details(iAccountId);
                 if (Session["LoginAccount"] == null)
                 {
-                    theContent.ContentP = theContent.ContentP.Replace("[URL]", "http://" + Request.Url.Authority + Request.ApplicationPath + "/Login.aspx?email=" + Email.Text);
+                    theContent.ContentP = theContent.ContentP.Replace("[URL]", Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Login.aspx?email=" + Email.Text);
                 }
                 else
                 {
-                    theContent.ContentP = theContent.ContentP.Replace("[URL]", "http://" + Request.Url.Authority + Request.ApplicationPath + "/Login.aspx?email=" + Email.Text + "&" + Session["LoginAccount"].ToString());
+                    theContent.ContentP = theContent.ContentP.Replace("[URL]", Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Login.aspx?email=" + Email.Text + "&" + Session["LoginAccount"].ToString());
                 }
 
                 DataTable theSPTable = SystemData.Run_ContentSP("ets_RegistrationEmailWizard", iUserID.ToString());

@@ -21,7 +21,7 @@ public partial class Pages_Record_TableList : SecurePage
     public string GetEditURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&MenuID=" + Cryptography.Encrypt("-1") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&TableID=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&MenuID=" + Cryptography.Encrypt("-1") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&TableID=";
 
     }
 
@@ -29,23 +29,23 @@ public partial class Pages_Record_TableList : SecurePage
     public string GetAddURL()
     {
 
-        //return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&MenuID=" + Cryptography.Encrypt(ddlRecordGroupFilter.SelectedValue) + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
+        //return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&MenuID=" + Cryptography.Encrypt(ddlRecordGroupFilter.SelectedValue) + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableOption.aspx?MenuID=" + Cryptography.Encrypt("-1") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableOption.aspx?MenuID=" + Cryptography.Encrypt("-1") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
         
     }
 
     public string GetViewURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=";
 
     }
 
     public string GetRootURL()
     {
         
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/";
 
     }
 

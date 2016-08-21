@@ -15,7 +15,7 @@ public partial class Renewal : System.Web.UI.Page
         {
 
             //string strURL = System.Configuration.ConfigurationManager.AppSettings["BaseAddress"];
-           string  strURL = "http://" + Request.Url.Authority + Request.ApplicationPath;
+           string  strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
             string strDeveloperEmail = System.Configuration.ConfigurationManager.AppSettings["Coder"];
             bool bSentEmailToClient = false;//true
 

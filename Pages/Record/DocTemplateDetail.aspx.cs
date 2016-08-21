@@ -58,7 +58,7 @@ public partial class Pages_Record_DocTemplateDetail : SecurePage
         DocTemplate theDocTemplate = DocumentManager.dbg_DocTemplate_Detail((int)_iDocTemplateID);
         if (theDocTemplate != null)
         {
-            lblWordDocument.Text = "<a href='" + "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/DocTemplates/" + theDocTemplate.FileUniqueName + "' target='_blank' >" + theDocTemplate.FileName.ToString() + " </a>";
+            lblWordDocument.Text = "<a href='" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/DocTemplates/" + theDocTemplate.FileUniqueName + "' target='_blank' >" + theDocTemplate.FileName.ToString() + " </a>";
             ddlDataRetriever.Text = theDocTemplate.DataRetrieverID.ToString();
            
             ViewState["theDocTemplate"] = theDocTemplate;

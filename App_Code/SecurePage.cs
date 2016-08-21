@@ -10,14 +10,14 @@ public class SecurePage : Page
     //    if (Session["LoginAccount"] == null)
     //    {
     //        Session.Clear();
-    //        Response.Redirect("http://" + base.Request.Url.Authority + base.Request.ApplicationPath + "/Login.aspx?ReturnURL=" + Server.UrlEncode(base.Request.RawUrl),false);
+    //        Response.Redirect(base.Request.Url.Scheme +"://" + base.Request.Url.Authority + base.Request.ApplicationPath + "/Login.aspx?ReturnURL=" + Server.UrlEncode(base.Request.RawUrl),false);
     //        return;
     //    }
     //    else
     //    {
     //        string strLoginAccount=Session["LoginAccount"].ToString();
     //        Session.Clear();
-    //        Response.Redirect("http://" + base.Request.Url.Authority + base.Request.ApplicationPath + "/Login.aspx?ReturnURL=" + Server.UrlEncode(base.Request.RawUrl) + "&" + strLoginAccount,false);
+    //        Response.Redirect(base.Request.Url.Scheme +"://" + base.Request.Url.Authority + base.Request.ApplicationPath + "/Login.aspx?ReturnURL=" + Server.UrlEncode(base.Request.RawUrl) + "&" + strLoginAccount,false);
     //        return;
     //    }
        
@@ -216,14 +216,14 @@ public class SecurePage : Page
             if (Session["LoginAccount"] == null)
             {
                 Session.Clear();
-               base.Response.Redirect("http://" + base.Request.Url.Authority + base.Request.ApplicationPath + "/Login.aspx?ReturnURL=" + Server.UrlEncode(base.Request.RawUrl), false);
+               base.Response.Redirect(base.Request.Url.Scheme +"://" + base.Request.Url.Authority + base.Request.ApplicationPath + "/Login.aspx?ReturnURL=" + Server.UrlEncode(base.Request.RawUrl), false);
                 
             }
             else
             {
                 string strLoginAccount = Session["LoginAccount"].ToString();
                 Session.Clear();
-                base.Response.Redirect("http://" + base.Request.Url.Authority + base.Request.ApplicationPath + "/Login.aspx?ReturnURL=" + Server.UrlEncode(base.Request.RawUrl) + "&" + strLoginAccount, false);
+                base.Response.Redirect(base.Request.Url.Scheme + "://" + base.Request.Url.Authority + base.Request.ApplicationPath + "/Login.aspx?ReturnURL=" + Server.UrlEncode(base.Request.RawUrl) + "&" + strLoginAccount, false);
                
             }
             return;

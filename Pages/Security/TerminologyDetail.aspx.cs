@@ -28,12 +28,12 @@ public partial class Pages_Security_TerminologyDetail : SecurePage
             if (Request.QueryString["SearchCriteria"] != null)
             {
 
-                hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Terminology.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+                hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Terminology.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
             }
             else
             {
 
-                Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Terminology.aspx", false);//i think no need
+                Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Terminology.aspx", false);//i think no need
             }
 
 
@@ -192,7 +192,7 @@ public partial class Pages_Security_TerminologyDetail : SecurePage
             else if (_strActionMode == "view")
             {
                 divEdit.Visible = true;
-                hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/TerminologyDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&TerminologyID=" + Cryptography.Encrypt(theTerminology.TerminologyID.ToString());
+                hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/TerminologyDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&TerminologyID=" + Cryptography.Encrypt(theTerminology.TerminologyID.ToString());
             }
         }
         catch (Exception ex)

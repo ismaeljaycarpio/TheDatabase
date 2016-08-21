@@ -12,10 +12,17 @@
     <script src="../Document/Uploadify/jquery.uploadify.v2.1.4.js" type="text/javascript"></script>
     <script src="../Document/Uploadify/swfobject.js" type="text/javascript"></script>
     <link href="../Document/Uploadify/uploadify.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+   <%-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/base/jquery-ui.css"
-        rel="stylesheet" type="text/css" />
+        rel="stylesheet" type="text/css" />--%>
+
+     <script type="text/javascript" src="<%=Request.Url.Scheme+@"://maps.google.com/maps/api/js?sensor=false" %>"></script>
+
+    <script src="<%=Request.Url.Scheme+@"://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js" %>"></script>
+    <link href="<%=Request.Url.Scheme+@"://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/themes/base/jquery-ui.css" %>" rel="stylesheet" type="text/css" />
+
+
     <script type="text/javascript">
 
 

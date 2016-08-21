@@ -33,11 +33,11 @@ public partial class Pages_User_SendEmail : SecurePage
             {
                 if (Request.QueryString["SearchCriteriaID2"] != null)
                 {
-                    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() + "&SearchCriteriaID2=" + Request.QueryString["SearchCriteriaID2"].ToString();
+                    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() + "&SearchCriteriaID2=" + Request.QueryString["SearchCriteriaID2"].ToString();
                 }
                 else
                 {
-                    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() ;
+                    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() ;
                 }
                 txtSubject.Text = _theTable.TableName + " Records";
                 lblAttachmnet.Text = _theTable.TableName + " Records.csv";
@@ -45,7 +45,7 @@ public partial class Pages_User_SendEmail : SecurePage
             }
             else if (Cryptography.Decrypt(Request.QueryString["Source"].ToString()).ToLower() == "jsgraph")
             {
-                hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Graph/RecordChart.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() ;
+                hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Graph/RecordChart.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() ;
                 txtMessage.Text = "Please find attached graph image in PNG format.";
                 string strFileName = Common.GetValidFileName(hfFileName.Value);
                 txtSubject.Text = _theTable.TableName + " - Graph";
@@ -53,7 +53,7 @@ public partial class Pages_User_SendEmail : SecurePage
             }
             else if (Cryptography.Decrypt(Request.QueryString["Source"].ToString()).ToLower() == "graph")
             {
-                hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Graph/RecordChart.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() + "&SearchCriteriaID2=" + Request.QueryString["SearchCriteriaID2"].ToString();
+                hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Graph/RecordChart.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() + "&SearchCriteriaID2=" + Request.QueryString["SearchCriteriaID2"].ToString();
                 txtMessage.Text = "Please find attached graph image in PDF format.";
 
                 txtSubject.Text = _theTable.TableName + " - Graph";
@@ -64,7 +64,7 @@ public partial class Pages_User_SendEmail : SecurePage
                 if (Request.QueryString["GraphOptionID"] != null)
                 {
 
-                    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Graph/GraphOptionDetail.aspx?page=list&mode=" + Request.QueryString["mode"].ToString() +
+                    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Graph/GraphOptionDetail.aspx?page=list&mode=" + Request.QueryString["mode"].ToString() +
                         "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() +
                         "&GraphOptionID=" + Request.QueryString["GraphOptionID"].ToString() +
                         "&SearchCriteriaID2=" + Request.QueryString["SearchCriteriaID2"].ToString();
@@ -80,7 +80,7 @@ public partial class Pages_User_SendEmail : SecurePage
                 }
                 else
                 {
-                    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Graph/GraphOptionDetail.aspx?page=list&mode=" + Request.QueryString["mode"].ToString() +
+                    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Graph/GraphOptionDetail.aspx?page=list&mode=" + Request.QueryString["mode"].ToString() +
                         "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() +
                         "&SearchCriteriaID2=" + Request.QueryString["SearchCriteriaID2"].ToString();
                     txtMessage.Text = "Please find attached graph image in PDF format.";

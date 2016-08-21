@@ -25,7 +25,7 @@ public partial class Public : System.Web.UI.Page
 
                     if (_theTable.ParentTableID == null)
                     {
-                        Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath
+                        Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
                             + "/Pages/Record/RecordDetail.aspx?public=yes&mode=" + Cryptography.Encrypt("add")
                             + "&TableID=" + Cryptography.Encrypt(_qsTableID) + "&SearchCriteriaID="
                             + Cryptography.Encrypt("-1"), true);
@@ -124,7 +124,7 @@ public partial class Public : System.Web.UI.Page
             return;
         }
 
-        Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath
+        Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
                             + "/Pages/Record/RecordDetail.aspx?public=yes&mode=" + Cryptography.Encrypt("add")
                             + "&TableID=" + Cryptography.Encrypt(_qsTableID) + "&SearchCriteriaID="
                             + Cryptography.Encrypt("-1") + "&ParentID=" + _theTable.ParentTableID.ToString()

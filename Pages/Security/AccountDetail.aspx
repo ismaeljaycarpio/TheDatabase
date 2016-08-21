@@ -5,12 +5,13 @@
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 <%@ Register Namespace="DBGServerControl" Assembly="DBGServerControl" TagPrefix="dbg" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HomeContentPlaceHolder" runat="Server">
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
-    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/base/jquery-ui.css"
-        rel="stylesheet" type="text/css" />
-    <script language="javascript" type="text/javascript">
+    <script type="text/javascript" src="<%=Request.Url.Scheme+@"://maps.google.com/maps/api/js?sensor=false" %>"></script>
 
+    <script src="<%=Request.Url.Scheme+@"://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js" %>"></script>
+    <link href="<%=Request.Url.Scheme+@"://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/base/jquery-ui.css" %>" rel="stylesheet" type="text/css" />
+   
+        <script language="javascript" type="text/javascript">
+          
         if (document.getElementById('hlChoose') != null) {
             document.getElementById('hlChoose').href = document.getElementById("hfRootURL").value + "/Pages/Site/" + "GoogleMap.aspx?type=account&lat=" + document.getElementById("ctl00_HomeContentPlaceHolder_txtLatitude").value + "&lng=" + document.getElementById("ctl00_HomeContentPlaceHolder_txtLongitude").value;
         };

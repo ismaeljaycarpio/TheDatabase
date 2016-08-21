@@ -263,12 +263,12 @@ FROM         [Table] INNER JOIN
 
     protected string GetOptionImageEditURL()
     {
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/OptionImageDetaill.aspx?mode=" + Cryptography.Encrypt("edit") + "&OptionImageID=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/OptionImageDetaill.aspx?mode=" + Cryptography.Encrypt("edit") + "&OptionImageID=";
     }
 
     protected string GetOptionImageAddURL()
     {
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/OptionImageDetaill.aspx?mode=" + Cryptography.Encrypt("add");
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/OptionImageDetaill.aspx?mode=" + Cryptography.Encrypt("add");
     }
 
     protected void gvOptionImage_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -893,9 +893,9 @@ FROM         [Table] INNER JOIN
         string strMaxHeight = "50";
 
         string strFilePath = _strFilesLocation + "/UserFiles/AppFiles/";
-        string strScriptPath = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Handler.ashx";
+        string strScriptPath = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Handler.ashx";
         string strFileExtension = "*.jpg;*.gif;*.png";
-        string strInnerHTML = "<img  title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + hfButtonValue.ID + "\" src=\"" + "http://" + Request.Url.Authority + Request.ApplicationPath
+        string strInnerHTML = "<img  title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + hfButtonValue.ID + "\" src=\"" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
             + "/App_Themes/Default/Images/icon_delete.gif\" />" +
             "<a id=\"a" + hfButtonValue.ID + "\" target=\"_blank\" >"
         + " <img style=\"padding-bottom:7px; max-height:"
@@ -990,7 +990,7 @@ FROM         [Table] INNER JOIN
             //this.lnkValidEdit.Attributes.Add("onclick", "javascript:return OpenValidPopup()");
             //this.lnkWarningEdit.Attributes.Add("onclick", "javascript:return OpenWarningPopup()");
             //this.lnkCalculationEdit.Attributes.Add("onclick", "javascript:return OpenCalculationPopup()");
-            edtContent.AssetManager = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Editor/assetmanager/assetmanager.aspx";
+            edtContent.AssetManager = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Editor/assetmanager/assetmanager.aspx";
             edtContent.ButtonFeatures = new string[] { "XHTMLFullSource", "RemoveFormat", "Undo", "Redo", "|", "Paragraph", "FontName", "FontSize", "|", "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyFull", "Bold", "Italic", "Underline", "Hyperlink" };
         }
 
@@ -1103,7 +1103,7 @@ FROM         [Table] INNER JOIN
                 if (!IsPostBack)
                 {
 
-                    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Request.QueryString["typemode"] + "&AccountID=" + Request.QueryString["AccountID"] + "&MenuID=" + Request.QueryString["MenuID"] + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&SearchCriteria2=" + Request.QueryString["SearchCriteria2"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"] + "#topline";
+                    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Request.QueryString["typemode"] + "&AccountID=" + Request.QueryString["AccountID"] + "&MenuID=" + Request.QueryString["MenuID"] + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&SearchCriteria2=" + Request.QueryString["SearchCriteria2"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"] + "#topline";
 
                     if (Request.QueryString["signup"] != null)
                         hlBack.NavigateUrl = hlBack.NavigateUrl + "&signup=yes";
@@ -1267,17 +1267,17 @@ FROM         [Table] INNER JOIN
 
         //if (Request.QueryString["TableID"] != null)
         //{
-        //    hlReminders.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Schedule/DataReminder.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&ColumnID=" + _qsColumnID;
+        //    hlReminders.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Schedule/DataReminder.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&ColumnID=" + _qsColumnID;
         //    hlEditMappopup.NavigateUrl = "~/Pages/Content/MapPopup.aspx?TableID=" + Request.QueryString["TableID"].ToString();
         //}
         //else
         //{
 
-        hlReminders.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Schedule/DataReminder.aspx?TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&ColumnID=" + _qsColumnID;
+        hlReminders.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Schedule/DataReminder.aspx?TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&ColumnID=" + _qsColumnID;
         hlEditMappopup.NavigateUrl = "~/Pages/Content/MapPopup.aspx?TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString());
 
 
-        hlValidConditions.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/Condition.aspx?ConditionType=V&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&ColumnID=" + _qsColumnID;
+        hlValidConditions.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/Condition.aspx?ConditionType=V&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&ColumnID=" + _qsColumnID;
         hlWarningConditions.NavigateUrl = "~/Pages/Help/Condition.aspx?ConditionType=W&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&ColumnID=" + _qsColumnID;
         hlExceedanceConditions.NavigateUrl = "~/Pages/Help/Condition.aspx?ConditionType=E&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&ColumnID=" + _qsColumnID;
 
@@ -1998,7 +1998,8 @@ FROM         [Table] INNER JOIN
         txtCalculation.Text = Common.GetDisplayFromSystem(theColumn.Calculation, (int)theColumn.TableID);
 
 
-        chkMandatory.Checked = (bool)theColumn.IsMandatory;
+        //chkMandatory.Checked = (bool)theColumn.IsMandatory;
+        ddlImportance.SelectedValue = theColumn.Importance;
         if (theColumn.DefaultValue != "")
         {
             //chkDefaultValue.Checked = true;
@@ -2617,7 +2618,7 @@ FROM         [Table] INNER JOIN
                                 + "<img style='padding-bottom:7px; max-height:" + strMaxHeight + "px;' alt='" + theButtonInfo.ImageFullPath.Substring(37)
                                 + "' src='" + strFilePath + "' title='" + theButtonInfo.ImageFullPath.Substring(37) + "'  />" + "</a><br/>";
 
-                            lblButtonValue.Text = "<img title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + hfButtonValue.ID + "\" src=\"" + "http://" + Request.Url.Authority + Request.ApplicationPath
+                            lblButtonValue.Text = "<img title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + hfButtonValue.ID + "\" src=\"" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
                               + "/App_Themes/Default/Images/icon_delete.gif\" />" + lblButtonValue.Text;
 
                             // hfButtonValue.Value = theButtonInfo.ImageFullPath;
@@ -2769,7 +2770,8 @@ FROM         [Table] INNER JOIN
             hfDateTimeColumn.Value = "yes";
 
             txtColumnName.Enabled = false;
-            chkMandatory.Enabled = false;
+            //chkMandatory.Enabled = false;
+            ddlImportance.Enabled = false;
             ddlType.Enabled = false;
             //chkDefaultValue.Enabled = false;
             ddlDateTimeType.Enabled = false;
@@ -2838,7 +2840,8 @@ FROM         [Table] INNER JOIN
             txtRoundNumber.Enabled = false;
             txtTextHeight.Enabled = false;
             txtTextWidth.Enabled = false;
-            chkMandatory.Enabled = false;
+            //chkMandatory.Enabled = false;
+            ddlImportance.Enabled = false;
             //chkShowTotal.Enabled = false;
             chkIgnoreSymbols.Enabled = false;
             chkCheckUnlikelyValue.Enabled = false;
@@ -3170,7 +3173,8 @@ FROM         [Table] INNER JOIN
         //    txtDropdownValues.Enabled = p_bEnable;
 
         //chkDropdownValues.Enabled = p_bEnable;
-        chkMandatory.Enabled = p_bEnable;
+        //chkMandatory.Enabled = p_bEnable;
+        ddlImportance.Enabled = p_bEnable;
         txtDefaultValue.Enabled = p_bEnable;
         //chkDefaultValue.Enabled = p_bEnable;
         ddlAvgColumn.Enabled = p_bEnable;
@@ -4048,7 +4052,7 @@ FROM         [Table] INNER JOIN
 
                 Column newParentjoinfield = new Column(null, newParentTable.TableID,
                       strParentjoinfieldSystemName, iDisplayOrder + 1, theColumn.DisplayName, theColumn.DisplayName, "", "", null, "",
-                       "", null, null, "", "", false, theColumn.DisplayName, null, "", null, null, false, "", "", false);
+                       "", null, null, "", "", false, theColumn.DisplayName, null, "", null, null, false, "", "", "");
 
                 newParentjoinfield.ColumnType = "text";
 
@@ -4075,7 +4079,7 @@ FROM         [Table] INNER JOIN
 
                 Column newBUColumn = new Column(null, theColumn.TableID,
                       strBUSystemName, iDisplayOrder + 1, theColumn.DisplayName + " Orig", theColumn.DisplayName + " Orig", "", "", null, "",
-                       "", null, null, "", "", false, theColumn.DisplayName + " Orig", null, "", null, null, false, "", "", false);
+                       "", null, null, "", "", false, theColumn.DisplayName + " Orig", null, "", null, null, false, "", "", "");
 
                 newBUColumn.ColumnType = "text";
 
@@ -4197,7 +4201,7 @@ FROM         [Table] INNER JOIN
 
                     Column newColumn = new Column(null, iTableID,
                       strAutoSystemName, iDisplayOrder + 1, theColumn.DisplayName, theColumn.DisplayName, "", "", null, "",
-                       "", null, null, "", "", false, theColumn.DisplayName, null, "", null, null, false, "", "", false);
+                       "", null, null, "", "", false, theColumn.DisplayName, null, "", null, null, false, "", "", "");
 
                     newColumn.ColumnType = "text";
 
@@ -4373,7 +4377,7 @@ FROM         [Table] INNER JOIN
                     null, GetWarningValidation(),
                     GetValidValidation(), null, null, "", "", false, txtColumnName.Text.Trim(), null, txtNotes.Text, chkRound.Checked,
                     txtRoundNumber.Text == "" ? null : (int?)int.Parse(txtRoundNumber.Text), chkCheckUnlikelyValue.Checked, txtGraph.Text.Trim(),
-                    "", chkMandatory.Checked
+                    "", ddlImportance.SelectedValue
                     );
                     //chkDropdownValues.Checked==true?txtDropdownValues.Text:""
                     newColumn.ValidationOnExceedance = GetExceedanceValidation();
@@ -5500,7 +5504,9 @@ FROM         [Table] INNER JOIN
                     }
                     //editColumn.NameOnImport = txtNameOnImport.Text.Trim();
                     //editColumn.DropdownValues = chkDropdownValues.Checked == true ? txtDropdownValues.Text : "";
-                    editColumn.IsMandatory = chkMandatory.Checked;
+                    //editColumn.IsMandatory = chkMandatory.Checked;
+
+                    editColumn.Importance=ddlImportance.SelectedValue;
                     editColumn.OnlyForAdmin = int.Parse(ddlOnlyForAdmin.SelectedValue);
                     editColumn.QuickAddLink = chkQuickAddLink.Checked;
 

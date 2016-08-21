@@ -1555,7 +1555,7 @@ public class Column
     private int? _iLastUpdatedUserID;
 
     private string _strDropdownValues;
-    private bool? _bIsMandatory;
+    //private bool? _bIsMandatory;
 
     private string _strAlignment;
     private int? _iNumberType;
@@ -1637,6 +1637,7 @@ public class Column
     public bool? ColourCells { set; get; }
 
     public string ButtonInfo { set; get; }
+    private string _strImportance="";
     public Column()
     {
     }
@@ -1649,7 +1650,7 @@ public class Column
         string p_strDisplayName, int? p_iPositionOnImport, string p_strNotes,
         bool? p_bIsRound, int? p_iRoundNumber, bool? p__bCheckUnlikelyValue,
         string p_strGraphLabel, string p_strDropdownValues,
-        bool? p_bIsMandatory)
+        string p_strImportance)
     {
         _iColumnID = p_iColumnID;
         _iTableID = p_iTableID;
@@ -1675,7 +1676,7 @@ public class Column
         _bCheckUnlikelyValue = p__bCheckUnlikelyValue;
         _strGraphLabel = p_strGraphLabel;
         _strDropdownValues = p_strDropdownValues;
-        _bIsMandatory=p_bIsMandatory;
+        _strImportance = p_strImportance;
     }
 
 
@@ -1722,6 +1723,13 @@ public class Column
         set { _strMobileName = value; }
     }
 
+    public string Importance
+    {
+        get { return _strImportance; }
+        set { _strImportance = value; }
+    }
+
+
     public int? AvgNumberOfRecords
     {
         get { return _iAvgNumberOfRecords; }
@@ -1754,11 +1762,11 @@ public class Column
         set { _strAlignment = value; }
     }
 
-    public bool? IsMandatory
-    {
-        get { return _bIsMandatory; }
-        set { _bIsMandatory = value; }
-    }
+    //public bool? IsMandatory
+    //{
+    //    get { return _bIsMandatory; }
+    //    set { _bIsMandatory = value; }
+    //}
 
     public string DropdownValues
     {

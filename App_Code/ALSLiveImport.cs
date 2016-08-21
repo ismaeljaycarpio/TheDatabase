@@ -77,7 +77,8 @@ public class ALSLiveImport
                     foreach (DataRow row in ds.Tables[0].Rows)
                     {
                         sites = sites + row["ALS Live Feed"] + ",";
-                        sampleSiteMap.Add(row["ALS Live Feed"].ToString(), row["Site Name"].ToString());
+                        sampleSiteMap.Add(row["ALS Live Feed"].ToString(), 
+                            row["Site Name"].ToString());
                     }
                     sites = sites.Substring(0, sites.Length - 1);
                     return sites;
@@ -361,7 +362,7 @@ public class ALSLiveImport
                         //UploadManager.SamplesImportEmail(item);
                         string strImportedSamples = "0";
                         HttpRequest request = HttpContext.Current.Request;
-                        string strRoot = "http://" + request.Url.Authority + request.ApplicationPath;
+                        string strRoot = request.Url.Scheme + "://" + request.Url.Authority + request.ApplicationPath;
 
                         UploadManager.RecordsImportEmail(item, ref strImportedSamples, strRoot);
 

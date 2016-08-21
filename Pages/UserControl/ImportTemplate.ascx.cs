@@ -343,7 +343,7 @@ public partial class Pages_UserControl_ImportTemplate : System.Web.UI.UserContro
     public string GetEditURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Import/ImportTemplateItem.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaIT=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&ImportTemplateID=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Import/ImportTemplateItem.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaIT=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&ImportTemplateID=";
 
     }
 
@@ -352,13 +352,13 @@ public partial class Pages_UserControl_ImportTemplate : System.Web.UI.UserContro
     public string GetViewURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Import/ImportTemplateItem.aspx?mode=" + Cryptography.Encrypt("view") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaIT=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&ImportTemplateID=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Import/ImportTemplateItem.aspx?mode=" + Cryptography.Encrypt("view") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaIT=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&ImportTemplateID=";
 
     }
     public string GetAddURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Import/ImportTemplateItem.aspx?mode=" + Cryptography.Encrypt("add") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaIT=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Import/ImportTemplateItem.aspx?mode=" + Cryptography.Encrypt("add") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaIT=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
 
     }
 

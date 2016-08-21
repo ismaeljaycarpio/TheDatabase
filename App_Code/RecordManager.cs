@@ -2461,7 +2461,7 @@ public class RecordManager
     //                         reader["CheckUnlikelyValue"] == DBNull.Value ? null : (bool?)reader["CheckUnlikelyValue"],
     //                          reader["GraphLabel"] == DBNull.Value ? "" : (string)reader["GraphLabel"],
     //                          reader["DropdownValues"] == DBNull.Value ? string.Empty : (string)reader["DropdownValues"],
-    //                           (bool)reader["IsMandatory"]
+    //                          reader["Importance"] == DBNull.Value ? string.Empty : (string)reader["Importance"]
     //                        );
 
     //                    temp.Constant = reader["Constant"] == DBNull.Value ? string.Empty : (string)reader["Constant"];
@@ -2608,7 +2608,7 @@ public class RecordManager
                                  reader["CheckUnlikelyValue"] == DBNull.Value ? null : (bool?)reader["CheckUnlikelyValue"],
                                   reader["GraphLabel"] == DBNull.Value ? "" : (string)reader["GraphLabel"],
                                   reader["DropdownValues"] == DBNull.Value ? string.Empty : (string)reader["DropdownValues"],
-                                   (bool)reader["IsMandatory"]
+                                   reader["Importance"] == DBNull.Value ? string.Empty : (string)reader["Importance"]
                                 );
 
                             temp.Constant = reader["Constant"] == DBNull.Value ? string.Empty : (string)reader["Constant"];
@@ -2765,7 +2765,7 @@ public class RecordManager
                                  reader["CheckUnlikelyValue"] == DBNull.Value ? null : (bool?)reader["CheckUnlikelyValue"],
                                   reader["GraphLabel"] == DBNull.Value ? "" : (string)reader["GraphLabel"],
                                   reader["DropdownValues"] == DBNull.Value ? string.Empty : (string)reader["DropdownValues"],
-                                   (bool)reader["IsMandatory"]
+                                  reader["Importance"] == DBNull.Value ? string.Empty : (string)reader["Importance"]
                                 );
 
                             temp.Constant = reader["Constant"] == DBNull.Value ? string.Empty : (string)reader["Constant"];
@@ -3284,8 +3284,8 @@ public class RecordManager
                 if (p_Column.DropdownValues != "")
                     command.Parameters.Add(new SqlParameter("@sDropdownValues ", p_Column.DropdownValues));
 
-                if (p_Column.IsMandatory != null)
-                    command.Parameters.Add(new SqlParameter("@bIsMandatory ", p_Column.IsMandatory));
+                if (p_Column.Importance != "")
+                    command.Parameters.Add(new SqlParameter("@sImportance ", p_Column.Importance));
 
                 if (p_Column.Alignment != "")
                     command.Parameters.Add(new SqlParameter("@sAlignment ", p_Column.Alignment));
@@ -3593,8 +3593,8 @@ public class RecordManager
                 if (p_Column.DropdownValues != "")
                     command.Parameters.Add(new SqlParameter("@sDropdownValues ", p_Column.DropdownValues));
 
-                if (p_Column.IsMandatory != null)
-                    command.Parameters.Add(new SqlParameter("@bIsMandatory ", p_Column.IsMandatory));
+                if (p_Column.Importance != "")
+                    command.Parameters.Add(new SqlParameter("@sImportance ", p_Column.Importance));
 
                 if (p_Column.Alignment != "")
                     command.Parameters.Add(new SqlParameter("@sAlignment ", p_Column.Alignment));
@@ -4323,7 +4323,7 @@ public class RecordManager
                                   reader["CheckUnlikelyValue"] == DBNull.Value ? null : (bool?)reader["CheckUnlikelyValue"],
                                   reader["GraphLabel"] == DBNull.Value ? string.Empty : (string)reader["GraphLabel"],
                                   reader["DropdownValues"] == DBNull.Value ? string.Empty : (string)reader["DropdownValues"],
-                                   (bool)reader["IsMandatory"]
+                                   reader["Importance"] == DBNull.Value ? string.Empty : (string)reader["Importance"]
                                  );
 
 
@@ -4475,7 +4475,7 @@ public class RecordManager
                                   reader["CheckUnlikelyValue"] == DBNull.Value ? null : (bool?)reader["CheckUnlikelyValue"],
                                    reader["GraphLabel"] == DBNull.Value ? string.Empty : (string)reader["GraphLabel"],
                                    reader["DropdownValues"] == DBNull.Value ? string.Empty : (string)reader["DropdownValues"],
-                                    (bool)reader["IsMandatory"]
+                                   reader["Importance"] == DBNull.Value ? string.Empty : (string)reader["Importance"]
                                  );
 
 
@@ -4630,7 +4630,7 @@ public class RecordManager
                                   reader["CheckUnlikelyValue"] == DBNull.Value ? null : (bool?)reader["CheckUnlikelyValue"],
                                    reader["GraphLabel"] == DBNull.Value ? string.Empty : (string)reader["GraphLabel"],
                                    reader["DropdownValues"] == DBNull.Value ? string.Empty : (string)reader["DropdownValues"],
-                                    (bool)reader["IsMandatory"]
+                                   reader["Importance"] == DBNull.Value ? string.Empty : (string)reader["Importance"]
                                  );
 
                             temp.Constant = reader["Constant"] == DBNull.Value ? string.Empty : (string)reader["Constant"];

@@ -189,15 +189,15 @@ public partial class DBEmail_LateData : System.Web.UI.Page
                     strBody = strBody.Replace("[DateTime]", dr["LastRecordDate"].ToString());
                     strBody = strBody.Replace("[Table]", dr["TableName"].ToString());
                     strBody = strBody.Replace("[LateDataDays]", dr["LateDataDays"].ToString());
-                    strBody = strBody.Replace("[week]", "http://" + Request.Url.Authority + Request.ApplicationPath +
+                    strBody = strBody.Replace("[week]", Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath +
                         "/LateDataSnooze.aspx?AccountID=" + Cryptography.Encrypt(dr["AccountID"].ToString())
                         + "&TableID=" + Cryptography.Encrypt(dr["TableID"].ToString()) + "&Period=week&emailuid="
                         + Cryptography.Encrypt(strEmailUID) + "&datetime=" + Cryptography.Encrypt(dr["LastRecordDate"].ToString()));
-                    strBody = strBody.Replace("[month]", "http://" + Request.Url.Authority + Request.ApplicationPath +
+                    strBody = strBody.Replace("[month]", Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath +
                         "/LateDataSnooze.aspx?AccountID=" + Cryptography.Encrypt(dr["AccountID"].ToString())
                         + "&TableID=" + Cryptography.Encrypt(dr["TableID"].ToString()) + "&Period=month&emailuid="
                         + Cryptography.Encrypt(strEmailUID) + "&datetime=" + Cryptography.Encrypt(dr["LastRecordDate"].ToString()));
-                    strBody = strBody.Replace("[turnoff]", "http://" + Request.Url.Authority + Request.ApplicationPath +
+                    strBody = strBody.Replace("[turnoff]", Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath +
                         "/LateDataSnooze.aspx?AccountID=" + Cryptography.Encrypt(dr["AccountID"].ToString())
                         + "&TableID=" + Cryptography.Encrypt(dr["TableID"].ToString()) + "&Period=turnoff&emailuid="
                         + Cryptography.Encrypt(strEmailUID) + "&datetime=" + Cryptography.Encrypt(dr["LastRecordDate"].ToString()));
@@ -207,15 +207,15 @@ public partial class DBEmail_LateData : System.Web.UI.Page
                     strBodySMS = strBodySMS.Replace("[Table]", dr["TableName"].ToString());
                     strBodySMS = strBodySMS.Replace("[LateDataDays]", dr["LateDataDays"].ToString());
 
-                    strBodySMS = strBodySMS.Replace("[week]", "http://" + Request.Url.Authority + Request.ApplicationPath +
+                    strBodySMS = strBodySMS.Replace("[week]", Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath +
                        "/LateDataSnooze.aspx?AccountID=" + Cryptography.Encrypt(dr["AccountID"].ToString())
                        + "&TableID=" + Cryptography.Encrypt(dr["TableID"].ToString()) + "&Period=week&emailuid="
                        + Cryptography.Encrypt(strEmailUID) + "&datetime=" + Cryptography.Encrypt(dr["LastRecordDate"].ToString()));
-                    strBodySMS = strBodySMS.Replace("[month]", "http://" + Request.Url.Authority + Request.ApplicationPath +
+                    strBodySMS = strBodySMS.Replace("[month]", Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath +
                       "/LateDataSnooze.aspx?AccountID=" + Cryptography.Encrypt(dr["AccountID"].ToString())
                       + "&TableID=" + Cryptography.Encrypt(dr["TableID"].ToString()) + "&Period=month&emailuid="
                       + Cryptography.Encrypt(strEmailUID) + "&datetime=" + Cryptography.Encrypt(dr["LastRecordDate"].ToString()));
-                    strBodySMS = strBodySMS.Replace("[turnoff]", "http://" + Request.Url.Authority + Request.ApplicationPath +
+                    strBodySMS = strBodySMS.Replace("[turnoff]", Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath +
                       "/LateDataSnooze.aspx?AccountID=" + Cryptography.Encrypt(dr["AccountID"].ToString())
                       + "&TableID=" + Cryptography.Encrypt(dr["TableID"].ToString()) + "&Period=turnoff&emailuid="
                       + Cryptography.Encrypt(strEmailUID) + "&datetime=" + Cryptography.Encrypt(dr["LastRecordDate"].ToString()));

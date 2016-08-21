@@ -112,8 +112,8 @@ public partial class Pages_RRP_ReportView : SecurePage
 
                 if (strRiskTableID != "")
                 {
-                    //"http://" + Request.Url.Authority + Request.ApplicationPath 
-                    ifReport.Attributes.Add("src", "http://" + Request.Url.Authority + Request.ApplicationPath 
+                    //Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath 
+                    ifReport.Attributes.Add("src", Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath 
                         + theDocument.DocumentDescription.Replace("[TableID]",Cryptography.Encrypt( strRiskTableID.ToString())));
 
                 }

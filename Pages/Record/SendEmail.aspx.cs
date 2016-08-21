@@ -489,7 +489,7 @@ public partial class Pages_Record_SendEmail :SecurePage
     {
        
         
-        edtContent.AssetManager = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Editor/assetmanager/assetmanager.aspx";
+        edtContent.AssetManager = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Editor/assetmanager/assetmanager.aspx";
         _qsTableID = Cryptography.Decrypt(Request.QueryString["TableID"].ToString());
 
         _theTable = RecordManager.ets_Table_Details(int.Parse(_qsTableID));

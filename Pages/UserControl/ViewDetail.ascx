@@ -530,6 +530,7 @@
         </ContentTemplate>
         <Triggers>
             <asp:AsyncPostBackTrigger ControlID="grdViewItem" />
+          
         </Triggers>
 
 

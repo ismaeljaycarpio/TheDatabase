@@ -177,7 +177,7 @@ public partial class Pages_Company_ContactUsAdmin : SecurePage
     //public string GetEditURL()
     //{
 
-    //    return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/SystemOptionDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SystemOptionID=";
+    //    return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/SystemOptionDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SystemOptionID=";
 
     //}
 
@@ -185,13 +185,13 @@ public partial class Pages_Company_ContactUsAdmin : SecurePage
     //public string GetViewURL()
     //{
 
-    //    return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/SystemOptionDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SystemOptionID=";
+    //    return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/SystemOptionDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SystemOptionID=";
 
     //}
     //public string GetAddURL()
     //{
 
-    //    return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/SystemOptionDetail.aspx?mode=" + Cryptography.Encrypt("add");
+    //    return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/SystemOptionDetail.aspx?mode=" + Cryptography.Encrypt("add");
 
     //}
 

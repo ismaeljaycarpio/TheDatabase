@@ -42,6 +42,12 @@ public partial class Home : System.Web.UI.MasterPage
             return;
         }
 
+        if (IsPostBack && Request.Params["__EVENTTARGET"] != null && Request.Params["__EVENTTARGET"].ToString().IndexOf("menuETS")> -1)
+        {
+            Response.Redirect(Request.RawUrl, true);
+            return;
+        }
+
         _objUser = (User)Session["User"];
         _CurrentUserRole = (UserRole)Session["UserRole"];
 
@@ -384,14 +390,14 @@ public partial class Home : System.Web.UI.MasterPage
             if (Session["LoginAccount"] == null)
             {
                 Session.Clear();
-                Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Login.aspx?ReturnURL=" + Server.UrlEncode(Request.RawUrl), false);
+                Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Login.aspx?ReturnURL=" + Server.UrlEncode(Request.RawUrl), false);
 
             }
             else
             {
                 string strLoginAccount = Session["LoginAccount"].ToString();
                 Session.Clear();
-                Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Login.aspx?ReturnURL=" + Server.UrlEncode(Request.RawUrl) + "&" + strLoginAccount, false);
+                Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Login.aspx?ReturnURL=" + Server.UrlEncode(Request.RawUrl) + "&" + strLoginAccount, false);
 
             }
             return;
@@ -599,8 +605,8 @@ public partial class Home : System.Web.UI.MasterPage
                                                 ";
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "strIsFlashSupportedJS", strIsFlashSupportedJS, true);
             //}
-            //hlReport.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
-            //hlDocuments.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+            //hlReport.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+            //hlDocuments.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
 
             string strRefSite = "";
 
@@ -790,7 +796,7 @@ public partial class Home : System.Web.UI.MasterPage
 
     protected void PopulateSubMenu(ref MenuItem menuRoot, ref MenuItem menuParent, int iParentMenuID)
     {
-        string strAppPath = "http://" + Request.Url.Authority + Request.ApplicationPath;
+        string strAppPath = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
         DataTable dtSubMenu = Common.DataTableFromText(@"SELECT DocumentID,DocumentTypeID, MenuID,Menu,Menu.TableID,TableName,
         ExternalPageLink,OpenInNewWindow,MenuType FROM Menu left JOIN [Table] ON
     [Table].TableID=Menu.TableID WHERE Menu.IsActive=1 AND 
@@ -882,13 +888,13 @@ public partial class Home : System.Web.UI.MasterPage
             }
             else if (drSubMenu["DocumentTypeID"] != DBNull.Value)
             {
-                string strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?Category=" + Cryptography.Encrypt(drSubMenu["DocumentTypeID"].ToString()) + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+                string strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?Category=" + Cryptography.Encrypt(drSubMenu["DocumentTypeID"].ToString()) + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
                 miTempChild.NavigateUrl = strURL;
                 menuParent.ChildItems.Add(miTempChild);
             }
             else if (drSubMenu["MenuType"] != DBNull.Value && drSubMenu["MenuType"].ToString() == "doc")
             {
-                string strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+                string strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
 
                 miTempChild.NavigateUrl = strURL;
                 menuParent.ChildItems.Add(miTempChild);
@@ -904,13 +910,13 @@ public partial class Home : System.Web.UI.MasterPage
 
                     if (theDocument.ReportType == "ssrs")
                     {
-                        strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/SSRS.aspx?DocumentID=" + Cryptography.Encrypt(theDocument.DocumentID.ToString()) + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
+                        strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/SSRS.aspx?DocumentID=" + Cryptography.Encrypt(theDocument.DocumentID.ToString()) + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
 
                     }
                     else if (theDocument.DocumentTypeID != null)
                     {
 
-                        strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/View.aspx?DocumentID=" + theDocument.DocumentID.ToString() + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
+                        strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/View.aspx?DocumentID=" + theDocument.DocumentID.ToString() + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
                     }
 
                 }
@@ -938,7 +944,7 @@ public partial class Home : System.Web.UI.MasterPage
       protected void BindMenuProfile()
     {
         menuProfile.Items.Clear();
-        string strAppPath = "http://" + Request.Url.Authority + Request.ApplicationPath;
+        string strAppPath = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
 
         //User _objUser = (User)Session["User"];
 
@@ -948,6 +954,8 @@ public partial class Home : System.Web.UI.MasterPage
             miUserName.Text = _objUser.FirstName + " " + _objUser.LastName;
             //miUserName.NavigateUrl = "~/Default.aspx";
             miUserName.Value = "UserName";
+            //miUserName.Selectable = false;
+            //miUserName.Enabled = false;
             menuProfile.Items.Add(miUserName);
             //if (!Common.HaveAccess(Session["roletype"].ToString(), Common.UserRoleType.ReadOnly))
             //{
@@ -989,7 +997,6 @@ public partial class Home : System.Web.UI.MasterPage
             }
             
 
-
             //MenuItem miChangePassword = new MenuItem();
             //miChangePassword.Text = "Change Password";
             //miChangePassword.Value = "UserName";
@@ -1012,8 +1019,8 @@ public partial class Home : System.Web.UI.MasterPage
       protected void BindMenuReport()
       {
 
-          //hlReport.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
-          //hlDocuments.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+          //hlReport.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+          //hlDocuments.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
                    
       }
 
@@ -1024,7 +1031,7 @@ public partial class Home : System.Web.UI.MasterPage
       {
           imgHouse.Visible = false;
           menuAccount.Items.Clear();
-          string strAppPath = "http://" + Request.Url.Authority + Request.ApplicationPath;
+          string strAppPath = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
 
           //User _objUser = (User)Session["User"];
           int? iAccountID = SecurityManager.GetPrimaryAccountID((int)_objUser.UserID);
@@ -1100,12 +1107,12 @@ public partial class Home : System.Web.UI.MasterPage
 
               MenuItem miOpen = new MenuItem();
               miOpen.Text = "Documents";
-              miOpen.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+              miOpen.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
               menuOpen.Items.Add(miOpen);
 
               //MenuItem miDocument = new MenuItem();
               //miDocument.Text = "Documents";
-              //miDocument.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+              //miDocument.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
               //miOpen.ChildItems.Add(miDocument);
 
               
@@ -1122,7 +1129,7 @@ public partial class Home : System.Web.UI.MasterPage
     public void BindMenu()
     {
         menuETS.Items.Clear();
-        string strAppPath = "http://" + Request.Url.Authority + Request.ApplicationPath;
+        string strAppPath = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
 
          //int iTN=0;
          //int iTempCount = 0;
@@ -1289,13 +1296,13 @@ public partial class Home : System.Web.UI.MasterPage
 
                          if (theDocument.ReportType == "ssrs")
                          {
-                             strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/SSRS.aspx?DocumentID=" + Cryptography.Encrypt(theDocument.DocumentID.ToString()) + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
+                             strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/SSRS.aspx?DocumentID=" + Cryptography.Encrypt(theDocument.DocumentID.ToString()) + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
 
                          }
                          else if (theDocument.DocumentTypeID != null)
                          {
 
-                             strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/View.aspx?DocumentID=" + theDocument.DocumentID.ToString() + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
+                             strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/View.aspx?DocumentID=" + theDocument.DocumentID.ToString() + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
                          }
 
                      }
@@ -1304,7 +1311,7 @@ public partial class Home : System.Web.UI.MasterPage
                  }
                  if (item.DocumentTypeID != null)
                  {
-                     string strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?Category=" + Cryptography.Encrypt(item.DocumentTypeID.ToString()) + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+                     string strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?Category=" + Cryptography.Encrypt(item.DocumentTypeID.ToString()) + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
                      
                      miTemp.NavigateUrl = strURL;
 
@@ -1312,7 +1319,7 @@ public partial class Home : System.Web.UI.MasterPage
 
                  if (item.MenuType != "" && item.MenuType=="doc")
                  {
-                     string strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+                     string strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
 
                      miTemp.NavigateUrl = strURL;
 
@@ -1385,7 +1392,7 @@ public partial class Home : System.Web.UI.MasterPage
                          miTopReports.Text = "Reports";
                          miTopReports.Value = "Reports";
                          miTopReports.Selectable = true;
-                         miTopReports.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+                         miTopReports.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
                          menuETS.Items.Add(miTopReports);
                      }
                  }
@@ -1448,7 +1455,7 @@ public partial class Home : System.Web.UI.MasterPage
                          MenuItem miAccounts = new MenuItem();
                          miAccounts.Text = "Add Account";
                          miAccounts.Value = "Admin";
-                         miAccounts.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/SystemSignUp.aspx";
+                         miAccounts.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/SystemSignUp.aspx";
                          miAdmin.ChildItems.Add(miAccounts);
                      }
 
@@ -1662,7 +1669,7 @@ public partial class Home : System.Web.UI.MasterPage
                                  MenuItem miReports = new MenuItem();
                                  miReports.Text = "Reports";
                                  miReports.Value = "Admin";
-                                 miReports.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+                                 miReports.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
                                  //miReports.Selectable = false;
                                  miAdmin.ChildItems.Add(miReports);
                              }
@@ -1992,14 +1999,8 @@ public partial class Home : System.Web.UI.MasterPage
         catch
        {
             //
-       }
-        
-       
-       
+       }       
     }
-
-
-
 
     protected void lnkChangeAccount_Click(object sender, EventArgs e)
     {
@@ -2015,6 +2016,7 @@ public partial class Home : System.Web.UI.MasterPage
     {
         Response.Redirect("~/Security/ChangePassword.aspx", false);
     }
+
     //protected void menuETS_MenuItemDataBound(object sender, MenuEventArgs e)
     //{
     //    if (e.Item.Selected == true)
@@ -2060,13 +2062,6 @@ public partial class Home : System.Web.UI.MasterPage
             selectedItem = menu.SelectedItem;
         }
         return selectedItem;
-    }
-
-
-    protected void menuProfile_MenuItemClick(object sender, MenuEventArgs e)
-    {
-        //show here
-
     }
 }
 

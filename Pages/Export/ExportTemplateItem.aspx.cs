@@ -107,12 +107,12 @@ public partial class Pages_Export_ExportTemplateItem : SecurePage
 
                 PopulateSearchCriteria(int.Parse(Cryptography.Decrypt(Request.QueryString["SearchCriteriaET"].ToString())));
 
-                hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteriaET=" + Request.QueryString["SearchCriteriaET"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString();
+                hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteriaET=" + Request.QueryString["SearchCriteriaET"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString();
             }
             else
             {
 
-               // Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteriaET=" + Cryptography.Encrypt("-1") + "&TableID=" + Request.QueryString["TableID"].ToString(), false);//i think no need
+               // Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteriaET=" + Cryptography.Encrypt("-1") + "&TableID=" + Request.QueryString["TableID"].ToString(), false);//i think no need
             }
 
             if (Request.QueryString["fixedbackurl"] != null)
@@ -332,7 +332,7 @@ public partial class Pages_Export_ExportTemplateItem : SecurePage
 
     public string GetAddExportTemplateItemURL(int iExportTemplateID)
     {
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Export/ExportTemplateItemDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&ExportTemplateID=" + Cryptography.Encrypt(iExportTemplateID.ToString());
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Export/ExportTemplateItemDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&ExportTemplateID=" + Cryptography.Encrypt(iExportTemplateID.ToString());
     }
 
 
@@ -494,7 +494,7 @@ public partial class Pages_Export_ExportTemplateItem : SecurePage
             else if (_strActionMode == "view")
             {
                 divEdit.Visible = true;
-                hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Export/ExportTemplateItem.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString()
+                hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Export/ExportTemplateItem.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString()
                     + "&SearchCriteriaET=" + Request.QueryString["SearchCriteriaET"].ToString() + "&ExportTemplateID=" + Cryptography.Encrypt(theExportTemplate.ExportTemplateID.ToString());
             }
         }
@@ -574,7 +574,7 @@ public partial class Pages_Export_ExportTemplateItem : SecurePage
                        if (Request.QueryString["fixedbackurl"] != null)
                            strExtarQueryString =strExtarQueryString+ "&fixedbackurl=" + Request.QueryString["fixedbackurl"].ToString();
 
-                       strEditURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Export/ExportTemplateItem.aspx?popupitem=yes&mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&ExportTemplateID=" + Cryptography.Encrypt(iNewExportTemplateID.ToString()) + strExtarQueryString;
+                       strEditURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Export/ExportTemplateItem.aspx?popupitem=yes&mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&ExportTemplateID=" + Cryptography.Encrypt(iNewExportTemplateID.ToString()) + strExtarQueryString;
 
 
 

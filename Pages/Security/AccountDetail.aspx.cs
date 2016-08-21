@@ -47,11 +47,11 @@ public partial class Pages_Security_AccountDetail : SecurePage
             _bGod = true;
             if (Request.QueryString["SearchCriteria"] != null)
             {
-                hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountList.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+                hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountList.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
             }
             else
             {
-                hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountList.aspx";
+                hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountList.aspx";
             }
             //divCheckPayment.Visible = false;
             divDemoEmail.Visible = true;
@@ -161,7 +161,7 @@ public partial class Pages_Security_AccountDetail : SecurePage
             }
 
 
-            hlMakePayment.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/MakePayment.aspx?PaymentInfo="
+            hlMakePayment.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/MakePayment.aspx?PaymentInfo="
                     + Cryptography.Encrypt("Payment_MakePayment");
 
             //Common.PopulateAdminDropDown(ref ddlAdminArea);
@@ -210,8 +210,8 @@ public partial class Pages_Security_AccountDetail : SecurePage
                 //hlChangeAccountType.Visible = true;
                 //hlRenew.Visible = true;
 
-                hlChangeAccountType.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountTypeChange.aspx?AccountID=" + Cryptography.Encrypt(_iAccountID.ToString());
-                hlRenew.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountTypeChange.aspx?type=pay&AccountID=" + Cryptography.Encrypt(_iAccountID.ToString());
+                hlChangeAccountType.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountTypeChange.aspx?AccountID=" + Cryptography.Encrypt(_iAccountID.ToString());
+                hlRenew.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountTypeChange.aspx?type=pay&AccountID=" + Cryptography.Encrypt(_iAccountID.ToString());
 
                 strTitle = "My Account";
                 break;
@@ -224,8 +224,8 @@ public partial class Pages_Security_AccountDetail : SecurePage
                     PopulateTheRecord();
                 }
 
-                hlChangeAccountType.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountTypeChange.aspx?AccountID=" + Cryptography.Encrypt(_iAccountID.ToString());
-                hlRenew.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountTypeChange.aspx?type=pay&AccountID=" + Cryptography.Encrypt(_iAccountID.ToString());
+                hlChangeAccountType.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountTypeChange.aspx?AccountID=" + Cryptography.Encrypt(_iAccountID.ToString());
+                hlRenew.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountTypeChange.aspx?type=pay&AccountID=" + Cryptography.Encrypt(_iAccountID.ToString());
 
                 strTitle = "My Account";
                 break;
@@ -265,7 +265,7 @@ public partial class Pages_Security_AccountDetail : SecurePage
 
         bool bHasValue = false;
 
-        hfFlag.Value = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Images/Flag.png";
+        hfFlag.Value = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Images/Flag.png";
 
 
         Account theAccount = SecurityManager.Account_Details(int.Parse(Session["AccountID"].ToString()));
@@ -426,7 +426,7 @@ public partial class Pages_Security_AccountDetail : SecurePage
         try
         {
 
-            hlDemoEmail.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/DemoEmail.aspx?AccountID=" + Cryptography.Encrypt(_iAccountID.ToString());
+            hlDemoEmail.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/DemoEmail.aspx?AccountID=" + Cryptography.Encrypt(_iAccountID.ToString());
 
             if (_bGod)
                 trIsActive.Visible = true;
@@ -726,11 +726,11 @@ public partial class Pages_Security_AccountDetail : SecurePage
 
                 if (Request.QueryString["SearchCriteria"] != null)
                 {
-                    hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&accountid=" + Cryptography.Encrypt(theAccount.AccountID.ToString()) + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+                    hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&accountid=" + Cryptography.Encrypt(theAccount.AccountID.ToString()) + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
                 }
                 else
                 {
-                    hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&accountid=" + Cryptography.Encrypt(theAccount.AccountID.ToString());
+                    hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&accountid=" + Cryptography.Encrypt(theAccount.AccountID.ToString());
                 }
             }
 
@@ -1430,7 +1430,7 @@ public partial class Pages_Security_AccountDetail : SecurePage
     {
         if (Common.HaveAccess(Session["roletype"].ToString(), "1"))
         {
-            Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountList.aspx", false);
+            Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountList.aspx", false);
         }
         else
         {
@@ -1445,7 +1445,7 @@ public partial class Pages_Security_AccountDetail : SecurePage
         try
         {
             SecurityManager.Account_Delete((int)_iAccountID);
-            Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountList.aspx", false);
+            Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountList.aspx", false);
 
         }
         catch (Exception ex)
@@ -1470,7 +1470,7 @@ public partial class Pages_Security_AccountDetail : SecurePage
         try
         {
             SecurityManager.Account_UnDelete((int)_iAccountID);
-            Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountList.aspx", false);
+            Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountList.aspx", false);
         }
         catch (Exception ex)
         {          

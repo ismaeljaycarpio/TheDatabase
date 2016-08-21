@@ -39,7 +39,7 @@ public partial class Pages_Record_TableTabList : SecurePage
 
         if (!IsPostBack)
         {
-            hlAddTableTab.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableTabDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(_iTableID.ToString());
+            hlAddTableTab.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableTabDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(_iTableID.ToString());
             PopulateTabs();
         }
         
@@ -110,7 +110,7 @@ public partial class Pages_Record_TableTabList : SecurePage
             HyperLink hlAddDetail = e.Row.FindControl("hlAddDetail") as HyperLink;
             if (hlAddDetail != null)
             {
-                hlAddDetail.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableTabDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(_iTableID.ToString());
+                hlAddDetail.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableTabDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(_iTableID.ToString());
             }
 
         }
@@ -125,7 +125,7 @@ public partial class Pages_Record_TableTabList : SecurePage
 
             if (hlEditDetail != null)
             {
-                hlEditDetail.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableTabDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Cryptography.Encrypt(_iTableID.ToString()) + "&TableTabID=" + Cryptography.Encrypt(DataBinder.Eval(e.Row.DataItem, "TableTabID").ToString());
+                hlEditDetail.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableTabDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Cryptography.Encrypt(_iTableID.ToString()) + "&TableTabID=" + Cryptography.Encrypt(DataBinder.Eval(e.Row.DataItem, "TableTabID").ToString());
             }
 
 

@@ -98,7 +98,7 @@ public partial class Login2 : System.Web.UI.Page
                 }
                 else
                 {
-                    Session["FilesLocation"] = "http://" + Request.Url.Authority + Request.ApplicationPath;
+                    Session["FilesLocation"] = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
                 }
 
 
@@ -206,7 +206,7 @@ public partial class Login2 : System.Web.UI.Page
                     Content theContent = SystemData.Content_Details_ByKey(strLoginPageContentKey, null);
                     if (theContent != null)
                     {
-                        hlContentCommonEdit.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&allowadmin=yes&fixedurl=~/Login.aspx?Logout=yes&ContentID=" + Cryptography.Encrypt(theContent.ContentID.ToString());
+                        hlContentCommonEdit.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&allowadmin=yes&fixedurl=~/Login.aspx?Logout=yes&ContentID=" + Cryptography.Encrypt(theContent.ContentID.ToString());
                         hlContentCommonEdit.Visible = true;
                         lblContentCommon.Text = theContent.ContentP;
                     }
@@ -704,7 +704,7 @@ public partial class Login2 : System.Web.UI.Page
                                             theContent.ContentP = theContent.ContentP.Replace("[AccountName]", theAccount.AccountName);
                                             theContent.ContentP = theContent.ContentP.Replace("[ExpiryDate]", theAccount.ExpiryDate.Value.ToLongDateString());
 
-                                            string strBasePage = "http://" + Request.Url.Authority + Request.ApplicationPath + "/ExpiredAccountUpdate.aspx?id=" + Cryptography.Encrypt(theAccount.AccountID.ToString())
+                                            string strBasePage = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/ExpiredAccountUpdate.aspx?id=" + Cryptography.Encrypt(theAccount.AccountID.ToString())
                                                 + "&ed=" + Cryptography.Encrypt(theAccount.ExpiryDate.Value.ToShortDateString()) + "&cd=" + Cryptography.Encrypt(DateTime.Now.ToString());
 
 

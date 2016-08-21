@@ -18,7 +18,7 @@ public partial class Pages_Record_TableOption : SecurePage
         {
             PopulateHelp("TableOptionsHelp");
             PopulateTerminology();
-            hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableList.aspx?MenuID=" + Request.QueryString["MenuID"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+            hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableList.aspx?MenuID=" + Request.QueryString["MenuID"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
 
         }
 
@@ -88,15 +88,15 @@ public partial class Pages_Record_TableOption : SecurePage
         string strNextPage = "#";
         if (optBrandNew.Checked)
         {
-            strNextPage = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableProperty.aspx?mode=" + Cryptography.Encrypt("add") + "&MenuID=" + Request.QueryString["MenuID"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+            strNextPage = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableProperty.aspx?mode=" + Cryptography.Encrypt("add") + "&MenuID=" + Request.QueryString["MenuID"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
         }
         else if (optCopyFromTemplate.Checked)
         {
-            strNextPage = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Template/TableList.aspx?MenuID=" + Request.QueryString["MenuID"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+            strNextPage = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Template/TableList.aspx?MenuID=" + Request.QueryString["MenuID"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
         }
         else if (optCreateFromSpreadSheet.Checked)
         {
-            strNextPage = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableSheet.aspx?MenuID=" + Request.QueryString["MenuID"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+            strNextPage = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableSheet.aspx?MenuID=" + Request.QueryString["MenuID"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
         }
         Response.Redirect(strNextPage, false);
      

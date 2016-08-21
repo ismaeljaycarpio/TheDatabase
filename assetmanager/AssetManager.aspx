@@ -369,7 +369,7 @@
 
         Dim sProtocol As String = Request.ServerVariables("SERVER_PORT_SECURE")
         If IsNothing(sProtocol) Or sProtocol = "0" Then
-            sProtocol = "http://"
+            sProtocol = Request.Url.Scheme + "://"
         Else
             sProtocol = "https://"
         End If

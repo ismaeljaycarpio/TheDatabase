@@ -407,6 +407,16 @@ public partial class Pages_UserControl_ViewDetail : System.Web.UI.UserControl
     protected void PopulateViewSortColumnDDL(int iViewID)
     {
         string sSQL;
+
+        string strOldValue = "";
+
+        if (ddlViewSortOrder.SelectedItem != null && ddlViewSortOrder.SelectedValue!="")
+        {
+            strOldValue = ddlViewSortOrder.SelectedValue;
+        }
+
+
+
         ddlViewSortOrder.Items.Clear();
         //oliver: Ticket 1298
         if (_theView.ViewID.ToString() != "")
@@ -425,6 +435,11 @@ public partial class Pages_UserControl_ViewDetail : System.Web.UI.UserControl
         ListItem liSeletec = new ListItem("-- Please Select --", "");
 
         ddlViewSortOrder.Items.Insert(0, liSeletec);
+        if(strOldValue!="")
+        {
+            if (ddlViewSortOrder.Items.FindByValue(strOldValue) != null)
+                ddlViewSortOrder.SelectedValue = strOldValue;
+        }
 
     }
 
@@ -1138,7 +1153,7 @@ public partial class Pages_UserControl_ViewDetail : System.Web.UI.UserControl
 
     public string GetAddViewItemURL(int iViewID)
     {
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/ViewItemDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&ViewID=" + Cryptography.Encrypt(iViewID.ToString());
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/ViewItemDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&ViewID=" + Cryptography.Encrypt(iViewID.ToString());
     }
 
 
@@ -1674,9 +1689,7 @@ public partial class Pages_UserControl_ViewDetail : System.Web.UI.UserControl
             ddlViewPageType.SelectedValue = theView.ViewPageType.ToString();
 
 
-            //populate Filter control
-
-            PopulateFilterControl(theView.FilterControlsInfo, (int)theView.TableID);
+           
 
             //if (theView.FilterControlsInfo != "")
             //{
@@ -1761,6 +1774,10 @@ public partial class Pages_UserControl_ViewDetail : System.Web.UI.UserControl
             {
                 PopulateViewItem(int.Parse(hfCurrentViewID.Value));
             }
+
+            //populate Filter control
+
+            PopulateFilterControl(theView.FilterControlsInfo, (int)theView.TableID);
         }
         else
         {

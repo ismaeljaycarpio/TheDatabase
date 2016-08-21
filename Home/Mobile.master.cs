@@ -187,7 +187,7 @@ public partial class Home_Mobile : System.Web.UI.MasterPage
     {
 
         //menuETS.Items.Clear();
-        string strAppPath = "http://" + Request.Url.Authority + Request.ApplicationPath;
+        string strAppPath = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
 
         int iTN = 0;
         int iTempCount = 0;

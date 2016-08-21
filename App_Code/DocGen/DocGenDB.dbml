@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?><Database Name="thedatabase_dev_08-Dec-2015" EntityNamespace="DocGen.DAL" ContextNamespace="DocGen.DAL" Class="DocGenDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="WebSettings" ConnectionString="Data Source=MOHSIN-I3\SQLEXPRESS2008R2;Initial Catalog=thedatabase_dev_08-Dec-2015;Integrated Security=True;Connect Timeout=600" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="CnString" Provider="System.Data.SqlClient" />
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="thedatabase_dev_27-Jan-2016" EntityNamespace="DocGen.DAL" ContextNamespace="DocGen.DAL" Class="DocGenDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=MOHSIN-I7\SQLEXPRESS2014;Initial Catalog=thedatabase_dev_27-Jan-2016;Integrated Security=True;Connect Timeout=600" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="CnString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.dgDataMap" Member="DataMaps">
     <Type Name="DataMap">
       <Column Name="DataMapID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -32,8 +32,8 @@
       <Column Name="AccountID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="IsAccountHolder" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
       <Column Name="IsAdvancedSecurity" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Association Name="User_Column" Member="Columns" ThisKey="UserID" OtherKey="LastUpdatedUserID" Type="Column" />
       <Association Name="User_Document" Member="Documents" ThisKey="UserID" OtherKey="UserID" Type="Document" />
+      <Association Name="User_Column" Member="Columns" ThisKey="UserID" OtherKey="LastUpdatedUserID" Type="Column" />
     </Type>
   </Table>
   <Table Name="dbo.DocumentSectionType" Member="DocumentSectionTypes">
@@ -65,60 +65,6 @@
       <Association Name="DocumentSectionStyle_DocumentSection" Member="DocumentSections" ThisKey="DocumentSectionStyleID" OtherKey="DocumentSectionStyleID" Type="DocumentSection" />
     </Type>
   </Table>
-  <Table Name="dbo.Column" Member="Columns">
-    <Type Name="Column">
-      <Column Name="ColumnID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="TableID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="SystemName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="DisplayOrder" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="DisplayTextSummary" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="DisplayTextDetail" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="NameOnImport" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="NameOnExport" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="GraphTypeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="ValidationOnWarning" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
-      <Column Name="ValidationOnEntry" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
-      <Column Name="IsStandard" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="DateAdded" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="DateUpdated" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Column Name="DisplayName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
-      <Column Name="PositionOnImport" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="Constant" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="Calculation" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
-      <Column Name="ShowTotal" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="IgnoreSymbols" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="Notes" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
-      <Column Name="IsRound" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="RoundNumber" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="CheckUnlikelyValue" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="GraphLabel" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="LastUpdatedUserID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="DropdownValues" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="IsMandatory" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="Alignment" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
-      <Column Name="NumberType" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="DefaultValue" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="AvgColumnID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="AvgNumberOfRecords" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="MobileName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
-      <Column Name="IsDateSingleColumn" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Column Name="ShowGraphExceedance" Type="System.Decimal" DbType="Decimal(18,10)" CanBeNull="true" />
-      <Column Name="ShowGraphWarning" Type="System.Decimal" DbType="Decimal(18,10)" CanBeNull="true" />
-      <Column Name="FlatLineNumber" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="MaxValueAt" Type="System.Decimal" DbType="Decimal(18,10)" CanBeNull="true" />
-      <Column Name="TextWidth" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="TextHeight" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="ColumnType" Type="System.String" DbType="VarChar(15) NOT NULL" CanBeNull="false" />
-      <Column Name="DropDownType" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
-      <Column Name="TableTableID" Type="System.Int32" DbType="Int" CanBeNull="true" />
-      <Column Name="DisplayColumn" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
-      <Column Name="DisplayRight" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Association Name="Column_Column" Member="Columns" ThisKey="ColumnID" OtherKey="AvgColumnID" Type="Column" />
-      <Association Name="Column_Column" Member="Column1" ThisKey="AvgColumnID" OtherKey="ColumnID" Type="Column" IsForeignKey="true" />
-      <Association Name="User_Column" Member="User" ThisKey="LastUpdatedUserID" OtherKey="UserID" Type="User" IsForeignKey="true" />
-      <Association Name="Table_Column" Member="Table" ThisKey="TableID" OtherKey="TableID" Type="Table" IsForeignKey="true" />
-    </Type>
-  </Table>
   <Table Name="dbo.Table" Member="Tables">
     <Type Name="Table">
       <Column Name="TableID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -137,8 +83,9 @@
       <Column Name="ImportDataStartRow" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Column Name="AddMissingLocation" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
       <Column Name="DateFormat" Type="System.String" DbType="VarChar(30) NOT NULL" CanBeNull="false" />
-      <Association Name="Table_Column" Member="Columns" ThisKey="TableID" OtherKey="TableID" Type="Column" />
       <Association Name="Table_Document" Member="Documents" ThisKey="TableID" OtherKey="TableID" Type="Document" />
+      <Association Name="Table_Column" Member="Columns" ThisKey="TableID" OtherKey="TableID" Type="Column" />
+      <Association Name="Table_Column1" Member="Columns1" ThisKey="TableID" OtherKey="DefaultRelatedTableID" Type="Column" />
     </Type>
   </Table>
   <Table Name="dbo.DocumentSection" Member="DocumentSections">
@@ -205,6 +152,122 @@
       <Association Name="DocumentType_Document" Member="DocumentType" ThisKey="DocumentTypeID" OtherKey="DocumentTypeID" Type="DocumentType" IsForeignKey="true" />
       <Association Name="Table_Document" Member="Table" ThisKey="TableID" OtherKey="TableID" Type="Table" IsForeignKey="true" />
       <Association Name="User_Document" Member="User" ThisKey="UserID" OtherKey="UserID" Type="User" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.[Column]" Member="Columns">
+    <Type Name="Column">
+      <Column Name="ColumnID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="TableID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="SystemName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="DisplayName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="DisplayTextSummary" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="DisplayTextDetail" Type="System.String" DbType="VarChar(255)" CanBeNull="true" />
+      <Column Name="NameOnImport" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="NameOnExport" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="MobileName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="DisplayOrder" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DisplayRight" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="Alignment" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="TextWidth" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TextHeight" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IsStandard" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="GraphTypeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="GraphLabel" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="ValidationOnWarning" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
+      <Column Name="ValidationOnEntry" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
+      <Column Name="CheckUnlikelyValue" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="PositionOnImport" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Constant" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Calculation" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
+      <Column Name="ShowTotal" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="IgnoreSymbols" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="IsRound" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="RoundNumber" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Notes" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="DropdownValues" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="NumberType" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DefaultValue" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="AvgColumnID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="AvgNumberOfRecords" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IsDateSingleColumn" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="ShowGraphExceedance" Type="System.Decimal" DbType="Decimal(18,10)" CanBeNull="true" />
+      <Column Name="ShowGraphWarning" Type="System.Decimal" DbType="Decimal(18,10)" CanBeNull="true" />
+      <Column Name="FlatLineNumber" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="MaxValueAt" Type="System.Decimal" DbType="Decimal(18,10)" CanBeNull="true" />
+      <Column Name="ColumnType" Type="System.String" DbType="VarChar(15) NOT NULL" CanBeNull="false" />
+      <Column Name="DropDownType" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="TableTableID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DisplayColumn" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="SummaryCellBackColor" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="FormVerticalPosition" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="FormHorizontalPosition" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ParentColumnID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TextType" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="RegEx" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="HideColumnID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="HideColumnValue" Type="System.String" DbType="NVarChar(250)" CanBeNull="true" />
+      <Column Name="DateCalculationType" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="OnlyForAdmin" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="IsSystemColumn" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Column Name="LinkedParentColumnID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DataRetrieverID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="VerticalList" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="SummarySearch" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="QuickAddLink" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="HideOperator" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="CalculationIsActive" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="DateAdded" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="DateUpdated" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="LastUpdatedUserID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TableTabID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ViewName" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="SPDefaultValue" Type="System.String" DbType="VarChar(200)" CanBeNull="true" />
+      <Column Name="DefaultType" Type="System.String" DbType="VarChar(20)" CanBeNull="true" />
+      <Column Name="DefaultColumnID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ShowViewLink" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="FilterParentColumnID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="FilterOtherColumnID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="FilterValue" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="MapPinHoverColumnID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CompareColumnID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="CompareOperator" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Column Name="MapPopup" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="TrafficLightColumnID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="TrafficLightValues" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="DefaultRelatedTableID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DefaultUpdateValues" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="ValidationCanIgnore" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="DefaultGraphDefinitionID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ImageOnSummary" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="AllowCopy" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="ValidationOnExceedance" Type="System.String" DbType="NVarChar(4000)" CanBeNull="true" />
+      <Column Name="ColourCells" Type="System.Boolean" DbType="Bit" CanBeNull="true" />
+      <Column Name="OldJoinColumn" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="NewJoinColumn" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="ButtonInfo" Type="System.String" DbType="VarChar(1000)" CanBeNull="true" />
+      <Column Name="FilterOperator" Type="System.String" DbType="VarChar(25)" CanBeNull="true" />
+      <Column Name="Importance" Type="System.Char" DbType="Char(1)" CanBeNull="true" />
+      <Association Name="Column_Column" Member="Columns" ThisKey="ColumnID" OtherKey="HideColumnID" Type="Column" />
+      <Association Name="Column_Column1" Member="Columns1" ThisKey="ColumnID" OtherKey="CompareColumnID" Type="Column" />
+      <Association Name="Column_Column2" Member="Columns2" ThisKey="ColumnID" OtherKey="MapPinHoverColumnID" Type="Column" />
+      <Association Name="Column_Column3" Member="Columns3" ThisKey="ColumnID" OtherKey="TrafficLightColumnID" Type="Column" />
+      <Association Name="Column_Column4" Member="Columns4" ThisKey="ColumnID" OtherKey="LinkedParentColumnID" Type="Column" />
+      <Association Name="Column_Column5" Member="Columns5" ThisKey="ColumnID" OtherKey="DefaultColumnID" Type="Column" />
+      <Association Name="Column_Column6" Member="Columns6" ThisKey="ColumnID" OtherKey="FilterOtherColumnID" Type="Column" />
+      <Association Name="Column_Column7" Member="Columns7" ThisKey="ColumnID" OtherKey="FilterParentColumnID" Type="Column" />
+      <Association Name="Column_Column8" Member="Columns8" ThisKey="ColumnID" OtherKey="AvgColumnID" Type="Column" />
+      <Association Name="Column_Column" Member="Column1" ThisKey="HideColumnID" OtherKey="ColumnID" Type="Column" IsForeignKey="true" />
+      <Association Name="Column_Column1" Member="Column2" ThisKey="CompareColumnID" OtherKey="ColumnID" Type="Column" IsForeignKey="true" />
+      <Association Name="Column_Column2" Member="Column3" ThisKey="MapPinHoverColumnID" OtherKey="ColumnID" Type="Column" IsForeignKey="true" />
+      <Association Name="Column_Column3" Member="Column4" ThisKey="TrafficLightColumnID" OtherKey="ColumnID" Type="Column" IsForeignKey="true" />
+      <Association Name="Column_Column4" Member="Column5" ThisKey="LinkedParentColumnID" OtherKey="ColumnID" Type="Column" IsForeignKey="true" />
+      <Association Name="Column_Column5" Member="Column6" ThisKey="DefaultColumnID" OtherKey="ColumnID" Type="Column" IsForeignKey="true" />
+      <Association Name="Column_Column6" Member="Column7" ThisKey="FilterOtherColumnID" OtherKey="ColumnID" Type="Column" IsForeignKey="true" />
+      <Association Name="Column_Column7" Member="Column8" ThisKey="FilterParentColumnID" OtherKey="ColumnID" Type="Column" IsForeignKey="true" />
+      <Association Name="Column_Column8" Member="Column9" ThisKey="AvgColumnID" OtherKey="ColumnID" Type="Column" IsForeignKey="true" />
+      <Association Name="Table_Column" Member="Table" ThisKey="TableID" OtherKey="TableID" Type="Table" IsForeignKey="true" />
+      <Association Name="Table_Column1" Member="Table1" ThisKey="DefaultRelatedTableID" OtherKey="TableID" Type="Table" IsForeignKey="true" />
+      <Association Name="User_Column" Member="User" ThisKey="LastUpdatedUserID" OtherKey="UserID" Type="User" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

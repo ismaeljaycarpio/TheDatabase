@@ -469,7 +469,7 @@ public partial class Pages_DocGen_EachCalendar : System.Web.UI.Page
                              {
                                  hlAddNewRecord.Visible = true;
                                  hlAddNewRecord.Target = "_parent";
-                                 hlAddNewRecord.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?fixedurl=" + Cryptography.Encrypt("~/Default.aspx") + "&stackzero=yes&mode="
+                                 hlAddNewRecord.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?fixedurl=" + Cryptography.Encrypt("~/Default.aspx") + "&stackzero=yes&mode="
                                     + Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(_strTableID) + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
                              }
                          }
@@ -784,7 +784,7 @@ public partial class Pages_DocGen_EachCalendar : System.Web.UI.Page
             else
             {
                 strDisplay = strDisplay + "<div style='padding-top:5px;padding-left:5px;padding-right:5px;color:#000000;font-size:10px;font-family:Arial;'><div ><a  target='_parent' href='"
-                     + "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?fixedurl=" + Cryptography.Encrypt("~/Default.aspx") + "&stackzero=yes&mode="
+                     + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?fixedurl=" + Cryptography.Encrypt("~/Default.aspx") + "&stackzero=yes&mode="
                      + Cryptography.Encrypt("edit") + "&TableID=" + Cryptography.Encrypt(_strTableID) + "&SearchCriteriaID=" + Cryptography.Encrypt("-1")
                      + "&RecordID=" + Cryptography.Encrypt(dr["RecordID"].ToString()) +
                      "' style='text-decoration:none;'>" + dr["DisplayField"].ToString() + " </a> </div></div>";
@@ -886,7 +886,7 @@ public partial class Pages_DocGen_EachCalendar : System.Web.UI.Page
         //foreach (DataRow dr in rows)
         //{
         //    e.Cell.Controls.Add(new LiteralControl("</br><div style='padding-left:5px;padding-right:5px;'><div class='eachschedule'><a  target='_parent' href='"
-        //        + "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?stackzero=yes&mode="
+        //        + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?stackzero=yes&mode="
         //        + Cryptography.Encrypt("edit") + "&TableID=" + Cryptography.Encrypt(_strTableID) + "&SearchCriteriaID="+ Cryptography.Encrypt("-1")
         //        + "&RecordID=" + Cryptography.Encrypt(dr["RecordID"].ToString()) +
         //        "' style='font-size:9pt;text-decoration:none;'>" + dr["DisplayField"].ToString() + " </a> </div></div>"));

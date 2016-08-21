@@ -138,7 +138,7 @@ public partial class Pages_Record_FormSetDetail : SecurePage
 
         if (!IsPostBack)
         {
-            hlAddFormSetForm.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetFormDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&FormSetID=" + Cryptography.Encrypt(_qsFormSetID);
+            hlAddFormSetForm.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetFormDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&FormSetID=" + Cryptography.Encrypt(_qsFormSetID);
 
         }
 
@@ -206,7 +206,7 @@ public partial class Pages_Record_FormSetDetail : SecurePage
             HyperLink hlAddDetail = e.Row.FindControl("hlAddDetail") as HyperLink;
             if (hlAddDetail != null)
             {
-                hlAddDetail.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetFormDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&FormSetID=" + Cryptography.Encrypt(_qsFormSetID);
+                hlAddDetail.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetFormDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&FormSetID=" + Cryptography.Encrypt(_qsFormSetID);
             }
 
         }
@@ -221,7 +221,7 @@ public partial class Pages_Record_FormSetDetail : SecurePage
 
             if (hlEditDetail != null)
             {
-                hlEditDetail.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetFormDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&FormSetFormID=" + Cryptography.Encrypt(DataBinder.Eval(e.Row.DataItem, "FormSetFormID").ToString()) + "&FormSetID=" + Cryptography.Encrypt(_qsFormSetID);
+                hlEditDetail.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetFormDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&FormSetFormID=" + Cryptography.Encrypt(DataBinder.Eval(e.Row.DataItem, "FormSetFormID").ToString()) + "&FormSetID=" + Cryptography.Encrypt(_qsFormSetID);
             }
 
 

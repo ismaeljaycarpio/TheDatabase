@@ -286,7 +286,7 @@ public partial class Pages_Graph_GraphDef : SecurePage
 
     public string GetEditURL()
     {
-        return "http://" + Request.Url.Authority + Request.ApplicationPath +
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath +
             "/Pages/Graph/GraphDefDetail.aspx?mode=" + Cryptography.Encrypt("edit") +
             "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) +
             "&GraphDefinitionID=";
@@ -294,7 +294,7 @@ public partial class Pages_Graph_GraphDef : SecurePage
 
     public string GetAddURL()
     {
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Graph/GraphDefDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Graph/GraphDefDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
     }
 
 

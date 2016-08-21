@@ -43,30 +43,50 @@ public partial class DBEmail_WinSchedules : System.Web.UI.Page
 
             Page.Server.ScriptTimeout = 1600;
 
-            //if (Request.Url.Authority != "emd.thedatabase.net")
-            //{
+
+            //Dynamasters Blast data
+            if (Request.Url.Authority == "emd.thedatabase.net" ||Request.QueryString["blast"]!=null)
+            {
                 try
                 {
-
-                    RegisterAsyncTask(new PageAsyncTask(AutoImportRecords_A));
-
+                    RegisterAsyncTask(new PageAsyncTask(EcotecImportBlastEvents_A));
+                    if(Request.QueryString["blast"]!=null)
+                    {
+                        return;//only run this method
+                    }
                 }
                 catch (Exception ex)
                 {
-                    ErrorLog theErrorLog = new ErrorLog(null, " DBEmail -WinSchedules -AutoImportRecords ", ex.Message, ex.StackTrace, DateTime.Now, Request.Path);
+                    ErrorLog theErrorLog = new ErrorLog(null, " DBEmail -EcotecImportBlastEvents_A ", ex.Message, ex.StackTrace, DateTime.Now, Request.Path);
                     SystemData.ErrorLog_Insert(theErrorLog);
                 }
-            //}
-         
-                      
+
+            }
 
 
 
             try
             {
-                //DataReminderEmail();
+
+                RegisterAsyncTask(new PageAsyncTask(AutoImportRecords_A));
+
+            }
+            catch (Exception ex)
+            {
+                ErrorLog theErrorLog = new ErrorLog(null, " DBEmail -WinSchedules -AutoImportRecords ", ex.Message, ex.StackTrace, DateTime.Now, Request.Path);
+                SystemData.ErrorLog_Insert(theErrorLog);
+            }
+
+
+
+
+
+
+            try
+            {
+
                 RegisterAsyncTask(new PageAsyncTask(DataReminderEmail_A));
-         
+
             }
             catch (Exception ex)
             {
@@ -76,9 +96,9 @@ public partial class DBEmail_WinSchedules : System.Web.UI.Page
 
             try
             {
-                //ReadIncomingEmails();
+
                 RegisterAsyncTask(new PageAsyncTask(ReadIncomingEmails_A));
-     
+
             }
             catch (Exception ex)
             {
@@ -89,7 +109,7 @@ public partial class DBEmail_WinSchedules : System.Web.UI.Page
 
             try
             {
-                //ReadIncomingEmails();
+
                 RegisterAsyncTask(new PageAsyncTask(BatchAutoProcessImport_A));
 
             }
@@ -146,55 +166,7 @@ public partial class DBEmail_WinSchedules : System.Web.UI.Page
             }
 
 
-            //if (Request.Url.Authority == "emd.thedatabase.net" || Request.Url.Authority == "emdtraining.thedatabase.net")
-            //{
-            //    try
-            //    {
-            //        RegisterAsyncTask(new PageAsyncTask(ALSLive_A)); 
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        ErrorLog theErrorLog = new ErrorLog(null, " DBEmail -ALSLive_A ", ex.Message, ex.StackTrace, DateTime.Now, Request.Path);
-            //        SystemData.ErrorLog_Insert(theErrorLog);
-            //    }
-                
-            //}
-
-
-            //Dynamasters Blast data
-            
-            //Option 1
-
-            if (Request.Url.Authority == "emd.thedatabase.net")
-            {
-                try
-                {
-                    RegisterAsyncTask(new PageAsyncTask(EcotecImportBlastEvents_A));
-                }
-                catch (Exception ex)
-                {
-                    ErrorLog theErrorLog = new ErrorLog(null, " DBEmail -EcotecImportBlastEvents_A ", ex.Message, ex.StackTrace, DateTime.Now, Request.Path);
-                    SystemData.ErrorLog_Insert(theErrorLog);
-                }
-
-            }
-            
-
-            //Option 2 
-
-            //if (Request.Url.Authority == "emd.thedatabase.net")
-            //{
-            //    try
-            //    {
-            //        EcotechBlastDataImport ecotechBlastDataImport = new EcotechBlastDataImport();
-            //        ecotechBlastDataImport.ImportBlastEvents();
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        ErrorLog theErrorLog = new ErrorLog(null, " DBEmail -WinSchedules -EcotechBlastDataImport ", ex.Message, ex.StackTrace, DateTime.Now, Request.Path);
-            //        SystemData.ErrorLog_Insert(theErrorLog);
-            //    }
-            //}
+           
 
         }
 
@@ -643,7 +615,7 @@ public partial class DBEmail_WinSchedules : System.Web.UI.Page
                             {
                                 //UploadManager.SamplesImportEmail(item);
                                 string strImportedSamples = "0";
-                                string strRoot = "http://" + Request.Url.Authority + Request.ApplicationPath;
+                                string strRoot = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
 
 
                                 if (item.BatchID.HasValue && dictMappedBatch.ContainsKey(item.BatchID.Value))
@@ -782,7 +754,7 @@ public partial class DBEmail_WinSchedules : System.Web.UI.Page
                         Common.ExecuteText("UPDATE Batch SET AutoProcess=0 WHERE BatchID=" + newSourceBatch.BatchID.ToString());
                         //send email
                         string strImportedSamples = "0";
-                        string strRoot = "http://" + Request.Url.Authority + Request.ApplicationPath;
+                        string strRoot = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
                         UploadManager.RecordsImportEmail(theBatch, ref strImportedSamples, strRoot);
                     }
 

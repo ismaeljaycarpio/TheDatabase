@@ -279,7 +279,7 @@ public partial class Pages_SystemData_ErrorLog : SecurePage
 
                     if (strRedirectURL.IndexOf("http:")==-1)
                     {
-                        strRedirectURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/" + strRedirectURL;
+                        strRedirectURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/" + strRedirectURL;
                     }
 
                     Session["LoginAccount"] = null;
@@ -362,7 +362,7 @@ public partial class Pages_SystemData_ErrorLog : SecurePage
     public string GetViewURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ErrorLogDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&errorlogid=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ErrorLogDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&errorlogid=";
 
     }
 

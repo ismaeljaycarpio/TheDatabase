@@ -129,7 +129,7 @@ public partial class Pages_SystemData_PageCount : SecurePage
     public string GetViewURL(string strvisiteddate, string strPageURL)
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/VisitorLog.aspx?visiteddate=" + Cryptography.Encrypt(strvisiteddate) + "&PageURL=" + Cryptography.Encrypt(strPageURL)  +"&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/VisitorLog.aspx?visiteddate=" + Cryptography.Encrypt(strvisiteddate) + "&PageURL=" + Cryptography.Encrypt(strPageURL)  +"&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
 
     }
 

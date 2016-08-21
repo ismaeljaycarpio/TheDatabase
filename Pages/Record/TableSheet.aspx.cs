@@ -44,7 +44,7 @@ public partial class Pages_Record_TableSheet : SecurePage
             }
             if (Request.QueryString["SearchCriteria"] != null)
             {
-                hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableOption.aspx?MenuID=" + Request.QueryString["MenuID"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+                hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableOption.aspx?MenuID=" + Request.QueryString["MenuID"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
             }
             //FileInfo
 
@@ -961,7 +961,7 @@ public partial class Pages_Record_TableSheet : SecurePage
 
                 //string strImportedRecords = "0";
                 //UploadManager.RecordsImportEmail(theBatch, ref strImportedRecords,
-                //    "http://" + Request.Url.Authority + Request.ApplicationPath);
+                //    Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath);
 
                 //if (SecurityManager.IsRecordsExceeded(int.Parse(Session["AccountID"].ToString())))
                 //{
@@ -976,7 +976,7 @@ public partial class Pages_Record_TableSheet : SecurePage
             }
             else
             {
-                Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?fromsheet=yes&mode="
+                Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?fromsheet=yes&mode="
                     + Cryptography.Encrypt("edit") + "&MenuID=" + Request.QueryString["MenuID"].ToString() + "&TableID=" + Cryptography.Encrypt(iTableID.ToString()) + "#topline", false); 
             }
 

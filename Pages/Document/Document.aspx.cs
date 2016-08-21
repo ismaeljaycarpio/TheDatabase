@@ -85,16 +85,16 @@ public partial class Pages_Document_Document : SecurePage
                 if (Request.QueryString["SSearchCriteriaID"] != null)
                 {
 
-                    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString();
+                    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString();
                 }
                 else
                 {
-                    //hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"].ToString();
+                    //hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"].ToString();
                     hlBack.NavigateUrl = "#";
                 }
 
 
-                //hlCreateReport.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/AuditReport.aspx?SearchCriteria=" + Cryptography.Encrypt("-1");
+                //hlCreateReport.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/AuditReport.aspx?SearchCriteria=" + Cryptography.Encrypt("-1");
 
                 //Common.PopulateAdminDropDown(ref ddlAdminArea);
                 //ddlAdminArea.SelectedIndex = 3;
@@ -357,10 +357,10 @@ public partial class Pages_Document_Document : SecurePage
 
                 
                    
-                    //_gvPager.AddImageURL2 = "http://" + Request.Url.Authority + Request.ApplicationPath + "/App_Themes/Default/Images/add_s.png";
-                    //_gvPager.AddURL2 = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/ReportDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SSearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString();
+                    //_gvPager.AddImageURL2 = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/App_Themes/Default/Images/add_s.png";
+                    //_gvPager.AddURL2 = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/ReportDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SSearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString();
 
-                    //_gvPager.AddImageURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/App_Themes/Default/Images/add_s.png";
+                    //_gvPager.AddImageURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/App_Themes/Default/Images/add_s.png";
                     //_gvPager.AddURL = GetAddURL();
 
                     //if (Request.QueryString["type"] != null)
@@ -388,7 +388,7 @@ public partial class Pages_Document_Document : SecurePage
 
 
             //hplNewData.NavigateUrl = GetAddURL();
-            //hlNewReport.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/ReportDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SSearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString();
+            //hlNewReport.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/ReportDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SSearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString();
             
             
             if (iTN == 0)
@@ -405,18 +405,18 @@ public partial class Pages_Document_Document : SecurePage
                 }
 
 
-                    //hpNew2.ImageUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/App_Themes/Default/Images/Icon_NewDoc.png";
-                    //hpNew2.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/ReportDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SSearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString();
+                    //hpNew2.ImageUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/App_Themes/Default/Images/Icon_NewDoc.png";
+                    //hpNew2.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/ReportDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SSearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString();
 
-                hpNew.ImageUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/App_Themes/Default/Images/Icon_Upload.png";
+                hpNew.ImageUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/App_Themes/Default/Images/Icon_Upload.png";
                     hpNew.NavigateUrl = GetAddURL();
-                    //hpNewFolder.ImageUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/App_Themes/Default/Images/add32.png";
+                    //hpNewFolder.ImageUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/App_Themes/Default/Images/add32.png";
                     //hpNewFolder.NavigateUrl = "javascript:OpenAddFolder();";
-                    //hplNewDataFilter2.ImageUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/App_Themes/Default/Images/Icon_NewDoc.png";
-                    //hplNewDataFilter2.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/ReportDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SSearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString();
+                    //hplNewDataFilter2.ImageUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/App_Themes/Default/Images/Icon_NewDoc.png";
+                    //hplNewDataFilter2.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/ReportDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SSearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString();
 
 
-                    hplNewDataFilter.ImageUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/App_Themes/Default/Images/Icon_Upload.png";
+                    hplNewDataFilter.ImageUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/App_Themes/Default/Images/Icon_Upload.png";
                     hplNewDataFilter.NavigateUrl = GetAddURL();
                 
             }
@@ -862,12 +862,12 @@ public partial class Pages_Document_Document : SecurePage
             if (Request.QueryString["SSearchCriteriaID"] != null)
                 strExtra = "&SSearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString();
 
-            strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&TableID=" + Request.QueryString["TableID"].ToString() + strExtra + "&DocumentID=" + Cryptography.Encrypt(strDocumentID);
+            strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&TableID=" + Request.QueryString["TableID"].ToString() + strExtra + "&DocumentID=" + Cryptography.Encrypt(strDocumentID);
 
             //if (theDocument.DocumentTypeID != null && hfCRDocumentTypeID.Value == theDocument.DocumentTypeID.ToString())
             //{
 
-            //    strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/EditReport.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SSearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString() + "&DocumentID=" + strDocumentID;
+            //    strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/EditReport.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SSearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString() + "&DocumentID=" + strDocumentID;
             //}
         }
         else
@@ -881,7 +881,7 @@ public partial class Pages_Document_Document : SecurePage
 
     //public string GetViewURL()
     //{
-    //    return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString())  + "&DocumentID=";
+    //    return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString())  + "&DocumentID=";
     //}
 
     public string GetAddURL()
@@ -892,17 +892,17 @@ public partial class Pages_Document_Document : SecurePage
         if (Request.QueryString["SSearchCriteriaID"] != null)
             strExtra = "&SSearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString();
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&TableID=" + Request.QueryString["TableID"].ToString() + strExtra + "&FolderID=" + hfParentFolderID.Value.ToString();
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&TableID=" + Request.QueryString["TableID"].ToString() + strExtra + "&FolderID=" + hfParentFolderID.Value.ToString();
     }
 
     public string GetAddFolderURL()
     {
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/FolderDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&ParentFolderID=" +hfParentFolderID.Value;
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/FolderDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&ParentFolderID=" +hfParentFolderID.Value;
     }
 
     public string GetEditFolderURL()
     {
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/FolderDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&ParentFolderID=" + hfParentFolderID.Value + "&FolderID=" ;
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/FolderDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&ParentFolderID=" + hfParentFolderID.Value + "&FolderID=" ;
     }
 
     public string GetDate(string strDocumentID)

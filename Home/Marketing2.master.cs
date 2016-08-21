@@ -69,7 +69,7 @@ public partial class Home_Marketing2 : System.Web.UI.MasterPage
                     //divCopyright.InnerText = "Copyright © 2012 - All rights reserved.";
                 }
 
-                string strRoot = "http://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath;
+                string strRoot = HttpContext.Current.Request.Url.Scheme +"://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath;
 
                 SubDomainInfo theSubDomain = SecurityManager.SubDomainInfo_Details(strRoot);
                 if (theSubDomain != null)

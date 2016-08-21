@@ -9,6 +9,6 @@ public partial class SignUpDone :SecurePage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        hfRoot.Value = "http://" + Request.Url.Authority + Request.ApplicationPath;
+        hfRoot.Value = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
     }
 }

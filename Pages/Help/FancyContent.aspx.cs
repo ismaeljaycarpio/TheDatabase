@@ -22,7 +22,7 @@ public partial class Pages_Help_FancyContent : System.Web.UI.Page
 
         if(!IsPostBack)
         {
-            edtContent.AssetManager = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Editor/assetmanager/assetmanager.aspx";
+            edtContent.AssetManager = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Editor/assetmanager/assetmanager.aspx";
 
             if (Request.QueryString["title"] != null)
             {

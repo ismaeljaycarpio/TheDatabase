@@ -17,7 +17,7 @@ public partial class DemoTips : System.Web.UI.Page
             if (Request.QueryString["notable"] != null)
             {
                 trContinue.Visible = true;
-                hlContinue.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableOption.aspx?FirstTime=yes&MenuID=" + Cryptography.Encrypt("-1") + "&SearchCriteria=" + Cryptography.Encrypt("-1");
+                hlContinue.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableOption.aspx?FirstTime=yes&MenuID=" + Cryptography.Encrypt("-1") + "&SearchCriteria=" + Cryptography.Encrypt("-1");
                 Content theContent = SystemData.Content_Details_ByKey("WelcomeTheDatabaseNoTable", null);
                 if (theContent != null)
                 {

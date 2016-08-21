@@ -184,7 +184,7 @@ public partial class Pages_Record_TableProperty : SecurePage
                 }
 
 
-                hfWebroot.Value = "http://" + Request.Url.Authority + Request.ApplicationPath;
+                hfWebroot.Value = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
                 if (_qsMode == "add")
                 {
                     if (hfFirstTable.Value == "Yes")
@@ -197,11 +197,11 @@ public partial class Pages_Record_TableProperty : SecurePage
                     }
                     if (Request.QueryString["SearchCriteria"] != null)
                     {
-                        hlBack2.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableOption.aspx?MenuID=" + Request.QueryString["MenuID"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+                        hlBack2.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableOption.aspx?MenuID=" + Request.QueryString["MenuID"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
                     }
                     else
                     {
-                        hlBack2.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableList.aspx?MenuID=" + Request.QueryString["MenuID"];
+                        hlBack2.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableList.aspx?MenuID=" + Request.QueryString["MenuID"];
 
                         if (Request.UrlReferrer != null)
                         {
@@ -232,11 +232,11 @@ public partial class Pages_Record_TableProperty : SecurePage
 
                     if (Request.QueryString["SearchCriteria"] != null)
                     {
-                        hlBack2.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableOption.aspx?MenuID=" + Request.QueryString["MenuID"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+                        hlBack2.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableOption.aspx?MenuID=" + Request.QueryString["MenuID"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
                     }
                     else
                     {
-                        hlBack2.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableList.aspx?MenuID=" + Request.QueryString["MenuID"];
+                        hlBack2.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableList.aspx?MenuID=" + Request.QueryString["MenuID"];
 
                         if (Request.UrlReferrer != null)
                         {
@@ -515,7 +515,7 @@ public partial class Pages_Record_TableProperty : SecurePage
 
                         Column newColumn = new Column(null, iTableID,
                        strAutoSystemName, iDisplayOrder + 1, strDisplayName, strDisplayName, "", "", null, "",
-                        "", null, null, "", "", false, strDisplayName, null, "", null, null, false, "", "", false);
+                        "", null, null, "", "", false, strDisplayName, null, "", null, null, false, "", "", "");
 
                         newColumn.ColumnType = strColumnType;
 
@@ -622,10 +622,10 @@ public partial class Pages_Record_TableProperty : SecurePage
 
 
                 Session["Fields"] = null;
-                //Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Cryptography.Encrypt(iTableID.ToString()) , false);
+                //Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Cryptography.Encrypt(iTableID.ToString()) , false);
 
 
-                Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID="  + Cryptography.Encrypt(iTableID.ToString()) + "&MenuID=" + Request.QueryString["MenuID"].ToString() + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString(), false);
+                Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID="  + Cryptography.Encrypt(iTableID.ToString()) + "&MenuID=" + Request.QueryString["MenuID"].ToString() + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString(), false);
 
 
 

@@ -75,7 +75,7 @@ public partial class TestList_SampleTypeGroup : SecurePage
     public string GetEditURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Test/TestDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SampleTypeGroupID=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Test/TestDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SampleTypeGroupID=";
 
     }
 
@@ -84,19 +84,19 @@ public partial class TestList_SampleTypeGroup : SecurePage
     {
        
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Test/TestDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SampleTypeGroupID=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Test/TestDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SampleTypeGroupID=";
 
     }
     public string GetAddURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Test/TestDetail.aspx?mode=" + Cryptography.Encrypt("add")  ;
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Test/TestDetail.aspx?mode=" + Cryptography.Encrypt("add")  ;
 
     }
     public string GetAccountViewURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&accountid=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&accountid=";
 
     }
 

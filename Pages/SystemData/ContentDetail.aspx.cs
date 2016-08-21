@@ -32,7 +32,7 @@ public partial class Pages_SystemData_ContentDetail : SecurePage
         if(_ObjUser==null)
         {
             Session.Clear();
-            base.Response.Redirect("http://" + base.Request.Url.Authority + base.Request.ApplicationPath + "/Login.aspx?ReturnURL=" + Server.UrlEncode(base.Request.RawUrl), false);
+            base.Response.Redirect(base.Request.Url.Scheme +"://" + base.Request.Url.Authority + base.Request.ApplicationPath + "/Login.aspx?ReturnURL=" + Server.UrlEncode(base.Request.RawUrl), false);
             return;
         }
 
@@ -93,11 +93,11 @@ public partial class Pages_SystemData_ContentDetail : SecurePage
             
                 if (Request.QueryString["SearchCriteria"] != null)
                 {
-                    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/Content.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+                    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/Content.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
                 }
                 else
                 {
-                    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/Content.aspx";
+                    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/Content.aspx";
                 }
                 //}
             }
@@ -147,7 +147,7 @@ public partial class Pages_SystemData_ContentDetail : SecurePage
 
 
 
-        edtContent.AssetManager = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Editor/assetmanager/assetmanager.aspx";
+        edtContent.AssetManager = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Editor/assetmanager/assetmanager.aspx";
 
         // checking permission
 
@@ -267,7 +267,7 @@ public partial class Pages_SystemData_ContentDetail : SecurePage
             {
                 chkAllAccount.Visible = false;
                 divEdit.Visible = true;
-                hlEditLink.NavigateUrl = hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&ContentID=" + Cryptography.Encrypt(theContent.ContentID.ToString()) + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+                hlEditLink.NavigateUrl = hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&ContentID=" + Cryptography.Encrypt(theContent.ContentID.ToString()) + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
             }
         }
         catch (Exception ex)
@@ -485,11 +485,11 @@ public partial class Pages_SystemData_ContentDetail : SecurePage
      
         if (Request.QueryString["search"] != null)
         {
-            Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/Content.aspx" + "?search=" + Request.QueryString["search"].ToString(), false);
+            Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/Content.aspx" + "?search=" + Request.QueryString["search"].ToString(), false);
         }
         else
         {
-            Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/Content.aspx", false);
+            Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/Content.aspx", false);
         }
        
     }

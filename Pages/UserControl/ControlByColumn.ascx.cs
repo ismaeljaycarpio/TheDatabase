@@ -256,7 +256,7 @@ public partial class Pages_UserControl_ControlByColumn : System.Web.UI.UserContr
 
 
                     Column theColumn = RecordManager.ets_Column_Details(iC);
-                    if ((theColumn.ColumnType == "number" && theColumn.IgnoreSymbols == false)|| theColumn.ColumnType=="calculation")
+                    if ((theColumn.ColumnType == "number" )|| theColumn.ColumnType=="calculation")
                     {
                         strValue= txtLowerLimit.Text + "____" + txtUpperLimit.Text;
                     }
@@ -345,7 +345,7 @@ public partial class Pages_UserControl_ControlByColumn : System.Web.UI.UserContr
                             ddlCompareOperator.SelectedValue = CompareOperator;
 
                     }
-                    else if ((theColumn.ColumnType == "number" && theColumn.IgnoreSymbols == false) || theColumn.ColumnType=="calculation")
+                    else if ((theColumn.ColumnType == "number" ) || theColumn.ColumnType=="calculation")
                     {
                        
                         if (strValue.IndexOf("____") > -1)
@@ -569,7 +569,7 @@ public partial class Pages_UserControl_ControlByColumn : System.Web.UI.UserContr
                 //_strNumericSearch = "";
                 _strTextSearch = " (Record." + theColumn.SystemName + " IS NOT NULL AND LEN(Record." + theColumn.SystemName + ")>0)";
             }
-            else if ((theColumn.ColumnType == "number"  && theColumn.IgnoreSymbols == false) || theColumn.ColumnType=="calculation")
+            else if ((theColumn.ColumnType == "number"  ) || theColumn.ColumnType=="calculation")
             {
                 _strTextSearch = "";
                 //_strNumericSearch = "";

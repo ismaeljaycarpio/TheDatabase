@@ -66,13 +66,13 @@ public partial class Pages_Security_Role : SecurePage
     public string GetAddURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/RoleDetail.aspx?mode=" + Cryptography.Encrypt("add");
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/RoleDetail.aspx?mode=" + Cryptography.Encrypt("add");
 
     }
     public string GetEditURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/RoleDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&roleid=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/RoleDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&roleid=";
 
     }
 
@@ -80,7 +80,7 @@ public partial class Pages_Security_Role : SecurePage
     public string GetViewURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/RoleDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&roleid=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/RoleDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&roleid=";
 
     }
 

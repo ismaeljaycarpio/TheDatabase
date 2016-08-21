@@ -9,7 +9,15 @@ using System.Web.UI.WebControls;
 using System.Web;
 using System.Web.UI;
 
-
+[Serializable]
+public class EmailCallBack
+{
+    public EmailCallBack()
+    {
+    }
+    public MailMessage TheMail { get; set; }
+    public Message TheMessage { get; set; }
+}
 
     public class DBGurus
     {
@@ -855,55 +863,355 @@ using System.Web.UI;
         //    return SendEmail(sHeading, sMessage, sFrom, sTo, "", "", out sErrorMessage);
         //}
 
-        public static int SendEmail
-        (
-            string strEmailType,bool? bEmailCount, bool? bSMSCount,
-            string sHeading,
-            string sMessage,
-            string sFrom,
-            string sTo,
-            string sCC,
-            string sBCC, AttachmentCollection attFiles, Message theMessage,
-            out string sErrorMessage
-        )
-        {
+//        public static int SendEmail
+//        (
+//            string strEmailType,bool? bEmailCount, bool? bSMSCount,
+//            string sHeading,
+//            string sMessage,
+//            string sFrom,
+//            string sTo,
+//            string sCC,
+//            string sBCC, AttachmentCollection attFiles, Message theMessage,
+//            out string sErrorMessage
+//        )
+//        {
             
+//            int returnValue = 0;
+//            string strPath="Send Email";
+//            try
+//            {
+
+//                bool bSMS = false;
+
+//                 if(bSMSCount!=null && (bool)bSMSCount==true)
+//                 {
+//                     bSMS = true;
+//                 }
+
+//                string strSMTPReplyToEmail = "";
+
+//                if (System.Web.HttpContext.Current!=null && System.Web.HttpContext.Current.Session!=null && System.Web.HttpContext.Current.Session["ReplyTo"] != null)
+//                {
+//                    strSMTPReplyToEmail = System.Web.HttpContext.Current.Session["ReplyTo"].ToString();
+//                }
+
+//                int? iAccountID = null;
+
+//                if (System.Web.HttpContext.Current != null && System.Web.HttpContext.Current.Session != null  && System.Web.HttpContext.Current.Session["AccountID"] != null)
+//                {
+
+//                    iAccountID = int.Parse(System.Web.HttpContext.Current.Session["AccountID"].ToString());
+
+//                    strPath=System.Web.HttpContext.Current.Request.Path;
+//                }
+
+                
+//                if (theMessage != null && theMessage.AccountID!=null)
+//                {
+//                    iAccountID = theMessage.AccountID;
+//                }
+                       
+                
+
+
+//                string strMessageIDMail = "mail.thedatabase.net";
+
+//                string strEmailServer = "";
+//                string smtpUsername = "";
+//                string smtpPassword = "";
+//                string strSmtpPort = "";
+//                string strEnableSSL = "";
+
+//                //string strSMSEmailFrom = SystemData.SystemOption_ValueByKey_Account("EmailFrom", null, null);
+//                //string strSMSEmailServer = SystemData.SystemOption_ValueByKey_Account("EmailServer", null, null);
+//                //string smtpSMSUsername = SystemData.SystemOption_ValueByKey_Account("EmailUsername", null, null);
+//                //string smtpSMSPassword = SystemData.SystemOption_ValueByKey_Account("EmailPassword", null, null);
+//                //string strSMSSmtpPort = SystemData.SystemOption_ValueByKey_Account("SmtpPort", null, null);
+//                //string strSMSEnableSSL = SystemData.SystemOption_ValueByKey_Account("EnableSSL", null, null);
+
+//                Account theAccount = null;
+//                if(iAccountID!=null)
+//                {
+//                    theAccount=SecurityManager.Account_Details((int)iAccountID);
+//                }
+
+//                if (theAccount != null && theAccount.SMTPEmail != "" && theAccount.SMTPUserName != "" && theAccount.SMTPPassword != ""
+//                    && theAccount.SMTPServer != "" && theAccount.SMTPPort != "" && theAccount.SMTPSSL != "" && bSMS==false)
+//                {
+//                    if (sFrom == "")
+//                        sFrom = theAccount.SMTPEmail;
+
+//                    strMessageIDMail = "mail." + theAccount.SMTPEmail.Substring(theAccount.SMTPEmail.IndexOf("@")+1);
+//                     smtpUsername = theAccount.SMTPUserName;
+//                    smtpPassword = theAccount.SMTPPassword;
+//                    strEmailServer=theAccount.SMTPServer;
+//                    strSmtpPort=theAccount.SMTPPort;
+//                    strEnableSSL = theAccount.SMTPSSL;
+
+//                    if (strSMTPReplyToEmail=="")
+//                     strSMTPReplyToEmail=theAccount.SMTPReplyToEmail;
+
+                   
+//                }
+//                else
+//                {
+//                    if (sFrom == "" || bSMS)
+//                        sFrom = SystemData.SystemOption_ValueByKey_Account("EmailFrom", null, null);
+
+//                     smtpUsername = SystemData.SystemOption_ValueByKey_Account("EmailUsername", null, null);
+//                    smtpPassword = SystemData.SystemOption_ValueByKey_Account("EmailPassword", null, null);
+//                    strEmailServer=SystemData.SystemOption_ValueByKey_Account("EmailServer", null, null);
+//                    strSmtpPort=SystemData.SystemOption_ValueByKey_Account("SmtpPort", null, null);
+//                    strEnableSSL=SystemData.SystemOption_ValueByKey_Account("EnableSSL", null, null);
+
+//                    if (strSMTPReplyToEmail == "")
+//                        strSMTPReplyToEmail=sFrom;
+//                }
+//                if(strEnableSSL=="1" || strEnableSSL.ToLower()=="true")
+//                {
+//                    strEnableSSL = "True";
+//                }
+
+//                if (strEnableSSL == "" || strEnableSSL == "0" || strEnableSSL.ToLower() == "false")
+//                {
+//                    strEnableSSL = "False";
+//                }
+
+
+
+//                MailMessage oMailMessage = new MailMessage();
+//                oMailMessage.From = new MailAddress(sFrom,smtpUsername);
+
+
+//                string strGUID = Guid.NewGuid().ToString();
+
+//                if (theMessage != null && theMessage.ExternalMessageKey != "")
+//                    strGUID = theMessage.ExternalMessageKey;
+
+
+//                oMailMessage.Headers.Add("Message-Id", String.Format("<{0}@{1}>", strGUID, strMessageIDMail));
+
+//                string[] sToCollection = sTo.Split(';');
+//                foreach (string str in sToCollection)
+//                {
+//                    if (!string.IsNullOrEmpty(str))
+//                        oMailMessage.To.Add(str);
+//                }
+
+//                if ((sCC != null) && (sCC.Length > 0))
+//                {
+//                    string[] sCCCollection = sCC.Split(';');
+//                    foreach (string str in sCCCollection)
+//                    {
+//                        if (!string.IsNullOrEmpty(str))
+//                            oMailMessage.CC.Add(str);
+//                    }
+//                }
+
+//                if ((sBCC != null) && (sBCC.Length > 0))
+//                {
+//                    string[] sBCCCollection = sBCC.Split(';');
+//                    foreach (string str in sBCCCollection)
+//                    {
+//                        if (!string.IsNullOrEmpty(str))
+//                            oMailMessage.Bcc.Add(str);
+//                    }
+//                }
+
+//                oMailMessage.Subject = sHeading;
+
+//                if (attFiles != null)
+//                {
+//                    foreach (Attachment item in attFiles)
+//                    {
+//                        oMailMessage.Attachments.Add(item);
+//                    }                   
+
+//                }
+               
+
+
+                
+//                if(bSMSCount==null || (bool)bSMSCount==false)
+//                {
+//                    Content theFooterContent = SystemData.Content_Details_ByKey("AllEmailFooter", iAccountID);
+//                    string strContentFooter = "";
+//                    if (theFooterContent != null && iAccountID != null)
+//                    {
+//                        strContentFooter = theFooterContent.ContentP;
+//                        //Account theAccount = SecurityManager.Account_Details((int)iAccountID);
+//                        if(theAccount!=null)
+//                        {
+//                            strContentFooter = strContentFooter.Replace("[Account]", theAccount.AccountName);
+//                            User theAccountHolder = SecurityManager.User_AccountHolder((int)theAccount.AccountID);
+                            
+//                            if(theAccountHolder!=null)
+//                            {
+//                                strContentFooter = strContentFooter.Replace("[AccountEmail]", theAccountHolder.Email);
+//                            }
+
+//                        }
+//                    }
+//                    sMessage = sMessage + strContentFooter;
+//                }
+//                oMailMessage.Body = sMessage;
+
+//                if (theAccount!=null && theAccount.POP3Email != "")
+//                    strSMTPReplyToEmail = theAccount.POP3Email;
+
+//                if (strSMTPReplyToEmail!="")
+//                    oMailMessage.ReplyToList.Add(new MailAddress(strSMTPReplyToEmail));
+
+//                oMailMessage.IsBodyHtml = true;
+//                SmtpClient smtp = new SmtpClient(strEmailServer);
+
+//                if (((sFrom != null) && (sFrom.Length > 0)) && ((smtpPassword != null) && (smtpPassword.Length > 0)))
+//                {
+//                    System.Net.NetworkCredential credentials = new System.Net.NetworkCredential(sFrom, smtpPassword);
+//                    smtp.Credentials = credentials;
+//                    smtp.Port = DBGurus.StringToInt(strSmtpPort);
+//                    smtp.EnableSsl = Convert.ToBoolean(strEnableSSL);
+//                }
+
+//#if (!DEBUG)
+//                smtp.Send(oMailMessage);
+
+
+//                //smtp.SendCompleted += (s, e) =>
+//                //{
+//                //    SmtpClient callbackClient = s as SmtpClient;
+//                //    callbackClient.Dispose();
+//                //    //smtp.Dispose();
+//                //    //oMailMessage.Dispose();
+//                //};
+//                //string userState = "DBG message";
+//                //smtp.SendAsync(oMailMessage, userState);
+//#endif
+
+
+//                if (iAccountID != null)
+//                {
+
+//                    SecurityManager.Account_SMS_Email_Count((int)iAccountID,bEmailCount,bSMSCount);
+//                }
+
+
+//                if (iAccountID != null)
+//                {
+//                    if (oMailMessage.To.Count > 0)
+//                    {
+//                        if (theMessage == null)
+//                        {
+//                            if (strEmailType == "E" || strEmailType=="S")
+//                            {
+//                                //do nothing
+//                            }
+//                            else
+//                            {
+//                                strEmailType = "E";
+//                            }
+                            
+//                            theMessage = new Message(null, null, null, iAccountID, DateTime.Now, strEmailType, "E",
+//                           null, oMailMessage.To[0].ToString(), oMailMessage.Subject, oMailMessage.Body, null, "");
+                            
+//                        }
+                                               
+
+//                       if(bSMSCount!=null && (bool)bSMSCount==true)
+//                       {
+//                           theMessage.DeliveryMethod = "S";
+//                       }
+//                       theMessage.ExternalMessageKey = oMailMessage.Headers["Message-Id"].ToString();
+//                       theMessage.ExternalMessageKey = theMessage.ExternalMessageKey.Replace("<", "");
+//                       theMessage.ExternalMessageKey = theMessage.ExternalMessageKey.Replace(">", "");
+//                        EmailManager.Message_Insert(theMessage);
+//                        //EmailManager.dbg_EmailLog_Insert(theEmailLog, null, null);
+
+
+//                    }
+//                }
+
+//                sErrorMessage = "";
+//            }
+//            catch (Exception e)
+//            {
+//                sErrorMessage = e.Message;
+//                ErrorLog theErrorLog = new ErrorLog(null, "Email Send" + theMessage==null?"":" - " + theMessage.Subject, 
+//                    e.Message, e.StackTrace, DateTime.Now, strPath);
+//                SystemData.ErrorLog_Insert(theErrorLog);
+
+
+//                returnValue = -1;
+//            }
+
+//            return returnValue;
+//        }
+
+
+       // static async System.Threading.Tasks.Task SendEmail_A
+       //(
+       //    MailMessage oMailMessage, SmtpClient smtp
+       //)
+       // {
+       //     //await smtp.SendMailAsync(oMailMessage);
+       //     //await smtp.Send(oMailMessage);
+       //     System.Threading.Tasks.Task t = System.Threading.Tasks.Task.Run(async () =>
+       //         {
+       //             await smtp.SendMailAsync(oMailMessage);
+       //         });
+       //     t.Wait();
+            
+       // }
+
+        public static int SendEmail
+       (
+           string strEmailType, bool? bEmailCount, bool? bSMSCount,
+           string sHeading,
+           string sMessage,
+           string sFrom,
+           string sTo,
+           string sCC,
+           string sBCC, AttachmentCollection attFiles, Message theMessage,
+           out string sErrorMessage
+       )
+        {
+
             int returnValue = 0;
-            string strPath="Send Email";
+            string strPath = "Send Email";
             try
             {
 
                 bool bSMS = false;
 
-                 if(bSMSCount!=null && (bool)bSMSCount==true)
-                 {
-                     bSMS = true;
-                 }
+                if (bSMSCount != null && (bool)bSMSCount == true)
+                {
+                    bSMS = true;
+                }
 
                 string strSMTPReplyToEmail = "";
 
-                if (System.Web.HttpContext.Current!=null && System.Web.HttpContext.Current.Session!=null && System.Web.HttpContext.Current.Session["ReplyTo"] != null)
+                if (System.Web.HttpContext.Current != null && System.Web.HttpContext.Current.Session != null && System.Web.HttpContext.Current.Session["ReplyTo"] != null)
                 {
                     strSMTPReplyToEmail = System.Web.HttpContext.Current.Session["ReplyTo"].ToString();
                 }
 
                 int? iAccountID = null;
 
-                if (System.Web.HttpContext.Current != null && System.Web.HttpContext.Current.Session != null  && System.Web.HttpContext.Current.Session["AccountID"] != null)
+                if (System.Web.HttpContext.Current != null && System.Web.HttpContext.Current.Session != null && System.Web.HttpContext.Current.Session["AccountID"] != null)
                 {
 
                     iAccountID = int.Parse(System.Web.HttpContext.Current.Session["AccountID"].ToString());
 
-                    strPath=System.Web.HttpContext.Current.Request.Path;
+                    strPath = System.Web.HttpContext.Current.Request.Path;
                 }
 
-                
-                if (theMessage != null && theMessage.AccountID!=null)
+
+                if (theMessage != null && theMessage.AccountID != null)
                 {
                     iAccountID = theMessage.AccountID;
                 }
-                       
-                
+
+
 
 
                 string strMessageIDMail = "mail.thedatabase.net";
@@ -922,44 +1230,44 @@ using System.Web.UI;
                 //string strSMSEnableSSL = SystemData.SystemOption_ValueByKey_Account("EnableSSL", null, null);
 
                 Account theAccount = null;
-                if(iAccountID!=null)
+                if (iAccountID != null)
                 {
-                    theAccount=SecurityManager.Account_Details((int)iAccountID);
+                    theAccount = SecurityManager.Account_Details((int)iAccountID);
                 }
 
                 if (theAccount != null && theAccount.SMTPEmail != "" && theAccount.SMTPUserName != "" && theAccount.SMTPPassword != ""
-                    && theAccount.SMTPServer != "" && theAccount.SMTPPort != "" && theAccount.SMTPSSL != "" && bSMS==false)
+                    && theAccount.SMTPServer != "" && theAccount.SMTPPort != "" && theAccount.SMTPSSL != "" && bSMS == false)
                 {
                     if (sFrom == "")
                         sFrom = theAccount.SMTPEmail;
 
-                    strMessageIDMail = "mail." + theAccount.SMTPEmail.Substring(theAccount.SMTPEmail.IndexOf("@")+1);
-                     smtpUsername = theAccount.SMTPUserName;
+                    strMessageIDMail = "mail." + theAccount.SMTPEmail.Substring(theAccount.SMTPEmail.IndexOf("@") + 1);
+                    smtpUsername = theAccount.SMTPUserName;
                     smtpPassword = theAccount.SMTPPassword;
-                    strEmailServer=theAccount.SMTPServer;
-                    strSmtpPort=theAccount.SMTPPort;
+                    strEmailServer = theAccount.SMTPServer;
+                    strSmtpPort = theAccount.SMTPPort;
                     strEnableSSL = theAccount.SMTPSSL;
 
-                    if (strSMTPReplyToEmail=="")
-                     strSMTPReplyToEmail=theAccount.SMTPReplyToEmail;
+                    if (strSMTPReplyToEmail == "")
+                        strSMTPReplyToEmail = theAccount.SMTPReplyToEmail;
 
-                   
+
                 }
                 else
                 {
                     if (sFrom == "" || bSMS)
                         sFrom = SystemData.SystemOption_ValueByKey_Account("EmailFrom", null, null);
 
-                     smtpUsername = SystemData.SystemOption_ValueByKey_Account("EmailUsername", null, null);
+                    smtpUsername = SystemData.SystemOption_ValueByKey_Account("EmailUsername", null, null);
                     smtpPassword = SystemData.SystemOption_ValueByKey_Account("EmailPassword", null, null);
-                    strEmailServer=SystemData.SystemOption_ValueByKey_Account("EmailServer", null, null);
-                    strSmtpPort=SystemData.SystemOption_ValueByKey_Account("SmtpPort", null, null);
-                    strEnableSSL=SystemData.SystemOption_ValueByKey_Account("EnableSSL", null, null);
+                    strEmailServer = SystemData.SystemOption_ValueByKey_Account("EmailServer", null, null);
+                    strSmtpPort = SystemData.SystemOption_ValueByKey_Account("SmtpPort", null, null);
+                    strEnableSSL = SystemData.SystemOption_ValueByKey_Account("EnableSSL", null, null);
 
                     if (strSMTPReplyToEmail == "")
-                        strSMTPReplyToEmail=sFrom;
+                        strSMTPReplyToEmail = sFrom;
                 }
-                if(strEnableSSL=="1" || strEnableSSL.ToLower()=="true")
+                if (strEnableSSL == "1" || strEnableSSL.ToLower() == "true")
                 {
                     strEnableSSL = "True";
                 }
@@ -972,7 +1280,7 @@ using System.Web.UI;
 
 
                 MailMessage oMailMessage = new MailMessage();
-                oMailMessage.From = new MailAddress(sFrom,smtpUsername);
+                oMailMessage.From = new MailAddress(sFrom, smtpUsername);
 
 
                 string strGUID = Guid.NewGuid().ToString();
@@ -1017,14 +1325,14 @@ using System.Web.UI;
                     foreach (Attachment item in attFiles)
                     {
                         oMailMessage.Attachments.Add(item);
-                    }                   
+                    }
 
                 }
-               
 
 
-                
-                if(bSMSCount==null || (bool)bSMSCount==false)
+
+
+                if (bSMSCount == null || (bool)bSMSCount == false)
                 {
                     Content theFooterContent = SystemData.Content_Details_ByKey("AllEmailFooter", iAccountID);
                     string strContentFooter = "";
@@ -1032,12 +1340,12 @@ using System.Web.UI;
                     {
                         strContentFooter = theFooterContent.ContentP;
                         //Account theAccount = SecurityManager.Account_Details((int)iAccountID);
-                        if(theAccount!=null)
+                        if (theAccount != null)
                         {
                             strContentFooter = strContentFooter.Replace("[Account]", theAccount.AccountName);
                             User theAccountHolder = SecurityManager.User_AccountHolder((int)theAccount.AccountID);
-                            
-                            if(theAccountHolder!=null)
+
+                            if (theAccountHolder != null)
                             {
                                 strContentFooter = strContentFooter.Replace("[AccountEmail]", theAccountHolder.Email);
                             }
@@ -1048,10 +1356,10 @@ using System.Web.UI;
                 }
                 oMailMessage.Body = sMessage;
 
-                if (theAccount!=null && theAccount.POP3Email != "")
+                if (theAccount != null && theAccount.POP3Email != "")
                     strSMTPReplyToEmail = theAccount.POP3Email;
 
-                if (strSMTPReplyToEmail!="")
+                if (strSMTPReplyToEmail != "")
                     oMailMessage.ReplyToList.Add(new MailAddress(strSMTPReplyToEmail));
 
                 oMailMessage.IsBodyHtml = true;
@@ -1065,15 +1373,11 @@ using System.Web.UI;
                     smtp.EnableSsl = Convert.ToBoolean(strEnableSSL);
                 }
 
-#if (!DEBUG)
-                smtp.Send(oMailMessage);
-#endif
-
 
                 if (iAccountID != null)
                 {
 
-                    SecurityManager.Account_SMS_Email_Count((int)iAccountID,bEmailCount,bSMSCount);
+                    SecurityManager.Account_SMS_Email_Count((int)iAccountID, bEmailCount, bSMSCount);
                 }
 
 
@@ -1083,7 +1387,7 @@ using System.Web.UI;
                     {
                         if (theMessage == null)
                         {
-                            if (strEmailType == "E" || strEmailType=="S")
+                            if (strEmailType == "E" || strEmailType == "S")
                             {
                                 //do nothing
                             }
@@ -1091,33 +1395,68 @@ using System.Web.UI;
                             {
                                 strEmailType = "E";
                             }
-                            
+
                             theMessage = new Message(null, null, null, iAccountID, DateTime.Now, strEmailType, "E",
                            null, oMailMessage.To[0].ToString(), oMailMessage.Subject, oMailMessage.Body, null, "");
-                            
+
                         }
-                                               
 
-                       if(bSMSCount!=null && (bool)bSMSCount==true)
-                       {
-                           theMessage.DeliveryMethod = "S";
-                       }
-                       theMessage.ExternalMessageKey = oMailMessage.Headers["Message-Id"].ToString();
-                       theMessage.ExternalMessageKey = theMessage.ExternalMessageKey.Replace("<", "");
-                       theMessage.ExternalMessageKey = theMessage.ExternalMessageKey.Replace(">", "");
+
+                        if (bSMSCount != null && (bool)bSMSCount == true)
+                        {
+                            theMessage.DeliveryMethod = "S";
+                        }
+
+
+                        theMessage.ExternalMessageKey = oMailMessage.Headers["Message-Id"].ToString();
+                        theMessage.ExternalMessageKey = theMessage.ExternalMessageKey.Replace("<", "");
+                        theMessage.ExternalMessageKey = theMessage.ExternalMessageKey.Replace(">", "");
                         EmailManager.Message_Insert(theMessage);
-                        //EmailManager.dbg_EmailLog_Insert(theEmailLog, null, null);
-
 
                     }
                 }
+              
+                //EmailCallBack theEmailCallBack = new EmailCallBack();
+                //theEmailCallBack.TheMail = oMailMessage;
+                //theEmailCallBack.TheMessage = theMessage;
+                //Object state = oMailMessage;
+                //event handler for asynchronous call
+                //smtp.SendCompleted += new SendCompletedEventHandler(smtpClient_SendCompleted);
+
+//#if (!DEBUG)
+
+                //if (System.Web.HttpContext.Current != null && System.Web.HttpContext.Current.Session != null)
+                //{
+                System.Threading.Tasks.Task t = System.Threading.Tasks.Task.Run(async () =>
+                {
+                    await smtp.SendMailAsync(oMailMessage);
+                 
+                });
+               // t.Wait();
+                ////}
+                //else
+                //{
+
+                //smtp.Send(oMailMessage);
+                //}
+
+               
+
+                 //SendEmail_A(oMailMessage, smtp);
+                //smtp.Send(oMailMessage);
+                //smtp.SendAsync(oMailMessage, null);
+                                
+//#endif
+
+
+                
 
                 sErrorMessage = "";
             }
             catch (Exception e)
             {
                 sErrorMessage = e.Message;
-                ErrorLog theErrorLog = new ErrorLog(null, "Email Send" + theMessage==null?"":" - " + theMessage.Subject, 
+                ErrorLog theErrorLog = new ErrorLog(null, "Email Send" + theMessage == null ? "" : " - " + theMessage.Subject,
                     e.Message, e.StackTrace, DateTime.Now, strPath);
                 SystemData.ErrorLog_Insert(theErrorLog);
 
@@ -1127,7 +1466,17 @@ using System.Web.UI;
 
             return returnValue;
         }
-
+       //static void smtpClient_SendCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+       // {
+       //     //MailMessage oMailMessage = e.UserState as MailMessage;
+       //     //oMailMessage.Dispose();
+       //     if (!e.Cancelled && e.Error != null)
+       //     {
+       //        // message.Text = "Mail sent successfully";
+               
+       //     }
+           
+       // }
         public static int SendEmail_AttachFie
        (
            string sHeading,

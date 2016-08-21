@@ -116,11 +116,11 @@ public partial class Security_PasswordReminder : System.Web.UI.Page
 
             if (Session["LoginAccount"] == null)
             {
-                theContent.ContentP = theContent.ContentP.Replace("[URL]", "http://" + Request.Url.Authority + Request.ApplicationPath + "/Login.aspx");
+                theContent.ContentP = theContent.ContentP.Replace("[URL]", Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Login.aspx");
             }
             else
             {
-                theContent.ContentP = theContent.ContentP.Replace("[URL]", "http://" + Request.Url.Authority + Request.ApplicationPath + "/Login.aspx?" + Session["LoginAccount"].ToString());
+                theContent.ContentP = theContent.ContentP.Replace("[URL]", Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Login.aspx?" + Session["LoginAccount"].ToString());
             }
 
             if (DBGurus.SendEmail(theContent.ContentKey, null, null, sHeading, theContent.ContentP, sFrom, eml, "", "", null,null, out sError) != 0)

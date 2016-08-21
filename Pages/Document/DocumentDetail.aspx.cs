@@ -165,7 +165,7 @@ public partial class Pages_Document_DocumentDetail : SecurePage
 
         if (!IsPostBack)
         {
-            hfRootURL.Value = "http://" + Request.Url.Authority + Request.ApplicationPath;
+            hfRootURL.Value = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
             //if (Request.Browser.IsMobileDevice)
             //{
             //    fuReadOnly.Visible = true;
@@ -211,7 +211,7 @@ public partial class Pages_Document_DocumentDetail : SecurePage
             if (Request.QueryString["SSearchCriteriaID"]!=null)
                 strExtra = "&SSearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString();
 
-            hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + strExtra;
+            hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&TableID=" + Request.QueryString["TableID"].ToString() + strExtra;
            
             hfDocURL.Value = hlBack.NavigateUrl;
         }
@@ -416,11 +416,11 @@ public partial class Pages_Document_DocumentDetail : SecurePage
 
                 //if (Request.QueryString["SearchCriteria"] != null)
                 //{
-                //    hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&DocumentID=" + Cryptography.Encrypt(_qsDocumentID) + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+                //    hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&DocumentID=" + Cryptography.Encrypt(_qsDocumentID) + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
                 //}
                 //else
                 //{
-                //    hlEditLink.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&DocumentID=" + Cryptography.Encrypt(_qsDocumentID);
+                //    hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/DocumentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&DocumentID=" + Cryptography.Encrypt(_qsDocumentID);
                 //}
                 
                 
@@ -520,7 +520,7 @@ public partial class Pages_Document_DocumentDetail : SecurePage
     //            //user input is not ok
 
     //        }
-    //        Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx", false);
+    //        Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx", false);
 
     //    }
     //    catch (Exception ex)

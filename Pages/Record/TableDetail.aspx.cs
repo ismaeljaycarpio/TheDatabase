@@ -257,7 +257,7 @@ public partial class Pages_Record_TableDetail : SecurePage
                         PopulateHeaderDisplay();
 
                     hfTableID.Value = _qsTableID;
-                    hlRecords.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"];
+                    hlRecords.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"];
 
                 }
 
@@ -375,8 +375,8 @@ public partial class Pages_Record_TableDetail : SecurePage
             //trChangeHistory.Visible = true;
             trAnonymousUser.Visible = true;        
            
-            hplAddChildTable.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/ChildTableDetail.aspx?ParentTableID=" + _qsTableID;
-            hlAddTemplates.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/DocTemplateDetail.aspx?TableID=" + _qsTableID;
+            hplAddChildTable.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/ChildTableDetail.aspx?ParentTableID=" + _qsTableID;
+            hlAddTemplates.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/DocTemplateDetail.aspx?TableID=" + _qsTableID;
 
         }
 
@@ -476,7 +476,7 @@ public partial class Pages_Record_TableDetail : SecurePage
 
                 //chkAddMissingLocation.Text = "Add Missing " + SecurityManager.etsTerminology(Request.Path.Substring(Request.Path.LastIndexOf("/") + 1), "Locations", "Locations");
 
-                hfWebroot.Value = "http://" + Request.Url.Authority + Request.ApplicationPath;
+                hfWebroot.Value = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
 
 
                 //PopulateRecordGroupDDL(int.Parse(Session["AccountID"].ToString()));
@@ -497,11 +497,11 @@ public partial class Pages_Record_TableDetail : SecurePage
 
                 if (Request.QueryString["SearchCriteria"] != null)
                 {
-                    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableList.aspx?MenuID=" + Request.QueryString["MenuID"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+                    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableList.aspx?MenuID=" + Request.QueryString["MenuID"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
                 }
                 else
                 {
-                    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableList.aspx?MenuID=" + Request.QueryString["MenuID"];
+                    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableList.aspx?MenuID=" + Request.QueryString["MenuID"];
 
                     if (Request.UrlReferrer != null)
                     {
@@ -514,7 +514,7 @@ public partial class Pages_Record_TableDetail : SecurePage
                             //importinfo
                             if (Request.QueryString["fromsheet"] != null)
                             {
-                                hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableList.aspx?MenuID=" + Request.QueryString["MenuID"];
+                                hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableList.aspx?MenuID=" + Request.QueryString["MenuID"];
                             }
                             else
                             {
@@ -535,7 +535,7 @@ public partial class Pages_Record_TableDetail : SecurePage
                 {
                     if (Request.UrlReferrer != null)
                     {
-                        hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Template/TableList.aspx";
+                        hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Template/TableList.aspx";
                     }
 
                 }
@@ -664,7 +664,7 @@ public partial class Pages_Record_TableDetail : SecurePage
 
                 //}
 
-                hlAddFormSet.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&TableID=" + Request.QueryString["TableID"].ToString();
+                hlAddFormSet.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&TableID=" + Request.QueryString["TableID"].ToString();
 
 
             }
@@ -1085,11 +1085,11 @@ public partial class Pages_Record_TableDetail : SecurePage
         {
             if (Request.QueryString["SearchCriteria"] != null)
             {
-                strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordColumnDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&typemode=" + Cryptography.Encrypt(_strActionMode) +  "&TableID=" + Cryptography.Encrypt(hfTableID.Value) + "&SearchCriteria2=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
+                strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordColumnDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&typemode=" + Cryptography.Encrypt(_strActionMode) +  "&TableID=" + Cryptography.Encrypt(hfTableID.Value) + "&SearchCriteria2=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString();
             }
             else
             {
-                strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordColumnDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&typemode=" + Cryptography.Encrypt(_strActionMode) + "&TableID=" + Cryptography.Encrypt(hfTableID.Value) + "&SearchCriteria2=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
+                strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordColumnDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&typemode=" + Cryptography.Encrypt(_strActionMode) + "&TableID=" + Cryptography.Encrypt(hfTableID.Value) + "&SearchCriteria2=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString());
             }
 
             if (Request.QueryString["signup"] != null)
@@ -1097,7 +1097,7 @@ public partial class Pages_Record_TableDetail : SecurePage
         }
         else
         {
-            strURL = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/EMD/TemplateColumnDetail.aspx?TableID=" + Cryptography.Encrypt(hfTableID.Value) ;
+            strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/EMD/TemplateColumnDetail.aspx?TableID=" + Cryptography.Encrypt(hfTableID.Value) ;
 
         }
 
@@ -1109,11 +1109,11 @@ public partial class Pages_Record_TableDetail : SecurePage
         string strURL = "";
         if (Request.QueryString["SearchCriteria"] != null)
         {
-            strURL= "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordColumnDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&typemode=" + Cryptography.Encrypt(_strActionMode) +  "&SearchCriteria2=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&ColumnID=";
+            strURL= Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordColumnDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&typemode=" + Cryptography.Encrypt(_strActionMode) +  "&SearchCriteria2=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&ColumnID=";
         }
         else
         {
-            strURL= "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordColumnDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&typemode=" + Cryptography.Encrypt(_strActionMode) +  "&SearchCriteria2=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&ColumnID=";
+            strURL= Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordColumnDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&typemode=" + Cryptography.Encrypt(_strActionMode) +  "&SearchCriteria2=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&ColumnID=";
         }
 
         if (Request.QueryString["signup"] != null)
@@ -1128,11 +1128,11 @@ public partial class Pages_Record_TableDetail : SecurePage
     {
         if (Request.QueryString["SearchCriteria"] != null)
         {
-            return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") +"&TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "#topline";
+            return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") +"&TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "#topline";
         }
         else
         {
-            return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString() + "#topline";
+            return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString() + "#topline";
         }
 
 
@@ -1143,11 +1143,11 @@ public partial class Pages_Record_TableDetail : SecurePage
     {
         if (Request.QueryString["SearchCriteria"] != null)
         {
-            return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "#topline";
+            return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "#topline";
         }
         else
         {
-            return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("view") +  "&TableID=" + Request.QueryString["TableID"].ToString() + "#topline";
+            return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("view") +  "&TableID=" + Request.QueryString["TableID"].ToString() + "#topline";
         }
 
 
@@ -1160,7 +1160,7 @@ public partial class Pages_Record_TableDetail : SecurePage
         string strURL = "";
         if (Request.QueryString["template"] != null)
         {
-            strURL= "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordColumnDetail.aspx?template=trure&mode=" + Cryptography.Encrypt("view") + "&typemode=" + Cryptography.Encrypt(_strActionMode) +  "&SearchCriteria2=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&ColumnID=";
+            strURL= Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordColumnDetail.aspx?template=trure&mode=" + Cryptography.Encrypt("view") + "&typemode=" + Cryptography.Encrypt(_strActionMode) +  "&SearchCriteria2=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&ColumnID=";
             
         }
         else
@@ -1168,11 +1168,11 @@ public partial class Pages_Record_TableDetail : SecurePage
 
             if (Request.QueryString["SearchCriteria"] != null)
             {
-                strURL= "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordColumnDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&typemode=" + Cryptography.Encrypt(_strActionMode)   + "&SearchCriteria2=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&ColumnID=";
+                strURL= Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordColumnDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&typemode=" + Cryptography.Encrypt(_strActionMode)   + "&SearchCriteria2=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&SearchCriteria=" + Request.QueryString["SearchCriteria"].ToString() + "&ColumnID=";
             }
             else
             {
-                strURL= "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordColumnDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&typemode=" + Cryptography.Encrypt(_strActionMode)  + "&SearchCriteria2=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&ColumnID=";
+                strURL= Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordColumnDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&typemode=" + Cryptography.Encrypt(_strActionMode)  + "&SearchCriteria2=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&ColumnID=";
             }
         }
 
@@ -1416,7 +1416,7 @@ public partial class Pages_Record_TableDetail : SecurePage
                 }
             }
 
-            hlPublicFormURL.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Public.aspx?TableID=" + theTable.TableID.ToString();
+            hlPublicFormURL.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Public.aspx?TableID=" + theTable.TableID.ToString();
             hlPublicFormURL.Text = hlPublicFormURL.NavigateUrl;
             if (theTable.IsImportPositional != null)
                 chkIsPosition.Checked = (bool)theTable.IsImportPositional;
@@ -1959,7 +1959,7 @@ public partial class Pages_Record_TableDetail : SecurePage
             ddlTableTabFilter.Items.Insert(0, liSelect);
         }
         
-        ListItem liaLL = new ListItem("--All Tabs--", "-1");
+        ListItem liaLL = new ListItem("--All Pages--", "-1");
         ddlTableTabFilter.Items.Insert(0, liaLL);
 
 
@@ -2239,6 +2239,12 @@ public partial class Pages_Record_TableDetail : SecurePage
 
             bool bIsStandard = bool.Parse(DataBinder.Eval(e.Row.DataItem, "IsStandard").ToString());
             ImageButton ib = (ImageButton)e.Row.FindControl("imgbtnDelete");
+            DropDownList ddlImportance = (DropDownList)e.Row.FindControl("ddlImportance");
+
+            if (ddlImportance != null && DataBinder.Eval(e.Row.DataItem, "Importance")!=DBNull.Value)
+            {
+                ddlImportance.SelectedValue = DataBinder.Eval(e.Row.DataItem, "Importance").ToString();
+            }
 
             if (_bTableTabYes)
             {
@@ -2303,8 +2309,8 @@ public partial class Pages_Record_TableDetail : SecurePage
                     //chkDisplayTextDetail.Enabled = false;
 
 
-                    CheckBox chkIsMandatory = (CheckBox)e.Row.FindControl("chkIsMandatory");
-                    chkIsMandatory.Enabled = false;
+                  
+                    ddlImportance.Enabled = false;
 
                     CheckBox chkNameOnImport = (CheckBox)e.Row.FindControl("chkNameOnImport");
                     chkNameOnImport.Enabled = false;
@@ -2331,8 +2337,7 @@ public partial class Pages_Record_TableDetail : SecurePage
                     //chkDisplayTextDetail.Enabled = false;
                     CheckBox chkNameOnImport = (CheckBox)e.Row.FindControl("chkNameOnImport");
                     chkNameOnImport.Enabled = false;
-                    CheckBox chkIsMandatory = (CheckBox)e.Row.FindControl("chkIsMandatory");
-                    chkIsMandatory.Enabled = false;
+                    ddlImportance.Enabled = false;
                 }
 
                 if (DataBinder.Eval(e.Row.DataItem, "SystemName").ToString() == "DateTimeRecorded")
@@ -2403,15 +2408,13 @@ public partial class Pages_Record_TableDetail : SecurePage
             {
                 CheckBox chkNameOnImport = (CheckBox)e.Row.FindControl("chkNameOnImport");
                 chkNameOnImport.Enabled = false;
-                CheckBox chkIsMandatory = (CheckBox)e.Row.FindControl("chkIsMandatory");
-                chkIsMandatory.Enabled = false;
+                ddlImportance.Enabled = false;
             }
 
             if (DataBinder.Eval(e.Row.DataItem, "ColumnType").ToString() == "slider")
             {
-              
-                CheckBox chkIsMandatory = (CheckBox)e.Row.FindControl("chkIsMandatory");
-                chkIsMandatory.Enabled = false;
+
+                ddlImportance.Enabled = false;
             }
 
             if (DataBinder.Eval(e.Row.DataItem, "ColumnType").ToString() == "content")
@@ -2427,9 +2430,7 @@ public partial class Pages_Record_TableDetail : SecurePage
                 CheckBox chkNameOnExport = (CheckBox)e.Row.FindControl("chkNameOnExport");
                 chkNameOnExport.Checked = false;
                 chkNameOnExport.Enabled = false;
-
-                CheckBox chkIsMandatory = (CheckBox)e.Row.FindControl("chkIsMandatory");
-                chkIsMandatory.Enabled = false;
+                ddlImportance.Enabled = false;
 
             }
 
@@ -2439,8 +2440,7 @@ public partial class Pages_Record_TableDetail : SecurePage
                 chkNameOnImport.Checked = false;
                 chkNameOnImport.Enabled = false;
 
-                CheckBox chkIsMandatory = (CheckBox)e.Row.FindControl("chkIsMandatory");
-                chkIsMandatory.Enabled = false;
+                ddlImportance.Enabled = false;
 
             }
 
@@ -2458,8 +2458,7 @@ public partial class Pages_Record_TableDetail : SecurePage
                 chkNameOnExport.Checked = false;
                 chkNameOnExport.Enabled = false;
 
-                CheckBox chkIsMandatory = (CheckBox)e.Row.FindControl("chkIsMandatory");
-                chkIsMandatory.Enabled = false;
+                ddlImportance.Enabled = false;
 
             }
 
@@ -2477,8 +2476,7 @@ public partial class Pages_Record_TableDetail : SecurePage
                 chkNameOnExport.Checked = false;
                 chkNameOnExport.Enabled = false;
 
-                CheckBox chkIsMandatory = (CheckBox)e.Row.FindControl("chkIsMandatory");
-                chkIsMandatory.Enabled = false;
+                ddlImportance.Enabled = false;
 
             }
             if (DataBinder.Eval(e.Row.DataItem, "ColumnType").ToString() == "button")
@@ -2495,8 +2493,7 @@ public partial class Pages_Record_TableDetail : SecurePage
                 chkNameOnExport.Checked = false;
                 chkNameOnExport.Enabled = false;
 
-                CheckBox chkIsMandatory = (CheckBox)e.Row.FindControl("chkIsMandatory");
-                chkIsMandatory.Enabled = false;
+                ddlImportance.Enabled = false;
 
             }
             //Testing
@@ -3392,26 +3389,26 @@ public partial class Pages_Record_TableDetail : SecurePage
                 HyperLink hlUploadEmail = (HyperLink)e.Row.FindControl("hlUploadEmail");
                 Content xContent = SystemData.Content_Details_ByKey("DataUploadEmail",int.Parse(Session["AccountID"].ToString()));
                 if (xContent != null)
-                    hlUploadEmail.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(xContent.ContentID.ToString());
+                    hlUploadEmail.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(xContent.ContentID.ToString());
 
                 HyperLink hlUploadSMS = (HyperLink)e.Row.FindControl("hlUploadSMS");
                 Content yContent = SystemData.Content_Details_ByKey("DataUploadSMS",int.Parse(Session["AccountID"].ToString()));
 
                 if (yContent != null)
-                    hlUploadSMS.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(yContent.ContentID.ToString());
+                    hlUploadSMS.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(yContent.ContentID.ToString());
 
 
 
                 HyperLink hlAddDataEmail = (HyperLink)e.Row.FindControl("hlAddDataEmail");
                 Content adContent = SystemData.Content_Details_ByKey("AddDataEmail", int.Parse(Session["AccountID"].ToString()));
                 if (adContent != null)
-                    hlAddDataEmail.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(adContent.ContentID.ToString());
+                    hlAddDataEmail.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(adContent.ContentID.ToString());
 
                 HyperLink hlAddDataSMS = (HyperLink)e.Row.FindControl("hlAddDataSMS");
                 Content adSContent = SystemData.Content_Details_ByKey("AddDataSMS", int.Parse(Session["AccountID"].ToString()));
 
                 if (adSContent != null)
-                    hlAddDataSMS.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(adSContent.ContentID.ToString());
+                    hlAddDataSMS.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(adSContent.ContentID.ToString());
 
 
 
@@ -3419,13 +3416,13 @@ public partial class Pages_Record_TableDetail : SecurePage
                 //HyperLink hlWarningEmail = (HyperLink)e.Row.FindControl("hlWarningEmail");
                 //Content aContent = SystemData.Content_Details_ByKey("DataWarningEmail_" + Session["AccountID"].ToString());
                 //if (aContent!=null)
-                //hlWarningEmail.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(aContent.ContentID.ToString());
+                //hlWarningEmail.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(aContent.ContentID.ToString());
 
                 //HyperLink hlWarningSMS = (HyperLink)e.Row.FindControl("hlWarningSMS");
                 //Content bContent = SystemData.Content_Details_ByKey("DataWarningSMS_" + Session["AccountID"].ToString());
 
                 //if (bContent != null)
-                //hlWarningSMS.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(bContent.ContentID.ToString());
+                //hlWarningSMS.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(bContent.ContentID.ToString());
 
 
 
@@ -3435,39 +3432,39 @@ public partial class Pages_Record_TableDetail : SecurePage
                 Content cContent = SystemData.Content_Details_ByKey("LateWarningEmail",int.Parse(Session["AccountID"].ToString()));
 
                 if (cContent != null)
-                    hlLateWarningEmail.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(cContent.ContentID.ToString());
+                    hlLateWarningEmail.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(cContent.ContentID.ToString());
 
 
                 HyperLink hlLateWarningSMS = (HyperLink)e.Row.FindControl("hlLateWarningSMS");
                 Content dContent = SystemData.Content_Details_ByKey("LateWarningSMS",int.Parse(Session["AccountID"].ToString()));
 
                 if (dContent != null)
-                    hlLateWarningSMS.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(dContent.ContentID.ToString());
+                    hlLateWarningSMS.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(dContent.ContentID.ToString());
 
 
 
                 HyperLink hlUploadWarningEmail = (HyperLink)e.Row.FindControl("hlUploadWarningEmail");
                 Content pContent = SystemData.Content_Details_ByKey("DataUploadWarningEmail",int.Parse(Session["AccountID"].ToString()));
                 if (pContent != null)
-                    hlUploadWarningEmail.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(pContent.ContentID.ToString());
+                    hlUploadWarningEmail.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(pContent.ContentID.ToString());
 
                 HyperLink hlUploadWarningSMS = (HyperLink)e.Row.FindControl("hlUploadWarningSMS");
                 Content qContent = SystemData.Content_Details_ByKey("DataUploadWarningSMS",int.Parse(Session["AccountID"].ToString()));
 
                 if (qContent != null)
-                    hlUploadWarningSMS.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(qContent.ContentID.ToString());
+                    hlUploadWarningSMS.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(qContent.ContentID.ToString());
 
 
                 HyperLink hlUploadExceedanceEmail = (HyperLink)e.Row.FindControl("hlUploadExceedanceEmail");
                 Content eContent = SystemData.Content_Details_ByKey("DataUploadExceedanceEmail", int.Parse(Session["AccountID"].ToString()));
                 if (eContent != null)
-                    hlUploadExceedanceEmail.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(eContent.ContentID.ToString());
+                    hlUploadExceedanceEmail.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(eContent.ContentID.ToString());
 
                 HyperLink hlUploadExceedanceSMS = (HyperLink)e.Row.FindControl("hlUploadExceedanceSMS");
                 Content esContent = SystemData.Content_Details_ByKey("DataUploadExceedanceSMS", int.Parse(Session["AccountID"].ToString()));
 
                 if (esContent != null)
-                    hlUploadExceedanceSMS.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(esContent.ContentID.ToString());
+                    hlUploadExceedanceSMS.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/SystemData/ContentDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&global=" + Cryptography.Encrypt("false") + "&ContentID=" + Cryptography.Encrypt(esContent.ContentID.ToString());
 
 
 
@@ -3509,7 +3506,7 @@ public partial class Pages_Record_TableDetail : SecurePage
     public string GetUserViewURL()
     {
         return "#";
-        //return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&MenuID=" + Cryptography.Encrypt(_qsMenuID) + "&TableID=";
+        //return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&MenuID=" + Cryptography.Encrypt(_qsMenuID) + "&TableID=";
 
     }
 
@@ -3627,12 +3624,12 @@ public partial class Pages_Record_TableDetail : SecurePage
                         }
                         break;
 
-                    case "chkIsMandatory":
+                    //case "ddlImportance":
 
-                        theColumn.IsMandatory = chkBx.Checked;
+                    //    theColumn.Importance = ddlim;
                         
                         
-                        break;
+                    //    break;
 
                     case "chkDisplayRight":
                         if (chkBx.Checked)
@@ -4201,7 +4198,7 @@ public partial class Pages_Record_TableDetail : SecurePage
             HyperLink hlAddDetail = e.Row.FindControl("hlAddDetail") as HyperLink;
             if (hlAddDetail != null)
             {
-                hlAddDetail.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetDetail.aspx?mode="+Cryptography.Encrypt("add")+"&TableID=" + Request.QueryString["TableID"].ToString();
+                hlAddDetail.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetDetail.aspx?mode="+Cryptography.Encrypt("add")+"&TableID=" + Request.QueryString["TableID"].ToString();
             }
 
         }
@@ -4216,7 +4213,7 @@ public partial class Pages_Record_TableDetail : SecurePage
 
             if (hlEditDetail != null)
             {
-                hlEditDetail.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&FormSetID=" + Cryptography.Encrypt(DataBinder.Eval(e.Row.DataItem, "FormSetID").ToString());
+                hlEditDetail.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&FormSetID=" + Cryptography.Encrypt(DataBinder.Eval(e.Row.DataItem, "FormSetID").ToString());
             }
 
 
@@ -4231,7 +4228,7 @@ public partial class Pages_Record_TableDetail : SecurePage
             HyperLink hlAddDetail = e.Row.FindControl("hlAddDetail") as HyperLink;
             if (hlAddDetail != null)
             {
-                hlAddDetail.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/ChildTableDetail.aspx?ParentTableID=" + _qsTableID;
+                hlAddDetail.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/ChildTableDetail.aspx?ParentTableID=" + _qsTableID;
             }
 
         }
@@ -4246,7 +4243,7 @@ public partial class Pages_Record_TableDetail : SecurePage
 
             if (hlEditDetail != null)
             {
-                hlEditDetail.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/ChildTableDetail.aspx?ParentTableID=" + _qsTableID + "&TableChildID=" + DataBinder.Eval(e.Row.DataItem, "TableChildID").ToString();
+                hlEditDetail.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/ChildTableDetail.aspx?ParentTableID=" + _qsTableID + "&TableChildID=" + DataBinder.Eval(e.Row.DataItem, "TableChildID").ToString();
             }
 
             Label lblDetailPageType = e.Row.FindControl("lblDetailPageType") as Label;
@@ -4297,7 +4294,7 @@ public partial class Pages_Record_TableDetail : SecurePage
             HyperLink hlAddDetail = e.Row.FindControl("hlAddDetail") as HyperLink;
             if (hlAddDetail != null)
             {
-                hlAddDetail.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/DocTemplateDetail.aspx?TableID=" + _qsTableID;
+                hlAddDetail.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/DocTemplateDetail.aspx?TableID=" + _qsTableID;
             }
 
         }
@@ -4307,7 +4304,7 @@ public partial class Pages_Record_TableDetail : SecurePage
 
             if (hlEditDetail != null)
             {
-                hlEditDetail.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/DocTemplateDetail.aspx?TableID=" + _qsTableID + "&DocTemplateID=" + DataBinder.Eval(e.Row.DataItem, "DocTemplateID").ToString();
+                hlEditDetail.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/DocTemplateDetail.aspx?TableID=" + _qsTableID + "&DocTemplateID=" + DataBinder.Eval(e.Row.DataItem, "DocTemplateID").ToString();
             }          
 
 
@@ -4398,7 +4395,7 @@ public partial class Pages_Record_TableDetail : SecurePage
     public string GetTableViewURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=";
 
     }
 
@@ -4611,11 +4608,17 @@ public partial class Pages_Record_TableDetail : SecurePage
 
                 CheckBox chkDisplayTextSummary = row.FindControl("chkDisplayTextSummary") as CheckBox;
                 CheckBox chkDisplayTextDetail = row.FindControl("chkDisplayTextDetail") as CheckBox;
-                CheckBox chkIsMandatory = row.FindControl("chkIsMandatory") as CheckBox;
+               
                 CheckBox chkDisplayRight = row.FindControl("chkDisplayRight") as CheckBox;
                 CheckBox chkNameOnImport = row.FindControl("chkNameOnImport") as CheckBox;
                 CheckBox chkNameOnExport = row.FindControl("chkNameOnExport") as CheckBox;
                 CheckBox chkAllowCopy = row.FindControl("chkAllowCopy") as CheckBox;
+
+                DropDownList ddlImportance = row.FindControl("ddlImportance") as DropDownList;
+
+                
+                theColumn.Importance = ddlImportance.SelectedValue;
+               
 
                 if (_bTableTabYes)
                 {
@@ -4657,7 +4660,7 @@ public partial class Pages_Record_TableDetail : SecurePage
                 }
 
 
-                theColumn.IsMandatory = chkIsMandatory.Checked;
+                //theColumn.IsMandatory = chkIsMandatory.Checked;
 
 
                 if (chkDisplayRight.Checked)

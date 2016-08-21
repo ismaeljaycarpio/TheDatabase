@@ -27,7 +27,7 @@ public partial class Pages_Site_GoogleMap : System.Web.UI.Page
 
                 bool bHasValue = false;
 
-                hfFlag.Value = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Images/Flag.png";
+                hfFlag.Value = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Images/Flag.png";
 
 
                 Account theAccount = SecurityManager.Account_Details(int.Parse(Session["AccountID"].ToString()));
@@ -61,12 +61,12 @@ public partial class Pages_Site_GoogleMap : System.Web.UI.Page
                     if (Request.QueryString["type"].ToString() == "account")
                     {
                         hfType.Value = "account";
-                        hfPath.Value = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Site/";
+                        hfPath.Value = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Site/";
                     }
                     if (Request.QueryString["type"].ToString() == "mapsection")
                     {
                         hfType.Value = "mapsection";
-                        hfPath.Value = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Site/";
+                        hfPath.Value = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Site/";
                     }
 
                 }

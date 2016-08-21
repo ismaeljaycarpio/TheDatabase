@@ -547,7 +547,7 @@ public partial class Record_Menu : SecurePage
 
     protected void lnkBack_Click(object sender, EventArgs e)
     {
-        Response.Redirect("http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableGroup.aspx", false);
+        Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableGroup.aspx", false);
     }
 
     protected void btnOrderMT_Click(object sender, EventArgs e)
@@ -745,7 +745,7 @@ public partial class Record_Menu : SecurePage
                 else
                 {
                     
-                    hlBack.NavigateUrl = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableGroup.aspx";
+                    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableGroup.aspx";
 
                     if(_strActionMode=="" && (hfParentMenuID.Value=="" || hfParentMenuID.Value=="-1") )
                     {
@@ -809,7 +809,7 @@ public partial class Record_Menu : SecurePage
     public string GetEditURL()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableGroup.aspx?mode=" + Cryptography.Encrypt("edit") +  "&MenuID=";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableGroup.aspx?mode=" + Cryptography.Encrypt("edit") +  "&MenuID=";
 
     }
 
@@ -822,27 +822,27 @@ public partial class Record_Menu : SecurePage
 
         if (_iMenuID != null)
             strparentForAdd = _iMenuID.ToString();
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableGroup.aspx?mode=" + Cryptography.Encrypt("add") + "&default=" + strparentForAdd;
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableGroup.aspx?mode=" + Cryptography.Encrypt("add") + "&default=" + strparentForAdd;
 
     }
 
     public string GetRoot()
     {
 
-        return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableGroup.aspx";
+        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableGroup.aspx";
 
     }
     //public string GetViewURL()
     //{
 
-    //    return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableGroup.aspx?SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&ParentMenuID=";
+    //    return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableGroup.aspx?SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&ParentMenuID=";
 
     //}
 
     //public string GetAccountViewURL()
     //{
 
-    //    return "http://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&accountid=";
+    //    return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&accountid=";
 
     //}
 

@@ -40,7 +40,7 @@ public partial class Page_SDisplayContent : SecurePage
         //    lnkBack.Text = "Continue";
         //}
 
-       // dbgContentCommon.AssetManager = "http://" + Request.Url.Authority + Request.ApplicationPath + "/Editor/assetmanager/assetmanager.aspx";
+       // dbgContentCommon.AssetManager = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Editor/assetmanager/assetmanager.aspx";
 
         try
         {
