@@ -1,0 +1,476 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Responsive.master.cs" Inherits="Home_Responsive" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+    <%--<meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />--%>
+    <title>TheDatabase.net - Your database on the web</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <%--<meta http-equiv="X-UA-Compatible" content="IE=10,chrome=1" />--%>
+    <meta name="Description" content="TheDatabase.net is an online database development platform to make getting your database on the web quick and easy with no upfront costs." />
+    <meta name="Keywords" content="Database, online, web, data, development, platform" />
+    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="all" />
+    <meta name="revisit-after" content="7 days" />
+    <meta name="google" content="notranslate">
+    <meta http-equiv="Content-Language" content="en">
+
+    <link rel="shortcut icon" href="../Images/favicon.ico" />
+
+    <link href="~/Responsive/css/bootstrap.css" rel="Stylesheet" type="text/css" />
+    <link href="~/App_Themes/Default/responsive-style.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+        .ui-widget {
+            font-size: 12px !important;
+            line-height: 1.25 !important;
+            font-family: Verdana,Arial,Helvetica,sans-serif !important;
+        }
+    </style>
+    <asp:Literal ID="ltMasterStyles" runat="server"></asp:Literal>
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    </asp:ContentPlaceHolder>
+
+</head>
+<body>
+    <div id="loadingredirect" title="Click to hide!">
+        <img alt="loading..." src="../../Images/ajax.gif" />
+    </div>
+
+    <script type="text/javascript" src="<%=ResolveUrl("~/script/jquery.js")%>"></script>
+    <script type="text/javascript" src="<%=ResolveUrl("~/JS/Common.js")%>"></script>
+    <script type="text/javascript" src="<%=ResolveUrl("~/JS/modernizr.custom.80028.js")%>"></script>
+    <link href="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.css")%>" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.pack.js")%>"></script>
+    <script type="text/javascript" src="<%=ResolveUrl("~/swfobject.js")%>"></script>
+
+    <script type="text/javascript">
+        $(window).load(function () {
+            $("#loadingredirect").fadeOut();
+        })
+
+        $(document).ready(function () {
+
+            function ShowLoadingContent() {
+                $("#loadingredirect").fadeIn();
+            }
+
+            $("#loadingredirect")
+            .click(
+              function () {
+                  $("#loadingredirect").fadeOut();
+                  //alert('test');
+              }
+            );
+
+            $(".dynamicmenuitem a")
+           .click(
+             function () {
+                 if ($(this).attr("href").indexOf('lkLogout') > 0) {
+                     //
+                 }
+                 else {
+                     $("#loadingredirect").fadeIn();
+                 }
+             }
+           );
+
+            $(".staticmenuitem a")
+              .click(
+                function () {
+                    $("#loadingredirect").fadeIn();
+                }
+              );
+
+            $(".staticmenuitemtop a")
+             .click(
+               function () {
+                   $("#loadingredirect").fadeIn();
+               }
+             );
+
+            $(".gridview_row a")
+            .click(
+              function () {
+                  if (this.id.indexOf('EditHyperLink') > 0 || this.id.indexOf('viewHyperLink') > 0) {
+                      $("#loadingredirect").fadeIn();
+                  }
+              }
+            );
+
+
+            $(".pagertable a")
+           .click(
+             function () {
+                 if (this.id.indexOf('HyperAdd') > 0) {
+                     $("#loadingredirect").fadeIn();
+                 }
+             }
+           );
+
+            $(".ListConfigControl a")
+          .click(
+            function () {
+                if (this.id.indexOf('hlShowGraph') > 0 || this.id.indexOf('hlUpload') > 0
+                    || this.id.indexOf('hlConfig') > 0) {
+                    $("#loadingredirect").fadeIn();
+                }
+            }
+          );
+
+            $(".DetailPageControls a")
+           .click(
+             function () {
+                 if (this.id.indexOf('hlBack') > 0) {
+                     $("#loadingredirect").fadeIn();
+                 }
+             }
+           );
+
+            $(document).ready(function () {
+                $("#loadingredirect").fadeOut();
+            });
+        });
+
+    </script>
+
+    <form id="form1" runat="server" enctype="multipart/form-data">
+
+        <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true" AsyncPostBackTimeout="36000">
+        </asp:ScriptManager>
+
+        <input id="Hidden1" type="hidden" />
+        <asp:HiddenField runat="server" ID="hfFlashSupport" Value="no" />
+        <asp:HiddenField runat="server" ID="hfIsAccountHolder" />
+
+        <asp:UpdatePanel ID="upNotificationMessage" runat="server" UpdateMode="Always">
+            <ContentTemplate>
+                <div id="divNotificationMessage" style="position: fixed; top: 0px;">
+                    <asp:Label runat="server" ID="lblNotificationMessage"></asp:Label>
+                </div>
+            </ContentTemplate>
+        </asp:UpdatePanel>
+        <table class="container">
+            <tr>
+                <td>
+                    <table cellpadding="0px" cellspacing="0px" class="MiddleBody">
+
+                        <%-- Renew --%>
+                        <tr>
+                            <td>
+                                <div runat="server" id="divRenew" visible="true" class="renew text-center">
+                                    <asp:Label runat="server" ID="lblRenewMessage" Text="" ForeColor="Red"></asp:Label>
+                                    <asp:HyperLink runat="server" ID="hlRenewNow">Contact us to renew</asp:HyperLink>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <%-- End Demo --%>
+                        <tr>
+                            <td>
+                                <asp:Panel runat="server" ID="trEndDemo" Visible="false" CssClass="text-center enddemo">
+                                    <asp:LinkButton ID="lnkEndDemo" runat="server" OnClick="lnkEndDemo_Click" CssClass="btn"
+                                        CausesValidation="false"> <strong>End Demo </strong> </asp:LinkButton>
+                                </asp:Panel>
+                            </td>
+                        </tr>
+
+                        <%-- Header --%>
+                        <tr>
+                            <td>
+                                <div class="navbar-header">
+                                    <a class="navbar-brand" href="#">
+                                        <asp:Image ID="imgLogo" runat="server" ImageUrl="~/Images/logo.png" alt="The Database Logo" />
+                                    </a>
+                                </div>
+                                <div class="navbar-header">
+                                    <button type="button"
+                                        class="navbar-toggle pull-left collapsed"
+                                        data-toggle="collapse"
+                                        data-target="#userMenu"
+                                        aria-expanded="false">
+                                        <span class="sr-only">Toggle navigation</span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                    </button>
+                                    <a class="navbar-brand visible-xs nounderline" href="#">Profile/Document/Account</a>
+                                </div>
+                                <div class="navbar-collapse collapse" id="userMenu">
+                                    <div class="nav navbar-nav navbar-right">
+                                        <%-- Menu Profile--%>
+                                        <div class="navbar-right">
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <asp:Image ID="Image2" runat="server" ImageUrl="~/Images/Head_Blue.png" /></td>
+                                                    <td>
+                                                        <asp:Menu ID="menuProfile"
+                                                            runat="server"
+                                                            IncludeStyleBlock="false"
+                                                            Orientation="Horizontal"
+                                                            EnableViewState="false"
+                                                            RenderingMode="List"
+                                                            SkipLinkText=""
+                                                            StaticMenuStyle-CssClass="nav navbar-nav"
+                                                            DynamicMenuStyle-CssClass="dropdown-menu">
+                                                            <StaticMenuItemStyle CssClass="staticmenuitemtop" />
+                                                            <StaticHoverStyle CssClass="staticmenuhover" />
+                                                            <DynamicHoverStyle CssClass="dynamicmenuhover" />
+                                                            <DynamicMenuItemStyle CssClass="dynamicmenuitem" />
+                                                            <StaticSelectedStyle CssClass="staticselecteditem" />
+                                                            <DynamicSelectedStyle CssClass="staticselecteditem" />
+                                                        </asp:Menu>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+                                        <%-- Menu Document --%>
+                                        <div class="navbar-right">
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <asp:Image ID="imgMenuOpen" runat="server" ImageUrl="~/Images/Doc_Menu.png" /></td>
+                                                    <td>
+                                                        <asp:Menu ID="menuOpen"
+                                                            runat="server"
+                                                            IncludeStyleBlock="false"
+                                                            Orientation="Horizontal"
+                                                            EnableViewState="false"
+                                                            RenderingMode="List"
+                                                            StaticMenuStyle-CssClass="nav navbar-nav"
+                                                            DynamicMenuStyle-CssClass="dropdown-menu"
+                                                            SkipLinkText="">
+                                                            <StaticMenuItemStyle CssClass="staticmenuitem" />
+                                                            <StaticHoverStyle CssClass="staticmenuhover" />
+                                                            <DynamicHoverStyle CssClass="dynamicmenuhover" />
+                                                            <DynamicMenuItemStyle CssClass="dynamicmenuitem" />
+                                                            <StaticSelectedStyle CssClass="staticselecteditem" />
+                                                            <DynamicSelectedStyle CssClass="staticselecteditem" />
+                                                        </asp:Menu>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+                                        <%-- Menu Account --%>
+                                        <div class="navbar-right">
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <asp:Image ID="imgHouse" runat="server" ImageUrl="~/Images/House.png" /></td>
+                                                    <td>
+                                                        <asp:UpdatePanel ID="upMasterUpdatePanel1" runat="server" UpdateMode="Conditional">
+                                                            <ContentTemplate>
+                                                                <asp:Menu ID="menuAccount"
+                                                                    Visible="false"
+                                                                    runat="server"
+                                                                    Orientation="Horizontal"
+                                                                    EnableViewState="false"
+                                                                    RenderingMode="List"
+                                                                    SkipLinkText=""
+                                                                    StaticMenuStyle-CssClass="nav navbar-nav"
+                                                                    DynamicMenuStyle-CssClass="dropdown-menu">
+                                                                    <StaticMenuItemStyle CssClass="staticmenuitem" />
+                                                                    <StaticHoverStyle CssClass="staticmenuhover" />
+                                                                    <DynamicHoverStyle CssClass="dynamicmenuhover" />
+                                                                    <DynamicMenuItemStyle CssClass="dynamicmenuitem" />
+                                                                    <StaticSelectedStyle CssClass="staticselecteditem" />
+                                                                    <DynamicSelectedStyle CssClass="staticselecteditem" />
+                                                                </asp:Menu>
+                                                                <asp:LinkButton ID="lkChangeAccount" runat="server" OnClick="lkChangeAccount_Click"
+                                                                    CausesValidation="false" Style="display: none;"></asp:LinkButton>
+                                                                <asp:HiddenField runat="server" ID="hfAccountIDToChangeAccount" Value="" ClientIDMode="Static" />
+                                                            </ContentTemplate>
+                                                        </asp:UpdatePanel>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <%-- Main Navigation --%>
+                        <tr>
+                            <td>
+                                <div class="navbar-header">
+                                    <button type="button"
+                                        class="navbar-toggle pull-left collapsed"
+                                        data-toggle="collapse"
+                                        data-target="#userMenuETS"
+                                        aria-expanded="false">
+                                        <span class="sr-only">Toggle navigation</span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                    </button>
+                                    <a class="navbar-brand visible-xs nounderline" href="#">Menu</a>
+                                </div>
+                                <div class="navbar-collapse collapse navbar-right" id="userMenuETS">
+                                    <asp:Menu ID="menuETS"
+                                        runat="server"
+                                        Orientation="Horizontal"
+                                        EnableViewState="false"
+                                        RenderingMode="List"
+                                        SkipLinkText=""
+                                        IncludeStyleBlock="false"
+                                        StaticDisplayLevels="1"
+                                        MaximumDynamicDisplayLevels="5"
+                                        StaticEnableDefaultPopOutImage="false"
+                                        StaticPopOutImageUrl="~/App_Themes/Default/Images/menu_popup3.gif"
+                                        StaticMenuStyle-CssClass="nav navbar-nav"
+                                        DynamicMenuStyle-CssClass="dropdown-menu">
+                                        <StaticMenuItemStyle CssClass="staticmenuitem" />
+                                        <StaticHoverStyle CssClass="staticmenuhover" />
+                                        <DynamicHoverStyle CssClass="dynamicmenuhover" />
+                                        <DynamicMenuItemStyle CssClass="dynamicmenuitem" />
+                                        <StaticSelectedStyle CssClass="staticselecteditem" />
+                                        <DynamicSelectedStyle CssClass="staticselecteditem" />
+                                    </asp:Menu>
+                                </div>
+                                <div class="clear"></div>
+                                <div class="undermenu3"></div>
+                            </td>
+                        </tr>
+
+                        <%-- Content --%>
+                        <tr align="left" style="text-align: left;">
+                            <td align="left" style="text-align: left;">
+                                <div id="Content" style="text-align: left; padding-left: 25px; padding-right: 10px; min-height: 500px; float: left;">
+                                    <asp:ContentPlaceHolder ID="HomeContentPlaceHolder" runat="server">
+                                    </asp:ContentPlaceHolder>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <%-- Footer --%>
+                        <tr>
+                            <td valign="top">
+                                <asp:Button ID="lkLogout" runat="server" OnClick="lkLogout_Click" CssClass="btn"
+                                    CausesValidation="false" Style="display: none;" Text="Sign Out"></asp:Button>
+                                <div id="footer">
+                                    <div runat="server" id="divMarketingMenu" visible="false">
+                                        <ul>
+                                            <li>
+                                                <asp:HyperLink ID="HyperLink16" runat="server" NavigateUrl="~/Environmental-Monitoring-Management-Database-System.aspx"
+                                                    ToolTip="Home">
+                        Home</asp:HyperLink></li>
+                                            <li>|</li>
+                                            <li>
+                                                <asp:HyperLink ID="HyperLink17" runat="server" NavigateUrl="~/Features-Include-Unlimited-Record-Types-Alerts-Warnings-Report-Generator.aspx"
+                                                    ToolTip="Features">Features</asp:HyperLink></li>
+                                            <li>|</li>
+                                            <li>
+                                                <asp:HyperLink ID="HyperLink18" runat="server" NavigateUrl="~/StartDemo.aspx" ToolTip="Demo">Demo</asp:HyperLink></li>
+                                            <li>|</li>
+                                            <li>
+                                                <asp:HyperLink ID="HyperLink19" runat="server" NavigateUrl="~/Pricing-Environmental-Monitoring-System.aspx"
+                                                    ToolTip="Packages">Packages</asp:HyperLink></li>
+                                            <li>|</li>
+                                            <li>
+                                                <asp:HyperLink ID="HyperLink20" runat="server" NavigateUrl="~/Product-Development-Environmental-Monitoring-System.aspx"
+                                                    ToolTip="Development">
+                        Development</asp:HyperLink></li>
+                                            <li>|</li>
+                                            <li>
+                                                <asp:HyperLink ID="HyperLink21" runat="server" NavigateUrl="~/Help-For-Environment-Tracking-System.aspx"
+                                                    ToolTip="Help">Help</asp:HyperLink></li>
+                                            <li>|</li>
+                                            <li>
+                                                <asp:HyperLink ID="HyperLink22" runat="server" NavigateUrl="~/Site-Map-For-Environmental-Tracking-System.aspx"
+                                                    ToolTip="Site Map">Site
+                        Map</asp:HyperLink></li>
+                                            <li>|</li>
+                                            <li>
+                                                <asp:HyperLink ID="HyperLink23" runat="server" NavigateUrl="~/Contact-Us-About-Envionmental-Monitoring-System.aspx"
+                                                    ToolTip="Contact Us">
+                        Contact Us</asp:HyperLink></li>
+                                        </ul>
+                                    </div>
+                                    <div class="copyright-text" id="divCopyright" runat="server">
+                                        © 2012-2016. All rights reserved. <a href="http://www.thedatabase.net/">www.TheDatabase.net</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <script type="text/javascript">
+            //Disable the default MouseOver functionality of ASP.Net Menu control.
+            Sys.WebForms.Menu._elementObjectMapper.getMappedObject = function () {
+                return false;
+            };
+
+            $(document).ready(function () {
+                //to fix collapse mode width issue
+                $(".navbar-nav li, .navbar-nav a, .navbar-nav ul").removeAttr('style');
+
+                //for dropdown menu
+                $(".dropdown-menu").parent().removeClass().addClass('dropdown');
+                $(".dropdown-menu").addClass("sub-menu");
+                $(".dropdown>a").removeClass().addClass('dropdown-toggle').attr('data-toggle', 'dropdown').attr("aria-haspopup", "true").attr("aria-expanded", "false");
+                $(".dropdown>a").addClass("trigger right-caret");
+                $(".dropdown>a").addClass("staticmenuitem");
+
+                //chk if has submenu then disable the redirect effect on parent
+                if ($(".dropdown>a").hasClass("dropdown-toggle")) {
+                    $(".dropdown>a").attr("href", "javascript:void(0)");
+                }
+
+                //remove default click redirect effect           
+                $('.dropdown-toggle').attr('onclick', '').off('click');
+
+                //apply active class
+                $("a.selected").addClass("active").addClass("staticselecteditem");
+                $("a.selected").closest("li").addClass("active");
+                $("a.selected").closest(".dropdown-toggle").addClass("active");
+
+                //multi-level
+                $(".dropdown-menu > li > a.trigger").on("click", function (e) {
+                    var current = $(this).next();
+                    var grandparent = $(this).parent().parent();
+                    if ($(this).hasClass('left-caret') || $(this).hasClass('right-caret'))
+                        $(this).toggleClass('right-caret left-caret');
+                    grandparent.find('.left-caret').not(this).toggleClass('right-caret left-caret');
+                    grandparent.find(".sub-menu:visible").not(current).hide();
+                    current.toggle();
+                    e.stopPropagation();
+                });
+                $(".dropdown-menu > li > a:not(.trigger)").on("click", function () {
+                    var root = $(this).closest('.dropdown');
+                    root.find('.left-caret').toggleClass('right-caret left-caret');
+                    root.find('.sub-menu:visible').hide();
+                });
+            });
+        </script>
+        <script type="text/javascript" src="<%=ResolveUrl("~/Responsive/js/bootstrap.js")%>"></script>
+    </form>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var close = document.getElementById('aNotificationMessageClose');
+
+            if (close != null) {
+                close.addEventListener('click', function () {
+                    var note = document.getElementById('divNotificationMessage');
+                    note.style.display = 'none';
+                }, false);
+            }
+
+            function HidedivNotificationMessage() {
+                $('#divNotificationMessage').fadeOut();
+                var note = document.getElementById('divNotificationMessage');
+                if (note != null)
+                    note.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
+</html>

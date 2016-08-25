@@ -1,13 +1,14 @@
-﻿html {
+﻿html { 
     background-color: #ffffff;
     background: #ffffff;
     font-family: Verdana,Arial,Helvetica,sans-serif;
 }
 
 body {
+    font-family: Verdana,Arial,Helvetica,sans-serif;
     color: #565656;
     margin: 0;
-    font-size: 12pt;
+    /*font-size: 12pt;*/
     background: url(images/bg.jpg) center top no-repeat;
     line-height: 1.25;
 }
@@ -18,6 +19,18 @@ body {
     left: 50%;
     /*background-color:rgba(256,256,256,0.5);*/
     z-index: 1;
+}
+
+@media (min-width: 1200px) {
+  .container {
+    width: 1055px;
+  }
+}
+
+.row-no-padding > [class*="col-"]
+{
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }
 
 .pager_textbox {
@@ -241,8 +254,9 @@ input:focus:-ms-input-placeholder {
 .MiddleBody {
     border-left-style: solid;
     border-right-style: solid;
-    border-left-width: 2px;
-    border-right-width: 2px;
+    /*border-left-width: 2px;
+    border-right-width: 2px;*/
+    margin: auto;
     border-color: #EAEAEA;
     background-color: white;
 }
@@ -417,6 +431,10 @@ img {
                 #navigation ul li a.current {
                     color: #009BB5;
                 }
+
+ul.nav a {
+    text-decoration: none;
+}
 /*--------- middle part ---------*/
 #body-part {
     width: 100%;
@@ -773,7 +791,9 @@ A {
             border-color: #3C7FB1 #3C7FB1 #8E8E8E #3C7FB1;
         }
 
-
+    a.nounderline {
+        text-decoration: none;
+    }
     /*
 
 a.btn { background:url(images/blue-left-corn.png) no-repeat left top; display: block; float: left; line-height: 27px; height: 37px; padding-left: 10px; text-decoration: none;  font-size:14px; font-weight:bold; color:#FFFFFF; }
@@ -789,18 +809,18 @@ a.btn:hover strong { background:url(images/blue-right-corn-hover.png) no-repeat 
 
 
     a.btn {
-        line-height: 27px;
-        height: 37px;
-        padding-left: 10px;
+        /*line-height: 27px;*/
+        /*height: 37px;*/
+        /*padding-left: 10px;
         padding-right: 10px;
         padding-top: 10px;
-        padding-bottom: 10px;
+        padding-bottom: 10px;*/
         text-decoration: none;
-        font-size: 14px;
-        font-weight: bold;
-        font-weight: 600;
+        /*font-size: 14px;
+        font-weight: bold;*/
+        /*font-weight: 600;*/
         color: #FFF;
-        padding: 8px16px;
+        /*padding: 8px16px;*/
         -webkit-border-radius: 4px;
         -moz-border-radius: 4px;
         border-radius: 4px;
@@ -1219,12 +1239,9 @@ a.btn:hover strong { background:url(images/blue-right-corn-hover.png) no-repeat 
 
 .staticselecteditem {
     background-color: #fff;
-    font-size: 13px;
     font-weight: bold;
     color: #009BB5;
 }
-
-
 
 
 .staticmenuhover {
@@ -1232,8 +1249,6 @@ a.btn:hover strong { background:url(images/blue-right-corn-hover.png) no-repeat 
     font-size: 13px;
     color: #009BB5;
 }
-
-
 
 .dynamicmenuitem {
     padding: 7px 7px 7px 7px;
@@ -2362,26 +2377,26 @@ left: 50%;
 */
 
 .dropdown-menu > li {
-    position: relative;
-    -webkit-user-select: none; /* Chrome/Safari */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* IE10+ */
+    /*position: relative;*/
+    /*-webkit-user-select: none;*/ /* Chrome/Safari */
+    /*-moz-user-select: none;*/ /* Firefox */
+    /*-ms-user-select: none;*/ /* IE10+ */
     /* Rules below not implemented in browsers yet */
-    -o-user-select: none;
+    /*-o-user-select: none;
     user-select: none;
-    cursor: pointer;
+    cursor: pointer;*/
 }
 
 .sub-menu {
-    left: 100%;
-    position: relative;
+    /*left: 100%;
+    position: absolute;
     top: 0;
     display: none;
     margin-top: -1px;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     border-left-color: #fff;
-    box-shadow: none;
+    box-shadow: none;*/
 }
 
 .right-caret:after {
@@ -2412,4 +2427,13 @@ left: 50%;
 
 .navbar-toggle .icon-bar {
     background-color: black !important;
+}
+
+div.renew {
+    line-height: 2em;
+    background-color: #909090;
+}
+
+div.enddemo{
+    margin-top:10px;
 }

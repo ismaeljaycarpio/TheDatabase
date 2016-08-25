@@ -590,6 +590,7 @@
                                                     <asp:ListItem Text="--Default--" Value="" Selected="True"></asp:ListItem>
                                                     <asp:ListItem Text="HIS" Value="~/Home/HIS.master"></asp:ListItem>
                                                     <asp:ListItem Text="RRP" Value="~/Home/RRP.master"></asp:ListItem>
+                                                    <asp:ListItem Text="Responsive" Value="~/Home/Responsive.master"></asp:ListItem>
                                                 </asp:DropDownList>
                                             </td>
                                         </tr>
