@@ -174,15 +174,27 @@
             </div>
 
             <%-- Header --%>
-            <div class="row row-no-padding">
+            <div class="row">
                 <div class="navbar-header">
                     <a class="navbar-brand" href="#">
                         <asp:Image ID="imgLogo" runat="server" ImageUrl="~/Images/logo.png" alt="The Database Logo" />
                     </a>
                 </div>
+                <div class="navbar-header">
+                    <button type="button"
+                        class="navbar-toggle pull-left collapsed"
+                        data-toggle="collapse"
+                        data-target="#userMenu"
+                        aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand visible-xs nounderline" href="#">Account</a>
+                </div>
                 <div class="navbar-collapse collapse" id="userMenu">
                     <div class="nav navbar-nav navbar-right">
-
                         <div class="navbar-right">
                             <table>
                                 <tr>
@@ -319,7 +331,7 @@
 
             <%-- Content --%>
             <div class="row row-no-padding">
-                <div class="col-md-12" id="Content">
+                <div class="col-md-12 table-responsive"  id="Content">
                     <asp:ContentPlaceHolder ID="HomeContentPlaceHolder" runat="server">
                     </asp:ContentPlaceHolder>
                 </div>
@@ -377,212 +389,7 @@
             </div>
 
         </div>
-        <table class="container MiddleBody">
-            <tr>
-                <td>
-                    <table cellpadding="0px" cellspacing="0px">
-
-                        <%-- Renew --%>
-                        <tr>
-                            <td>
-                                <%--<div runat="server" id="divRenew" visible="true" class="renew text-center">
-                                    <asp:Label runat="server" ID="lblRenewMessage" Text="" ForeColor="Red"></asp:Label>
-                                    <asp:HyperLink runat="server" ID="hlRenewNow">Contact us to renew</asp:HyperLink>
-                                </div>--%>
-                            </td>
-                        </tr>
-
-                        <%-- End Demo --%>
-                        <tr>
-                            <td>
-                                <%--<asp:Panel runat="server" ID="trEndDemo" Visible="false" CssClass="text-center enddemo">
-                                    <asp:LinkButton ID="lnkEndDemo" runat="server" OnClick="lnkEndDemo_Click" CssClass="btn"
-                                        CausesValidation="false"> <strong>End Demo </strong> </asp:LinkButton>
-                                </asp:Panel>--%>
-                            </td>
-                        </tr>
-
-                        <%-- Header --%>
-                        <tr>
-                            <td>
-                                <%--<div class="navbar-header">
-                                    <a class="navbar-brand" href="#">
-                                        <asp:Image ID="imgLogo" runat="server" ImageUrl="~/Images/logo.png" alt="The Database Logo" />
-                                    </a>
-                                </div>--%>
-                                <%--<div class="navbar-header">
-                                    <button type="button"
-                                        class="navbar-toggle pull-left collapsed"
-                                        data-toggle="collapse"
-                                        data-target="#userMenu"
-                                        aria-expanded="false">
-                                        <span class="sr-only">Toggle navigation</span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                    </button>
-                                    <a class="navbar-brand visible-xs nounderline" href="#">Profile/Document/Account</a>
-                                </div>--%>
-                                <%--<div class="navbar-collapse collapse" id="userMenu">
-                                    <div class="nav navbar-nav navbar-right">
-
-                                        <div class="navbar-right">
-                                            <table>
-                                                <tr>
-                                                    <td>
-                                                        <asp:Image ID="Image2" runat="server" ImageUrl="~/Images/Head_Blue.png" /></td>
-                                                    <td>
-                                                        <asp:Menu ID="menuProfile"
-                                                            runat="server"
-                                                            IncludeStyleBlock="false"
-                                                            Orientation="Horizontal"
-                                                            EnableViewState="false"
-                                                            RenderingMode="List"
-                                                            SkipLinkText=""
-                                                            StaticMenuStyle-CssClass="nav navbar-nav"
-                                                            DynamicMenuStyle-CssClass="dropdown-menu">
-                                                            <StaticMenuItemStyle CssClass="staticmenuitemtop" />
-                                                            <StaticHoverStyle CssClass="staticmenuhover" />
-                                                            <DynamicHoverStyle CssClass="dynamicmenuhover" />
-                                                            <DynamicMenuItemStyle CssClass="dynamicmenuitem" />
-                                                            <StaticSelectedStyle CssClass="staticselecteditem" />
-                                                            <DynamicSelectedStyle CssClass="staticselecteditem" />
-                                                        </asp:Menu>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-
-
-                                        <div class="navbar-right">
-                                            <table>
-                                                <tr>
-                                                    <td>
-                                                        <asp:Image ID="imgMenuOpen" runat="server" ImageUrl="~/Images/Doc_Menu.png" /></td>
-                                                    <td>
-                                                        <asp:Menu ID="menuOpen"
-                                                            runat="server"
-                                                            IncludeStyleBlock="false"
-                                                            Orientation="Horizontal"
-                                                            EnableViewState="false"
-                                                            RenderingMode="List"
-                                                            StaticMenuStyle-CssClass="nav navbar-nav"
-                                                            DynamicMenuStyle-CssClass="dropdown-menu"
-                                                            SkipLinkText="">
-                                                            <StaticMenuItemStyle CssClass="staticmenuitem" />
-                                                            <StaticHoverStyle CssClass="staticmenuhover" />
-                                                            <DynamicHoverStyle CssClass="dynamicmenuhover" />
-                                                            <DynamicMenuItemStyle CssClass="dynamicmenuitem" />
-                                                            <StaticSelectedStyle CssClass="staticselecteditem" />
-                                                            <DynamicSelectedStyle CssClass="staticselecteditem" />
-                                                        </asp:Menu>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-
-
-                                        <div class="navbar-right">
-                                            <table>
-                                                <tr>
-                                                    <td>
-                                                        <asp:Image ID="imgHouse" runat="server" ImageUrl="~/Images/House.png" /></td>
-                                                    <td>
-                                                        <asp:UpdatePanel ID="upMasterUpdatePanel1" runat="server" UpdateMode="Conditional">
-                                                            <ContentTemplate>
-                                                                <asp:Menu ID="menuAccount"
-                                                                    Visible="false"
-                                                                    runat="server"
-                                                                    Orientation="Horizontal"
-                                                                    EnableViewState="false"
-                                                                    RenderingMode="List"
-                                                                    SkipLinkText=""
-                                                                    StaticMenuStyle-CssClass="nav navbar-nav"
-                                                                    DynamicMenuStyle-CssClass="dropdown-menu">
-                                                                    <StaticMenuItemStyle CssClass="staticmenuitem" />
-                                                                    <StaticHoverStyle CssClass="staticmenuhover" />
-                                                                    <DynamicHoverStyle CssClass="dynamicmenuhover" />
-                                                                    <DynamicMenuItemStyle CssClass="dynamicmenuitem" />
-                                                                    <StaticSelectedStyle CssClass="staticselecteditem" />
-                                                                    <DynamicSelectedStyle CssClass="staticselecteditem" />
-                                                                </asp:Menu>
-                                                                <asp:LinkButton ID="lkChangeAccount" runat="server" OnClick="lkChangeAccount_Click"
-                                                                    CausesValidation="false" Style="display: none;"></asp:LinkButton>
-                                                                <asp:HiddenField runat="server" ID="hfAccountIDToChangeAccount" Value="" ClientIDMode="Static" />
-                                                            </ContentTemplate>
-                                                        </asp:UpdatePanel>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>--%>
-                            </td>
-                        </tr>
-
-                        <%-- Main Navigation --%>
-                        <tr>
-                            <td>
-                                <%--<div class="navbar-header">
-                                    <button type="button"
-                                        class="navbar-toggle pull-left collapsed"
-                                        data-toggle="collapse"
-                                        data-target="#userMenuETS"
-                                        aria-expanded="false">
-                                        <span class="sr-only">Toggle navigation</span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                    </button>
-                                    <a class="navbar-brand visible-xs nounderline" href="#">Menu</a>
-                                </div>
-                                <div class="navbar-collapse collapse navbar-right" id="userMenuETS">
-                                    <asp:Menu ID="menuETS"
-                                        runat="server"
-                                        Orientation="Horizontal"
-                                        EnableViewState="false"
-                                        RenderingMode="List"
-                                        SkipLinkText=""
-                                        IncludeStyleBlock="false"
-                                        StaticDisplayLevels="1"
-                                        MaximumDynamicDisplayLevels="5"
-                                        StaticEnableDefaultPopOutImage="false"
-                                        StaticPopOutImageUrl="~/App_Themes/Default/Images/menu_popup3.gif"
-                                        StaticMenuStyle-CssClass="nav navbar-nav"
-                                        DynamicMenuStyle-CssClass="dropdown-menu">
-                                        <StaticMenuItemStyle CssClass="staticmenuitem" />
-                                        <StaticHoverStyle CssClass="staticmenuhover" />
-                                        <DynamicHoverStyle CssClass="dynamicmenuhover" />
-                                        <DynamicMenuItemStyle CssClass="dynamicmenuitem" />
-                                        <StaticSelectedStyle CssClass="staticselecteditem" />
-                                        <DynamicSelectedStyle CssClass="staticselecteditem" />
-                                    </asp:Menu>
-                                </div>
-                                <div class="clear"></div>
-                                <div class="undermenu3"></div>--%>
-                            </td>
-                        </tr>
-
-                        <%-- Content --%>
-                        <%--<tr align="left" style="text-align: left;">
-                            <td align="left" style="text-align: left;">
-                                <div id="Content" style="text-align: left; padding-left: 25px; padding-right: 10px; min-height: 500px; float: left;">
-                                    <asp:ContentPlaceHolder ID="HomeContentPlaceHolder" runat="server">
-                                    </asp:ContentPlaceHolder>
-                                </div>
-                            </td>
-                        </tr>--%>
-
-                        <%-- Footer --%>
-                        <tr>
-                            <td valign="top">
-                                
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
+        
         <script type="text/javascript">
             //Disable the default MouseOver functionality of ASP.Net Menu control.
             Sys.WebForms.Menu._elementObjectMapper.getMappedObject = function () {
