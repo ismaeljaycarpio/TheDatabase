@@ -5631,15 +5631,15 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
                         //check warning and validation
-                        if (strWarning.IndexOf("WARNING: " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString()) >= 0)
+                        if (TheDatabase.HasWarning_msg(strWarning, _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), ""))
                         {
                             _txtValue[i].ForeColor = System.Drawing.Color.Blue;
                         }
-                        if (strWarning.IndexOf("EXCEEDANCE: " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString()) >= 0)
+                        if (TheDatabase.HasExceedance_msg(strWarning, _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), ""))
                         {
                             _txtValue[i].ForeColor = System.Drawing.Color.Orange;
                         }
-                        if (strWarning.IndexOf("INVALID (and ignored): " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString()) >= 0)
+                        if (TheDatabase.HasInvalidIgnored_msg(strWarning, _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), ""))
                         {
                             _txtValue[i].ForeColor = System.Drawing.Color.Red;
                         }
@@ -5655,14 +5655,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         string strToopTip = "";
                         if (strWarning != "")
                         {
-                            if (strWarning.IndexOf("WARNING: " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range") >= 0)
+                            if (TheDatabase.HasWarning_msg(strWarning,_dtColumnsDetail.Rows[i]["DisplayName"].ToString(),"l"))
                             {
                                 _imgWarning[i].Visible = true;
                                 strToopTip = strEachFormulaW_Msg;// "Value outside accepted range(" + strEachFormulaW + ").";
                                 _imgWarning[i].ToolTip = strToopTip;
                             }
 
-                            if (strWarning.IndexOf("EXCEEDANCE: " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range") >= 0)
+                            if (TheDatabase.HasExceedance_msg(strWarning, _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), ""))
                             {
                                 _imgWarning[i].Visible = true;
                                 strToopTip = strEachFormulaE_Msg;// "Value outside accepted range(" + strEachFormulaE + ").";
@@ -5670,7 +5670,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 _imgWarning[i].ImageUrl = _imgWarning[i].ImageUrl.Replace("warning.png", "exceedance.png");
                             }
 
-                            if (strWarning.IndexOf("INVALID (and ignored): " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() ) >= 0)
+                            if (TheDatabase.HasInvalidIgnored_msg(strWarning, _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), ""))
                             {
                                 _imgWarning[i].Visible = true;
                                 strToopTip = strEachFormulaV_Msg;// "INVALID (and ignored):" + strEachFormulaV + ".";
@@ -5682,7 +5682,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                         if (strWarning != "")
                         {
-                            if (strWarning.IndexOf("WARNING: " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + " – Unlikely data – outside 3 standard deviations.") >= 0)
+                            if (TheDatabase.HasWarningUnlikely_msg(strWarning, _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), "l"))
                             {
                                 _imgWarning[i].Visible = true;
                                 _imgWarning[i].ToolTip = strToopTip + "Unlikely data – outside 3 standard deviations.";
@@ -5865,16 +5865,20 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
                             //check warning and validation
-                            if (strWarning.IndexOf("WARNING: " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString()) >= 0)
+                            if (TheDatabase.HasWarning_msg(strWarning, _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), ""))
                             {
                                 _ddlValue[i].ForeColor = System.Drawing.Color.Blue;
                             }
 
-                            if (strWarning.IndexOf("EXCEEDANCE: " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString()) >= 0)
+                            if (TheDatabase.HasExceedance_msg(strWarning, _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), ""))
                             {
                                 _ddlValue[i].ForeColor = System.Drawing.Color.Orange;
                             }
 
+                            if (TheDatabase.HasInvalidIgnored_msg(strWarning, _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), ""))
+                            {
+                                _ddlValue[i].ForeColor = System.Drawing.Color.Red;
+                            }
 
                             if (strValidation.IndexOf(": " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString()) >= 0)
                             {
@@ -5885,15 +5889,15 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             string strToopTip = "";
                             if (strWarning != "")
                             {
-                                
 
-                                if (strWarning.IndexOf("WARNING: " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range") >= 0)
+
+                                if (TheDatabase.HasWarning_msg(strWarning, _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), "l"))
                                 {
                                     _imgWarning[i].Visible = true;
                                     strToopTip = strEachFormulaW_Msg;// "Value outside accepted range(" + strEachFormulaW + ").";
                                     _imgWarning[i].ToolTip = strToopTip;
                                 }
-                                if (strWarning.IndexOf("EXCEEDANCE: " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range") >= 0)
+                                if (TheDatabase.HasExceedance_msg(strWarning, _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), ""))
                                 {
                                     _imgWarning[i].Visible = true;
                                     strToopTip = strEachFormulaE_Msg;// "Value outside accepted range(" + strEachFormulaE + ").";
@@ -5901,7 +5905,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                     _imgWarning[i].ImageUrl = _imgWarning[i].ImageUrl.Replace("warning.png", "exceedance.png");
                                 }
 
-                                if (strWarning.IndexOf("INVALID (and ignored): " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString()) >= 0)
+                                if (TheDatabase.HasInvalidIgnored_msg(strWarning, _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), ""))
                                 {
                                     _imgWarning[i].Visible = true;
                                     strToopTip = strEachFormulaV_Msg;// "INVALID (and ignored):" + strEachFormulaV + ".";
@@ -10450,159 +10454,159 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
     }
 
-    protected void PerformAllValidation(ref Record theRecord, ref DataTable dtValidWarning,
-        bool bAddToGrid, bool bSendEmail)
-    {
-        bool bEachColumnExceedance = false;
-        bool bEachColumnInValid = false;
-        string strTemp = "";
-        if (bSendEmail)
-            bAddToGrid = false;//in case
+    //protected void PerformAllValidation(ref Record theRecord, ref DataTable dtValidWarning,
+    //    bool bAddToGrid, bool bSendEmail)
+    //{
+    //    bool bEachColumnExceedance = false;
+    //    bool bEachColumnInValid = false;
+    //    string strTemp = "";
+    //    if (bSendEmail)
+    //        bAddToGrid = false;//in case
 
-        for (int i = 0; i < _dtColumnsAll.Rows.Count; i++)
-        {
-            //ALL Validation
-            bEachColumnExceedance = false;
-            bEachColumnInValid = false;
-            string strValue = RecordManager.GetRecordValue(ref theRecord, _dtColumnsAll.Rows[i]["SystemName"].ToString());
-            if (strValue != "")
-            {
-                //if (bSendEmail == false)
-                //{
+    //    for (int i = 0; i < _dtColumnsAll.Rows.Count; i++)
+    //    {
+    //        //ALL Validation
+    //        bEachColumnExceedance = false;
+    //        bEachColumnInValid = false;
+    //        string strValue = RecordManager.GetRecordValue(ref theRecord, _dtColumnsAll.Rows[i]["SystemName"].ToString());
+    //        if (strValue != "")
+    //        {
+    //            //if (bSendEmail == false)
+    //            //{
 
-                    string strFormulaV = "";
+    //                string strFormulaV = "";
 
-                    if (_dtColumnsAll.Rows[i]["ConV"] != DBNull.Value)
-                    {
-                        Column theCheckColumn = RecordManager.ets_Column_Details(int.Parse(_dtColumnsAll.Rows[i]["ConV"].ToString()));
-                        if(theCheckColumn!=null)
-                        {
-                            string strCheckValue = RecordManager.GetRecordValue(ref theRecord, theCheckColumn.SystemName);
-                            strFormulaV = UploadWorld.Condition_GetFormula(int.Parse(_dtColumnsAll.Rows[i]["ColumnID"].ToString()), theCheckColumn.ColumnID,
-                                "V", strCheckValue);
-                        }
-                    }
-                    else
-                    {
-                        if(_dtColumnsAll.Rows[i]["ValidationOnEntry"] != DBNull.Value && _dtColumnsAll.Rows[i]["ValidationOnEntry"].ToString().Length > 0)
-                        {
-                            strFormulaV = _dtColumnsAll.Rows[i]["ValidationOnEntry"].ToString();
-                        }
-                    }
+    //                if (_dtColumnsAll.Rows[i]["ConV"] != DBNull.Value)
+    //                {
+    //                    Column theCheckColumn = RecordManager.ets_Column_Details(int.Parse(_dtColumnsAll.Rows[i]["ConV"].ToString()));
+    //                    if(theCheckColumn!=null)
+    //                    {
+    //                        string strCheckValue = RecordManager.GetRecordValue(ref theRecord, theCheckColumn.SystemName);
+    //                        strFormulaV = UploadWorld.Condition_GetFormula(int.Parse(_dtColumnsAll.Rows[i]["ColumnID"].ToString()), theCheckColumn.ColumnID,
+    //                            "V", strCheckValue);
+    //                    }
+    //                }
+    //                else
+    //                {
+    //                    if(_dtColumnsAll.Rows[i]["ValidationOnEntry"] != DBNull.Value && _dtColumnsAll.Rows[i]["ValidationOnEntry"].ToString().Length > 0)
+    //                    {
+    //                        strFormulaV = _dtColumnsAll.Rows[i]["ValidationOnEntry"].ToString();
+    //                    }
+    //                }
 
-                    if (strFormulaV != "" && !UploadManager.IsDataValid(strValue, strFormulaV, ref _strValidationError))
-                    {
+    //                if (strFormulaV != "" && !UploadManager.IsDataValid(strValue, strFormulaV, ref _strValidationError))
+    //                {
 
-                        _strInValidResults = _strInValidResults + " INVALID (and ignored): " + _dtColumnsAll.Rows[i]["DisplayName"].ToString() + ".";
+    //                    _strInValidResults = _strInValidResults +  TheDatabase.GetInvalidIgnored_msg( _dtColumnsAll.Rows[i]["DisplayName"].ToString());
 
-                        bEachColumnInValid = true;
+    //                    bEachColumnInValid = true;
 
-                        if (bAddToGrid)
-                        {
-                            dtValidWarning.Rows.Add(_dtColumnsAll.Rows[i]["ColumnID"].ToString(), "i", "no",
-                            Common.GetFromulaMsg("i", _dtColumnsAll.Rows[i]["DisplayName"].ToString(), strFormulaV)//    "Invalid data - " + _dtColumnsAll.Rows[i]["DisplayName"].ToString()
-                                ,strFormulaV, strValue);
+    //                    if (bAddToGrid)
+    //                    {
+    //                        dtValidWarning.Rows.Add(_dtColumnsAll.Rows[i]["ColumnID"].ToString(), "i", "no",
+    //                        Common.GetFromulaMsg("i", _dtColumnsAll.Rows[i]["DisplayName"].ToString(), strFormulaV)//    "Invalid data - " + _dtColumnsAll.Rows[i]["DisplayName"].ToString()
+    //                            ,strFormulaV, strValue);
                            
-                        }
-                    }
-                //}
+    //                    }
+    //                }
+    //            //}
 
-                //bEachColumnExceedance = false;
-                if (_bShowExceedances && bEachColumnInValid==false)
-                {
+    //            //bEachColumnExceedance = false;
+    //            if (_bShowExceedances && bEachColumnInValid==false)
+    //            {
 
-                    string strFormulaE = "";
+    //                string strFormulaE = "";
 
-                    if (_dtColumnsAll.Rows[i]["ConE"] != DBNull.Value)
-                    {
-                        Column theCheckColumn = RecordManager.ets_Column_Details(int.Parse(_dtColumnsAll.Rows[i]["ConE"].ToString()));
-                        if (theCheckColumn != null)
-                        {
-                            string strCheckValue = RecordManager.GetRecordValue(ref theRecord, theCheckColumn.SystemName);
-                            strFormulaE = UploadWorld.Condition_GetFormula(int.Parse(_dtColumnsAll.Rows[i]["ColumnID"].ToString()), theCheckColumn.ColumnID,
-                                "E", strCheckValue);
-                        }
-                    }
-                    else
-                    {
-                        if (_dtColumnsAll.Rows[i]["ValidationOnExceedance"] != DBNull.Value && _dtColumnsAll.Rows[i]["ValidationOnExceedance"].ToString().Length > 0)
-                        {
-                            strFormulaE = _dtColumnsAll.Rows[i]["ValidationOnExceedance"].ToString();
-                        }
-                    }
-
-
-                    if (strFormulaE!="")
-                    {
-                        if (!UploadManager.IsDataValid(strValue, strFormulaE, ref _strValidationError))
-                        {
-                            _strExceedanceResults = _strExceedanceResults + " EXCEEDANCE: " + _dtColumnsAll.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range.";
-                            bEachColumnExceedance = true;
-                            //_bDataExceedance = true;
-                            if (bAddToGrid)
-                            {
-                                dtValidWarning.Rows.Add(_dtColumnsAll.Rows[i]["ColumnID"].ToString(), "e", "yes",
-                                  Common.GetFromulaMsg("e", _dtColumnsAll.Rows[i]["DisplayName"].ToString(), strFormulaE)//  "EXCEEDANCE: " + _dtColumnsAll.Rows[i]["DisplayName"].ToString() + " –  Value outside accepted range."
-                                    , strFormulaE, strValue);
-                            }
-
-                            if (bSendEmail)
-                            {
-                                RecordManager.BuildDataExceedanceSMSandEmail(int.Parse(_dtColumnsAll.Rows[i]["ColumnID"].ToString()), strValue, theRecord.DateTimeRecorded.ToString(),
-                                    ref strTemp, _iSessionAccountID, _strURL, ref _strExceedanceEmailFullBody, ref _strExceedanceSMSFullBody, ref _iExceedanceColumnCount);
-
-                            }
-                        }
-
-                    }
-                }
-
-                if (bEachColumnExceedance == false && bEachColumnInValid == false)
-                {
-
-                    string strFormulaW = "";
-
-                    if (_dtColumnsAll.Rows[i]["ConW"] != DBNull.Value)
-                    {
-                        Column theCheckColumn = RecordManager.ets_Column_Details(int.Parse(_dtColumnsAll.Rows[i]["ConW"].ToString()));
-                        if (theCheckColumn != null)
-                        {
-                            string strCheckValue = RecordManager.GetRecordValue(ref theRecord, theCheckColumn.SystemName);
-                            strFormulaW = UploadWorld.Condition_GetFormula(int.Parse(_dtColumnsAll.Rows[i]["ColumnID"].ToString()), theCheckColumn.ColumnID,
-                                "W", strCheckValue);
-                        }
-                    }
-                    else
-                    {
-                        if (_dtColumnsAll.Rows[i]["ValidationOnWarning"] != DBNull.Value && _dtColumnsAll.Rows[i]["ValidationOnWarning"].ToString().Length > 0)
-                        {
-                            strFormulaW = _dtColumnsAll.Rows[i]["ValidationOnWarning"].ToString();
-                        }
-                    }
+    //                if (_dtColumnsAll.Rows[i]["ConE"] != DBNull.Value)
+    //                {
+    //                    Column theCheckColumn = RecordManager.ets_Column_Details(int.Parse(_dtColumnsAll.Rows[i]["ConE"].ToString()));
+    //                    if (theCheckColumn != null)
+    //                    {
+    //                        string strCheckValue = RecordManager.GetRecordValue(ref theRecord, theCheckColumn.SystemName);
+    //                        strFormulaE = UploadWorld.Condition_GetFormula(int.Parse(_dtColumnsAll.Rows[i]["ColumnID"].ToString()), theCheckColumn.ColumnID,
+    //                            "E", strCheckValue);
+    //                    }
+    //                }
+    //                else
+    //                {
+    //                    if (_dtColumnsAll.Rows[i]["ValidationOnExceedance"] != DBNull.Value && _dtColumnsAll.Rows[i]["ValidationOnExceedance"].ToString().Length > 0)
+    //                    {
+    //                        strFormulaE = _dtColumnsAll.Rows[i]["ValidationOnExceedance"].ToString();
+    //                    }
+    //                }
 
 
-                    if (strFormulaW != "" && !UploadManager.IsDataValid(strValue, strFormulaW, ref _strValidationError))
-                    {
-                        _strWarningResults = _strWarningResults + " WARNING: " + _dtColumnsAll.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range.";
-                        //_bDataWarning = true;
-                        if (bAddToGrid)
-                        {
-                            dtValidWarning.Rows.Add(_dtColumnsAll.Rows[i]["ColumnID"].ToString(), "w", "no",
-                               Common.GetFromulaMsg("w", _dtColumnsAll.Rows[i]["DisplayName"].ToString(), strFormulaW)// "WARNING: " + _dtColumnsAll.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range."
-                                , strFormulaW, strValue);
-                        }
+    //                if (strFormulaE!="")
+    //                {
+    //                    if (!UploadManager.IsDataValid(strValue, strFormulaE, ref _strValidationError))
+    //                    {
+    //                        _strExceedanceResults = _strExceedanceResults + TheDatabase.GetExceedance_msg(_dtColumnsAll.Rows[i]["DisplayName"].ToString());
+    //                        bEachColumnExceedance = true;
+    //                        //_bDataExceedance = true;
+    //                        if (bAddToGrid)
+    //                        {
+    //                            dtValidWarning.Rows.Add(_dtColumnsAll.Rows[i]["ColumnID"].ToString(), "e", "yes",
+    //                              Common.GetFromulaMsg("e", _dtColumnsAll.Rows[i]["DisplayName"].ToString(), strFormulaE)//  "EXCEEDANCE: " + _dtColumnsAll.Rows[i]["DisplayName"].ToString() + " –  Value outside accepted range."
+    //                                , strFormulaE, strValue);
+    //                        }
 
-                        if (bSendEmail)
-                        {
-                            RecordManager.BuildDataWanrningSMSandEmail(int.Parse(_dtColumnsAll.Rows[i]["ColumnID"].ToString()), strValue, theRecord.DateTimeRecorded.ToString(),
-                                ref strTemp, _iSessionAccountID, _strURL, ref _strWarningEmailFullBody, ref _strWarningSMSFullBody, ref _iWarningColumnCount);
-                        }
-                    }
+    //                        if (bSendEmail)
+    //                        {
+    //                            RecordManager.BuildDataExceedanceSMSandEmail(int.Parse(_dtColumnsAll.Rows[i]["ColumnID"].ToString()), strValue, theRecord.DateTimeRecorded.ToString(),
+    //                                ref strTemp, _iSessionAccountID, _strURL, ref _strExceedanceEmailFullBody, ref _strExceedanceSMSFullBody, ref _iExceedanceColumnCount);
 
-                }
-            }
-        }
-    }
+    //                        }
+    //                    }
+
+    //                }
+    //            }
+
+    //            if (bEachColumnExceedance == false && bEachColumnInValid == false)
+    //            {
+
+    //                string strFormulaW = "";
+
+    //                if (_dtColumnsAll.Rows[i]["ConW"] != DBNull.Value)
+    //                {
+    //                    Column theCheckColumn = RecordManager.ets_Column_Details(int.Parse(_dtColumnsAll.Rows[i]["ConW"].ToString()));
+    //                    if (theCheckColumn != null)
+    //                    {
+    //                        string strCheckValue = RecordManager.GetRecordValue(ref theRecord, theCheckColumn.SystemName);
+    //                        strFormulaW = UploadWorld.Condition_GetFormula(int.Parse(_dtColumnsAll.Rows[i]["ColumnID"].ToString()), theCheckColumn.ColumnID,
+    //                            "W", strCheckValue);
+    //                    }
+    //                }
+    //                else
+    //                {
+    //                    if (_dtColumnsAll.Rows[i]["ValidationOnWarning"] != DBNull.Value && _dtColumnsAll.Rows[i]["ValidationOnWarning"].ToString().Length > 0)
+    //                    {
+    //                        strFormulaW = _dtColumnsAll.Rows[i]["ValidationOnWarning"].ToString();
+    //                    }
+    //                }
+
+
+    //                if (strFormulaW != "" && !UploadManager.IsDataValid(strValue, strFormulaW, ref _strValidationError))
+    //                {
+    //                    _strWarningResults = _strWarningResults + TheDatabase.GetWarning_msg( _dtColumnsAll.Rows[i]["DisplayName"].ToString() );
+    //                    //_bDataWarning = true;
+    //                    if (bAddToGrid)
+    //                    {
+    //                        dtValidWarning.Rows.Add(_dtColumnsAll.Rows[i]["ColumnID"].ToString(), "w", "no",
+    //                           Common.GetFromulaMsg("w", _dtColumnsAll.Rows[i]["DisplayName"].ToString(), strFormulaW)// "WARNING: " + _dtColumnsAll.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range."
+    //                            , strFormulaW, strValue);
+    //                    }
+
+    //                    if (bSendEmail)
+    //                    {
+    //                        RecordManager.BuildDataWanrningSMSandEmail(int.Parse(_dtColumnsAll.Rows[i]["ColumnID"].ToString()), strValue, theRecord.DateTimeRecorded.ToString(),
+    //                            ref strTemp, _iSessionAccountID, _strURL, ref _strWarningEmailFullBody, ref _strWarningSMSFullBody, ref _iWarningColumnCount);
+    //                    }
+    //                }
+
+    //            }
+    //        }
+    //    }
+    //}
     protected void PopulateTable()
     {
         //int iTemp = 0;
@@ -12079,9 +12083,9 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                     if (dRecordedate > (dAVG + dSTDEV) || dRecordedate < (dAVG - dSTDEV))
                                                     {
                                                         //deviation happaned
-                                                        _strWarningResults = _strWarningResults + " WARNING: " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + " – Unlikely data – outside 3 standard deviations.";
+                                                        _strWarningResults = _strWarningResults + TheDatabase.GetWarningUnlikely_msg(_dtColumnsDetail.Rows[i]["DisplayName"].ToString());
 
-                                                        dtValidWarning.Rows.Add(_dtColumnsDetail.Rows[i]["ColumnID"].ToString(), "w", "no", "WARNING: " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + " – Unlikely data – outside 3 standard deviations.",
+                                                        dtValidWarning.Rows.Add(_dtColumnsDetail.Rows[i]["ColumnID"].ToString(), "w", "no", TheDatabase.GetWarningUnlikely_msg(_dtColumnsDetail.Rows[i]["DisplayName"].ToString()),
                                                 "CheckUnlikelyValue", strRecordedate.ToString());
 
                                                     }
@@ -12314,7 +12318,6 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                             {
                                                 comValue1 = DateTime.Parse(strValue1);
                                                 comValue2 = DateTime.Parse(strValue2);
-
                                             }
                                             catch
                                             {
@@ -12327,7 +12330,6 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                 {
                                                     comValue1 = DateTime.Parse(comValue1.Hour.ToString() + ":" + comValue1.Minute.ToString());
                                                     comValue2 = DateTime.Parse(comValue2.Hour.ToString() + ":" + comValue2.Minute.ToString());
-
                                                 }
                                             }
                                             catch
@@ -12392,10 +12394,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                         bValid = true;
                                                     }
                                                     break;
-
                                             }
-
-
                                         }
                                         else if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "number")
                                         {
@@ -12411,7 +12410,6 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                             {
 
                                             }
-
 
                                             switch (_dtColumnsDetail.Rows[i]["CompareOperator"].ToString())
                                             {
@@ -12471,9 +12469,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                         bValid = true;
                                                     }
                                                     break;
-
                                             }
-
                                         }
                                         else
                                         {
@@ -12538,10 +12534,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                         bValid = true;
                                                     }
                                                     break;
-
                                             }
-
-
                                         }
 
                                         if (bValid == false)
@@ -12585,24 +12578,30 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         }
 
                         //check duplicate
-                        if (strUniqueColumnIDSys != "" || strUniqueColumnID2Sys != "")
+
+                        if (TheDatabase.IsRecordDuplicate(newRecord, strUniqueColumnIDSys, strUniqueColumnID2Sys,-1))
                         {
-                            string strUniqueColumnIDValue = "";
-                            string strUniqueColumnID2Value = "";
-                            if (strUniqueColumnIDSys != "")
-                                strUniqueColumnIDValue = RecordManager.GetRecordValue(ref newRecord, strUniqueColumnIDSys);
-
-                            if (strUniqueColumnID2Sys != "")
-                                strUniqueColumnID2Value = RecordManager.GetRecordValue(ref newRecord, strUniqueColumnID2Sys);
-
-                            if (RecordManager.ets_Record_IsDuplicate_Entry((int)newRecord.TableID, -1, strUniqueColumnIDSys, strUniqueColumnIDValue,
-                                strUniqueColumnID2Sys, strUniqueColumnID2Value))
-                            {
-                                lblMsg.Text = "Duplicate Record!";
-                                return false;
-                            }
-
+                            lblMsg.Text = "Duplicate Record!";
+                            return false;
                         }
+                        //if (strUniqueColumnIDSys != "" || strUniqueColumnID2Sys != "")
+                        //{
+                        //    string strUniqueColumnIDValue = "";
+                        //    string strUniqueColumnID2Value = "";
+                        //    if (strUniqueColumnIDSys != "")
+                        //        strUniqueColumnIDValue = RecordManager.GetRecordValue(ref newRecord, strUniqueColumnIDSys);
+
+                        //    if (strUniqueColumnID2Sys != "")
+                        //        strUniqueColumnID2Value = RecordManager.GetRecordValue(ref newRecord, strUniqueColumnID2Sys);
+
+                        //    if (RecordManager.ets_Record_IsDuplicate_Entry((int)newRecord.TableID, -1, strUniqueColumnIDSys, strUniqueColumnIDValue,
+                        //        strUniqueColumnID2Sys, strUniqueColumnID2Value))
+                        //    {
+                        //        lblMsg.Text = "Duplicate Record!";
+                        //        return false;
+                        //    }
+
+                        //}
 
 
 
@@ -12625,7 +12624,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
 
-                        PerformAllValidation(ref newRecord, ref dtValidWarning, true, false);
+                        //PerformAllValidation(ref newRecord, ref dtValidWarning, true, false);
+                        TheDatabase.PerformAllValidation(ref newRecord, ref dtValidWarning, true, false,_dtColumnsAll,ref _strValidationError,ref _strInValidResults,_bShowExceedances,
+                            ref _strExceedanceResults,_iSessionAccountID,_strURL,ref _strExceedanceEmailFullBody,ref _strExceedanceSMSFullBody,ref _iExceedanceColumnCount,ref _strWarningResults,
+                            ref _strWarningEmailFullBody,ref _strWarningSMSFullBody,ref _iWarningColumnCount);
 
                         if (_strWarningResults.Length > 0)
                         {
@@ -12639,7 +12641,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                         if (_strInValidResults.Length > 0)
                         {
-                            newRecord.WarningResults = newRecord.WarningResults == "" ? _strInValidResults : newRecord.WarningResults + " " + _strInValidResults;
+                            newRecord.ValidationResults = _strInValidResults;// newRecord.WarningResults == "" ? _strInValidResults : newRecord.WarningResults + " " + _strInValidResults;
                         }
 
                         if (newRecord.WarningResults != null && newRecord.WarningResults != "")
@@ -12801,7 +12803,11 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             }
                         }
 
-                        PerformAllValidation(ref newRecord, ref dtValidWarning, false, true);
+                       // PerformAllValidation(ref newRecord, ref dtValidWarning, false, true);
+
+                        TheDatabase.PerformAllValidation(ref newRecord, ref dtValidWarning, false, true, _dtColumnsAll, ref _strValidationError, ref _strInValidResults, _bShowExceedances,
+                           ref _strExceedanceResults, _iSessionAccountID, _strURL, ref _strExceedanceEmailFullBody, ref _strExceedanceSMSFullBody, ref _iExceedanceColumnCount, ref _strWarningResults,
+                           ref _strWarningEmailFullBody, ref _strWarningSMSFullBody, ref _iWarningColumnCount);
                         //if (_bShowExceedances && _bDataExceedance)
                         //{
                         //    for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
@@ -13748,8 +13754,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                     if (dRecordedate > (dAVG + dSTDEV) || dRecordedate < (dAVG - dSTDEV))
                                                     {
                                                         //deviation happaned
-                                                        _strWarningResults = _strWarningResults + " WARNING: " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + " – Unlikely data – outside 3 standard deviations.";
-                                                        dtValidWarning.Rows.Add(_dtColumnsDetail.Rows[i]["ColumnID"].ToString(), "w", "no", "WARNING: " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + " – Unlikely data – outside 3 standard deviations.",
+                                                        _strWarningResults = _strWarningResults + TheDatabase.GetWarningUnlikely_msg(_dtColumnsDetail.Rows[i]["DisplayName"].ToString());
+                                                        dtValidWarning.Rows.Add(_dtColumnsDetail.Rows[i]["ColumnID"].ToString(), "w", "no", TheDatabase.GetWarningUnlikely_msg(_dtColumnsDetail.Rows[i]["DisplayName"].ToString()),
                                                     "CheckUnlikelyValue", strRecordedate.ToString());
                                                     }
 
@@ -13811,36 +13817,32 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         editRecord.LastUpdatedUserID = _objUser.UserID;
 
 
-                        //check duplicate
-                        //if ((bool)_theTable.IsRecordDateUnique)
-                        //{
 
-                        //    if (RecordManager.ets_Record_IsDuplicate_Entry((int)editRecord.TableID, (DateTime)editRecord.DateTimeRecorded, (int)editRecord.RecordID))
+                        if (TheDatabase.IsRecordDuplicate(editRecord, strUniqueColumnIDSys, strUniqueColumnID2Sys,(int)editRecord.RecordID))
+                        {
+                            lblMsg.Text = "Duplicate Record!";
+                            return false;
+                        }
+
+
+                        //if (strUniqueColumnIDSys != "" || strUniqueColumnID2Sys != "")
+                        //{
+                        //    string strUniqueColumnIDValue = "";
+                        //    string strUniqueColumnID2Value = "";
+                        //    if (strUniqueColumnIDSys != "")
+                        //        strUniqueColumnIDValue = RecordManager.GetRecordValue(ref editRecord, strUniqueColumnIDSys);
+
+                        //    if (strUniqueColumnID2Sys != "")
+                        //        strUniqueColumnID2Value = RecordManager.GetRecordValue(ref editRecord, strUniqueColumnID2Sys);
+
+                        //    if (RecordManager.ets_Record_IsDuplicate_Entry((int)editRecord.TableID, (int)editRecord.RecordID, strUniqueColumnIDSys, strUniqueColumnIDValue,
+                        //        strUniqueColumnID2Sys, strUniqueColumnID2Value))
                         //    {
                         //        lblMsg.Text = "Duplicate Record!";
                         //        return false;
                         //    }
 
                         //}
-
-                        if (strUniqueColumnIDSys != "" || strUniqueColumnID2Sys != "")
-                        {
-                            string strUniqueColumnIDValue = "";
-                            string strUniqueColumnID2Value = "";
-                            if (strUniqueColumnIDSys != "")
-                                strUniqueColumnIDValue = RecordManager.GetRecordValue(ref editRecord, strUniqueColumnIDSys);
-
-                            if (strUniqueColumnID2Sys != "")
-                                strUniqueColumnID2Value = RecordManager.GetRecordValue(ref editRecord, strUniqueColumnID2Sys);
-
-                            if (RecordManager.ets_Record_IsDuplicate_Entry((int)editRecord.TableID, (int)editRecord.RecordID, strUniqueColumnIDSys, strUniqueColumnIDValue,
-                                strUniqueColumnID2Sys, strUniqueColumnID2Value))
-                            {
-                                lblMsg.Text = "Duplicate Record!";
-                                return false;
-                            }
-
-                        }
 
 
 
@@ -14183,8 +14185,11 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                         }
 
-                        PerformAllValidation(ref editRecord, ref dtValidWarning, true, false);
+                        //PerformAllValidation(ref editRecord, ref dtValidWarning, true, false);
 
+                        TheDatabase.PerformAllValidation(ref editRecord, ref dtValidWarning, true, false, _dtColumnsAll, ref _strValidationError, ref _strInValidResults, _bShowExceedances,
+                          ref _strExceedanceResults, _iSessionAccountID, _strURL, ref _strExceedanceEmailFullBody, ref _strExceedanceSMSFullBody, ref _iExceedanceColumnCount, ref _strWarningResults,
+                          ref _strWarningEmailFullBody, ref _strWarningSMSFullBody, ref _iWarningColumnCount);
 
                         editRecord.WarningResults = _strWarningResults.Trim();
 
@@ -14194,9 +14199,9 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             editRecord.WarningResults = editRecord.WarningResults == "" ? _strExceedanceResults : editRecord.WarningResults + " " + _strExceedanceResults;
                         }
 
-                        if (_strInValidResults.Length > 0)
+                        if (_strInValidResults.Length > 0 )
                         {
-                            editRecord.WarningResults = editRecord.WarningResults == "" ? _strInValidResults : editRecord.WarningResults + " " + _strInValidResults;
+                            editRecord.ValidationResults = _strInValidResults;
                         }
 
 
@@ -14422,7 +14427,11 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         //}
 
                         editRecord = RecordManager.ets_Record_Detail_Full((int)editRecord.RecordID);
-                        PerformAllValidation(ref editRecord, ref dtValidWarning, false, true);
+                        //PerformAllValidation(ref editRecord, ref dtValidWarning, false, true);
+
+                        TheDatabase.PerformAllValidation(ref editRecord, ref dtValidWarning, false, true, _dtColumnsAll, ref _strValidationError, ref _strInValidResults, _bShowExceedances,
+                          ref _strExceedanceResults, _iSessionAccountID, _strURL, ref _strExceedanceEmailFullBody, ref _strExceedanceSMSFullBody, ref _iExceedanceColumnCount, ref _strWarningResults,
+                          ref _strWarningEmailFullBody, ref _strWarningSMSFullBody, ref _iWarningColumnCount);
 
                         break;
 

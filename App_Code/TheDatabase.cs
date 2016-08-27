@@ -2250,9 +2250,296 @@ public class TheDatabase
 		//
 	}
 
+    public static bool IsRecordDuplicate(Record theRecord, string strUniqueColumnIDSys, string strUniqueColumnID2Sys,int iRecordID)
+    {
+        if (strUniqueColumnIDSys != "" || strUniqueColumnID2Sys != "")
+        {
+            string strUniqueColumnIDValue = "";
+            string strUniqueColumnID2Value = "";
+            if (strUniqueColumnIDSys != "")
+                strUniqueColumnIDValue = RecordManager.GetRecordValue(ref theRecord, strUniqueColumnIDSys);
 
+            if (strUniqueColumnID2Sys != "")
+                strUniqueColumnID2Value = RecordManager.GetRecordValue(ref theRecord, strUniqueColumnID2Sys);
+
+            if (RecordManager.ets_Record_IsDuplicate_Entry((int)theRecord.TableID, iRecordID, strUniqueColumnIDSys, strUniqueColumnIDValue,
+                strUniqueColumnID2Sys, strUniqueColumnID2Value))
+            {
+               
+                return true;
+            }
+
+        }
+        return false;
+    }
+    public static void PerformAllValidation(ref Record theRecord, ref DataTable dtValidWarning,
+       bool bAddToGrid, bool bSendEmail, DataTable _dtColumnsAll, ref string _strValidationError, ref string _strInValidResults,
+        bool _bShowExceedances, ref string _strExceedanceResults, int _iSessionAccountID, string _strURL,ref string _strExceedanceEmailFullBody,
+        ref string _strExceedanceSMSFullBody, ref int _iExceedanceColumnCount, ref string _strWarningResults,ref string _strWarningEmailFullBody,
+        ref string _strWarningSMSFullBody,ref int _iWarningColumnCount)
+    {
+        bool bEachColumnExceedance = false;
+        bool bEachColumnInValid = false;
+        string strTemp = "";
+        if (bSendEmail)
+            bAddToGrid = false;//in case
+
+        for (int i = 0; i < _dtColumnsAll.Rows.Count; i++)
+        {
+            //ALL Validation
+            bEachColumnExceedance = false;
+            bEachColumnInValid = false;
+            string strValue = RecordManager.GetRecordValue(ref theRecord, _dtColumnsAll.Rows[i]["SystemName"].ToString());
+            if (strValue != "")
+            {
+                bool bValidationCanIgnore = false;
+                if (_dtColumnsAll.Rows[i]["ValidationCanIgnore"] != DBNull.Value && (bool)_dtColumnsAll.Rows[i]["ValidationCanIgnore"])
+                {
+                    bValidationCanIgnore = true;
+                }
+
+
+                string strFormulaV = "";
+
+                if (_dtColumnsAll.Rows[i]["ConV"] != DBNull.Value)
+                {
+                    Column theCheckColumn = RecordManager.ets_Column_Details(int.Parse(_dtColumnsAll.Rows[i]["ConV"].ToString()));
+                    if (theCheckColumn != null)
+                    {
+                        string strCheckValue = RecordManager.GetRecordValue(ref theRecord, theCheckColumn.SystemName);
+                        strFormulaV = UploadWorld.Condition_GetFormula(int.Parse(_dtColumnsAll.Rows[i]["ColumnID"].ToString()), theCheckColumn.ColumnID,
+                            "V", strCheckValue);
+                    }
+                }
+                else
+                {
+                    if (_dtColumnsAll.Rows[i]["ValidationOnEntry"] != DBNull.Value && _dtColumnsAll.Rows[i]["ValidationOnEntry"].ToString().Length > 0)
+                    {
+                        strFormulaV = _dtColumnsAll.Rows[i]["ValidationOnEntry"].ToString();
+                    }
+                }
+
+                if (strFormulaV != "" && !UploadManager.IsDataValid(strValue, strFormulaV, ref _strValidationError))
+                {
+                    if (bValidationCanIgnore)
+                    {
+                        _strWarningResults = _strWarningResults + TheDatabase.GetInvalidIgnored_msg(_dtColumnsAll.Rows[i]["DisplayName"].ToString());
+
+                    }
+                    else
+                    {
+                        _strInValidResults = _strInValidResults + TheDatabase.GetInvalid_msg(_dtColumnsAll.Rows[i]["DisplayName"].ToString());
+
+                    }
+
+                    bEachColumnInValid = true;
+
+                    if (bAddToGrid)
+                    {
+                        dtValidWarning.Rows.Add(_dtColumnsAll.Rows[i]["ColumnID"].ToString(), "i", "no",
+                        Common.GetFromulaMsg("i", _dtColumnsAll.Rows[i]["DisplayName"].ToString(), strFormulaV)//    "Invalid data - " + _dtColumnsAll.Rows[i]["DisplayName"].ToString()
+                            , strFormulaV, strValue);
+
+                    }
+                }
+                //}
+
+                //bEachColumnExceedance = false;
+                if (_bShowExceedances && bEachColumnInValid == false)
+                {
+
+                    string strFormulaE = "";
+
+                    if (_dtColumnsAll.Rows[i]["ConE"] != DBNull.Value)
+                    {
+                        Column theCheckColumn = RecordManager.ets_Column_Details(int.Parse(_dtColumnsAll.Rows[i]["ConE"].ToString()));
+                        if (theCheckColumn != null)
+                        {
+                            string strCheckValue = RecordManager.GetRecordValue(ref theRecord, theCheckColumn.SystemName);
+                            strFormulaE = UploadWorld.Condition_GetFormula(int.Parse(_dtColumnsAll.Rows[i]["ColumnID"].ToString()), theCheckColumn.ColumnID,
+                                "E", strCheckValue);
+                        }
+                    }
+                    else
+                    {
+                        if (_dtColumnsAll.Rows[i]["ValidationOnExceedance"] != DBNull.Value && _dtColumnsAll.Rows[i]["ValidationOnExceedance"].ToString().Length > 0)
+                        {
+                            strFormulaE = _dtColumnsAll.Rows[i]["ValidationOnExceedance"].ToString();
+                        }
+                    }
+
+
+                    if (strFormulaE != "")
+                    {
+                        if (!UploadManager.IsDataValid(strValue, strFormulaE, ref _strValidationError))
+                        {
+                            _strExceedanceResults = _strExceedanceResults + TheDatabase.GetExceedance_msg(_dtColumnsAll.Rows[i]["DisplayName"].ToString());
+                            bEachColumnExceedance = true;
+                            //_bDataExceedance = true;
+                            if (bAddToGrid)
+                            {
+                                dtValidWarning.Rows.Add(_dtColumnsAll.Rows[i]["ColumnID"].ToString(), "e", "yes",
+                                  Common.GetFromulaMsg("e", _dtColumnsAll.Rows[i]["DisplayName"].ToString(), strFormulaE)//  "EXCEEDANCE: " + _dtColumnsAll.Rows[i]["DisplayName"].ToString() + " –  Value outside accepted range."
+                                    , strFormulaE, strValue);
+                            }
+
+                            if (bSendEmail)
+                            {
+                                RecordManager.BuildDataExceedanceSMSandEmail(int.Parse(_dtColumnsAll.Rows[i]["ColumnID"].ToString()), strValue, theRecord.DateTimeRecorded.ToString(),
+                                    ref strTemp, _iSessionAccountID, _strURL, ref _strExceedanceEmailFullBody, ref _strExceedanceSMSFullBody, ref _iExceedanceColumnCount);
+
+                            }
+                        }
+
+                    }
+                }
+
+                if (bEachColumnExceedance == false && bEachColumnInValid == false)
+                {
+
+                    string strFormulaW = "";
+
+                    if (_dtColumnsAll.Rows[i]["ConW"] != DBNull.Value)
+                    {
+                        Column theCheckColumn = RecordManager.ets_Column_Details(int.Parse(_dtColumnsAll.Rows[i]["ConW"].ToString()));
+                        if (theCheckColumn != null)
+                        {
+                            string strCheckValue = RecordManager.GetRecordValue(ref theRecord, theCheckColumn.SystemName);
+                            strFormulaW = UploadWorld.Condition_GetFormula(int.Parse(_dtColumnsAll.Rows[i]["ColumnID"].ToString()), theCheckColumn.ColumnID,
+                                "W", strCheckValue);
+                        }
+                    }
+                    else
+                    {
+                        if (_dtColumnsAll.Rows[i]["ValidationOnWarning"] != DBNull.Value && _dtColumnsAll.Rows[i]["ValidationOnWarning"].ToString().Length > 0)
+                        {
+                            strFormulaW = _dtColumnsAll.Rows[i]["ValidationOnWarning"].ToString();
+                        }
+                    }
+
+
+                    if (strFormulaW != "" && !UploadManager.IsDataValid(strValue, strFormulaW, ref _strValidationError))
+                    {
+                        _strWarningResults = _strWarningResults + TheDatabase.GetWarning_msg(_dtColumnsAll.Rows[i]["DisplayName"].ToString());
+                        //_bDataWarning = true;
+                        if (bAddToGrid)
+                        {
+                            dtValidWarning.Rows.Add(_dtColumnsAll.Rows[i]["ColumnID"].ToString(), "w", "no",
+                               Common.GetFromulaMsg("w", _dtColumnsAll.Rows[i]["DisplayName"].ToString(), strFormulaW)// "WARNING: " + _dtColumnsAll.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range."
+                                , strFormulaW, strValue);
+                        }
+
+                        if (bSendEmail)
+                        {
+                            RecordManager.BuildDataWanrningSMSandEmail(int.Parse(_dtColumnsAll.Rows[i]["ColumnID"].ToString()), strValue, theRecord.DateTimeRecorded.ToString(),
+                                ref strTemp, _iSessionAccountID, _strURL, ref _strWarningEmailFullBody, ref _strWarningSMSFullBody, ref _iWarningColumnCount);
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+    public static string GetAdjustValidationNotification(string strNotifications, string strInvalidRecordIDs, string strValidRecordIDs, Column editColumn)
+    {
+        if (strInvalidRecordIDs != "" )
+        {
+            strNotifications = strNotifications + "Validation Adjusted:" + editColumn.DisplayColumn + " " + (strInvalidRecordIDs.Split(',').Length - 1).ToString() + " invalid records";
+            //strNotifications = strNotifications + " and " + (strValidRecordIDs.Split(',').Length - 1).ToString() + " records became valid from invalid.";
+        }
+        //else if (strInvalidRecordIDs != "")
+        //{
+        //    strNotifications = strNotifications + "Validation Adjusted:" + editColumn.DisplayColumn + " " + (strInvalidRecordIDs.Split(',').Length - 1).ToString() + " invalid records.";
+        //}
+        //else if (strInvalidRecordIDs != "" && strValidRecordIDs != "")
+        //{
+        //    strNotifications = strNotifications + "Validation Adjusted:" + editColumn.DisplayColumn + " " + (strValidRecordIDs.Split(',').Length - 1).ToString() + " records became valid from invalid";
+        //}
+
+        return strNotifications;
+    }
    
+    public static string GetInvalid_msg(string strDisplayName)
+    {
+        return "INVALID: " + strDisplayName + ".";
+    }
+    public static string GetInvalidIgnored_msg(string strDisplayName)
+    {
+        return "INVALID (and ignored): " + strDisplayName + ".";
+    }
 
+    public static string GetWarning_msg(string strDisplayName)
+    {
+        return "WARNING: " + strDisplayName + " – Value outside accepted range.";
+    }
+    public static string GetWarningUnlikely_msg(string strDisplayName)
+    {
+        return "WARNING: " + strDisplayName + " – Unlikely data – outside 3 standard deviations.";
+    }
+    public static string GetExceedance_msg(string strDisplayName)
+    {
+        return "EXCEEDANCE: " + strDisplayName + " – Value outside accepted range.";
+    }
+
+    public static bool HasInvalidIgnored_msg(string strWarningResults, string strDisplayName, string strType)
+    {
+        string strFullMsg = GetInvalidIgnored_msg(strDisplayName);
+        return strWarningResults.IndexOf(strFullMsg.Substring(0, (strFullMsg.Length - 1))) > -1;
+    }
+
+    public static bool HasInvalid_msg(string strWarningResults, string strDisplayName, string strType)
+    {
+        string strFullMsg = GetInvalid_msg(strDisplayName);
+        return strWarningResults.IndexOf(strFullMsg.Substring(0, (strFullMsg.Length - 1))) > -1;
+    }
+
+    public static bool HasExceedance_msg(string strWarningResults, string strDisplayName, string strType)
+    {
+        string strFullMsg = GetExceedance_msg(strDisplayName);
+
+        if (strType == "")
+        {
+            return strWarningResults.IndexOf("EXCEEDANCE: " + strDisplayName) > -1;
+        }
+        if (strType == "l")
+        {
+            return strWarningResults.IndexOf(strFullMsg.Substring(0, (strFullMsg.Length - 5))) > -1;
+        }
+
+        return false;
+    }
+
+    public static bool HasWarning_msg(string strWarningResults, string strDisplayName,string strType)
+    {
+        string strFullMsg = GetWarning_msg(strDisplayName);
+
+        if (strType=="")
+        {
+            return strWarningResults.IndexOf("WARNING: " + strDisplayName) > -1;
+        }
+        if (strType == "l")
+        {
+            return strWarningResults.IndexOf(strFullMsg.Substring(0,(strFullMsg.Length-5))) > -1;
+        }
+
+        return false;
+    }
+
+    public static bool HasWarningUnlikely_msg(string strWarningResults, string strDisplayName, string strType)
+    {
+        string strFullMsg = GetWarningUnlikely_msg(strDisplayName);
+
+        if (strType == "")
+        {
+            return strWarningResults.IndexOf("WARNING: " + strDisplayName) > -1;
+        }
+        if (strType == "l")
+        {
+            return strWarningResults.IndexOf(strFullMsg.Substring(0, (strFullMsg.Length - 5))) > -1;
+        }
+
+        return false;
+    }
 
     public static void PutCheckBoxListValues(string strDropdownValues, ref  CheckBoxList lb)
     {

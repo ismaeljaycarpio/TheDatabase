@@ -178,12 +178,23 @@ public partial class Pages_Record_RecordUpload : SecurePage
 
             if (!IsPostBack)
             {
-                if(_theTable.DataUpdateUniqueColumnID!=null)
+                if(_theTable.IsDataUpdateAllowed!=null && (bool)(_theTable.IsDataUpdateAllowed))
                 {
                     trDataUpdateUniqueColumnID.Visible = true;
                     chkDataUpdateUniqueColumnID.Checked = true;
-                    Column theDataUpdateUniqueColumn = RecordManager.ets_Column_Details((int)_theTable.DataUpdateUniqueColumnID);
-                    chkDataUpdateUniqueColumnID.Text = "Update existing data, matching on ["+theDataUpdateUniqueColumn.DisplayName+"]";
+                    string strMatchColumn = "";
+                    if(_theTable.UniqueColumnID!=null)
+                    {
+                        Column theUniqueColumn = RecordManager.ets_Column_Details((int)_theTable.UniqueColumnID);
+                        strMatchColumn = theUniqueColumn.DisplayName;
+                    }
+                    if (_theTable.UniqueColumnID2 != null)
+                    {
+                        Column theUniqueColumn2 = RecordManager.ets_Column_Details((int)_theTable.UniqueColumnID2);
+                        strMatchColumn = strMatchColumn == "" ? theUniqueColumn2.DisplayName : strMatchColumn + " and " + theUniqueColumn2.DisplayName;
+                    }
+
+                    chkDataUpdateUniqueColumnID.Text = "Update existing data, matching on [" + strMatchColumn + "]";
                 }
 
 

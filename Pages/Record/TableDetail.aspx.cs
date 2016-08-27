@@ -102,7 +102,10 @@ public partial class Pages_Record_TableDetail : SecurePage
             Response.Redirect("~/Default.aspx", false);
 
         }
-
+        if (Common.HaveAccess(Session["roletype"].ToString(), "1"))
+        {
+            _bIsAccountHolder = true;
+        }
 
         if (this.Master.FindControl("hfIsAccountHolder") != null)
         {
@@ -1347,11 +1350,11 @@ public partial class Pages_Record_TableDetail : SecurePage
             if (theTable.PinDisplayOrder != null)
                 txtPinDisplayOrder.Text = theTable.PinDisplayOrder.ToString();
 
-            if(theTable.DataUpdateUniqueColumnID!=null)
-            {
-                chkDataUpdateUniqueColumnID.Checked = true;
-                ddlDataUpdateUniqueColumnID.SelectedValue = theTable.DataUpdateUniqueColumnID.ToString();
-            }
+            //if(theTable.DataUpdateUniqueColumnID!=null)
+            //{
+            //    chkDataUpdateUniqueColumnID.Checked = true;
+            //    ddlDataUpdateUniqueColumnID.SelectedValue = theTable.DataUpdateUniqueColumnID.ToString();
+            //}
 
             if (theTable.HeaderName != "")
             {
@@ -5228,14 +5231,14 @@ public partial class Pages_Record_TableDetail : SecurePage
                             editTable.AddUserNotification = null;
                         }
 
-                        editTable.DataUpdateUniqueColumnID = null;
-                        if(chkDataUpdateUniqueColumnID.Checked)
-                        {
-                            if(ddlDataUpdateUniqueColumnID.SelectedValue!="")
-                            {
-                                editTable.DataUpdateUniqueColumnID = int.Parse(ddlDataUpdateUniqueColumnID.SelectedValue);
-                            }
-                        }
+                        //editTable.DataUpdateUniqueColumnID = null;
+                        //if(chkDataUpdateUniqueColumnID.Checked)
+                        //{
+                        //    if(ddlDataUpdateUniqueColumnID.SelectedValue!="")
+                        //    {
+                        //        editTable.DataUpdateUniqueColumnID = int.Parse(ddlDataUpdateUniqueColumnID.SelectedValue);
+                        //    }
+                        //}
                        
 
                         if (ddlParentTable.SelectedValue == "")

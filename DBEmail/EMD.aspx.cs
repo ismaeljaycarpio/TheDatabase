@@ -38,6 +38,9 @@ public partial class DBEmail_Emd : System.Web.UI.Page
                 try
                 {
                     ALSLive();
+
+                    Response.Redirect("~/DBEmail/WinSchedules.aspx?AutoImportRecords=yes", false);
+                    return;
                 }
                 catch (Exception ex)
                 {

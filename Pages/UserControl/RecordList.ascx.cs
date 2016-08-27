@@ -7666,12 +7666,12 @@ function checkAllHR(objRef,GridView) {
                                             else if (aRecord.WarningResults.IndexOf("INVALID (and ignored): " + _dtRecordColums.Rows[i]["DisplayName"].ToString()) >= 0)
                                             {
                                                 e.Row.Cells[j + 4].ForeColor = System.Drawing.Color.Red;
-                                                strToolTips = strToolTips + Common.GetFromulaMsg("i", _dtRecordColums.Rows[i]["DisplayName"].ToString(), strEachFormulaV);// "INVALID (and ignored):" + strEachFormulaV + ". ";
+                                                strToolTips =  Common.GetFromulaMsg("i", _dtRecordColums.Rows[i]["DisplayName"].ToString(), strEachFormulaV);// "INVALID (and ignored):" + strEachFormulaV + ". ";
                                             }
                                             else if (aRecord.WarningResults.IndexOf("WARNING: " + _dtRecordColums.Rows[i]["DisplayName"].ToString()) >= 0)
                                             {
                                                 e.Row.Cells[j + 4].ForeColor = System.Drawing.Color.Blue;
-
+                                                strToolTips = "";
                                                 if (aRecord.WarningResults.IndexOf("SENSOR WARNING: " + _dtRecordColums.Rows[i]["DisplayName"].ToString() + " - Value below minimum detectable limit") >= 0)
                                                 {
                                                     strToolTips = "SENSOR: Value below minimum detectable limit. ";
@@ -7692,6 +7692,26 @@ function checkAllHR(objRef,GridView) {
 
 
                                             }
+
+
+
+                                            if (aRecord.ValidationResults != "" && chkIsActive.Checked == false)
+                                            {
+                                                if (IsStandard(_dtRecordColums.Rows[i]["SystemName"].ToString()) == false)
+                                                {
+
+                                                    if (aRecord.ValidationResults.IndexOf("INVALID (and ignored): " + _dtRecordColums.Rows[i]["DisplayName"].ToString()) >= 0
+                                                        || aRecord.ValidationResults.IndexOf("INVALID: " + _dtRecordColums.Rows[i]["DisplayName"].ToString()) >= 0)
+                                                    {
+                                                        e.Row.Cells[j + 4].ForeColor = System.Drawing.Color.Red;
+                                                        strToolTips = Common.GetFromulaMsg("i", _dtRecordColums.Rows[i]["DisplayName"].ToString(), strEachFormulaV);// "INVALID (and ignored):" + strEachFormulaV + ". ";
+
+                                                    }
+
+                                                }
+                                            }
+
+
                                             e.Row.Cells[j + 4].ToolTip = strToolTips;
                                         }
                                         else
@@ -7715,24 +7735,7 @@ function checkAllHR(objRef,GridView) {
                                     //validation
 
 
-                                    if (aRecord.ValidationResults != "")
-                                    {
-
-
-                                        if (IsStandard(_dtRecordColums.Rows[i]["SystemName"].ToString()) == false)
-                                        {
-
-                                            if (aRecord.ValidationResults.IndexOf(": " + _dtRecordColums.Rows[i]["DisplayName"].ToString()) >= 0
-                                                || aRecord.ValidationResults.IndexOf(":" + _dtRecordColums.Rows[i]["DisplayName"].ToString()) >= 0)
-                                            {
-                                                e.Row.Cells[j + 4].ForeColor = System.Drawing.Color.Red;
-                                                e.Row.Cells[j + 4].ToolTip = "Test Validation.";
-                                            }
-
-                                        }
-
-
-                                    }
+                                   
 
 
                                 }
@@ -8820,9 +8823,21 @@ function checkAllHR(objRef,GridView) {
             DateTime dtRightNow = DateTime.Now;
             RecordManager.Record_Audit(null, sCheck, false, dtRightNow);
             Common.ExecuteText("UPDATE Record SET " + theColumn.SystemName + "='" + strValue.Replace("'", "''") + "' WHERE RecordID IN (" + sCheck + ")");
+            DataTable dtRecords = Common.DataTableFromText(@"SELECT " +  theColumn.SystemName  + @",RecordID,WarningResults,ValidationResults FROM Record
+	                    WHERE  RecordID IN (" + sCheck + @")");
+
+            string strInvalidRecordIDs = "";
+            string strValidRecordIDs = "";
+            string strSQL = @"SELECT " + theColumn.SystemName + @",RecordID,WarningResults,ValidationResults FROM Record
+	                    WHERE  RecordID IN (" + sCheck + @")";
+            RecordManager.ets_AdjustValidFormulaChanges(theColumn, ref strInvalidRecordIDs, ref strValidRecordIDs, true, strSQL);
+
             RecordManager.Record_Audit(null, sCheck, true, dtRightNow);
 
-
+            if (strInvalidRecordIDs!="")
+            {
+                Session["tdbmsgpb"]="Total invalid records:" + (strInvalidRecordIDs.Split(',').Length-1).ToString();
+            }
 
             lnkSearch_Click(null, null);
             mpeEditMany.Hide();
@@ -9484,11 +9499,12 @@ function checkAllHR(objRef,GridView) {
 
         if (string.IsNullOrEmpty(sCheck))
         {
-            ScriptManager.RegisterClientScriptBlock(gvTheGrid, typeof(Page), "message_alert", "alert('Please select a record.');", true);
+           // ScriptManager.RegisterClientScriptBlock(gvTheGrid, typeof(Page), "message_alert", "alert('Please select a record.');", true);
+            Session["tdbmsgpb"] = "Please select a record.";
         }
         else
         {
-            UnDeleteItem(sCheck);
+            RestoreRecords(sCheck);
 
         }
 
@@ -9678,168 +9694,114 @@ function checkAllHR(objRef,GridView) {
         }
     }
 
-    private void UnDeleteItem(string keys)
+    private void RestoreRecords(string strRecordIDs)
     {
         try
         {
-            if (!string.IsNullOrEmpty(keys))
+            if (!string.IsNullOrEmpty(strRecordIDs))
             {
-
-                //_dtRecordColums = RecordManager.ets_Table_Columns_Summary(TableID, int.Parse(hfViewID.Value));
-
-
+             
                 _dtRecordColums = RecordManager.ets_Table_Columns_All(TableID);
-                Table theTable = RecordManager.ets_Table_Details((int)TableID);
 
+                bool _bShowExceedances = false;
+                string strShowExceedances = SystemData.SystemOption_ValueByKey_Account("Show Exceedances", _theTable.AccountID, _theTable.TableID);
 
-                //bool _bShowExceedances = false;
-                //string strShowExceedances = SystemData.SystemOption_ValueByKey_Account("Show Exceedances", _theTable.AccountID, _theTable.TableID);
+                if (strShowExceedances != "" && strShowExceedances.ToLower() == "yes")
+                {
+                    _bShowExceedances = true;
+                }
 
-                //if (strShowExceedances != "" && strShowExceedances.ToLower() == "yes")
-                //{
-                //    _bShowExceedances = true;
-                //}
-
-
-
+                int iDuplicateRecord = 0;
+                int iTotalInvalid = 0;
+                int iTotalRestoredRecords = 0;
 
 
                 string strUniqueColumnIDSys = "";
                 string strUniqueColumnID2Sys = "";
 
-                if (theTable.UniqueColumnID != null)
-                    strUniqueColumnIDSys = Common.GetValueFromSQL("SELECT SystemName FROM [Column] WHERE ColumnID=" + theTable.UniqueColumnID.ToString());
+                if (_theTable.UniqueColumnID != null)
+                    strUniqueColumnIDSys = Common.GetValueFromSQL("SELECT SystemName FROM [Column] WHERE ColumnID=" + _theTable.UniqueColumnID.ToString());
 
-                if (theTable.UniqueColumnID2 != null)
-                    strUniqueColumnID2Sys = Common.GetValueFromSQL("SELECT SystemName FROM [Column] WHERE ColumnID=" + theTable.UniqueColumnID2.ToString());
+                if (_theTable.UniqueColumnID2 != null)
+                    strUniqueColumnID2Sys = Common.GetValueFromSQL("SELECT SystemName FROM [Column] WHERE ColumnID=" + _theTable.UniqueColumnID2.ToString());
 
 
 
                 string strTempErr = "";
-                foreach (string sTemp in keys.Split(','))
+                foreach (string sTemp in strRecordIDs.Split(','))
                 {
 
                     if (!string.IsNullOrEmpty(sTemp))
                     {
                         //get the Record
                         Record aRecord = RecordManager.ets_Record_Detail_Full(int.Parse(sTemp));
-
-
-                        //check duplicate
-
-
-                        if (strUniqueColumnIDSys != "" || strUniqueColumnID2Sys != "")
-                        {
-                            string strUniqueColumnIDValue = "";
-                            string strUniqueColumnID2Value = "";
-                            if (strUniqueColumnIDSys != "")
-                                strUniqueColumnIDValue = RecordManager.GetRecordValue(ref aRecord, strUniqueColumnIDSys);
-
-                            if (strUniqueColumnID2Sys != "")
-                                strUniqueColumnID2Value = RecordManager.GetRecordValue(ref aRecord, strUniqueColumnID2Sys);
-
-                            if (RecordManager.ets_Record_IsDuplicate_Entry((int)aRecord.TableID, (int)aRecord.RecordID, strUniqueColumnIDSys, strUniqueColumnIDValue,
-                                strUniqueColumnID2Sys, strUniqueColumnID2Value))
-                            {
-                                ScriptManager.RegisterClientScriptBlock(gvTheGrid, typeof(Page), "msg_delete", "alert('Duplicate Record.');", true);
-                                return;
-                            }
-
-                        }
-
-
-
-                        //if (theTable != null && (bool)theTable.IsRecordDateUnique)
-                        //{
-
-                        //    if (RecordManager.ets_Record_IsDuplicate_Entry((int)aRecord.TableID, (DateTime)aRecord.DateTimeRecorded, -1))
-                        //    {
-                        //        // lblMsg.Text = "Duplicate Record!";
-                        //        ScriptManager.RegisterClientScriptBlock(gvTheGrid, typeof(Page), "msg_delete", "alert('Duplicate Record.');", true);
-                        //        return;
-                        //    }
-
-                        //}
-
                         bool bIsValid = true;
-                        for (int i = 0; i < _dtRecordColums.Rows.Count; i++)
+
+                        if(TheDatabase.IsRecordDuplicate(aRecord,strUniqueColumnIDSys,strUniqueColumnID2Sys,(int)aRecord.RecordID))
                         {
-
-
-                            if (_dtRecordColums.Rows[i]["ValidationOnEntry"] != DBNull.Value)
-                            {
-
-                                string strValue = "";
-                                if (RecordManager.GetRecordValue(ref aRecord, _dtRecordColums.Rows[i]["SystemName"].ToString()) != null)
-                                    strValue = RecordManager.GetRecordValue(ref aRecord, _dtRecordColums.Rows[i]["SystemName"].ToString());
-
-                                if (strValue != "")
-                                {
-                                    if (!UploadManager.IsDataValid(strValue, _dtRecordColums.Rows[i]["ValidationOnEntry"].ToString(), ref strTempErr))
-                                    {
-                                        bIsValid = false;
-
-                                        //lblMsg.Text = "Invalid data - " + _dtRecordColums.Rows[i]["DisplayName"].ToString() + ".";
-
-                                        ScriptManager.RegisterClientScriptBlock(gvTheGrid, typeof(Page), "msg_delete", "alert('Invalid data - " + _dtRecordColums.Rows[i]["DisplayName"].ToString() + ".');", true);
-                                        return;
-                                        //break;
-                                    }
-                                }
-                            }
-
-
-
-
-                            //bool bEachColumnExceedance = false;
-                            //if (_bShowExceedances && _dtRecordColums.Rows[i]["ValidationOnExceedance"] != DBNull.Value)
-                            //{
-                            //    if (_dtRecordColums.Rows[i]["ValidationOnExceedance"].ToString().Length > 0)
-                            //    {
-                            //        if (!UploadManager.IsDataValid(strValue, _dtRecordTypleColumlns.Rows[i]["ValidationOnExceedance"].ToString(), ref strValidationError, bool.Parse(_dtRecordTypleColumlns.Rows[i]["IgnoreSymbols"].ToString()), null))
-                            //        {
-                            //            strExceedanceResults = strExceedanceResults + " EXCEEDANCE: " + _dtRecordTypleColumlns.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range.";
-
-                            //            dtValidWarning.Rows.Add(_dtRecordTypleColumlns.Rows[i]["ColumnID"].ToString(), "e", "yes", "EXCEEDANCE: " + _dtRecordTypleColumlns.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range.",
-                            //     _dtRecordTypleColumlns.Rows[i]["ValidationOnExceedance"].ToString(), strValue);
-                            //            bEachColumnExceedance = true;
-                            //            string strTemp = "";
-                            //            RecordManager.BuildDataExceedanceSMSandEmail(int.Parse(_dtRecordTypleColumlns.Rows[i]["ColumnID"].ToString()), strValue, editRecord.DateTimeRecorded.ToString(),
-                            //                ref strTemp, _iSessionAccountID, _strURL, ref strExceedanceEmailFullBody, ref strExceedanceSMSFullBody, ref iExceedanceColumnCount);
-
-                            //        }
-                            //    }
-                            //}
-
-                            //if (_dtRecordTypleColumlns.Rows[i]["ValidationOnWarning"] != DBNull.Value && bEachColumnExceedance == false)
-                            //{
-                            //    if (_dtRecordTypleColumlns.Rows[i]["ValidationOnWarning"].ToString().Length > 0)
-                            //    {
-                            //        if (!UploadManager.IsDataValid(strValue, _dtRecordTypleColumlns.Rows[i]["ValidationOnWarning"].ToString(), ref strValidationError, bool.Parse(_dtRecordTypleColumlns.Rows[i]["IgnoreSymbols"].ToString()), null))
-                            //        {
-                            //            strWarningResults = strWarningResults + " WARNING: " + _dtRecordTypleColumlns.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range.";
-
-                            //            dtValidWarning.Rows.Add(_dtRecordTypleColumlns.Rows[i]["ColumnID"].ToString(), "w", "no", "WARNING: " + _dtRecordTypleColumlns.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range.",
-                            //        _dtRecordTypleColumlns.Rows[i]["ValidationOnWarning"].ToString(), strValue);
-
-                            //            string strTemp = "";
-
-                            //            RecordManager.BuildDataWanrningSMSandEmail(int.Parse(_dtRecordTypleColumlns.Rows[i]["ColumnID"].ToString()), strValue, editRecord.DateTimeRecorded.ToString(),
-                            //                ref strTemp, _iSessionAccountID, _strURL, ref strEmailFullBody, ref strSMSFullBody, ref iWarningColumnCount);
-
-                            //        }
-                            //    }
-                            //}
-
-
+                            iDuplicateRecord = iDuplicateRecord + 1;
+                            bIsValid = false;
                         }
+                        DataTable dtValidWarning=null;
+                        string strtempRef = "";
+                        string _strInValidResults = "";
+                        string _strExceedanceResults = "";
+                        string _strWarningResults = "";
+                        int _iWarningColumnCount = 0;
+                        int _iExceedanceColumnCount = 0;                        
+
+                        TheDatabase.PerformAllValidation(ref aRecord, ref dtValidWarning, false, false, _dtColumnsAll, ref strtempRef, ref _strInValidResults, _bShowExceedances,
+                            ref _strExceedanceResults, (int)_theTable.AccountID, strtempRef, ref strtempRef, ref strtempRef, ref _iExceedanceColumnCount, ref _strWarningResults,
+                            ref strtempRef, ref strtempRef, ref _iWarningColumnCount);
+
+                        if (_strInValidResults!="")
+                        {
+                            aRecord.ValidationResults = _strExceedanceResults;
+                            bIsValid = false;
+                            iTotalInvalid = iTotalInvalid + 1;
+                        }
+                        else
+                        {
+                            aRecord.ValidationResults = "";
+                        }
+                        aRecord.WarningResults = "";
+                        if (_strWarningResults.Length > 0)
+                        {
+                            aRecord.WarningResults = _strWarningResults.Trim();
+                        }
+
+                        if (_bShowExceedances && _strExceedanceResults.Length > 0)
+                        {
+                            aRecord.WarningResults = aRecord.WarningResults == "" ? _strExceedanceResults : aRecord.WarningResults + " " + _strExceedanceResults;
+                        }
+
 
                         if (bIsValid)
                         {
-                            RecordManager.ets_Record_UnDelete(int.Parse(sTemp), (int)_ObjUser.UserID);
+                            aRecord.IsActive = true;
+                            iTotalRestoredRecords = iTotalRestoredRecords + 1;
                         }
+                        else
+                        {
+                            aRecord.IsActive = false;
+                          
+                        }
+                        aRecord.LastUpdatedUserID = _ObjUser.UserID;
+                        RecordManager.ets_Record_Update(aRecord, false);
                     }
                 }
+
+                string strNotification = "";
+
+                if (iDuplicateRecord > 0)
+                    strNotification = "Total duplicate recrods:" + iDuplicateRecord.ToString()+".";
+                if(iTotalInvalid>0)
+                    strNotification = strNotification+"Total invalid recrods:" + iTotalInvalid.ToString() + ".";
+                if(iTotalRestoredRecords>0)
+                    strNotification = strNotification + "Total restored recrods:" + iTotalRestoredRecords.ToString() + ".";
+
+                if (strNotification!="")
+                    Session["tdbmsgpb"] = strNotification;
             }
         }
         catch (Exception ex)

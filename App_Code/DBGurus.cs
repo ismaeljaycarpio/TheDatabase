@@ -1427,11 +1427,14 @@ public class EmailCallBack
 
                 //if (System.Web.HttpContext.Current != null && System.Web.HttpContext.Current.Session != null)
                 //{
+#if (!DEBUG)
+
                 System.Threading.Tasks.Task t = System.Threading.Tasks.Task.Run(async () =>
                 {
                     await smtp.SendMailAsync(oMailMessage);
                  
                 });
+#endif
                // t.Wait();
                 ////}
                 //else
@@ -1446,7 +1449,7 @@ public class EmailCallBack
                 //smtp.Send(oMailMessage);
                 //smtp.SendAsync(oMailMessage, null);
                                 
-//#endif
+
 
 
                 

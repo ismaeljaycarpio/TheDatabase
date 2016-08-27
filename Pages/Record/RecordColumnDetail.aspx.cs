@@ -98,10 +98,12 @@ public partial class Pages_Record_ColumnDetail : SecurePage
         optDouble.Text = optDouble.Text.Replace("Fields", SecurityManager.etsTerminology(Request.Path.Substring(Request.Path.LastIndexOf("/") + 1), "Fields", "Fields"));
 
         lblFieldType.Text = lblFieldType.Text.Replace("Field", SecurityManager.etsTerminology(Request.Path.Substring(Request.Path.LastIndexOf("/") + 1), "Field", "Field"));
+        string strConditions_TL = SecurityManager.etsTerminology(Request.Path.Substring(Request.Path.LastIndexOf("/") + 1), "Conditions", "Conditions");
+        hfConditions_T.Value = strConditions_TL;
 
-        hlValidConditions.Text = SecurityManager.etsTerminology(Request.Path.Substring(Request.Path.LastIndexOf("/") + 1), "Conditions", "Conditions");
-        hlWarningConditions.Text = hlValidConditions.Text;
-        hlExceedanceConditions.Text = hlValidConditions.Text;
+        hlValidConditions.Text = hlValidConditions.Text.Replace("Conditions", strConditions_TL);
+        hlWarningConditions.Text = hlWarningConditions.Text.Replace("Conditions", strConditions_TL);
+        hlExceedanceConditions.Text = hlExceedanceConditions.Text.Replace("Conditions", strConditions_TL);
     }
 
     protected void PopulateChildTables()
@@ -263,12 +265,12 @@ FROM         [Table] INNER JOIN
 
     protected string GetOptionImageEditURL()
     {
-        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/OptionImageDetaill.aspx?mode=" + Cryptography.Encrypt("edit") + "&OptionImageID=";
+        return Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/OptionImageDetaill.aspx?mode=" + Cryptography.Encrypt("edit") + "&OptionImageID=";
     }
 
     protected string GetOptionImageAddURL()
     {
-        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/OptionImageDetaill.aspx?mode=" + Cryptography.Encrypt("add");
+        return Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/OptionImageDetaill.aspx?mode=" + Cryptography.Encrypt("add");
     }
 
     protected void gvOptionImage_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -570,6 +572,9 @@ FROM         [Table] INNER JOIN
         string strFancy = @"
 
         $(document).ready(function () {
+
+                    var hfConditions_T = document.getElementById('hfConditions_T');
+                
                     $(function () {
                         $("".validationlink"").fancybox({
                             scrolling: 'auto',
@@ -664,7 +669,7 @@ FROM         [Table] INNER JOIN
                                          var chkValidConditions=document.getElementById('chkValidConditions');
                                         if(res>0)
                                         {
-                                             document.getElementById('hlValidConditions').innerHTML='Conditions('+ res+')';
+                                             document.getElementById('hlValidConditions').innerHTML=hfConditions_T.value +'('+ res+')';
                                             chkValidConditions.checked=true;
                                                var chkValidFormula = document.getElementById('chkValidFormula');
                                                 if (chkValidFormula != null)
@@ -672,7 +677,7 @@ FROM         [Table] INNER JOIN
                                         }
                                         else
                                         {
-                                             document.getElementById('hlValidConditions').innerHTML='Conditions';
+                                             document.getElementById('hlValidConditions').innerHTML=hfConditions_T.value;
                                             chkValidConditions.checked=false;
                                         }
                                         //alert(res);
@@ -702,7 +707,7 @@ FROM         [Table] INNER JOIN
                                     if(res>0)
                                     {
                                         chkWarningConditions.checked=true;
-                                         document.getElementById('hlWarningConditions').innerHTML='Conditions('+ res+')';
+                                         document.getElementById('hlWarningConditions').innerHTML=hfConditions_T.value + '('+ res+')';
                                
                                                var chkWarningFormula = document.getElementById('chkWarningFormula');
                                                 if (chkWarningFormula != null)
@@ -710,7 +715,7 @@ FROM         [Table] INNER JOIN
                                     }
                                     else
                                     {
-                                        document.getElementById('hlWarningConditions').innerHTML='Conditions';
+                                        document.getElementById('hlWarningConditions').innerHTML=hfConditions_T.value;
                                         chkWarningConditions.checked=false;
                                     }
                         
@@ -742,7 +747,7 @@ FROM         [Table] INNER JOIN
                                         if(res>0)
                                         {
                                             chkExceedanceConditions.checked=true;
-                                             document.getElementById('hlExceedanceConditions').innerHTML='Conditions('+ res+')';
+                                             document.getElementById('hlExceedanceConditions').innerHTML=hfConditions_T.value + '('+ res+')';
                                
                                                    var chkExceedanceFormula = document.getElementById('chkExceedanceFormula');
                                                     if (chkExceedanceFormula != null)
@@ -751,7 +756,7 @@ FROM         [Table] INNER JOIN
                                         else
                                         {
                                             chkExceedanceConditions.checked=false;
-                                             document.getElementById('hlExceedanceConditions').innerHTML='Conditions';
+                                             document.getElementById('hlExceedanceConditions').innerHTML=hfConditions_T.value;
                                         }
                         
                                     },
@@ -893,9 +898,9 @@ FROM         [Table] INNER JOIN
         string strMaxHeight = "50";
 
         string strFilePath = _strFilesLocation + "/UserFiles/AppFiles/";
-        string strScriptPath = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Handler.ashx";
+        string strScriptPath = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Handler.ashx";
         string strFileExtension = "*.jpg;*.gif;*.png";
-        string strInnerHTML = "<img  title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + hfButtonValue.ID + "\" src=\"" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
+        string strInnerHTML = "<img  title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + hfButtonValue.ID + "\" src=\"" + Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath
             + "/App_Themes/Default/Images/icon_delete.gif\" />" +
             "<a id=\"a" + hfButtonValue.ID + "\" target=\"_blank\" >"
         + " <img style=\"padding-bottom:7px; max-height:"
@@ -990,7 +995,7 @@ FROM         [Table] INNER JOIN
             //this.lnkValidEdit.Attributes.Add("onclick", "javascript:return OpenValidPopup()");
             //this.lnkWarningEdit.Attributes.Add("onclick", "javascript:return OpenWarningPopup()");
             //this.lnkCalculationEdit.Attributes.Add("onclick", "javascript:return OpenCalculationPopup()");
-            edtContent.AssetManager = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Editor/assetmanager/assetmanager.aspx";
+            edtContent.AssetManager = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Editor/assetmanager/assetmanager.aspx";
             edtContent.ButtonFeatures = new string[] { "XHTMLFullSource", "RemoveFormat", "Undo", "Redo", "|", "Paragraph", "FontName", "FontSize", "|", "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyFull", "Bold", "Italic", "Underline", "Hyperlink" };
         }
 
@@ -1103,7 +1108,7 @@ FROM         [Table] INNER JOIN
                 if (!IsPostBack)
                 {
 
-                    hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Request.QueryString["typemode"] + "&AccountID=" + Request.QueryString["AccountID"] + "&MenuID=" + Request.QueryString["MenuID"] + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&SearchCriteria2=" + Request.QueryString["SearchCriteria2"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"] + "#topline";
+                    hlBack.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Request.QueryString["typemode"] + "&AccountID=" + Request.QueryString["AccountID"] + "&MenuID=" + Request.QueryString["MenuID"] + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&SearchCriteria2=" + Request.QueryString["SearchCriteria2"] + "&SearchCriteria=" + Request.QueryString["SearchCriteria"] + "#topline";
 
                     if (Request.QueryString["signup"] != null)
                         hlBack.NavigateUrl = hlBack.NavigateUrl + "&signup=yes";
@@ -1134,6 +1139,10 @@ FROM         [Table] INNER JOIN
             PopulateChildTables();
 
             hfTableID.Value = _theTable.TableID.ToString();
+           if(Common.HaveAccess(Session["roletype"].ToString(), "1"))
+           {
+               hfGOD.Value = "yes";
+           }
         }
 
         string strShowExceedances = SystemData.SystemOption_ValueByKey_Account("Show Exceedances", _theTable.AccountID, _theTable.TableID);
@@ -1158,7 +1167,7 @@ FROM         [Table] INNER JOIN
                 hfHideConditions.Value = "yes";
             }
         }
-        
+
         string strTitle = "Field Detail";
 
         switch (_strActionMode.ToLower())
@@ -1273,11 +1282,11 @@ FROM         [Table] INNER JOIN
         //else
         //{
 
-        hlReminders.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Schedule/DataReminder.aspx?TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&ColumnID=" + _qsColumnID;
+        hlReminders.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Schedule/DataReminder.aspx?TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&ColumnID=" + _qsColumnID;
         hlEditMappopup.NavigateUrl = "~/Pages/Content/MapPopup.aspx?TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString());
 
 
-        hlValidConditions.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/Condition.aspx?ConditionType=V&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&ColumnID=" + _qsColumnID;
+        hlValidConditions.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Help/Condition.aspx?ConditionType=V&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&ColumnID=" + _qsColumnID;
         hlWarningConditions.NavigateUrl = "~/Pages/Help/Condition.aspx?ConditionType=W&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&ColumnID=" + _qsColumnID;
         hlExceedanceConditions.NavigateUrl = "~/Pages/Help/Condition.aspx?ConditionType=E&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&ColumnID=" + _qsColumnID;
 
@@ -1580,6 +1589,9 @@ FROM         [Table] INNER JOIN
                    Cryptography.Encrypt("Would you like to recalculate all records?")
                    + "&okbutton=" + Cryptography.Encrypt(btnResetCalValues.ClientID);
 
+        hlResetValidation.NavigateUrl = "~/Pages/Help/FancyConfirm.aspx?message=" +
+                 Cryptography.Encrypt("Would you like to revalidate all records?")
+                 + "&okbutton=" + Cryptography.Encrypt(btnRevalidateRecords.ClientID);
 
         if (!IsPostBack)
         {
@@ -1629,6 +1641,12 @@ FROM         [Table] INNER JOIN
         if (!IsPostBack)
         {
             ViewState["OldFormulaV"] = GetOldFormula(theColumn, "V");
+            DataTable dtConditons_V = UploadWorld.dbg_Condition_Select(theColumn.ColumnID, null, "V", "");
+            if (dtConditons_V != null && dtConditons_V.Rows.Count > 0)
+            {
+                ViewState["OldFormulaV_C"] = dtConditons_V;
+            }
+
             ViewState["OldFormulaE"] = GetOldFormula(theColumn, "E");
             ViewState["OldFormulaW"] = GetOldFormula(theColumn, "W");
         }
@@ -2618,7 +2636,7 @@ FROM         [Table] INNER JOIN
                                 + "<img style='padding-bottom:7px; max-height:" + strMaxHeight + "px;' alt='" + theButtonInfo.ImageFullPath.Substring(37)
                                 + "' src='" + strFilePath + "' title='" + theButtonInfo.ImageFullPath.Substring(37) + "'  />" + "</a><br/>";
 
-                            lblButtonValue.Text = "<img title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + hfButtonValue.ID + "\" src=\"" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
+                            lblButtonValue.Text = "<img title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + hfButtonValue.ID + "\" src=\"" + Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath
                               + "/App_Themes/Default/Images/icon_delete.gif\" />" + lblButtonValue.Text;
 
                             // hfButtonValue.Value = theButtonInfo.ImageFullPath;
@@ -3936,7 +3954,7 @@ FROM         [Table] INNER JOIN
             string strErrors = "";
             Column theColumn = RecordManager.ets_Column_Details(int.Parse(hfColumnID.Value));
             // theColumn.Calculation = txtCalculation.Text.Trim();
-            string strResult = RecordManager.ets_AdjustCalculationFormulaChanges(theColumn, ref strErrors);
+            string strResult = RecordManager.ets_AdjustCalculationFormulaChanges(theColumn, ref strErrors, true);
 
             if (strResult != "error")
             {
@@ -3963,6 +3981,59 @@ FROM         [Table] INNER JOIN
         }
     }
 
+    protected void btnRevalidateRecords_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            string strInvalidRecordIDs = "";
+            string strValidRecordIDs = "";
+            Column theColumn = RecordManager.ets_Column_Details(int.Parse(hfColumnID.Value));
+            RecordManager.ets_AdjustValidFormulaChanges(theColumn, ref strInvalidRecordIDs, ref strValidRecordIDs, true, "");
+            string strNotifications = "";
+            if (strInvalidRecordIDs != "")
+            {
+                strNotifications = TheDatabase.GetAdjustValidationNotification(strNotifications, strInvalidRecordIDs, strValidRecordIDs, theColumn);
+            }
+            else
+            {
+                strNotifications="Done!";
+            }
+
+            Session["tdbmsgpb"] = strNotifications;
+        }
+        catch
+        {
+            //
+        }
+       
+    }
+    protected void btnValidateRecordsOK_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            ViewState["perform_validation"] = "yes";
+            lnkSave_Click(null, null);
+        }
+        catch
+        {
+            //
+        }
+
+    }
+
+    protected void btnValidateRecordsNO_Click(object sender, EventArgs e)
+    {
+        try
+        {
+            ViewState["perform_validation"] = "no";
+            lnkSave_Click(null, null);
+        }
+        catch
+        {
+            //
+        }
+
+    }
     protected void btnResetIDsOK_Click(object sender, EventArgs e)
     {
         try
@@ -5268,7 +5339,7 @@ FROM         [Table] INNER JOIN
 
                         if (newColumn.Calculation != "" && newColumn.Calculation.Length > 0)
                         {
-                            string strCalOutput = RecordManager.ets_AdjustCalculationFormulaChanges(newColumn, ref strErrorCal);
+                            string strCalOutput = RecordManager.ets_AdjustCalculationFormulaChanges(newColumn, ref strErrorCal, false);
                             strNotifications = strNotifications + "Calculation Values Adjusted:" + newColumn.DisplayColumn + " " + strCalOutput;
                         }
 
@@ -5506,7 +5577,7 @@ FROM         [Table] INNER JOIN
                     //editColumn.DropdownValues = chkDropdownValues.Checked == true ? txtDropdownValues.Text : "";
                     //editColumn.IsMandatory = chkMandatory.Checked;
 
-                    editColumn.Importance=ddlImportance.SelectedValue;
+                    editColumn.Importance = ddlImportance.SelectedValue;
                     editColumn.OnlyForAdmin = int.Parse(ddlOnlyForAdmin.SelectedValue);
                     editColumn.QuickAddLink = chkQuickAddLink.Checked;
 
@@ -5621,7 +5692,7 @@ FROM         [Table] INNER JOIN
                     }
 
                     editColumn.DisplayName = txtColumnName.Text.Trim();
-
+                    editColumn.ValidationCanIgnore = chkValidationCanIgnore.Checked;
 
 
                     if (ddlTextType.Text == "own")
@@ -5755,104 +5826,126 @@ FROM         [Table] INNER JOIN
                         editColumn.PositionOnImport = null;
 
                     }
+                    editColumn.ColumnType = ddlType.Text;
+                    string strOldCalculation = editColumn.Calculation;
+                    if (editColumn.ColumnType == "calculation")
+                    {
+                        editColumn.Calculation = Common.GetSystemFromDisplay(txtCalculation.Text, (int)editColumn.TableID);
+                    }
+                    else
+                    {
+                        editColumn.Calculation = "";
+                    }
 
-                    string strNewForumulaV = GetOldFormula(editColumn, "V");
+                    if (strOldCalculation.ToLower() != editColumn.Calculation.ToLower())
+                    {
+                        bCalculationChanged = true;
+                    }
 
 
 
-                    if (ViewState["OldFormulaV"].ToString().ToUpper() != strNewForumulaV.ToUpper())
+
+                    string strNewFormulaV = GetOldFormula(editColumn, "V");
+                    bool bAllowReValidation = false;
+                    bool bAdjustValidPreformed = false;
+                    //bool bPerformValiationInCalculation = false;
+                    if (ViewState["perform_validation"] == null && 
+                        (ViewState["OldFormulaV"].ToString().ToUpper() != strNewFormulaV.ToUpper() || bExceedanceChanged || bWarningChanged))
+                    {
+                        hlResetValidation.NavigateUrl = "~/Pages/Help/FancyConfirm.aspx?message=" +
+                            Cryptography.Encrypt("Would you like to revalidate all records?")
+                            + "&okbutton=" + Cryptography.Encrypt(btnValidateRecordsOK.ClientID)
+                            + "&nobutton=" + Cryptography.Encrypt(btnValidateRecordsNO.ClientID);
+
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "perform_validation", "setTimeout(function () { $('#hlResetValidation').trigger('click'); }, 500); ", true);
+                        return;
+                    }
+                    if (ViewState["perform_validation"] != null && ViewState["perform_validation"].ToString() == "yes")
+                    {
+                        bAllowReValidation = true;
+                    }
+
+                    if (bCalculationChanged == true && ViewState["perform_validation"] == null && bAllowReValidation == false
+                        && (ViewState["OldFormulaV"] != "" || ViewState["OldFormulaE"] != "" || ViewState["OldFormulaW"] != ""))
+                    {
+                        hlResetValidation.NavigateUrl = "~/Pages/Help/FancyConfirm.aspx?message=" +
+                             Cryptography.Encrypt("Calculation formula has been changed, Would you like to revalidate all records?")
+                              + "&okbutton=" + Cryptography.Encrypt(btnValidateRecordsOK.ClientID)
+                            + "&nobutton=" + Cryptography.Encrypt(btnValidateRecordsNO.ClientID);
+
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "perform_validation", "setTimeout(function () { $('#hlResetValidation').trigger('click'); }, 500);", true);
+                        return;
+                    }
+                  
+
+
+                    if (bAllowReValidation == true && bCalculationChanged == false && ViewState["OldFormulaV"].ToString().ToUpper() != strNewFormulaV.ToUpper())
                     {
                         if (ddlType.SelectedValue == "number" || ddlType.SelectedValue == "calculation")
                         {
-                            if (ViewState["ok"] != null)
+
+                            if (ViewState["InvalidConfirmed"] != null)
                             {
-                                //if (ViewState["ok"].ToString() == "ok")
+                                //if (ViewState["InvalidConfirmed"].ToString() == "ok")
                                 //{
                                 //    editColumn.ValidationOnEntry = strValidationOnEntry;
                                 //}
-
                             }
                             else
                             {
                                 //first time
                                 //get list of Records
-
-                                DataTable dtRecords = Common.DataTableFromText("Select RecordID," + editColumn.SystemName + " FROM Record where IsActive=1 AND " + editColumn.SystemName + " IS NOT NULL and TableID=" + editColumn.TableID.ToString());
-
-                                if (dtRecords.Rows.Count > 0)
+                                bool bUpdateDB = false;
+                                if (editColumn.ValidationCanIgnore != null && (bool)editColumn.ValidationCanIgnore)
                                 {
-                                    string strRecordIDs = "";
-                                    string strValidationError = "";
-                                    double dCounter = 0;
+                                    bUpdateDB = true;
+                                }
+                                string strInvalidRecordIDs = "";
+                                string strValidRecordIDs = "";
+                                RecordManager.ets_AdjustValidFormulaChanges(editColumn, ref strInvalidRecordIDs, ref strValidRecordIDs, bUpdateDB, "");
 
-                                    if (editColumn.ValidationOnEntry != "")
+                                if (strInvalidRecordIDs != "" && bUpdateDB == false)
+                                {
+                                    ViewState["InvalidRecordIDs"] = strInvalidRecordIDs;
+                                    if (strValidRecordIDs != "")
+                                        ViewState["ValidRecordIDs"] = strValidRecordIDs;
+
+                                    string strValidInfo = "The Data Validation will make " + (strInvalidRecordIDs.Split(',').Length - 1).ToString() + " existing records inactive. Are you sure you wish to change this?";
+                                    //divSaveGroup.Visible = false;
+                                    //divValid.Visible = true;
+                                    hlResetValidation.NavigateUrl = "~/Pages/Help/FancyConfirm.aspx?message=" +
+                                              Cryptography.Encrypt(strValidInfo)
+                                              + "&okbutton=" + Cryptography.Encrypt(btnConfirmInvalidOK.ClientID)
+                                              + "&nobutton=" + Cryptography.Encrypt(btnConfirmInvalidNO.ClientID);
+
+                                    ScriptManager.RegisterStartupScript(this, this.GetType(), "perform_validation", "setTimeout(function () { $('#hlResetValidation').trigger('click'); }, 500);", true);
+
+                                    return;
+                                }
+                                else if (strValidRecordIDs != "" && bUpdateDB == false)
+                                {
+                                    RecordManager.ets_AdjustValidFormulaChanges(editColumn, ref strInvalidRecordIDs, ref strValidRecordIDs, true, "");
+                                    bAdjustValidPreformed = true;
+                                }
+                                else
+                                {
+                                    if (bUpdateDB && (strInvalidRecordIDs != ""))
                                     {
-                                        foreach (DataRow dr in dtRecords.Rows)
-                                        {
-                                            if (dr[1].ToString() != "")
-                                            {
-                                                if (!UploadManager.IsDataValid(dr[1].ToString(), editColumn.ValidationOnEntry, ref strValidationError))
-                                                {
-                                                    strRecordIDs = strRecordIDs + dr[0].ToString() + ",";
-                                                    dCounter = dCounter + 1;
-                                                }
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-
-                                        string strCheckColumnID = Common.GetValueFromSQL("SELECT TOP 1 CheckColumnID FROM [Condition] WHERE ConditionType='V' AND ColumnID=" + editColumn.ColumnID.ToString());
-
-                                        if (strCheckColumnID != "")
-                                        {
-                                            Column theCheckColumn = RecordManager.ets_Column_Details(int.Parse(strCheckColumnID));
-
-                                            if (theCheckColumn != null)
-                                            {
-                                                foreach (DataRow dr in dtRecords.Rows)
-                                                {
-                                                    if (dr[1].ToString() != "")
-                                                    {
-                                                        string strEachFormula = "";
-                                                        string strEachValue = dr[1].ToString();
-
-                                                        Record vRecord = RecordManager.ets_Record_Detail_Full(int.Parse(dr[0].ToString()));
-                                                        string strCheckValue = RecordManager.GetRecordValue(ref vRecord, theCheckColumn.SystemName);
-                                                        strEachFormula = UploadWorld.Condition_GetFormula((int)editColumn.ColumnID, theCheckColumn.ColumnID,
-                                                              "V", strCheckValue);
-
-                                                        if (!UploadManager.IsDataValid(strEachValue, strEachFormula, ref strValidationError))
-                                                        {
-                                                            strRecordIDs = strRecordIDs + dr[0].ToString() + ",";
-                                                            dCounter = dCounter + 1;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-
-                                    }
-
-
-                                    if (dCounter > 0)
-                                    {
-                                        strRecordIDs = strRecordIDs.Substring(0, strRecordIDs.Length - 1);
-                                        ViewState["RecordIDs"] = strRecordIDs;
-                                        lblValidInfo.Text = "The Data Validation will make " + dCounter.ToString() + " existing records inactive. Are you sure you wish to continue?";
-                                        divSaveGroup.Visible = false;
-                                        divValid.Visible = true;
-                                        ViewState["invalidrecords"] = dCounter.ToString();
-                                        return;
+                                        strNotifications = TheDatabase.GetAdjustValidationNotification(strNotifications, strInvalidRecordIDs, strValidRecordIDs, editColumn);
                                     }
                                 }
+
                             }
                         }
-
-
-
                     }
 
+
+                    hlResetValidation.NavigateUrl = "~/Pages/Help/FancyConfirm.aspx?message=" +
+                          Cryptography.Encrypt("Would you like to revalidate all records?")
+                          + "&okbutton=" + Cryptography.Encrypt(btnRevalidateRecords.ClientID);
+
+
+                    ViewState["perform_validation"] = null;
                     if (chkImport.Checked)
                     {
                         txtConstant.Text = "";
@@ -5874,22 +5967,7 @@ FROM         [Table] INNER JOIN
                     }
 
                     editColumn.Constant = txtConstant.Text;
-                    editColumn.ColumnType = ddlType.Text;
-                    string strOldCalculation = editColumn.Calculation;
-                    if (editColumn.ColumnType == "calculation")
-                    {
-                        editColumn.Calculation = Common.GetSystemFromDisplay(txtCalculation.Text, (int)editColumn.TableID);
-                    }
-                    else
-                    {
-                        editColumn.Calculation = "";
-                    }
-
-                    if (strOldCalculation.ToLower() != editColumn.Calculation.ToLower())
-                    {
-                        bCalculationChanged = true;
-                    }
-
+                    
 
 
                     editColumn.DefaultValue = txtDefaultValue.Text;
@@ -6750,10 +6828,7 @@ FROM         [Table] INNER JOIN
                         }
                     }
 
-                    //SqlTransaction tn;
-                    //SqlConnection connection = new SqlConnection(DBGurus.strGlobalConnectionString);
-                    //connection.Open();
-                    //tn = connection.BeginTransaction();
+                  
                     editColumn.DefaultType = ddlDefaultValue.SelectedValue;
                     editColumn.DefaultUpdateValues = false;
                     if (ddlDefaultValue.SelectedValue == "parent")
@@ -6793,7 +6868,7 @@ FROM         [Table] INNER JOIN
                         }
 
 
-                        editColumn.ValidationCanIgnore = chkValidationCanIgnore.Checked;
+                      
 
                         if (chkColumnColour.Checked)
                         {
@@ -6905,81 +6980,78 @@ FROM         [Table] INNER JOIN
                                         }
 
                                     }
-                                    else
-                                    {
-                                        //do nothing
-                                    }
-
+                                 
                                 }
 
                             }
-                            else
-                            {
-                                //if (txtNameOnImport.Text.IndexOf(",") == -1)
-                                //{
-                                //    lblMsg.Text = "Name on Import Date Recorded and Time Recorded need to be comma(,) separated! ";
-                                //    txtNameOnImport.Focus();
-                                //    tn.Rollback();
-                                //    connection.Close();
-                                //    return;
-                                //}
-
-                            }
+                          
 
                         }
-                        else
-                        {
-                            //if (_theTable.IsImportPositional == true)
-                            //{
-                            //    DataTable dtTemp = Common.DataTableFromText("SELECT PositionOnImport FROM [Column] WHERE   TableID=" + _theTable.TableID.ToString() + " AND SystemName='datetimerecorded'", ref connection, ref tn);
-                            //    if (dtTemp.Rows.Count > 0)
-                            //    {
-                            //        //date time found
-                            //        if (dtTemp.Rows[0][0].ToString().Trim() != "")
-                            //        {
-                            //            if ((int.Parse(dtTemp.Rows[0][0].ToString()) + 1) == editColumn.PositionOnImport)
-                            //            {
-                            //                lblMsg.Text = "Please put another position as '" + editColumn.PositionOnImport.ToString() + "' is now reserved for Time Recorded column";
-                            //                tn.Rollback();
-                            //                connection.Close();
-                            //                return;
-                            //            }
-                            //        }
-
-                            //    }
-                            //}
-
-                        }
-
-                        //Reset View items
+                       
 
 
-                        //if (editColumn.DisplayTextSummary != strOldDisplayTextSummary)
-                        //{
-                        //    ViewManager.dbg_View_ColumnUpdate((int)editColumn.ColumnID);
-                        //}
 
                         editColumn = RecordManager.ets_Column_Details((int)editColumn.ColumnID);
 
-                        if (ViewState["ok"] != null)
+                        if (ViewState["InvalidConfirmed"] != null && bAllowReValidation)
                         {
 
-                            if (ViewState["ok"].ToString() == "ok")
+                            if (ViewState["InvalidConfirmed"].ToString() == "ok")
                             {
-                                if (ViewState["RecordIDs"] != null)
-                                {
-                                    string strValidResults = " INVALID:" + editColumn.DisplayName;
-                                    Common.ExecuteText("Update Record SET IsActive=0, validationresults=( Case WHEN (ValidationResults IS null) then '" + strValidResults.Replace("'", "''") + "' else (ValidationResults+ '" + strValidResults.Replace("'", "''") + "') END) WHERE RecordID in (" + ViewState["RecordIDs"].ToString() + ")");
-                                    //Common.ExecuteText("Update Record SET IsActive=0 WHERE RecordID in (" + ViewState["RecordIDs"].ToString() + ")", ref connection, ref tn);
-                                }
-                                //send emails
-                                if (ViewState["invalidrecords"] != null)
+                                if (ViewState["InvalidRecordIDs"] != null)
                                 {
                                     string strTemp = "";
-                                    RecordManager.SendAdjustValidationSMSandEmail(editColumn, double.Parse(ViewState["invalidrecords"].ToString()), ref strTemp, false);
-                                    strError = strError + strTemp;
 
-                                    strNotifications = strNotifications + "Validation Adjusted:" + editColumn.DisplayColumn + " " + ViewState["invalidrecords"].ToString() + " invalid records.";
+                                    string strInvalidRecordIDs = "";
+                                    string strValidRecordIDs = "";
+
+                                    RecordManager.ets_AdjustValidFormulaChanges(editColumn, ref strInvalidRecordIDs, ref strValidRecordIDs, true, "");
+                                    bAdjustValidPreformed = true;
+                                    string strInvalidCount = "";
+                                    if (strInvalidRecordIDs != "")
+                                    {
+                                        strInvalidCount = (strInvalidRecordIDs.Split(',').Length - 1).ToString();
+                                        RecordManager.SendAdjustValidationSMSandEmail(editColumn, double.Parse(strInvalidCount), ref strTemp, false);
+
+                                    }
+                                    strError = strError + strTemp;
+                                    if (strInvalidRecordIDs != "" || strValidRecordIDs != "")
+                                        strNotifications = TheDatabase.GetAdjustValidationNotification(strNotifications, strInvalidRecordIDs, strValidRecordIDs, editColumn);
+
+
+
+                                }
+                                //send emails
+                                //if (ViewState["NoOfInvalid"] != null)
+                                //{
+                                //    string strTemp = "";
+                                //    RecordManager.SendAdjustValidationSMSandEmail(editColumn, double.Parse(ViewState["NoOfInvalid"].ToString()), ref strTemp, false);
+                                //    strError = strError + strTemp;
+
+                                //    strNotifications = strNotifications + "Validation Adjusted:" + editColumn.DisplayColumn + " " + ViewState["NoOfInvalid"].ToString() + " invalid records.";
+                                //}
+                            }
+                            else
+                            {
+                                //no was selected
+                                if (ViewState["OldFormulaV_C"] != null)
+                                {
+                                    Common.ExecuteText("DELETE FROM [Condition] WHERE ColumnID=" + editColumn.ColumnID);
+                                    DataTable dtConditons = (DataTable)ViewState["OldFormulaV_C"];
+                                    foreach (DataRow dr in dtConditons.Rows)
+                                    {
+                                        Condition newCondition = new Condition(null, editColumn.ColumnID, dr["ConditionType"].ToString(),
+                              int.Parse(dr["CheckColumnID"].ToString()), dr["CheckFormula"].ToString(), dr["CheckValue"].ToString());
+                                        UploadWorld.dbg_Condition_Insert(newCondition);
+                                    }
+                                }
+                                else
+                                {
+                                    if (ViewState["OldFormulaV"] != null)
+                                    {
+                                        editColumn.ValidationOnEntry = ViewState["OldFormulaV"].ToString();
+                                        RecordManager.ets_Column_Update(editColumn);
+                                    }
                                 }
                             }
                         }
@@ -6988,41 +7060,52 @@ FROM         [Table] INNER JOIN
 
                         //
 
-
-                        if (_bShowExceedances && bExceedanceChanged)
+                        if (bAdjustValidPreformed == false && (bExceedanceChanged || bWarningChanged) && bAllowReValidation)
                         {
-                            //lets do the warning job
-                            string strTemp = "";
-                            RecordManager.ets_AdjustExceedanceFormulaChanges(editColumn, ref strTemp, false);
 
-                            int iTest = 0;
-                            if (int.TryParse(strTemp, out iTest))
-                            {
-                                strNotifications = strNotifications + "Exceedance Adjusted:" + editColumn.DisplayColumn + " " + strTemp + " records.";
-                            }
-                            else
-                            {
-                                strError = strError + "<br/>" + strTemp;
-                            }
+                            string strInvalidRecordIDs = "";
+                            string strValidRecordIDs = "";
 
+                            RecordManager.ets_AdjustValidFormulaChanges(editColumn, ref strInvalidRecordIDs, ref strValidRecordIDs, true, "");
                         }
 
 
-                        if (bWarningChanged)
-                        {
-                            //lets do the warning job
-                            string strTemp = "";
-                            RecordManager.ets_AdjustWarningFormulaChanges(editColumn, ref strTemp, false);
-                            int iTest = 0;
-                            if (int.TryParse(strTemp, out iTest))
-                            {
-                                strNotifications = strNotifications + "Warning Adjusted:" + editColumn.DisplayColumn + " " + strTemp + " records.";
-                            }
-                            else
-                            {
-                                strError = strError + "<br/>" + strTemp;
-                            }
-                        }
+                        //if (_bShowExceedances && bExceedanceChanged)
+                        //{
+                        //    //lets do the warning job
+                        //    string strTemp = "";
+                        //    RecordManager.ets_AdjustExceedanceFormulaChanges(editColumn, ref strTemp, false);
+
+                        //    int iTest = 0;
+                        //    if (int.TryParse(strTemp, out iTest))
+                        //    {
+                        //        if (strTemp != "" & strTemp != "0")
+                        //            strNotifications = strNotifications + "Exceedance Adjusted:" + editColumn.DisplayColumn + " " + strTemp + " records.";
+                        //    }
+                        //    else
+                        //    {
+                        //        strError = strError + "<br/>" + strTemp;
+                        //    }
+
+                        //}
+
+
+                        //if (bWarningChanged)
+                        //{
+                        //    //lets do the warning job
+                        //    string strTemp = "";
+                        //    RecordManager.ets_AdjustWarningFormulaChanges(editColumn, ref strTemp, false);
+                        //    int iTest = 0;
+                        //    if (int.TryParse(strTemp, out iTest))
+                        //    {
+                        //        if (strTemp != "" & strTemp!="0")
+                        //            strNotifications = strNotifications + "Warning Adjusted:" + editColumn.DisplayColumn + " " + strTemp + " records.";
+                        //    }
+                        //    else
+                        //    {
+                        //        strError = strError + "<br/>" + strTemp;
+                        //    }
+                        //}
 
 
                         if (bUnlikelyReadingChnaged)
@@ -7038,8 +7121,8 @@ FROM         [Table] INNER JOIN
 
                         if (bCalculationChanged)
                         {
-                            string strCalOutput = RecordManager.ets_AdjustCalculationFormulaChanges(editColumn, ref strErrorCal);
-                            strNotifications = "Calculation Values Adjusted:" + editColumn.DisplayColumn + " " + strCalOutput;
+                            string strCalOutput = RecordManager.ets_AdjustCalculationFormulaChanges(editColumn, ref strErrorCal, bAllowReValidation);
+                            strNotifications = "";// "Calculation Values Adjusted:" + editColumn.DisplayColumn + " " + strCalOutput;
                         }
 
                         if (bAvgDefinitionChanged)
@@ -7142,18 +7225,19 @@ FROM         [Table] INNER JOIN
     //}
 
 
-    protected void lnkOk_Click(object sender, EventArgs e)
+    protected void btnConfirmInvalidOK_Click(object sender, EventArgs e)
     {
 
-        ViewState["ok"] = "ok";
+        ViewState["InvalidConfirmed"] = "ok";
         lnkSave_Click(null, null);
     }
 
-    protected void lnkNo_Click(object sender, EventArgs e)
+    protected void btnConfirmInvalidNO_Click(object sender, EventArgs e)
     {
-        ViewState["ok"] = "no";
-        divSaveGroup.Visible = true;
-        divValid.Visible = false;
+        ViewState["InvalidConfirmed"] = "no";
+        lnkSave_Click(null, null);
+        //divSaveGroup.Visible = true;
+        //divValid.Visible = false;
 
     }
 

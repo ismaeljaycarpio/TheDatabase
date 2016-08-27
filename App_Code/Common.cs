@@ -1135,8 +1135,16 @@ public class Common
             strReturnMessage = strReturnMessage + strDisplayName + " ";
 
         if (bAdvanced)
-        {            
-           strReturnMessage = strReturnMessage + "Value outside accepted range(" + strFormula + ").";
+        {
+            if (strFormula=="")
+            {
+                strReturnMessage = strReturnMessage + "Not set.";
+            }
+            else
+            {
+                strReturnMessage = strReturnMessage + "Value outside accepted range(" + strFormula + ").";
+            }
+           
         }
         else
         {           

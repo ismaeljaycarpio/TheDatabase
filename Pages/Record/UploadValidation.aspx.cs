@@ -564,14 +564,15 @@ public partial class Pages_Record_UploadValidation : SecurePage
                     lblImportTemplate.Text = _theImportTemplate.ImportTemplateName;
                 }
 
-                if(_qsTable.DataUpdateUniqueColumnID!=null)
-                {
-                    tblAllowDataUpdate.Visible = true;
+                //if(_qsTable.DataUpdateUniqueColumnID!=null)
+                //{
+                   
                     if (_qsBatch.AllowDataUpdate != null && (bool)_qsBatch.AllowDataUpdate)
                     {
+                        tblAllowDataUpdate.Visible = true;
                         lblDataUpdate.Text = "Yes";
                     }
-                }
+                //}
                
 
             }
@@ -1347,7 +1348,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
 
         string strRollBackSQL = @"DELETE Record WHERE BatchID=" + _qsBatch.BatchID.ToString() + "; Update Batch set IsImported=0 WHERE BatchID=" + _qsBatch.BatchID.ToString() + ";";
 
-        int nUpdatedRowCount = -1;
+        bool bUpdatedBatch=false;
 
         try
         {
@@ -1379,21 +1380,18 @@ public partial class Pages_Record_UploadValidation : SecurePage
 
                 if(_qsBatch.AllowDataUpdate!=null && (bool)_qsBatch.AllowDataUpdate )
                 {
-                   
+                    bUpdatedBatch = true;
 
-                    if(theTable.DataUpdateUniqueColumnID!=null)
-                    {
-                        Column theColumn = RecordManager.ets_Column_Details((int)theTable.DataUpdateUniqueColumnID);
+                    //if(theTable.DataUpdateUniqueColumnID!=null)
+                    //{
+                    //    Column theColumn = RecordManager.ets_Column_Details((int)theTable.DataUpdateUniqueColumnID);
 
-                        if(theColumn!=null)
-                        {
-                          nUpdatedRowCount=  UploadManager.spUpdateExistingData((int)_qsBatch.TableID, theColumn.SystemName, (int)_qsBatch.BatchID);
-                        }
-                            
+                    //    if(theColumn!=null)
+                    //    {
+                    //      nUpdatedRowCount=  UploadManager.spUpdateExistingData((int)_qsBatch.TableID, theColumn.SystemName, (int)_qsBatch.BatchID);
+                    //    }                           
 
-                    }
-
-                    
+                    //}                    
                 }
 
 
@@ -1507,14 +1505,14 @@ public partial class Pages_Record_UploadValidation : SecurePage
 
             
             string strImp_Upd="imported";
-            if (nUpdatedRowCount==-1)
+            if (bUpdatedBatch == false)
             {
 
             }
             else
             {
                 strImp_Upd = "updated";
-                strImportedRecords = nUpdatedRowCount.ToString();
+                //strImportedRecords = strImportedRecords.ToString();
             }
             if(strImportedRecords=="0")
             {

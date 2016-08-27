@@ -67,8 +67,19 @@ public partial class DBEmail_WinSchedules : System.Web.UI.Page
 
             try
             {
-
-                RegisterAsyncTask(new PageAsyncTask(AutoImportRecords_A));
+                if (Request.QueryString["AutoImportRecords"] != null)
+                {
+                    RegisterAsyncTask(new PageAsyncTask(AutoImportRecords_A));
+                    return;//only run this method
+                }
+                else
+                {
+                    if (Request.Url.Authority != "emd.thedatabase.net")
+                    {
+                        RegisterAsyncTask(new PageAsyncTask(AutoImportRecords_A));
+                    }                    
+                }
+               
 
             }
             catch (Exception ex)
@@ -743,6 +754,8 @@ public partial class DBEmail_WinSchedules : System.Web.UI.Page
 
                     string strOutMsg = "";
                     int iFinalBatchID = 0;
+
+                    //Table theTable = RecordManager.ets_Table_Details((int)newSourceBatch.TableID);
                     UploadManager.UploadCSV(null, null, "", "", null, "", out strOutMsg, out iFinalBatchID, "", "",
                         newSourceBatch.AccountID, null, null, newSourceBatch.BatchID);
                     Batch theBatch = UploadManager.ets_Batch_Details(iFinalBatchID);

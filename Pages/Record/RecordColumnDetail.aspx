@@ -125,32 +125,32 @@
                     chkMaximumValueat.checked = false;
 
                     
-                    var txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtMinValid");
-                    txt.value = '';
+                    //var txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtMinValid");
+                    txtMinValid.value = '';
 
-                    txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtMaxValid");
-                    txt.value = '';
+                    //txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtMaxValid");
+                    txtMaxValid.value = '';
 
-                    txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtValidationEntry");
-                    txt.value = '';
+                    //txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtValidationEntry");
+                    txtValidationEntry.value = '';
 
-                    txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtMinWaring");
-                    txt.value = '';
+                    //txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtMinWaring");
+                    txtMinWaring.value = '';
 
-                    txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtMaxWrning");
-                    txt.value = '';
+                    //txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtMaxWrning");
+                    txtMaxWrning.value = '';
 
-                    txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtValidationOnWarning");
-                    txt.value = '';
+                    //txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtValidationOnWarning");
+                    txtValidationOnWarning.value = '';
 
-                    txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtMinExceedance");
-                    txt.value = '';
+                    //txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtMinExceedance");
+                    txtMinExceedance.value = '';
 
-                    txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtMaxExceedance");
-                    txt.value = '';
+                    //txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtMaxExceedance");
+                    txtMaxExceedance.value = '';
 
-                    txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtValidationOnExceedance");
-                    txt.value = '';
+                    //txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtValidationOnExceedance");
+                    txtValidationOnExceedance.value = '';
                 }
                 chkWarningClick(false);
                 chkExceedenceClick(false);
@@ -335,17 +335,17 @@
                 var hfShowWarningMinMax = document.getElementById("hfShowWarningMinMax");
                 if (hfShowWarningMinMax.value == 'yes') {
 
-                    var x = document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationOnWarning');
-                    x.style.display = 'none';
+                    //var x = document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationOnWarning');
+                    txtValidationOnWarning.style.display = 'none';
 
-                    x = document.getElementById('divWarningMinMax');
+                    var x = document.getElementById('divWarningMinMax');
                     x.style.display = 'block';
                     hlWarningAdvancedURL();
                 }
                 else {
-                    var x = document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationOnWarning');
-                    x.style.display = '';
-                    x = document.getElementById('divWarningMinMax');
+                    //var x = document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationOnWarning');
+                    txtValidationOnWarning.style.display = '';
+                    var x = document.getElementById('divWarningMinMax');
                     x.style.display = 'none';
                 }
 
@@ -355,19 +355,19 @@
                 var hfShowExceedanceMinMax = document.getElementById("hfShowExceedanceMinMax");
                 if (hfShowExceedanceMinMax.value == 'yes') {
 
-                    var x = document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationOnExceedance');
-                    x.style.display = 'none';
+                    //var x = document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationOnExceedance');
+                    txtValidationOnExceedance.style.display = 'none';
 
-                    x = document.getElementById('divExceedanceMinMax');
+                    var x = document.getElementById('divExceedanceMinMax');
                     x.style.display = 'block';
 
                     hlExceedanceAdvancedURL();
 
                 }
                 else {
-                    var x = document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationOnExceedance');
-                    x.style.display = '';
-                    x = document.getElementById('divExceedanceMinMax');
+                    //var x = document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationOnExceedance');
+                    txtValidationOnExceedance.style.display = '';
+                    var x = document.getElementById('divExceedanceMinMax');
                     x.style.display = 'none';
                 }
 
@@ -377,10 +377,10 @@
                 var hfShowValidMinMax = document.getElementById("hfShowValidMinMax");
                 if (hfShowValidMinMax.value == 'yes') {
 
-                    var x = document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationEntry');
-                    x.style.display = 'none';
+                    //var x = document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationEntry');
+                    txtValidationEntry.style.display = 'none';
 
-                    x = document.getElementById('divValidMinMax');
+                    var x = document.getElementById('divValidMinMax');
                     x.style.display = 'block';
 
                     //x = document.getElementById('ctl00_HomeContentPlaceHolder_hlValidAdvanced');
@@ -390,10 +390,10 @@
                 }
                 else {
 
-                    var x = document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationEntry');
-                    x.style.display = '';
+                    //var x = document.getElementById('ctl00_HomeContentPlaceHolder_txtValidationEntry');
+                    txtValidationEntry.style.display = '';
 
-                    x = document.getElementById('divValidMinMax');
+                    var x = document.getElementById('divValidMinMax');
                     x.style.display = 'none';
                     //x = document.getElementById('ctl00_HomeContentPlaceHolder_hlValidAdvanced');
                     // x.style.display = 'none';
@@ -926,7 +926,17 @@
             function WarningChanged() {
                 hlWarningAdvancedURL();
                 if (chkWarningFormula != null)
-                    chkWarningFormula.checked = true;
+                {
+                    if (txtMinWaring.value == '' && txtMaxWrning.value == '' && txtValidationOnWarning.value == '')
+                    {
+                        chkWarningFormula.checked = false;
+                    }
+                    else
+                    {
+                        chkWarningFormula.checked = true;
+                    }
+                }
+                    
 
                 if (chkWarningConditions != null)
                     chkWarningConditions.checked = false;
@@ -953,7 +963,15 @@
             function ExceedanceChanged() {
                 hlExceedanceAdvancedURL();
                 if (chkExceedanceFormula != null)
-                    chkExceedanceFormula.checked = true;
+                {
+                    if (txtMinExceedance.value == '' && txtMaxExceedance.value == '' && txtValidationOnExceedance.value == '') {
+                        chkExceedanceFormula.checked = false;
+                    }
+                    else {
+                        chkExceedanceFormula.checked = true;
+                    }
+                }
+                   
 
                 if (chkExceedanceConditions != null)
                     chkExceedanceConditions.checked = false;
@@ -979,7 +997,15 @@
             function ValidChanged() {
                 hlValidAdvancedURL();
                 if (chkValidFormula != null)
-                    chkValidFormula.checked = true;
+                {
+                    if (txtMinValid.value == '' && txtMaxValid.value == '' && txtValidationEntry.value == '') {
+                        chkValidFormula.checked = false;
+                    }
+                    else {
+                        chkValidFormula.checked = true;
+                    }
+                }
+                   
 
                 if (chkValidConditions != null)
                     chkValidConditions.checked = false;
@@ -1053,6 +1079,11 @@
                 }
 
             });
+            function OpenResetValidationConfirm()
+            {
+                $("#hlResetValidation").trigger("click");
+            }
+
             $("#chkValidFormula").click(function () {
                 if (chkValidFormula.checked == true) {
                     $("#ctl00_HomeContentPlaceHolder_hlValidAdvanced").trigger("click");
@@ -1723,6 +1754,13 @@
                 }
             }
 
+            var hfGOD = document.getElementById("hfGOD");
+            if (hfGOD != null && hfColumnID.value != -1) {
+                if (hfGOD.value == 'yes') {
+                    $("#trResetValidation").fadeIn();
+                }
+            }
+
             var hfHideFormula = document.getElementById("hfHideFormula");
             if (hfHideFormula != null) {
                 if (hfHideFormula.value == 'yes') {
@@ -1827,9 +1865,10 @@
                                         </tr>
                                     </table>
                                 </div>
-                                <div runat="server" id="divValid" visible="false">
+                                <%--<div runat="server" id="divValid" visible="false" >
                                     <asp:Label runat="server" ID="lblValidInfo" Text="" ForeColor="Red"></asp:Label>
-                                    <table>
+                                   
+                                    <table style="padding-top:5px;">
                                         <tr>
                                             <td>
                                                 <div runat="server" id="divOk">
@@ -1844,7 +1883,7 @@
                                             </td>
                                         </tr>
                                     </table>
-                                </div>
+                                </div>--%>
                             </td>
                             <td align="right" style="padding-left: 50px;">
                                 <asp:HyperLink runat="server" ID="hlHelpCommon" ClientIDMode="Static" NavigateUrl="~/Pages/Help/Help.aspx?contentkey=ColumnDetailHelp">
@@ -1879,6 +1918,8 @@
                         <asp:HiddenField runat="server" ID="hfShowExceedance" Value="no" ClientIDMode="Static" />
                         <asp:HiddenField runat="server" ID="hfHideFormula" Value="no" ClientIDMode="Static" />
                         <asp:HiddenField runat="server" ID="hfHideConditions" Value="no" ClientIDMode="Static" />
+                         <asp:HiddenField runat="server" ID="hfConditions_T" Value="Conditions" ClientIDMode="Static" />
+                         <asp:HiddenField runat="server" ID="hfGOD" Value="no" ClientIDMode="Static" />
                         <%-- <asp:HiddenField runat="server" ID="hfHideColumnID" Value="" ClientIDMode="Static" />
                         <asp:HiddenField runat="server" ID="hfHideColumnValue" Value="" ClientIDMode="Static" />
                         <asp:HiddenField runat="server" ID="hfHideColumnOperator" Value="" ClientIDMode="Static" />
@@ -2484,7 +2525,13 @@
                                                                 </td>
                                                                 <td></td>
                                                             </tr>
-
+                                                            <tr id="trResetValidation" style="display:none;">
+                                                                <td ></td>
+                                                                <td colspan="3">
+                                                                    <asp:HyperLink ID="hlResetValidation" ClientIDMode="Static" runat="server"
+                                                                    CssClass="popupresetIDs" >Revalidate Records</asp:HyperLink>
+                                                                </td>
+                                                            </tr>
 
                                                         </table>
                                                     </div>
@@ -3024,6 +3071,15 @@
 
                                                                 <asp:Button runat="server" ID="btnResetIDsOK" ClientIDMode="Static" Style="display: none;" OnClick="btnResetIDsOK_Click" />
                                                                 <asp:Button runat="server" ID="btnResetCalValues" ClientIDMode="Static" Style="display: none;" OnClick="btnResetCalValues_Click" />
+
+                                                                <asp:Button runat="server" ID="btnValidateRecordsOK" ClientIDMode="Static" Style="display: none;" OnClick="btnValidateRecordsOK_Click" />
+                                                                <asp:Button runat="server" ID="btnValidateRecordsNO" ClientIDMode="Static" Style="display: none;" OnClick="btnValidateRecordsNO_Click" />
+
+                                                                <asp:Button runat="server" ID="btnConfirmInvalidOK" ClientIDMode="Static" Style="display: none;" OnClick="btnConfirmInvalidOK_Click" />
+                                                                <asp:Button runat="server" ID="btnConfirmInvalidNO" ClientIDMode="Static" Style="display: none;" OnClick="btnConfirmInvalidNO_Click" />
+
+                                                                <asp:Button runat="server" ID="btnRevalidateRecords" ClientIDMode="Static" Style="display: none;" OnClick="btnRevalidateRecords_Click" />
+
                                                             </td>
                                                         </tr>
 

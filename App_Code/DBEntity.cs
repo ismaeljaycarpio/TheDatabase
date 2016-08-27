@@ -5880,7 +5880,7 @@ public class DynamasterConfig
     public string Password { get; set; }
     public string Username { get; set; }
     public System.DateTime? DateAdded { get; set; }
-
+    public int? SampleTableID { get; set; }
     public DynamasterConfig()
     {
 

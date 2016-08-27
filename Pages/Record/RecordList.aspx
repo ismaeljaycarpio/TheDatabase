@@ -21,11 +21,10 @@
     <asp:Button ID="btnReloadMe" runat="server" ClientIDMode="Static" OnClientClick="ReloadMe();return false;"
         Style="display: none;" />
 
-    
     <table>
         <tr>
             <td>
-                 <asp:RecordList runat="server" ID="rlOne" PageType="p" ShowAddButton="true" ShowEditButton="true" />
+                <asp:RecordList runat="server" ID="rlOne" PageType="p" ShowAddButton="true" ShowEditButton="true" />
             </td>
         </tr>
         <tr>
@@ -35,6 +34,4 @@
         </tr>
     </table>
    
-
-
 </asp:Content>

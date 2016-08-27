@@ -614,9 +614,18 @@ public class UploadManager
 
 
             if (bAllowDataUpload.HasValue)
+            {
                 newBatch.AllowDataUpdate = bAllowDataUpload;
-            else
-                newBatch.AllowDataUpdate = theTable.IsDataUpdateAllowed;
+            }
+            //else
+            //{
+            //    if (Common.GetDatabaseName() == "thedatabase_emd")
+            //    {
+            //        newBatch.AllowDataUpdate = theTable.IsDataUpdateAllowed;
+            //    }
+
+            //}
+                
 
             newBatch.ImportTemplateID = iImportTemplateID;
             iBatchID = UploadManager.ets_Batch_Insert(newBatch);
@@ -824,8 +833,7 @@ public class UploadManager
                                             }
                                             catch
                                             {
-                                                strRejectReason = strRejectReason + " INVALID:" + dtRecordTypleColumns.Rows[i]["DisplayName"].ToString() + ".";
-                                                //strWarningReason = strWarningReason + " INVALID (and ignored):" + dtRecordTypleColumns.Rows[i]["DisplayName"].ToString() + ".[[" + dtImportFileTable.Rows[r][dc.ColumnName].ToString() + "]].";
+                                                strRejectReason = strRejectReason +  TheDatabase.GetInvalid_msg(dtRecordTypleColumns.Rows[i]["DisplayName"].ToString());
                                             }
                                         }
                                     }
@@ -840,8 +848,7 @@ public class UploadManager
                                             }
                                             catch
                                             {
-                                                strRejectReason = strRejectReason + " INVALID:" + dtRecordTypleColumns.Rows[i]["DisplayName"].ToString() + ".";
-                                                //strWarningReason = strWarningReason + " INVALID (and ignored):" + dtRecordTypleColumns.Rows[i]["DisplayName"].ToString() + ".[[" + dtImportFileTable.Rows[r][dc.ColumnName].ToString() + "]].";
+                                                strRejectReason = strRejectReason +TheDatabase.GetInvalid_msg(dtRecordTypleColumns.Rows[i]["DisplayName"].ToString());
                                             }
                                         }
                                     }
@@ -882,7 +889,7 @@ public class UploadManager
                                 {
                                     if (dtImportFileTable.Rows[r][dc.ColumnName].ToString() == "")
                                     {
-                                        strRejectReason = strRejectReason + " MANDATORY:" + dtRecordTypleColumns.Rows[i]["DisplayName"].ToString();
+                                        strRejectReason = strRejectReason + "MANDATORY:" + dtRecordTypleColumns.Rows[i]["DisplayName"].ToString() + ".";
 
                                     }
 
@@ -1063,7 +1070,7 @@ public class UploadManager
 
                             if (strFormulaV != "" && !UploadManager.IsDataValid(strValue, strFormulaV, ref strTemp))
                             {
-                                strRejectReason = strRejectReason + " INVALID:" + dtColumnsAll.Rows[i]["DisplayName"].ToString() + ".";
+                                strRejectReason = strRejectReason + TheDatabase.GetInvalid_msg( dtColumnsAll.Rows[i]["DisplayName"].ToString() );
                             }
                         }
                     }
@@ -1097,7 +1104,7 @@ public class UploadManager
 
                                 if (strFormulaE != "" && !UploadManager.IsDataValid(strValue, strFormulaE, ref strTemp))
                                 {
-                                    strExceedanceReason = strExceedanceReason + " EXCEEDANCE: " + dtColumnsAll.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range.";
+                                    strExceedanceReason = strExceedanceReason + TheDatabase.GetExceedance_msg(dtColumnsAll.Rows[i]["DisplayName"].ToString());
                                     bEachColumnExceedance = true;
                                 }
                             }
@@ -1134,7 +1141,7 @@ public class UploadManager
 
                                 if (strFormulaW != "" && !UploadManager.IsDataValid(strValue, strFormulaW, ref strTemp))
                                 {
-                                    strWarningReason = strWarningReason + " WARNING: " + dtColumnsAll.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range.";
+                                    strWarningReason = strWarningReason + TheDatabase.GetWarning_msg(dtColumnsAll.Rows[i]["DisplayName"].ToString());
                                 }
                             }
                         }
@@ -1173,7 +1180,7 @@ public class UploadManager
                                     if (dRecordedate > (dAVG + dSTDEV) || dRecordedate < (dAVG - dSTDEV))
                                     {
                                         //deviation happaned
-                                        strWarningReason = strWarningReason + " WARNING: " + dtColumnsAll.Rows[i]["DisplayName"].ToString() + " – Unlikely data – outside 3 standard deviations.";
+                                        strWarningReason = strWarningReason + TheDatabase.GetWarningUnlikely_msg(dtColumnsAll.Rows[i]["DisplayName"].ToString());
                                     }
 
                                 }
@@ -1237,10 +1244,11 @@ public class UploadManager
             }
 
 
+            // if ((strUniqueColumnIDSys != "") && (!theTable.IsDataUpdateAllowed.HasValue || !theTable.IsDataUpdateAllowed.Value))
 
-            //if ((strUniqueColumnIDSys != "" || strUniqueColumnID2Sys != "") &&
-            if ((strUniqueColumnIDSys != "") &&
-                (!theTable.IsDataUpdateAllowed.HasValue || !theTable.IsDataUpdateAllowed.Value))
+            if ((strUniqueColumnIDSys != "") && 
+                (newBatch.AllowDataUpdate == null || 
+                            (newBatch.AllowDataUpdate != null && (bool)newBatch.AllowDataUpdate==false)))
             {
                 RecordManager.ets_Batch_Duplicate(iBatchID, strUniqueColumnIDSys, strUniqueColumnID2Sys);
             }
@@ -4395,7 +4403,7 @@ public class UploadManager
         {
             using (SqlCommand command = new SqlCommand("spAdjustTempRecordLinkedValueOnImport", connection))
             {
-
+                command.CommandTimeout = 3600;
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.Add(new SqlParameter("@nBatchID", nBatchID));
                 command.Parameters.Add(new SqlParameter("@sSystemName", sSystemName));
@@ -4484,7 +4492,10 @@ public class UploadManager
 
                 connection.Close();
                 connection.Dispose();
-
+                if (i != -1 && pRV!=null)
+                {
+                    i = int.Parse(pRV.Value.ToString());
+                }
                 return i;
             }
         }
@@ -4674,7 +4685,12 @@ public class UploadManager
 
                 if (oBatch.AllowDataUpdate.HasValue && oBatch.AllowDataUpdate.Value &&
                     theTable.IsDataUpdateAllowed.HasValue && theTable.IsDataUpdateAllowed.Value)
+                {
                     UploadManager.ets_Record_UpdateByBatch((int)oBatch.BatchID);
+
+
+                }
+                    
 
                 DataTable dtRecordTypleColumns = RecordManager.ets_Table_Columns_All((int)oBatch.TableID);
 

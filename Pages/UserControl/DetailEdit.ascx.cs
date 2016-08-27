@@ -6969,7 +6969,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
         {
 
             //divEdit.Visible = false;
-            hlEdit.Visible = false;
+            //hlEdit.Visible = false;
 
         }
 

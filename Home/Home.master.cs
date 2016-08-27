@@ -20,7 +20,7 @@ using System.Xml;
 
 public partial class Home : System.Web.UI.MasterPage
 {
-   
+
     bool _bDemoUser = false;
     Account _theAccount;
     User _objUser;
@@ -35,14 +35,14 @@ public partial class Home : System.Web.UI.MasterPage
             return;
         }
 
-        if (Session["AccountID"]==null)
+        if (Session["AccountID"] == null)
         {
-          
+
             Response.Redirect("~/Login.aspx?Logout=yes", false);
             return;
         }
 
-        if (IsPostBack && Request.Params["__EVENTTARGET"] != null && Request.Params["__EVENTTARGET"].ToString().IndexOf("menuETS")> -1)
+        if (IsPostBack && Request.Params["__EVENTTARGET"] != null && Request.Params["__EVENTTARGET"].ToString().IndexOf("menuETS") > -1)
         {
             Response.Redirect(Request.RawUrl, true);
             return;
@@ -53,7 +53,7 @@ public partial class Home : System.Web.UI.MasterPage
 
         //string strUserAccountCount = Common.GetValueFromSQL("SELECT COUNT(UserRoleID) FROM UserRole WHERE UserID=" + _objUser.UserID.ToString());
 
-        if (!IsPostBack )
+        if (!IsPostBack)
         {
             if (Request.QueryString["TableID"] != null || Request.QueryString["ColumnID"] != null
                            || Request.QueryString["DocumentID"] != null || Request.QueryString["GraphOptionID"] != null
@@ -64,12 +64,12 @@ public partial class Home : System.Web.UI.MasterPage
             }
         }
 
-        
-        
 
-       
 
-        if (_CurrentUserRole.IsAccountHolder != null && (bool)_CurrentUserRole.IsAccountHolder )
+
+
+
+        if (_CurrentUserRole.IsAccountHolder != null && (bool)_CurrentUserRole.IsAccountHolder)
         {
             _bIsAccountHolder = true;
             hfIsAccountHolder.Value = "yes";
@@ -103,7 +103,7 @@ public partial class Home : System.Web.UI.MasterPage
                 menuOpen.Visible = false;
             }
 
-           
+
             //if (Common.HaveAccess(Session["roletype"].ToString(), "1,2"))
             //{
             BindAccountMenu();
@@ -124,7 +124,7 @@ public partial class Home : System.Web.UI.MasterPage
                 FormsAuthentication.SignOut();
                 Response.Redirect("~/Login.aspx?" + strLoginAccount, false);
             }
-           
+
         }
     }
 
@@ -153,7 +153,7 @@ public partial class Home : System.Web.UI.MasterPage
                 }
             }
 
-            
+
             //    item.Selected = item.NavigateUrl.Equals(path, StringComparison.InvariantCultureIgnoreCase);
 
             if (bGotSelected == false)
@@ -183,7 +183,7 @@ public partial class Home : System.Web.UI.MasterPage
                                     foreach (MenuItem ccitem in citem.ChildItems)
                                     {
                                         if (Request.RawUrl.IndexOf(ccitem.NavigateUrl.Replace("~", "")) > -1
-                                            && ccitem.NavigateUrl.Trim()!="")
+                                            && ccitem.NavigateUrl.Trim() != "")
                                         {
                                             if (ccitem.Value == item.Value)
                                             {
@@ -219,7 +219,7 @@ public partial class Home : System.Web.UI.MasterPage
 
                         Menu menuMenu = RecordManager.ets_Menu_By_TableID((int)menuTable.TableID);
 
-                        if (menuMenu!=null && menuMenu.ParentMenuID!=null)
+                        if (menuMenu != null && menuMenu.ParentMenuID != null)
                         {
                             Menu pMenu = RecordManager.ets_Menu_Details((int)menuMenu.ParentMenuID);
 
@@ -318,7 +318,7 @@ public partial class Home : System.Web.UI.MasterPage
                  Request.RawUrl.IndexOf("/Security/MakePayment.aspx") > -1 ||
                   Request.RawUrl.IndexOf("/DocGen/DocumentStypeEdit.aspx") > -1 ||
                    Request.RawUrl.IndexOf("/DocGen/DocumentStyleList.aspx") > -1 ||
-                    Request.RawUrl.IndexOf("/Security/ChangePassword.aspx") > -1 )
+                    Request.RawUrl.IndexOf("/Security/ChangePassword.aspx") > -1)
             {
                 foreach (MenuItem item in menuETS.Items)
                 {
@@ -333,7 +333,7 @@ public partial class Home : System.Web.UI.MasterPage
                 }
             }
 
-        }  
+        }
 
 
     }
@@ -357,7 +357,7 @@ public partial class Home : System.Web.UI.MasterPage
                 lblNotificationMessage.Text = "";
             }
         }
-        
+
 
 
     }
@@ -368,7 +368,7 @@ public partial class Home : System.Web.UI.MasterPage
             imgHouse.Visible = false;
             imgMenuOpen.Visible = false;
             Image2.Visible = false;
-           
+
             PopulatePublicAccount();
 
 
@@ -390,19 +390,19 @@ public partial class Home : System.Web.UI.MasterPage
             if (Session["LoginAccount"] == null)
             {
                 Session.Clear();
-                Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Login.aspx?ReturnURL=" + Server.UrlEncode(Request.RawUrl), false);
+                Response.Redirect(Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Login.aspx?ReturnURL=" + Server.UrlEncode(Request.RawUrl), false);
 
             }
             else
             {
                 string strLoginAccount = Session["LoginAccount"].ToString();
                 Session.Clear();
-                Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Login.aspx?ReturnURL=" + Server.UrlEncode(Request.RawUrl) + "&" + strLoginAccount, false);
+                Response.Redirect(Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Login.aspx?ReturnURL=" + Server.UrlEncode(Request.RawUrl) + "&" + strLoginAccount, false);
 
             }
             return;
 
-            
+
         }
 
 
@@ -440,11 +440,11 @@ public partial class Home : System.Web.UI.MasterPage
         string strWebsiteMasterPageHeader = SystemData.SystemOption_ValueByKey_Account("Website Master Page Header", int.Parse(Session["AccountID"].ToString()), null);
 
         if (strWebsiteMasterPageHeader != "")
-           this.Page.Title = strWebsiteMasterPageHeader;
+            this.Page.Title = strWebsiteMasterPageHeader;
 
         if (!Page.IsPostBack)
         {
-            hlRenewNow.NavigateUrl = SystemData.SystemOption_ValueByKey_Account("ContactUsRenewal",null,null);
+            hlRenewNow.NavigateUrl = SystemData.SystemOption_ValueByKey_Account("ContactUsRenewal", null, null);
             //DataTable dtActiveTableList = Common.DataTableFromText("SELECT * FROM [Table] WHERE IsActive=1 AND AccountID=" + Session["AccountID"].ToString());
             //if (dtActiveTableList.Rows.Count == 0)
             //{
@@ -470,66 +470,66 @@ public partial class Home : System.Web.UI.MasterPage
                 Account theAccount = SecurityManager.Account_Details(int.Parse(Session["AccountID"].ToString()));
 
                 if (theAccount != null)
-                {                    
-                    divCopyright.InnerText = theAccount.CopyRightInfo;                 
+                {
+                    divCopyright.InnerText = theAccount.CopyRightInfo;
 
                 }
 
             }
         }
 
-        
+
 
         //if (Session["ExpireLeftDay"] != null)
         //{
-                     
-           
 
 
-            //Account theAccount = SecurityManager.Account_Details(int.Parse(Session["AccountID"].ToString()));
-            //Session["DoNotAllow"] = null;
-            //if (theAccount.ExpiryDate != null)
-            //{
-            //    Session["ExpireLeftDay"] = Common.DaysBetween((DateTime)DateTime.Today, (DateTime)theAccount.ExpiryDate);
 
-            //    if (theAccount.ExpiryDate.Value.AddDays(0) < DateTime.Today)
-            //    {
-            //        Session["DoNotAllow"] = "true";
 
-            //    }
-              
-            //}
+        //Account theAccount = SecurityManager.Account_Details(int.Parse(Session["AccountID"].ToString()));
+        //Session["DoNotAllow"] = null;
+        //if (theAccount.ExpiryDate != null)
+        //{
+        //    Session["ExpireLeftDay"] = Common.DaysBetween((DateTime)DateTime.Today, (DateTime)theAccount.ExpiryDate);
 
-            //if (int.Parse(Session["ExpireLeftDay"].ToString()) < 10)
-            //{
-            //    divRenew.Visible = true;
-            //    if (Session["DoNotAllow"] == null)
-            //    {
-            //        lblRenewMessage.Text = "Account expires in " +
-            //        Session["ExpireLeftDay"].ToString() + " days. ";
-            //    }
-            //    else
-            //    {
-            //        Response.Redirect("~/Login.aspx?Logout=yes", true);
-            //        return;
-            //    }
-            //}
+        //    if (theAccount.ExpiryDate.Value.AddDays(0) < DateTime.Today)
+        //    {
+        //        Session["DoNotAllow"] = "true";
+
+        //    }
+
+        //}
+
+        //if (int.Parse(Session["ExpireLeftDay"].ToString()) < 10)
+        //{
+        //    divRenew.Visible = true;
+        //    if (Session["DoNotAllow"] == null)
+        //    {
+        //        lblRenewMessage.Text = "Account expires in " +
+        //        Session["ExpireLeftDay"].ToString() + " days. ";
+        //    }
+        //    else
+        //    {
+        //        Response.Redirect("~/Login.aspx?Logout=yes", true);
+        //        return;
+        //    }
+        //}
         //}
         //else
         //{
 
-            //this is for the data exceed
-            divRenew.Visible = false;
-            if (Session["DoNotAllow"] != null)
-            {
-                //Response.Redirect("~/Login.aspx?Logout=yes", true);
-                //return;
-            }
+        //this is for the data exceed
+        divRenew.Visible = false;
+        if (Session["DoNotAllow"] != null)
+        {
+            //Response.Redirect("~/Login.aspx?Logout=yes", true);
+            //return;
+        }
         //}
 
         if (!Page.IsPostBack)
         {
-           
+
 
             if (!Context.User.Identity.IsAuthenticated)
             {
@@ -562,16 +562,16 @@ public partial class Home : System.Web.UI.MasterPage
         if (!Page.IsPostBack)
         {
 
-          
+
             //if (Session["IsFlashSupported"] == null )
             //{
-                string strIsFlashSupportedJS = @"                                                     
+            string strIsFlashSupportedJS = @"                                                     
                                                    $(document).ready(function () {
 
                                                         function IsFlashSupported() {
                                                             try
                                                             {
-                                                                var hfFlashSupport = document.getElementById('"+hfFlashSupport.ClientID+@"');
+                                                                var hfFlashSupport = document.getElementById('" + hfFlashSupport.ClientID + @"');
                                                                 if (swfobject.hasFlashPlayerVersion('1')) {
                                                                     hfFlashSupport.value = 'yes';
                                                                 }
@@ -581,7 +581,7 @@ public partial class Home : System.Web.UI.MasterPage
                                                                 //alert(hfFlashSupport.value);
 
                                                                 $.ajax({
-                                                                    url: '" + ResolveUrl("~/Pages/DocGen/REST/SectionREST.ashx")+@"?type=FlashSupport&hfFlashSupport=' + hfFlashSupport.value,
+                                                                    url: '" + ResolveUrl("~/Pages/DocGen/REST/SectionREST.ashx") + @"?type=FlashSupport&hfFlashSupport=' + hfFlashSupport.value,
                                                                     cache: false,
                                                                     success: function (content) {
                                                                        //
@@ -603,7 +603,7 @@ public partial class Home : System.Web.UI.MasterPage
                                                     });
                                                     
                                                 ";
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "strIsFlashSupportedJS", strIsFlashSupportedJS, true);
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "strIsFlashSupportedJS", strIsFlashSupportedJS, true);
             //}
             //hlReport.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
             //hlDocuments.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
@@ -622,58 +622,58 @@ public partial class Home : System.Web.UI.MasterPage
             {
                 if (_objUser.Email.ToLower() == Session["DemoEmail"].ToString().ToLower())
                 {
-                   trEndDemo.Visible=true;
+                    trEndDemo.Visible = true;
                 }
             }
             //CheckConcurrent();
             CheckDoNotAllow();
         }
 
-//        string  strCellToolTip = @"var mouseX;
-//                                var mouseY;
-//                                $(document).mousemove(function (e) {
-//                                    try
-//                                    {
-//                                        mouseX = e.pageX;
-//                                        mouseY = e.pageY;
-//                                    }
-//                                    catch (err)
-//                                    {
-//                                       // alert(err.message)
-//                                    }
-//        
-//                                });
-//    
-//
-//                                $(function () {
-//        
-//                                    $('.js-tooltip-container').hover(function () {
-//                                        //$(this).find('.js-tooltip').show();
-//                                        try {
-//                                            $(this).find('.js-tooltip').addClass('ajax-tooltip');
-//                                            $(this).find('.ajax-tooltip').css({ 'top': mouseY, 'left': mouseX }).fadeIn('slow');
-//                                        }
-//                                        catch (err) {
-//                                           // alert(err.message);
-//                                        }
-//                                    }, function () {
-//                                        try {
-//                                            $(this).find('.js-tooltip').hide();
-//                                            $(this).find('.js-tooltip').removeClass('ajax-tooltip');
-//                                            $(this).find('.ajax-tooltip').css({ 'top': mouseY, 'left': mouseX }).fadeOut('slow');
-//                                        }
-//                                        catch (err) {
-//                                            //alert(err.message);
-//                                        }
-//                                    });
-//       
-//                                });";
+        //        string  strCellToolTip = @"var mouseX;
+        //                                var mouseY;
+        //                                $(document).mousemove(function (e) {
+        //                                    try
+        //                                    {
+        //                                        mouseX = e.pageX;
+        //                                        mouseY = e.pageY;
+        //                                    }
+        //                                    catch (err)
+        //                                    {
+        //                                       // alert(err.message)
+        //                                    }
+        //        
+        //                                });
+        //    
+        //
+        //                                $(function () {
+        //        
+        //                                    $('.js-tooltip-container').hover(function () {
+        //                                        //$(this).find('.js-tooltip').show();
+        //                                        try {
+        //                                            $(this).find('.js-tooltip').addClass('ajax-tooltip');
+        //                                            $(this).find('.ajax-tooltip').css({ 'top': mouseY, 'left': mouseX }).fadeIn('slow');
+        //                                        }
+        //                                        catch (err) {
+        //                                           // alert(err.message);
+        //                                        }
+        //                                    }, function () {
+        //                                        try {
+        //                                            $(this).find('.js-tooltip').hide();
+        //                                            $(this).find('.js-tooltip').removeClass('ajax-tooltip');
+        //                                            $(this).find('.ajax-tooltip').css({ 'top': mouseY, 'left': mouseX }).fadeOut('slow');
+        //                                        }
+        //                                        catch (err) {
+        //                                            //alert(err.message);
+        //                                        }
+        //                                    });
+        //       
+        //                                });";
 
 
-//        ScriptManager.RegisterStartupScript(this, this.GetType(), "strCellToolTip", strCellToolTip, true);
+        //        ScriptManager.RegisterStartupScript(this, this.GetType(), "strCellToolTip", strCellToolTip, true);
 
 
-       //notifications
+        //notifications
 
 
 
@@ -714,7 +714,7 @@ public partial class Home : System.Web.UI.MasterPage
                 {
                     Account theAccount = SecurityManager.Account_Details((int)theTable.AccountID);
 
-                    if(theAccount!=null)
+                    if (theAccount != null)
                     {
                         if (theAccount.Logo != null)
                         {
@@ -727,9 +727,9 @@ public partial class Home : System.Web.UI.MasterPage
                 }
 
             }
-        
+
         }
-        catch 
+        catch
         {
         }
     }
@@ -780,7 +780,7 @@ public partial class Home : System.Web.UI.MasterPage
         {
             if (Session["DoNotAllow"] != null)
             {
-                if (Session["DoNotAllow"].ToString()=="true")
+                if (Session["DoNotAllow"].ToString() == "true")
                 {
                     //Response.Redirect("~/Pages/Security/AccountTypeChange.aspx?type=renew", false);
                     //Response.Redirect("~/Default.aspx",false);
@@ -796,7 +796,7 @@ public partial class Home : System.Web.UI.MasterPage
 
     protected void PopulateSubMenu(ref MenuItem menuRoot, ref MenuItem menuParent, int iParentMenuID)
     {
-        string strAppPath = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
+        string strAppPath = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath;
         DataTable dtSubMenu = Common.DataTableFromText(@"SELECT DocumentID,DocumentTypeID, MenuID,Menu,Menu.TableID,TableName,
         ExternalPageLink,OpenInNewWindow,MenuType FROM Menu left JOIN [Table] ON
     [Table].TableID=Menu.TableID WHERE Menu.IsActive=1 AND 
@@ -811,7 +811,7 @@ public partial class Home : System.Web.UI.MasterPage
         {
             strHideByShowWhen = RecordManager.ets_Table_Hide_ByShowMenu((int)_CurrentUserRole.RoleID);
         }
-        
+
         foreach (DataRow drSubMenu in dtSubMenu.Rows)
         {
             MenuItem miTempChild = new MenuItem();
@@ -824,7 +824,7 @@ public partial class Home : System.Web.UI.MasterPage
                 miTempChild.Selectable = false;
                 //miTempChild.Text = "";
                 miTempChild.Text = "<hr />";
-              
+
                 //miTempChild.
                 //miTempChild.SeparatorImageUrl = "~/Images/menu_Divider_1.png";
             }
@@ -835,7 +835,7 @@ public partial class Home : System.Web.UI.MasterPage
             }
             if (drSubMenu["TableID"] != DBNull.Value)
             {
-                if(drSubMenu["Menu"].ToString()=="")
+                if (drSubMenu["Menu"].ToString() == "")
                     miTempChild.Text = drSubMenu["TableName"].ToString();
 
 
@@ -864,7 +864,7 @@ public partial class Home : System.Web.UI.MasterPage
                                 }
                             }
 
-                            if (bHasHideByShowMenu==false)
+                            if (bHasHideByShowMenu == false)
                                 menuParent.ChildItems.Add(miTempChild);
 
 
@@ -877,7 +877,7 @@ public partial class Home : System.Web.UI.MasterPage
                 {
                     if (Session["roletype"].ToString() == Common.UserRoleType.OwnData)
                     {
-                      
+
                         menuParent.ChildItems.Add(miTempChild);
                     }
                     else
@@ -888,13 +888,13 @@ public partial class Home : System.Web.UI.MasterPage
             }
             else if (drSubMenu["DocumentTypeID"] != DBNull.Value)
             {
-                string strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?Category=" + Cryptography.Encrypt(drSubMenu["DocumentTypeID"].ToString()) + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+                string strURL = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?Category=" + Cryptography.Encrypt(drSubMenu["DocumentTypeID"].ToString()) + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
                 miTempChild.NavigateUrl = strURL;
                 menuParent.ChildItems.Add(miTempChild);
             }
             else if (drSubMenu["MenuType"] != DBNull.Value && drSubMenu["MenuType"].ToString() == "doc")
             {
-                string strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+                string strURL = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
 
                 miTempChild.NavigateUrl = strURL;
                 menuParent.ChildItems.Add(miTempChild);
@@ -910,19 +910,19 @@ public partial class Home : System.Web.UI.MasterPage
 
                     if (theDocument.ReportType == "ssrs")
                     {
-                        strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/SSRS.aspx?DocumentID=" + Cryptography.Encrypt(theDocument.DocumentID.ToString()) + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
+                        strURL = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/SSRS.aspx?DocumentID=" + Cryptography.Encrypt(theDocument.DocumentID.ToString()) + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
 
                     }
                     else if (theDocument.DocumentTypeID != null)
                     {
 
-                        strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/View.aspx?DocumentID=" + theDocument.DocumentID.ToString() + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
+                        strURL = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/View.aspx?DocumentID=" + theDocument.DocumentID.ToString() + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
                     }
 
                 }
                 miTempChild.NavigateUrl = strURL;
                 menuParent.ChildItems.Add(miTempChild);
-            }         
+            }
             else if (drSubMenu["ExternalPageLink"] != DBNull.Value)
             {
                 string strExternalPageLink = drSubMenu["ExternalPageLink"].ToString();
@@ -935,16 +935,16 @@ public partial class Home : System.Web.UI.MasterPage
             else
             {
                 menuParent.ChildItems.Add(miTempChild);
-                
+
             }
             PopulateSubMenu(ref menuRoot, ref miTempChild, int.Parse(drSubMenu["MenuID"].ToString()));
         }
     }
 
-      protected void BindMenuProfile()
+    protected void BindMenuProfile()
     {
         menuProfile.Items.Clear();
-        string strAppPath = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
+        string strAppPath = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath;
 
         //User _objUser = (User)Session["User"];
 
@@ -952,30 +952,28 @@ public partial class Home : System.Web.UI.MasterPage
         {
             MenuItem miUserName = new MenuItem();
             miUserName.Text = _objUser.FirstName + " " + _objUser.LastName;
-            //miUserName.NavigateUrl = "~/Default.aspx";
+            miUserName.NavigateUrl = "~/Default.aspx";
             miUserName.Value = "UserName";
-            //miUserName.Selectable = false;
-            //miUserName.Enabled = false;
             menuProfile.Items.Add(miUserName);
             //if (!Common.HaveAccess(Session["roletype"].ToString(), Common.UserRoleType.ReadOnly))
             //{
 
-                if (_theAccount.HideMyAccount != null && (bool)_theAccount.HideMyAccount)
-                {
+            if (_theAccount.HideMyAccount != null && (bool)_theAccount.HideMyAccount)
+            {
 
-                }
-                else
-                {
-                    //if (!Common.HaveAccess(Session["roletype"].ToString(), Common.UserRoleType.OwnData))
-                    //{
-                        MenuItem miMyAccount = new MenuItem();
-                        miMyAccount.Text = "My Account";
-                        miMyAccount.Value = "UserName";
-                        miMyAccount.NavigateUrl = "~/Pages/Security/AccountDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&accountid=" + Cryptography.Encrypt(Session["AccountID"].ToString());
-                        miUserName.ChildItems.Add(miMyAccount);
-                    //}
-                }
-               
+            }
+            else
+            {
+                //if (!Common.HaveAccess(Session["roletype"].ToString(), Common.UserRoleType.OwnData))
+                //{
+                MenuItem miMyAccount = new MenuItem();
+                miMyAccount.Text = "My Account";
+                miMyAccount.Value = "UserName";
+                miMyAccount.NavigateUrl = "~/Pages/Security/AccountDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&accountid=" + Cryptography.Encrypt(Session["AccountID"].ToString());
+                miUserName.ChildItems.Add(miMyAccount);
+                //}
+            }
+
 
             //}
 
@@ -983,7 +981,7 @@ public partial class Home : System.Web.UI.MasterPage
 
             string strHideLinkMenu = SystemData.SystemOption_ValueByKey_Account("Hide Link Account Menu", int.Parse(Session["AccountID"].ToString()), null);
 
-            if(strHideLinkMenu!="" & strHideLinkMenu.ToLower()=="yes")
+            if (strHideLinkMenu != "" & strHideLinkMenu.ToLower() == "yes")
             {
                 //avoid the menu
             }
@@ -995,7 +993,8 @@ public partial class Home : System.Web.UI.MasterPage
                 miLinkToAnotherAccount.NavigateUrl = "~/Pages/User/AddAccount.aspx?menu=yes&UserID=" + _objUser.UserID.ToString();
                 miUserName.ChildItems.Add(miLinkToAnotherAccount);
             }
-            
+
+
 
             //MenuItem miChangePassword = new MenuItem();
             //miChangePassword.Text = "Change Password";
@@ -1011,131 +1010,137 @@ public partial class Home : System.Web.UI.MasterPage
             miSignOut.NavigateUrl = "~/Login.aspx?Logout=Yes";
             miUserName.ChildItems.Add(miSignOut);
 
-            //menuProfile.Attributes.Add("onclick", "alert('hello!')");
+
         }
     }
 
 
-      protected void BindMenuReport()
-      {
+    protected void BindMenuReport()
+    {
 
-          //hlReport.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
-          //hlDocuments.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
-                   
-      }
+        //hlReport.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+        //hlDocuments.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
 
-
+    }
 
 
-      protected void BindAccountMenu()
-      {
-          imgHouse.Visible = false;
-          menuAccount.Items.Clear();
-          string strAppPath = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
-
-          //User _objUser = (User)Session["User"];
-          int? iAccountID = SecurityManager.GetPrimaryAccountID((int)_objUser.UserID);
-          if (_objUser != null && _objUser.UserID > 0)
-          {
 
 
-              DataTable dtTemp = Common.DataTableFromText(@"SELECT DISTINCT UserRole.AccountID,  AccountName FROM 
+    protected void BindAccountMenu()
+    {
+        imgHouse.Visible = false;
+        menuAccount.Items.Clear();
+        string strAppPath = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath;
+
+        //User _objUser = (User)Session["User"];
+        int? iAccountID = SecurityManager.GetPrimaryAccountID((int)_objUser.UserID);
+        if (_objUser != null && _objUser.UserID > 0)
+        {
+
+
+            DataTable dtTemp = Common.DataTableFromText(@"SELECT DISTINCT UserRole.AccountID,  AccountName FROM 
                     UserRole INNER JOIN Account ON UserRole.AccountID=Account.AccountID
                     WHERE UserID=" + _objUser.UserID.ToString() + " ORDER BY AccountName");
 
-              if (dtTemp.Rows.Count > 1)
-              {
-                  menuAccount.Visible = true;
-                  imgHouse.Visible = true;
+            if (dtTemp.Rows.Count > 1)
+            {
+                menuAccount.Visible = true;
+                imgHouse.Visible = true;
 
-                  int i = 0;
-
-
-                  MenuItem miAccounts = new MenuItem();
-                  miAccounts.Text = "Accounts";
-                  miAccounts.NavigateUrl = "~/Default.aspx";
-                  miAccounts.Value = "Account";
-                  menuAccount.Items.Add(miAccounts);
-                  foreach (DataRow dr in dtTemp.Rows)
-                  {
-                          MenuItem miTempChild = new MenuItem();
-                          miTempChild.Text = dr["AccountName"].ToString();
-                          miTempChild.NavigateUrl = "javascript:document.getElementById('hfAccountIDToChangeAccount').value = '" + dr["AccountID"].ToString() + "';__doPostBack('ctl00$lkChangeAccount','')"; ;
-                          miAccounts.ChildItems.Add(miTempChild);
-                      
-                      i = i + 1;
-                  }
-
-                  Account theAccount = SecurityManager.Account_Details((int)iAccountID);
-
-                  //if (theAccount != null)
-                  //{
-                  //    MenuItem miTempChild = new MenuItem();
-                  //    miTempChild.Text = theAccount.AccountName;
-                  //    miTempChild.NavigateUrl = "javascript:document.getElementById('hfAccountIDToChangeAccount').value = '" + theAccount.AccountID + "';__doPostBack('ctl00$lkChangeAccount','')"; ;
-                  //    miAccounts.ChildItems.Add(miTempChild);
-                  //}
-
-                  Account theAccountRoot = SecurityManager.Account_Details(int.Parse(Session["AccountID"].ToString()));
-
-                  if (theAccountRoot != null)
-                  {
-                      miAccounts.Text = theAccountRoot.AccountName;
-                  }
-              }
-          }
-      }
+                int i = 0;
 
 
-      protected void BindOpenMenu()
-      {
-          menuOpen.Items.Clear();
-          if (!Common.HaveAccess(Session["roletype"].ToString(), Common.UserRoleType.OwnData))
-          {
-              
-              
-              //MenuItem miOpen = new MenuItem();
-              //miOpen.Text = "Open";
-              //miOpen.NavigateUrl = "~/Default.aspx";
-              //menuOpen.Items.Add(miOpen);
+                MenuItem miAccounts = new MenuItem();
+                miAccounts.Text = "Accounts";
+                miAccounts.NavigateUrl = "~/Default.aspx";
+                miAccounts.Value = "Account";
+                menuAccount.Items.Add(miAccounts);
+                foreach (DataRow dr in dtTemp.Rows)
+                {
 
-              MenuItem miOpen = new MenuItem();
-              miOpen.Text = "Documents";
-              miOpen.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
-              menuOpen.Items.Add(miOpen);
 
-              //MenuItem miDocument = new MenuItem();
-              //miDocument.Text = "Documents";
-              //miDocument.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
-              //miOpen.ChildItems.Add(miDocument);
+                    MenuItem miTempChild = new MenuItem();
+                    miTempChild.Text = dr["AccountName"].ToString();
+                    miTempChild.NavigateUrl = "javascript:document.getElementById('hfAccountIDToChangeAccount').value = '" + dr["AccountID"].ToString() + "';__doPostBack('ctl00$lkChangeAccount','')"; ;
+                    miAccounts.ChildItems.Add(miTempChild);
 
-              
+                    i = i + 1;
+                }
 
-             
-          }
-          else
-          {
-              menuOpen.Visible = false;
-              imgMenuOpen.Visible = false;
-          }
+                Account theAccount = SecurityManager.Account_Details((int)iAccountID);
 
-      }
+                //if (theAccount != null)
+                //{
+                //    MenuItem miTempChild = new MenuItem();
+                //    miTempChild.Text = theAccount.AccountName;
+                //    miTempChild.NavigateUrl = "javascript:document.getElementById('hfAccountIDToChangeAccount').value = '" + theAccount.AccountID + "';__doPostBack('ctl00$lkChangeAccount','')"; ;
+                //    miAccounts.ChildItems.Add(miTempChild);
+                //}
+
+                Account theAccountRoot = SecurityManager.Account_Details(int.Parse(Session["AccountID"].ToString()));
+
+                if (theAccountRoot != null)
+                {
+                    miAccounts.Text = theAccountRoot.AccountName;
+                }
+
+            }
+
+
+
+        }
+    }
+
+
+    protected void BindOpenMenu()
+    {
+        menuOpen.Items.Clear();
+        if (!Common.HaveAccess(Session["roletype"].ToString(), Common.UserRoleType.OwnData))
+        {
+
+
+            //MenuItem miOpen = new MenuItem();
+            //miOpen.Text = "Open";
+            //miOpen.NavigateUrl = "~/Default.aspx";
+            //menuOpen.Items.Add(miOpen);
+
+            MenuItem miOpen = new MenuItem();
+            miOpen.Text = "Documents";
+            miOpen.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+            menuOpen.Items.Add(miOpen);
+
+            //MenuItem miDocument = new MenuItem();
+            //miDocument.Text = "Documents";
+            //miDocument.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+            //miOpen.ChildItems.Add(miDocument);
+
+
+
+
+        }
+        else
+        {
+            menuOpen.Visible = false;
+            imgMenuOpen.Visible = false;
+        }
+
+    }
     public void BindMenu()
     {
         menuETS.Items.Clear();
-        string strAppPath = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
+        string strAppPath = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath;
 
-         //int iTN=0;
-         //int iTempCount = 0;
-         //User _objUser = (User)Session["User"];
+        //int iTN=0;
+        //int iTempCount = 0;
+        //User _objUser = (User)Session["User"];
 
-         //_objUser = SecurityManager.User_Details((int)_objUser.UserID);
-         //Session["User"] = _objUser;
+        //_objUser = SecurityManager.User_Details((int)_objUser.UserID);
+        //Session["User"] = _objUser;
 
         UserRole theUserRole = SecurityManager.GetUserRole((int)_objUser.UserID, int.Parse(Session["AccountID"].ToString()));
         if (theUserRole == null)
         {
-            if(Session["roletype"].ToString()=="1")
+            if (Session["roletype"].ToString() == "1")
             {
                 theUserRole = SecurityManager.GetGlobalUserRole((int)_objUser.UserID);
             }
@@ -1143,638 +1148,638 @@ public partial class Home : System.Web.UI.MasterPage
         }
         Session["UserRole"] = theUserRole;
 
-        if (_objUser.Email.ToLower() == SystemData.SystemOption_ValueByKey_Account("DemoAccountCreator",null,null).ToLower())
-         {
-             _bDemoUser = true;
-         }
+        if (_objUser.Email.ToLower() == SystemData.SystemOption_ValueByKey_Account("DemoAccountCreator", null, null).ToLower())
+        {
+            _bDemoUser = true;
+        }
 
         string strHideByShowWhen = "";
-         if ((bool)theUserRole.IsAdvancedSecurity)
-         {
-             //Session["STs"] = RecordManager.ets_Table_ByUser_AdvancedSecurity((int)_objUser.UserID, "-1,3,4,5,7,8,9");
-             Session["STs"] = RecordManager.ets_Table_ByUser_AdvancedSecurity((int)theUserRole.RoleID);
+        if ((bool)theUserRole.IsAdvancedSecurity)
+        {
+            //Session["STs"] = RecordManager.ets_Table_ByUser_AdvancedSecurity((int)_objUser.UserID, "-1,3,4,5,7,8,9");
+            Session["STs"] = RecordManager.ets_Table_ByUser_AdvancedSecurity((int)theUserRole.RoleID);
 
-             strHideByShowWhen = RecordManager.ets_Table_Hide_ByShowMenu((int)theUserRole.RoleID);
-         }
-         else
-         {
-             Session["STs"] = "";
-            
-
-//             if (Session["roletype"].ToString() == Common.UserRoleType.OwnData)
-//             {
-//                 //
-//                 DataTable dtTables = Common.DataTableFromText(@"SELECT DISTINCT Record.TableID FROM Record INNER JOIN [Table] 
-//                    ON Record.TableID=[Table].TableID WHERE OwnerUserID=" + _objUser.UserID.ToString() + " OR Record.EnteredBy=" + _objUser.UserID.ToString());
-
-//                 string strTableIDs = "-1,";
-//                 foreach (DataRow dr in dtTables.Rows)
-//                 {
-//                     strTableIDs = strTableIDs + dr[0].ToString() + ",";
-//                 }
-
-//                 strTableIDs = strTableIDs.Substring(0, strTableIDs.Length - 1);
-//                 Session["STs"] = strTableIDs;
-//             }
+            strHideByShowWhen = RecordManager.ets_Table_Hide_ByShowMenu((int)theUserRole.RoleID);
+        }
+        else
+        {
+            Session["STs"] = "";
 
 
-             if (Common.HaveAccess(Session["roletype"].ToString(),Common.UserRoleType.None))
-             {
-                 Session["STs"] = "-1";
-             }
-         }
+            //             if (Session["roletype"].ToString() == Common.UserRoleType.OwnData)
+            //             {
+            //                 //
+            //                 DataTable dtTables = Common.DataTableFromText(@"SELECT DISTINCT Record.TableID FROM Record INNER JOIN [Table] 
+            //                    ON Record.TableID=[Table].TableID WHERE OwnerUserID=" + _objUser.UserID.ToString() + " OR Record.EnteredBy=" + _objUser.UserID.ToString());
+
+            //                 string strTableIDs = "-1,";
+            //                 foreach (DataRow dr in dtTables.Rows)
+            //                 {
+            //                     strTableIDs = strTableIDs + dr[0].ToString() + ",";
+            //                 }
+
+            //                 strTableIDs = strTableIDs.Substring(0, strTableIDs.Length - 1);
+            //                 Session["STs"] = strTableIDs;
+            //             }
+
+
+            if (Common.HaveAccess(Session["roletype"].ToString(), Common.UserRoleType.None))
+            {
+                Session["STs"] = "-1";
+            }
+        }
 
 
 
-         if (_objUser != null && _objUser.UserID > 0)
-         {
+        if (_objUser != null && _objUser.UserID > 0)
+        {
 
-             //
+            //
 
-             Account theAccount = SecurityManager.Account_Details(int.Parse(Session["AccountID"].ToString()));
-                                     
-             //populate accountwise things
+            Account theAccount = SecurityManager.Account_Details(int.Parse(Session["AccountID"].ToString()));
 
-             
+            //populate accountwise things
 
-             if (theAccount.Logo != null)
-             {
-                 if ((bool)theAccount.UseDefaultLogo==false)
+
+
+            if (theAccount.Logo != null)
+            {
+                if ((bool)theAccount.UseDefaultLogo == false)
                     imgLogo.ImageUrl = "~/SSPhoto.ashx?AccountID=" + Session["AccountID"].ToString() + "&type=o";
-             }
-             
-             //populate dynamic [Table] Group 
-             List<Menu> listSTG = RecordManager.ets_Menu_List(int.Parse(Session["AccountID"].ToString()));
+            }
+
+            //populate dynamic [Table] Group 
+            List<Menu> listSTG = RecordManager.ets_Menu_List(int.Parse(Session["AccountID"].ToString()));
 
 
-             if (!Common.HaveAccess(Session["roletype"].ToString(), Common.UserRoleType.OwnData))
-             {
-                 
-                 if (theAccount.HomeMenuCaption.Trim() != "")
-                 {                    
+            if (!Common.HaveAccess(Session["roletype"].ToString(), Common.UserRoleType.OwnData))
+            {
 
-                     MenuItem miDefault = new MenuItem();
-                     miDefault.Text = theAccount.HomeMenuCaption;
-                     miDefault.NavigateUrl = "~/Default.aspx";
+                if (theAccount.HomeMenuCaption.Trim() != "")
+                {
 
-                     if (theAccount.DisplayTableID != null)
-                     {
-                         miDefault.NavigateUrl = "~/Pages/Record/RecordList.aspx?TableID=" +
-                                Cryptography.Encrypt(theAccount.DisplayTableID.ToString());
-                     }
+                    MenuItem miDefault = new MenuItem();
+                    miDefault.Text = theAccount.HomeMenuCaption;
+                    miDefault.NavigateUrl = "~/Default.aspx";
 
-                    
-                     menuETS.Items.Add(miDefault);
-                 }
-                
-             }
-
-            
-
-             //foreach (Menu item in listSTG)
-             //{
-             //    MenuItem miTemp = new MenuItem();
-             //    miTemp.Text = item.MenuP;
-             //    List<Table> lstTable = RecordManager.ets_Table_Select(null, "", (int)item.MenuID, null, null, null,true,
-             //        "st.DisplayOrder", "ASC", null, null, ref iTN, Session["STs"].ToString());
-             //    miTemp.Value = item.MenuP;
-             //    int iLevel = 1;
-             //    if (iTN > 0)
-             //    {
-             //        menuETS.Items.Add(miTemp);
-             //        foreach (Table tempST in lstTable)
-             //        {
-
-             //            MenuItem miTempChild = new MenuItem();
-             //            miTempChild.Text = tempST.TableName;
-             //            miTempChild.Value = miTemp.Value;
-             //            miTempChild.NavigateUrl = "~/Pages/Record/RecordList.aspx?TableID=" +
-             //                Cryptography.Encrypt(tempST.TableID.ToString());
-             //            miTemp.ChildItems.Add(miTempChild);
-
-             //            if (iLevel==1)
-             //            {
-             //                miTemp.NavigateUrl = miTempChild.NavigateUrl;
-
-             //            }
-
-             //            iLevel = iLevel + 1;
-             //        }
-             //    }
-             //}
+                    if (theAccount.DisplayTableID != null)
+                    {
+                        miDefault.NavigateUrl = "~/Pages/Record/RecordList.aspx?TableID=" +
+                               Cryptography.Encrypt(theAccount.DisplayTableID.ToString());
+                    }
 
 
-             foreach (Menu item in listSTG)
-             {
-                 MenuItem miTemp = new MenuItem();
-                 miTemp.Text = item.MenuP;
-                 miTemp.Value = item.MenuP;
+                    menuETS.Items.Add(miDefault);
+                }
 
-                 if (item.OpenInNewWindow != null && (bool)item.OpenInNewWindow)
-                 {
-                     miTemp.Target = "_blank";
-                 }
-
-                 bool bOkToAdd = true;
-
-                 if (!string.IsNullOrEmpty(item.ExternalPageLink))
-                 {
-                     miTemp.NavigateUrl = item.ExternalPageLink;
-                 }
-                 if(item.DocumentID!=null)
-                 {
-                     string strURL = "#";
-                     Document theDocument = DocumentManager.ets_Document_Detail((int)item.DocumentID);
-                     if (theDocument != null)
-                     {
-
-                         if (theDocument.ReportType == "ssrs")
-                         {
-                             strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/SSRS.aspx?DocumentID=" + Cryptography.Encrypt(theDocument.DocumentID.ToString()) + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
-
-                         }
-                         else if (theDocument.DocumentTypeID != null)
-                         {
-
-                             strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/View.aspx?DocumentID=" + theDocument.DocumentID.ToString() + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
-                         }
-
-                     }
-                     miTemp.NavigateUrl = strURL;
-
-                 }
-                 if (item.DocumentTypeID != null)
-                 {
-                     string strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?Category=" + Cryptography.Encrypt(item.DocumentTypeID.ToString()) + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
-                     
-                     miTemp.NavigateUrl = strURL;
-
-                 }
-
-                 if (item.MenuType != "" && item.MenuType=="doc")
-                 {
-                     string strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
-
-                     miTemp.NavigateUrl = strURL;
-
-                 }
-
-                 if(item.TableID!=null)
-                 {
-                     bool bFound = false;
-                     miTemp.NavigateUrl = "~/Pages/Record/RecordList.aspx?TableID=" +
-                         Cryptography.Encrypt(item.TableID.ToString());                   
-                     if ((bool)theUserRole.IsAdvancedSecurity)
-                     {
-                         string[] strSTs = Session["STs"].ToString().Split(',');
-                         foreach (string strST in strSTs)
-                         {
-                             if (strST == item.TableID.ToString())
-                             {
-                                 bFound = true;
-
-                                 if (strHideByShowWhen!="")
-                                 {
-                                     string[] strSTh = strHideByShowWhen.Split(',');
-                                     foreach (string eachSTh in strSTh)
-                                     {
-                                         if (eachSTh == item.TableID.ToString())
-                                          {
-                                              bFound = false;
-                                              break;
-                                          }
-                                     }
-                                 }
+            }
 
 
-                                 break;
-                             }
-                         }
 
-                     }
-                     else
-                     {
-                         bFound = true;
-                     }
-                    if(bFound==false)
+            //foreach (Menu item in listSTG)
+            //{
+            //    MenuItem miTemp = new MenuItem();
+            //    miTemp.Text = item.MenuP;
+            //    List<Table> lstTable = RecordManager.ets_Table_Select(null, "", (int)item.MenuID, null, null, null,true,
+            //        "st.DisplayOrder", "ASC", null, null, ref iTN, Session["STs"].ToString());
+            //    miTemp.Value = item.MenuP;
+            //    int iLevel = 1;
+            //    if (iTN > 0)
+            //    {
+            //        menuETS.Items.Add(miTemp);
+            //        foreach (Table tempST in lstTable)
+            //        {
+
+            //            MenuItem miTempChild = new MenuItem();
+            //            miTempChild.Text = tempST.TableName;
+            //            miTempChild.Value = miTemp.Value;
+            //            miTempChild.NavigateUrl = "~/Pages/Record/RecordList.aspx?TableID=" +
+            //                Cryptography.Encrypt(tempST.TableID.ToString());
+            //            miTemp.ChildItems.Add(miTempChild);
+
+            //            if (iLevel==1)
+            //            {
+            //                miTemp.NavigateUrl = miTempChild.NavigateUrl;
+
+            //            }
+
+            //            iLevel = iLevel + 1;
+            //        }
+            //    }
+            //}
+
+
+            foreach (Menu item in listSTG)
+            {
+                MenuItem miTemp = new MenuItem();
+                miTemp.Text = item.MenuP;
+                miTemp.Value = item.MenuP;
+
+                if (item.OpenInNewWindow != null && (bool)item.OpenInNewWindow)
+                {
+                    miTemp.Target = "_blank";
+                }
+
+                bool bOkToAdd = true;
+
+                if (!string.IsNullOrEmpty(item.ExternalPageLink))
+                {
+                    miTemp.NavigateUrl = item.ExternalPageLink;
+                }
+                if (item.DocumentID != null)
+                {
+                    string strURL = "#";
+                    Document theDocument = DocumentManager.ets_Document_Detail((int)item.DocumentID);
+                    if (theDocument != null)
+                    {
+
+                        if (theDocument.ReportType == "ssrs")
+                        {
+                            strURL = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/SSRS.aspx?DocumentID=" + Cryptography.Encrypt(theDocument.DocumentID.ToString()) + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
+
+                        }
+                        else if (theDocument.DocumentTypeID != null)
+                        {
+
+                            strURL = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/DocGen/View.aspx?DocumentID=" + theDocument.DocumentID.ToString() + "&SearchCriteria=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SSearchCriteriaID=" + Cryptography.Encrypt("-1");
+                        }
+
+                    }
+                    miTemp.NavigateUrl = strURL;
+
+                }
+                if (item.DocumentTypeID != null)
+                {
+                    string strURL = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?Category=" + Cryptography.Encrypt(item.DocumentTypeID.ToString()) + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+
+                    miTemp.NavigateUrl = strURL;
+
+                }
+
+                if (item.MenuType != "" && item.MenuType == "doc")
+                {
+                    string strURL = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+
+                    miTemp.NavigateUrl = strURL;
+
+                }
+
+                if (item.TableID != null)
+                {
+                    bool bFound = false;
+                    miTemp.NavigateUrl = "~/Pages/Record/RecordList.aspx?TableID=" +
+                        Cryptography.Encrypt(item.TableID.ToString());
+                    if ((bool)theUserRole.IsAdvancedSecurity)
+                    {
+                        string[] strSTs = Session["STs"].ToString().Split(',');
+                        foreach (string strST in strSTs)
+                        {
+                            if (strST == item.TableID.ToString())
+                            {
+                                bFound = true;
+
+                                if (strHideByShowWhen != "")
+                                {
+                                    string[] strSTh = strHideByShowWhen.Split(',');
+                                    foreach (string eachSTh in strSTh)
+                                    {
+                                        if (eachSTh == item.TableID.ToString())
+                                        {
+                                            bFound = false;
+                                            break;
+                                        }
+                                    }
+                                }
+
+
+                                break;
+                            }
+                        }
+
+                    }
+                    else
+                    {
+                        bFound = true;
+                    }
+                    if (bFound == false)
                     {
                         bOkToAdd = false;
                     }
-                 }
-
-                 if (bOkToAdd)
-                 {
-                     PopulateSubMenu(ref miTemp, ref miTemp, (int)item.MenuID);
-
-                     if (miTemp.ChildItems.Count > 0 || !string.IsNullOrEmpty(item.ExternalPageLink)
-                         || item.TableID != null || item.DocumentID != null || item.MenuType!="" || item.DocumentTypeID!=null)
-                     {
-                         menuETS.Items.Add(miTemp);
-                     }
-                 }
-                
-             }
-
-
-             if (Common.HaveAccess(Session["roletype"].ToString(), "1,2"))
-             {
-                 if (theAccount.IsReportTopMenu != null)
-                 {
-                     if ((bool)theAccount.IsReportTopMenu)
-                     {
-                         MenuItem miTopReports = new MenuItem();
-                         miTopReports.Text = "Reports";
-                         miTopReports.Value = "Reports";
-                         miTopReports.Selectable = true;
-                         miTopReports.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
-                         menuETS.Items.Add(miTopReports);
-                     }
-                 }
-             }
-
-             bool bHideAdminMenusExceptUsers = false;
-             if (SystemData.SystemOption_ValueByKey_Account("HideAdminMenusExceptUsers",null,null).ToLower() == "yes"
-                 && Common.HaveAccess(Session["roletype"].ToString(), "1")==false)
-             {
-                 bHideAdminMenusExceptUsers = true;
-             }
-
-             if (Common.HaveAccess(Session["roletype"].ToString(), "1,2"))
-             {
-
-                 MenuItem miAdmin = new MenuItem();
-                 miAdmin.Text = "Admin";
-                 miAdmin.Value = "Admin";
-                 miAdmin.Selectable = true;
-                 miAdmin.NavigateUrl = "~/Pages/User/List.aspx";
-                 menuETS.Items.Add(miAdmin);
-
-                 if (_bIsAccountHolder || _bGod)
-                 {
-                     MenuItem miAudit = new MenuItem();
-                     miAudit.Text = "Audit";
-                     miAudit.Value = "Admin";
-                     miAudit.NavigateUrl = "~/Pages/Document/AuditReport.aspx";
-                     miAdmin.ChildItems.Add(miAudit);
-                 }
-                
-
-                 if (bHideAdminMenusExceptUsers == false)
-                 {
-                     if (_bIsAccountHolder || _bGod)
-                     {
-                         MenuItem miUploads = new MenuItem();
-                         miUploads.Text = "Auto Uploads";
-                         miUploads.Value = "Admin";
-                         miUploads.NavigateUrl = "~/Pages/Record/Upload.aspx";
-                         miAdmin.ChildItems.Add(miUploads);
-                     }
-                 }
-
-                 if (Common.HaveAccess(Session["roletype"].ToString(), "1"))
-                 {
-                     MenuItem miAccounts = new MenuItem();
-                     miAccounts.Text = "Accounts";
-                     miAccounts.Value = "Admin";
-                     miAccounts.NavigateUrl = "~/Pages/Security/AccountList.aspx";
-                     miAdmin.ChildItems.Add(miAccounts);
-
-                 }
-                 else
-                 {
-                     //User objUser = (User)Session["User"];
-
-                     if (_bDemoUser)
-                     {
-                         MenuItem miAccounts = new MenuItem();
-                         miAccounts.Text = "Add Account";
-                         miAccounts.Value = "Admin";
-                         miAccounts.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/SystemSignUp.aspx";
-                         miAdmin.ChildItems.Add(miAccounts);
-                     }
-
-                 }
-
-
-                 if (_bDemoUser == false)
-                 {
-                     //MenuItem miAudit = new MenuItem();
-                     //miAudit.Text = "Audit";
-                     //miAudit.Value = "Admin";
-                     //miAudit.NavigateUrl = "~/Pages/Document/AuditReport.aspx";
-                     //miAdmin.ChildItems.Add(miAudit);
-
-                     if (bHideAdminMenusExceptUsers == false && Common.HaveAccess(Session["roletype"].ToString(), "1,2"))
-                     {
-                         string strOptionValue = SystemData.SystemOption_ValueByKey_Account("Show_Admin_Menu_Batches", int.Parse(Session["AccountID"].ToString()), null);
-                         if (_bIsAccountHolder || _bGod || (strOptionValue != "" && strOptionValue.ToLower() == "yes"))
-                         {
-                             MenuItem miBatches = new MenuItem();
-                             miBatches.Text = "Batches";
-                             miBatches.Value = "Admin";
-                             miBatches.NavigateUrl = "~/Pages/Record/Batches.aspx?menu=" + Cryptography.Encrypt("yes") + "&TableID=" + Cryptography.Encrypt("-1");
-                             miAdmin.ChildItems.Add(miBatches);
-
-                         }
-                     }
-
-                    
-                     if (Common.HaveAccess(Session["roletype"].ToString(), "1"))
-                     {
-
-
-                        
-
-                         MenuItem miConfiguration = new MenuItem();
-                         miConfiguration.Text = "Configuration";
-                         miConfiguration.Value = "Admin";
-                         //miConfiguration.NavigateUrl = "~/Pages/Company/ContactUsAdmin.aspx";
-                         miConfiguration.Selectable = false;
-                         miAdmin.ChildItems.Add(miConfiguration);
-
-
-                         MenuItem miCopyFields = new MenuItem();
-                         miCopyFields.Text = "Copy Field";
-                         miCopyFields.Value = "Admin";
-                         miCopyFields.NavigateUrl = "~/Pages/SystemData/CopyRecordField.aspx";
-                         miConfiguration.ChildItems.Add(miCopyFields);
-
-                         MenuItem miResetValues = new MenuItem();
-                         miResetValues.Text = "Reset Values";
-                         miResetValues.Value = "Admin";
-                         miResetValues.NavigateUrl = "~/Pages/SystemData/ResetValues.aspx";
-                         miConfiguration.ChildItems.Add(miResetValues);
-
-                         MenuItem miUpdateLinkedTables = new MenuItem();
-                         miUpdateLinkedTables.Text = "Update Linked Tables";
-                         miUpdateLinkedTables.Value = "Admin";
-                         miUpdateLinkedTables.NavigateUrl = "~/Pages/SystemData/UpdateLinkedTables.aspx";
-                         miConfiguration.ChildItems.Add(miUpdateLinkedTables);
-
-                         //MenuItem miWorkFlow = new MenuItem();
-                         //miWorkFlow.Text = "WorkFlow";
-                         //miWorkFlow.Value = "Admin";
-                         //miWorkFlow.NavigateUrl = "~/Pages/WorkFlow/WorkFlow.aspx";
-                         //miConfiguration.ChildItems.Add(miWorkFlow);
-
-                        
-
-
-                         MenuItem miContactAdmin = new MenuItem();
-                         miContactAdmin.Text = "Contacts";
-                         miContactAdmin.Value = "Admin";
-                         miContactAdmin.NavigateUrl = "~/Pages/Company/ContactUsAdmin.aspx";
-                         miAdmin.ChildItems.Add(miContactAdmin);
-
-                         MenuItem miContents = new MenuItem();
-                         miContents.Text = "Contents";
-                         miContents.Value = "Admin";
-                         miContents.NavigateUrl = "~/Pages/SystemData/Content.aspx";
-                         miAdmin.ChildItems.Add(miContents);
-
-                        
-
-                     }
-
-                 }
-
-                 if (Common.HaveAccess(Session["roletype"].ToString(), "1,2"))
-                 {
-
-                     if (bHideAdminMenusExceptUsers == false)
-                     {
-                       
-
-                         if (_bIsAccountHolder || _bGod)
-                         {
-                             MenuItem miDashboard = new MenuItem();
-                             miDashboard.Text = "Dashboards";
-                             miDashboard.Value = "Admin";
-                             miDashboard.NavigateUrl = "~/Pages/Home/DashBoard.aspx";
-                             miAdmin.ChildItems.Add(miDashboard);
-                         }
-
-                         MenuItem miGraph = new MenuItem();
-                         miGraph.Text = "Graphs";
-                         miGraph.Value = "Admin";
-                         miGraph.NavigateUrl = "~/Pages/Graph/GraphOptions.aspx";
-                         miAdmin.ChildItems.Add(miGraph);
-                         if (_bIsAccountHolder || _bGod)
-                         {
-                             MenuItem miGraphDef = new MenuItem();
-                             miGraphDef.Text = "Graph Definitions";
-                             miGraphDef.Value = "Admin";
-                             miGraphDef.NavigateUrl = "~/Pages/Graph/GraphDef.aspx";
-                             miAdmin.ChildItems.Add(miGraphDef);
-                         }
-                     }
-                    
-                 }
-
-                
-
-                 if (Common.HaveAccess(Session["roletype"].ToString(), "1"))
-                 {
-                     MenuItem miErrorLogs = new MenuItem();
-                     miErrorLogs.Text = "Error Logs";
-                     miErrorLogs.Value = "Admin";
-                     miErrorLogs.NavigateUrl = "~/Pages/SystemData/ErrorLog.aspx";
-                     miAdmin.ChildItems.Add(miErrorLogs);
-
-
-                     MenuItem miLookup = new MenuItem();
-                     miLookup.Text = "Look up data";
-                     miLookup.Value = "Admin";
-                     miLookup.NavigateUrl = "#";
-                     miAdmin.ChildItems.Add(miLookup);
-
-
-
-
-                     MenuItem miCountry = new MenuItem();
-                     miCountry.Text = "Country";
-                     miCountry.Value = "Admin";
-                     miCountry.NavigateUrl = "~/Pages/LookUp/LookUp.aspx?LookUpTypeID=" + Cryptography.Encrypt("-1");
-                     miLookup.ChildItems.Add(miCountry);
-                 }
-
-
-                 if (Common.HaveAccess(Session["roletype"].ToString(), "1,2"))
-                 {
-                     if (bHideAdminMenusExceptUsers == false)
-                     {
-                         string strOptionValue = SystemData.SystemOption_ValueByKey_Account("Show_Admin_Menu_Menus", int.Parse(Session["AccountID"].ToString()), null);
-                         if (_bIsAccountHolder || _bGod || (strOptionValue != "" && strOptionValue.ToLower()=="yes"))
-                         {
-                             MenuItem miMenus = new MenuItem();
-                             miMenus.Text = "Menus";
-                             miMenus.Value = "Admin";
-                             miMenus.NavigateUrl = "~/Pages/Record/TableGroup.aspx";
-                             miAdmin.ChildItems.Add(miMenus);
-                         }                        
-                     }
-
-                     MenuItem miMessages = new MenuItem();
-                     miMessages.Text = "Messages";
-                     miMessages.Value = "Admin";
-                     miMessages.NavigateUrl = "~/Pages/Record/MessageList.aspx";
-                     miAdmin.ChildItems.Add(miMessages);
-                 }
-
-
-                 if (_bDemoUser == false)
-                 {
-                     if (bHideAdminMenusExceptUsers == false && Common.HaveAccess(Session["roletype"].ToString(), "1,2"))
-                     {
-                         string strOptionValue = SystemData.SystemOption_ValueByKey_Account("Show_Admin_Menu_Notification", int.Parse(Session["AccountID"].ToString()), null);
-                         if (_bIsAccountHolder || _bGod || (strOptionValue != "" && strOptionValue.ToLower() == "yes"))
-                         {
-                             MenuItem miNotifications = new MenuItem();
-                             miNotifications.Text = "Notifications";
-                             miNotifications.Value = "Admin";
-                             miNotifications.NavigateUrl = "~/Pages/Record/Notification.aspx";
-                             miAdmin.ChildItems.Add(miNotifications);
-                         }
-                     }
-                 }
-
-                 if (Common.HaveAccess(Session["roletype"].ToString(), "1"))
-                 {
-                   
-                     MenuItem miInvoices = new MenuItem();
-                     miInvoices.Text = "Invoices";
-                     miInvoices.Value = "Admin";
-                     miInvoices.NavigateUrl = "~/Pages/Security/Invoice.aspx";
-                     miAdmin.ChildItems.Add(miInvoices);
-
-
-                    
-
-                 }
-
-                 if (_bDemoUser == false)
-                 {
-                     if (Common.HaveAccess(Session["roletype"].ToString(), "1,2"))
-                     {
-                         if (bHideAdminMenusExceptUsers == false)
-                         {
-                             if (_bIsAccountHolder || _bGod)
-                             {
-                                 MenuItem miReports = new MenuItem();
-                                 miReports.Text = "Reports";
-                                 miReports.Value = "Admin";
-                                 miReports.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
-                                 //miReports.Selectable = false;
-                                 miAdmin.ChildItems.Add(miReports);
-                             }
-                          
-                         }
-                     }
-                     
-
-                     if (bHideAdminMenusExceptUsers == false && Common.HaveAccess(Session["roletype"].ToString(), "1,2"))
-                     {
-                         string strOptionValue = SystemData.SystemOption_ValueByKey_Account("Show_Admin_Menu_Tables", int.Parse(Session["AccountID"].ToString()), null);
-                         if (_bIsAccountHolder || _bGod || (strOptionValue != "" && strOptionValue.ToLower() == "yes"))
-                          {
-                              MenuItem miST = new MenuItem();
-                              miST.Text = SecurityManager.etsTerminology("", "Tables", "Tables");
-                              miST.Value = "Admin";
-                              miST.NavigateUrl = "~/Pages/Record/TableList.aspx";
-                              miAdmin.ChildItems.Add(miST);
-                          }                      
-                     }
-
-                    
-
-                     if (Common.HaveAccess(Session["roletype"].ToString(), "1"))
-                     {
-
-                         MenuItem miSystemOptions = new MenuItem();
-                         miSystemOptions.Text = "System Options";
-                         miSystemOptions.Value = "Admin";
-                         miSystemOptions.NavigateUrl = "~/Pages/SystemData/SystemOption.aspx";
-                         miAdmin.ChildItems.Add(miSystemOptions);
-                     }
-
-
-
-                     if (Common.HaveAccess(Session["roletype"].ToString(), "1,2"))
-                     {
-                         if (bHideAdminMenusExceptUsers == false)
-                         {
-                             if (_bIsAccountHolder || _bGod)
-                             {
-                                 MenuItem miTerminology = new MenuItem();
-                                 miTerminology.Text = "Terminology";
-                                 miTerminology.Value = "Admin";
-                                 miTerminology.NavigateUrl = "~/Pages/Security/Terminology.aspx";
-                                 miAdmin.ChildItems.Add(miTerminology);
-                             }
-                         }
-                     
-
-
-                     }
-
-
-                     MenuItem miUsers = new MenuItem();
-                     miUsers.Text = "Users";
-                     miUsers.Value = "Admin";
-                     miUsers.NavigateUrl = "~/Pages/User/List.aspx";
-                     miAdmin.ChildItems.Add(miUsers);
-
-                     if (Common.HaveAccess(Session["roletype"].ToString(), "1"))
-                     {
-
-                        
-
-                         MenuItem miVisitorPageCount = new MenuItem();
-                         miVisitorPageCount.Text = "Visitors";
-                         miVisitorPageCount.Value = "Admin";
-                         miVisitorPageCount.NavigateUrl = "~/Pages/SystemData/PageCount.aspx";
-                         miAdmin.ChildItems.Add(miVisitorPageCount);
-
-
-                        
-
-                         MenuItem miForm = new MenuItem();
-                         miForm.Text = "Form";
-                         miForm.Value = "Admin";
-                         miForm.NavigateUrl = "~/Pages/Form/Form.aspx";
-                         miAdmin.ChildItems.Add(miForm);
-
-                     }
-
-                    
-                    
-                 }
-
-             }
-
-
-
-
-
-         }
-         else
-         {
-             if (Session["LoginAccount"] == null)
-             {
-                 Session.Clear();
-                 FormsAuthentication.SignOut();
-                 Response.Redirect("~/Login.aspx", false);
-             }
-             else
-             {
-                 string strLoginAccount = Session["LoginAccount"].ToString();
-                 Session.Clear();
-                 FormsAuthentication.SignOut();
-                 Response.Redirect("~/Login.aspx?" + strLoginAccount, false);
-             }
-
-         }
-         
+                }
+
+                if (bOkToAdd)
+                {
+                    PopulateSubMenu(ref miTemp, ref miTemp, (int)item.MenuID);
+
+                    if (miTemp.ChildItems.Count > 0 || !string.IsNullOrEmpty(item.ExternalPageLink)
+                        || item.TableID != null || item.DocumentID != null || item.MenuType != "" || item.DocumentTypeID != null)
+                    {
+                        menuETS.Items.Add(miTemp);
+                    }
+                }
+
+            }
+
+
+            if (Common.HaveAccess(Session["roletype"].ToString(), "1,2"))
+            {
+                if (theAccount.IsReportTopMenu != null)
+                {
+                    if ((bool)theAccount.IsReportTopMenu)
+                    {
+                        MenuItem miTopReports = new MenuItem();
+                        miTopReports.Text = "Reports";
+                        miTopReports.Value = "Reports";
+                        miTopReports.Selectable = true;
+                        miTopReports.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+                        menuETS.Items.Add(miTopReports);
+                    }
+                }
+            }
+
+            bool bHideAdminMenusExceptUsers = false;
+            if (SystemData.SystemOption_ValueByKey_Account("HideAdminMenusExceptUsers", null, null).ToLower() == "yes"
+                && Common.HaveAccess(Session["roletype"].ToString(), "1") == false)
+            {
+                bHideAdminMenusExceptUsers = true;
+            }
+
+            if (Common.HaveAccess(Session["roletype"].ToString(), "1,2"))
+            {
+
+                MenuItem miAdmin = new MenuItem();
+                miAdmin.Text = "Admin";
+                miAdmin.Value = "Admin";
+                miAdmin.Selectable = true;
+                miAdmin.NavigateUrl = "~/Pages/User/List.aspx";
+                menuETS.Items.Add(miAdmin);
+
+                if (_bIsAccountHolder || _bGod)
+                {
+                    MenuItem miAudit = new MenuItem();
+                    miAudit.Text = "Audit";
+                    miAudit.Value = "Admin";
+                    miAudit.NavigateUrl = "~/Pages/Document/AuditReport.aspx";
+                    miAdmin.ChildItems.Add(miAudit);
+                }
+
+
+                if (bHideAdminMenusExceptUsers == false)
+                {
+                    if (_bIsAccountHolder || _bGod)
+                    {
+                        MenuItem miUploads = new MenuItem();
+                        miUploads.Text = "Auto Uploads";
+                        miUploads.Value = "Admin";
+                        miUploads.NavigateUrl = "~/Pages/Record/Upload.aspx";
+                        miAdmin.ChildItems.Add(miUploads);
+                    }
+                }
+
+                if (Common.HaveAccess(Session["roletype"].ToString(), "1"))
+                {
+                    MenuItem miAccounts = new MenuItem();
+                    miAccounts.Text = "Accounts";
+                    miAccounts.Value = "Admin";
+                    miAccounts.NavigateUrl = "~/Pages/Security/AccountList.aspx";
+                    miAdmin.ChildItems.Add(miAccounts);
+
+                }
+                else
+                {
+                    //User objUser = (User)Session["User"];
+
+                    if (_bDemoUser)
+                    {
+                        MenuItem miAccounts = new MenuItem();
+                        miAccounts.Text = "Add Account";
+                        miAccounts.Value = "Admin";
+                        miAccounts.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/SystemSignUp.aspx";
+                        miAdmin.ChildItems.Add(miAccounts);
+                    }
+
+                }
+
+
+                if (_bDemoUser == false)
+                {
+                    //MenuItem miAudit = new MenuItem();
+                    //miAudit.Text = "Audit";
+                    //miAudit.Value = "Admin";
+                    //miAudit.NavigateUrl = "~/Pages/Document/AuditReport.aspx";
+                    //miAdmin.ChildItems.Add(miAudit);
+
+                    if (bHideAdminMenusExceptUsers == false && Common.HaveAccess(Session["roletype"].ToString(), "1,2"))
+                    {
+                        string strOptionValue = SystemData.SystemOption_ValueByKey_Account("Show_Admin_Menu_Batches", int.Parse(Session["AccountID"].ToString()), null);
+                        if (_bIsAccountHolder || _bGod || (strOptionValue != "" && strOptionValue.ToLower() == "yes"))
+                        {
+                            MenuItem miBatches = new MenuItem();
+                            miBatches.Text = "Batches";
+                            miBatches.Value = "Admin";
+                            miBatches.NavigateUrl = "~/Pages/Record/Batches.aspx?menu=" + Cryptography.Encrypt("yes") + "&TableID=" + Cryptography.Encrypt("-1");
+                            miAdmin.ChildItems.Add(miBatches);
+
+                        }
+                    }
+
+
+                    if (Common.HaveAccess(Session["roletype"].ToString(), "1"))
+                    {
+
+
+
+
+                        MenuItem miConfiguration = new MenuItem();
+                        miConfiguration.Text = "Configuration";
+                        miConfiguration.Value = "Admin";
+                        //miConfiguration.NavigateUrl = "~/Pages/Company/ContactUsAdmin.aspx";
+                        miConfiguration.Selectable = false;
+                        miAdmin.ChildItems.Add(miConfiguration);
+
+
+                        MenuItem miCopyFields = new MenuItem();
+                        miCopyFields.Text = "Copy Field";
+                        miCopyFields.Value = "Admin";
+                        miCopyFields.NavigateUrl = "~/Pages/SystemData/CopyRecordField.aspx";
+                        miConfiguration.ChildItems.Add(miCopyFields);
+
+                        MenuItem miResetValues = new MenuItem();
+                        miResetValues.Text = "Reset Values";
+                        miResetValues.Value = "Admin";
+                        miResetValues.NavigateUrl = "~/Pages/SystemData/ResetValues.aspx";
+                        miConfiguration.ChildItems.Add(miResetValues);
+
+                        MenuItem miUpdateLinkedTables = new MenuItem();
+                        miUpdateLinkedTables.Text = "Update Linked Tables";
+                        miUpdateLinkedTables.Value = "Admin";
+                        miUpdateLinkedTables.NavigateUrl = "~/Pages/SystemData/UpdateLinkedTables.aspx";
+                        miConfiguration.ChildItems.Add(miUpdateLinkedTables);
+
+                        //MenuItem miWorkFlow = new MenuItem();
+                        //miWorkFlow.Text = "WorkFlow";
+                        //miWorkFlow.Value = "Admin";
+                        //miWorkFlow.NavigateUrl = "~/Pages/WorkFlow/WorkFlow.aspx";
+                        //miConfiguration.ChildItems.Add(miWorkFlow);
+
+
+
+
+                        MenuItem miContactAdmin = new MenuItem();
+                        miContactAdmin.Text = "Contacts";
+                        miContactAdmin.Value = "Admin";
+                        miContactAdmin.NavigateUrl = "~/Pages/Company/ContactUsAdmin.aspx";
+                        miAdmin.ChildItems.Add(miContactAdmin);
+
+                        MenuItem miContents = new MenuItem();
+                        miContents.Text = "Contents";
+                        miContents.Value = "Admin";
+                        miContents.NavigateUrl = "~/Pages/SystemData/Content.aspx";
+                        miAdmin.ChildItems.Add(miContents);
+
+
+
+                    }
+
+                }
+
+                if (Common.HaveAccess(Session["roletype"].ToString(), "1,2"))
+                {
+
+                    if (bHideAdminMenusExceptUsers == false)
+                    {
+
+
+                        if (_bIsAccountHolder || _bGod)
+                        {
+                            MenuItem miDashboard = new MenuItem();
+                            miDashboard.Text = "Dashboards";
+                            miDashboard.Value = "Admin";
+                            miDashboard.NavigateUrl = "~/Pages/Home/DashBoard.aspx";
+                            miAdmin.ChildItems.Add(miDashboard);
+                        }
+
+                        MenuItem miGraph = new MenuItem();
+                        miGraph.Text = "Graphs";
+                        miGraph.Value = "Admin";
+                        miGraph.NavigateUrl = "~/Pages/Graph/GraphOptions.aspx";
+                        miAdmin.ChildItems.Add(miGraph);
+                        if (_bIsAccountHolder || _bGod)
+                        {
+                            MenuItem miGraphDef = new MenuItem();
+                            miGraphDef.Text = "Graph Definitions";
+                            miGraphDef.Value = "Admin";
+                            miGraphDef.NavigateUrl = "~/Pages/Graph/GraphDef.aspx";
+                            miAdmin.ChildItems.Add(miGraphDef);
+                        }
+                    }
+
+                }
+
+
+
+                if (Common.HaveAccess(Session["roletype"].ToString(), "1"))
+                {
+                    MenuItem miErrorLogs = new MenuItem();
+                    miErrorLogs.Text = "Error Logs";
+                    miErrorLogs.Value = "Admin";
+                    miErrorLogs.NavigateUrl = "~/Pages/SystemData/ErrorLog.aspx";
+                    miAdmin.ChildItems.Add(miErrorLogs);
+
+
+                    MenuItem miLookup = new MenuItem();
+                    miLookup.Text = "Look up data";
+                    miLookup.Value = "Admin";
+                    miLookup.NavigateUrl = "#";
+                    miAdmin.ChildItems.Add(miLookup);
+
+
+
+
+                    MenuItem miCountry = new MenuItem();
+                    miCountry.Text = "Country";
+                    miCountry.Value = "Admin";
+                    miCountry.NavigateUrl = "~/Pages/LookUp/LookUp.aspx?LookUpTypeID=" + Cryptography.Encrypt("-1");
+                    miLookup.ChildItems.Add(miCountry);
+                }
+
+
+                if (Common.HaveAccess(Session["roletype"].ToString(), "1,2"))
+                {
+                    if (bHideAdminMenusExceptUsers == false)
+                    {
+                        string strOptionValue = SystemData.SystemOption_ValueByKey_Account("Show_Admin_Menu_Menus", int.Parse(Session["AccountID"].ToString()), null);
+                        if (_bIsAccountHolder || _bGod || (strOptionValue != "" && strOptionValue.ToLower() == "yes"))
+                        {
+                            MenuItem miMenus = new MenuItem();
+                            miMenus.Text = "Menus";
+                            miMenus.Value = "Admin";
+                            miMenus.NavigateUrl = "~/Pages/Record/TableGroup.aspx";
+                            miAdmin.ChildItems.Add(miMenus);
+                        }
+                    }
+
+                    MenuItem miMessages = new MenuItem();
+                    miMessages.Text = "Messages";
+                    miMessages.Value = "Admin";
+                    miMessages.NavigateUrl = "~/Pages/Record/MessageList.aspx";
+                    miAdmin.ChildItems.Add(miMessages);
+                }
+
+
+                if (_bDemoUser == false)
+                {
+                    if (bHideAdminMenusExceptUsers == false && Common.HaveAccess(Session["roletype"].ToString(), "1,2"))
+                    {
+                        string strOptionValue = SystemData.SystemOption_ValueByKey_Account("Show_Admin_Menu_Notification", int.Parse(Session["AccountID"].ToString()), null);
+                        if (_bIsAccountHolder || _bGod || (strOptionValue != "" && strOptionValue.ToLower() == "yes"))
+                        {
+                            MenuItem miNotifications = new MenuItem();
+                            miNotifications.Text = "Notifications";
+                            miNotifications.Value = "Admin";
+                            miNotifications.NavigateUrl = "~/Pages/Record/Notification.aspx";
+                            miAdmin.ChildItems.Add(miNotifications);
+                        }
+                    }
+                }
+
+                if (Common.HaveAccess(Session["roletype"].ToString(), "1"))
+                {
+
+                    MenuItem miInvoices = new MenuItem();
+                    miInvoices.Text = "Invoices";
+                    miInvoices.Value = "Admin";
+                    miInvoices.NavigateUrl = "~/Pages/Security/Invoice.aspx";
+                    miAdmin.ChildItems.Add(miInvoices);
+
+
+
+
+                }
+
+                if (_bDemoUser == false)
+                {
+                    if (Common.HaveAccess(Session["roletype"].ToString(), "1,2"))
+                    {
+                        if (bHideAdminMenusExceptUsers == false)
+                        {
+                            if (_bIsAccountHolder || _bGod)
+                            {
+                                MenuItem miReports = new MenuItem();
+                                miReports.Text = "Reports";
+                                miReports.Value = "Admin";
+                                miReports.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+                                //miReports.Selectable = false;
+                                miAdmin.ChildItems.Add(miReports);
+                            }
+
+                        }
+                    }
+
+
+                    if (bHideAdminMenusExceptUsers == false && Common.HaveAccess(Session["roletype"].ToString(), "1,2"))
+                    {
+                        string strOptionValue = SystemData.SystemOption_ValueByKey_Account("Show_Admin_Menu_Tables", int.Parse(Session["AccountID"].ToString()), null);
+                        if (_bIsAccountHolder || _bGod || (strOptionValue != "" && strOptionValue.ToLower() == "yes"))
+                        {
+                            MenuItem miST = new MenuItem();
+                            miST.Text = SecurityManager.etsTerminology("", "Tables", "Tables");
+                            miST.Value = "Admin";
+                            miST.NavigateUrl = "~/Pages/Record/TableList.aspx";
+                            miAdmin.ChildItems.Add(miST);
+                        }
+                    }
+
+
+
+                    if (Common.HaveAccess(Session["roletype"].ToString(), "1"))
+                    {
+
+                        MenuItem miSystemOptions = new MenuItem();
+                        miSystemOptions.Text = "System Options";
+                        miSystemOptions.Value = "Admin";
+                        miSystemOptions.NavigateUrl = "~/Pages/SystemData/SystemOption.aspx";
+                        miAdmin.ChildItems.Add(miSystemOptions);
+                    }
+
+
+
+                    if (Common.HaveAccess(Session["roletype"].ToString(), "1,2"))
+                    {
+                        if (bHideAdminMenusExceptUsers == false)
+                        {
+                            if (_bIsAccountHolder || _bGod)
+                            {
+                                MenuItem miTerminology = new MenuItem();
+                                miTerminology.Text = "Terminology";
+                                miTerminology.Value = "Admin";
+                                miTerminology.NavigateUrl = "~/Pages/Security/Terminology.aspx";
+                                miAdmin.ChildItems.Add(miTerminology);
+                            }
+                        }
+
+
+
+                    }
+
+
+                    MenuItem miUsers = new MenuItem();
+                    miUsers.Text = "Users";
+                    miUsers.Value = "Admin";
+                    miUsers.NavigateUrl = "~/Pages/User/List.aspx";
+                    miAdmin.ChildItems.Add(miUsers);
+
+                    if (Common.HaveAccess(Session["roletype"].ToString(), "1"))
+                    {
+
+
+
+                        MenuItem miVisitorPageCount = new MenuItem();
+                        miVisitorPageCount.Text = "Visitors";
+                        miVisitorPageCount.Value = "Admin";
+                        miVisitorPageCount.NavigateUrl = "~/Pages/SystemData/PageCount.aspx";
+                        miAdmin.ChildItems.Add(miVisitorPageCount);
+
+
+
+
+                        MenuItem miForm = new MenuItem();
+                        miForm.Text = "Form";
+                        miForm.Value = "Admin";
+                        miForm.NavigateUrl = "~/Pages/Form/Form.aspx";
+                        miAdmin.ChildItems.Add(miForm);
+
+                    }
+
+
+
+                }
+
+            }
+
+
+
+
+
+        }
+        else
+        {
+            if (Session["LoginAccount"] == null)
+            {
+                Session.Clear();
+                FormsAuthentication.SignOut();
+                Response.Redirect("~/Login.aspx", false);
+            }
+            else
+            {
+                string strLoginAccount = Session["LoginAccount"].ToString();
+                Session.Clear();
+                FormsAuthentication.SignOut();
+                Response.Redirect("~/Login.aspx?" + strLoginAccount, false);
+            }
+
+        }
+
     }
     public bool DisplayAdmin()
     {
@@ -1782,7 +1787,7 @@ public partial class Home : System.Web.UI.MasterPage
         bool kq = false;
         if (Context.User.Identity.IsAuthenticated)
         {
-          
+
             string roletype = Session["roletype"].ToString();
             if (roletype.Length > 0)
             {
@@ -1791,14 +1796,14 @@ public partial class Home : System.Web.UI.MasterPage
                     kq = true;
                 }
             }
-           
+
         }
         return kq;
     }
     public bool DisplayGod()
     {
         bool kq = false;
-    
+
         if (Context.User.Identity.IsAuthenticated)
         {
             string roletype = Session["roletype"].ToString();
@@ -1809,7 +1814,7 @@ public partial class Home : System.Web.UI.MasterPage
                     kq = true;
                 }
             }
-            
+
         }
         return kq;
     }
@@ -1836,7 +1841,7 @@ public partial class Home : System.Web.UI.MasterPage
             //try
             //{
             //    Session["DoNotAllow"] = null;
-             
+
             //    Account theAccount = SecurityManager.Account_Details(int.Parse(Session["AccountID"].ToString()));
 
 
@@ -1847,7 +1852,7 @@ public partial class Home : System.Web.UI.MasterPage
             //    if (SecurityManager.IsRecordsExceeded(int.Parse(Session["AccountID"].ToString())))
             //    {
             //        Session["DoNotAllow"] = "true";
-                  
+
             //    }
 
 
@@ -1857,7 +1862,7 @@ public partial class Home : System.Web.UI.MasterPage
             //    //
             //}
 
-         
+
             try
             {
                 if (Common.ChangeAccount((int)_objUser.UserID, int.Parse(hfAccountIDToChangeAccount.Value)))
@@ -1869,12 +1874,12 @@ public partial class Home : System.Web.UI.MasterPage
                 {
                     Response.Redirect("~/Empty.aspx", true);
                 }
-             
+
             }
             catch
             {
                 //
-            }         
+            }
 
         }
 
@@ -1949,56 +1954,62 @@ public partial class Home : System.Web.UI.MasterPage
     protected void lkLogout_Click(object sender, EventArgs e)
     {
 
-       try
-       {
-           string strLoginAccount = "";
-           if (Session["LoginAccount"] != null)
-           {
-               strLoginAccount = Session["LoginAccount"].ToString();
-           }
+        try
+        {
+            string strLoginAccount = "";
+            if (Session["LoginAccount"] != null)
+            {
+                strLoginAccount = Session["LoginAccount"].ToString();
+            }
 
 
-           Session["User"] = null;
-           Session.Abandon();
+            Session["User"] = null;
+            Session.Abandon();
 
-           FormsAuthentication.SignOut();
-           HttpCookie oUseInfor = new HttpCookie("UserInformation", "nothing");
-           oUseInfor.Expires = DateTime.Now.AddDays(-3d);
-           Response.Cookies.Add(oUseInfor);
-
-
+            FormsAuthentication.SignOut();
+            HttpCookie oUseInfor = new HttpCookie("UserInformation", "nothing");
+            oUseInfor.Expires = DateTime.Now.AddDays(-3d);
+            Response.Cookies.Add(oUseInfor);
 
 
-           if (Session["client"] != null)
-           {
-               Session.Clear();
-               Response.Redirect("~/Login.aspx?Logout=yes&Account=" + Session["client"].ToString(), false);
-               
-               return;
-           }
 
-           if (Session["LoginAccount"] == null)
-           {
-               Session.Clear();
-               Response.Redirect("~/Login.aspx?Logout=yes", true);
-           }
-           else
-           {
-               Session.Clear();
-               Response.Redirect("~/Login.aspx?Logout=yes&" + strLoginAccount, true);
-           }
-           //}
 
-       }
+            if (Session["client"] != null)
+            {
+                Session.Clear();
+                Response.Redirect("~/Login.aspx?Logout=yes&Account=" + Session["client"].ToString(), false);
+
+                return;
+            }
+
+            if (Session["LoginAccount"] == null)
+            {
+                Session.Clear();
+                Response.Redirect("~/Login.aspx?Logout=yes", true);
+            }
+            else
+            {
+                Session.Clear();
+                Response.Redirect("~/Login.aspx?Logout=yes&" + strLoginAccount, true);
+            }
+            //}
+
+        }
         catch
-       {
+        {
             //
-       }       
+        }
+
+
+
     }
+
+
+
 
     protected void lnkChangeAccount_Click(object sender, EventArgs e)
     {
-        Response.Redirect("~/Pages/Security/AccountList.aspx",false);
+        Response.Redirect("~/Pages/Security/AccountList.aspx", false);
     }
 
     protected void lnkViewAccount_Click(object sender, EventArgs e)
@@ -2010,7 +2021,6 @@ public partial class Home : System.Web.UI.MasterPage
     {
         Response.Redirect("~/Security/ChangePassword.aspx", false);
     }
-
     //protected void menuETS_MenuItemDataBound(object sender, MenuEventArgs e)
     //{
     //    if (e.Item.Selected == true)
@@ -2057,5 +2067,7 @@ public partial class Home : System.Web.UI.MasterPage
         }
         return selectedItem;
     }
+
+
 }
 

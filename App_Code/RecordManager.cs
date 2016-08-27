@@ -15173,7 +15173,7 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
 
 
 
-    public static string ets_AdjustCalculationFormulaChanges(Column theColumn,  ref string strErrorMsg)
+    public static string ets_AdjustCalculationFormulaChanges(Column theColumn,  ref string strErrorMsg,bool bPerformValiation)
     {
         string strCalculationType = "";
         DateTime dtStartTime= DateTime.Now;
@@ -15183,8 +15183,13 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
 
             string strReturn = "";
             int iInvalid = 0;
+            int iValid = 0;
+
             int iExceedance = 0;
             int iWarning = 0;
+
+            int iNoExceedance = 0;
+            int iNoWarning = 0;
 
             string strTemp="";
             if (theColumn.ColumnType != "calculation")
@@ -15401,45 +15406,58 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
                     }
 
                     //
+                    string strFalseRef = "";
                     string strInvalid="";
-                    ets_AdjustValidFormulaChanges(theColumn,ref strInvalid,true);
-                    string strExceedance="";
-                    ets_AdjustExceedanceFormulaChanges(theColumn, ref strExceedance, true);
-                    string strWarning = "";
-                    ets_AdjustWarningFormulaChanges(theColumn, ref strWarning, true);
+                    string strValid = "";
+                    if (bPerformValiation)
+                        ets_AdjustValidFormulaChanges(theColumn, ref strInvalid, ref strValid,  true,"");
+
+                    if (strInvalid!="")
+                        iInvalid = strInvalid.Split(',').Length - 1;
+                    if (strValid != "")
+                        iValid = strValid.Split(',').Length - 1;
+
+                    //string strExceedance="";
+                    //ets_AdjustExceedanceFormulaChanges(theColumn, ref strExceedance, true);
+                    //string strWarning = "";
+                    //ets_AdjustWarningFormulaChanges(theColumn, ref strWarning, true);
 
                    
-                    try
-                    {
-                        if (strInvalid != "")
-                            iInvalid = int.Parse(strInvalid);
-                        if (strExceedance != "")
-                            iExceedance = int.Parse(strExceedance);
-                        if (strWarning != "")
-                            iWarning = int.Parse(strWarning);
-                    }
-                    catch
-                    {
-                        //
-                    }
+                    //try
+                    //{
+                    //    //if (strInvalid != "")
+                    //    //    iInvalid = int.Parse(strInvalid);
+                    //    //if (strExceedance != "")
+                    //    //    iExceedance = int.Parse(strExceedance);
+                    //    //if (strWarning != "")
+                    //    //    iWarning = int.Parse(strWarning);
+                    //}
+                    //catch
+                    //{
+                    //    //
+                    //}
                 }
             }
 
-            strReturn = strReturn + " Total:" + iNoOfRecords.ToString() + " records; ";
+            //strReturn = strReturn + " Total:" + iNoOfRecords.ToString() + " records; ";
             if(iInvalid>0)
             {
-                strReturn = strReturn+ " InValid("+iInvalid.ToString()+") ";
+                strReturn = "Total invalid records:"+iInvalid.ToString()+"";
             }
-            if (iExceedance > 0)
-            {
-                strReturn =strReturn+ " Exceedance(" + iExceedance.ToString() + ") ";
-            }
-            if (iWarning > 0)
-            {
-                strReturn =strReturn+ " Warning(" + iWarning.ToString() + ")";
-            }
+            //if (iValid > 0)
+            //{
+            //    strReturn = strReturn + " Became Valid(" + iValid.ToString() + ") ";
+            //}
+            //if (iExceedance > 0)
+            //{
+            //    strReturn =strReturn+ " Exceedance(" + iExceedance.ToString() + ") ";
+            //}
+            //if (iWarning > 0)
+            //{
+            //    strReturn =strReturn+ " Warning(" + iWarning.ToString() + ")";
+            //}
 
-            strReturn = strReturn + "--- Time:" + (DateTime.Now - dtStartTime).TotalSeconds.ToString("N1") + " seconds.";
+            //strReturn = strReturn + "--- Time:" + (DateTime.Now - dtStartTime).TotalSeconds.ToString("N1") + " seconds.";
             ///////////
 
             //ErrorLog theTimeLog = new ErrorLog(null, "AdjustCalculation", iNoOfRecords.ToString() + "Records --" + strCalculationType + "--- Time:" + (DateTime.Now-dtStartTime).TotalSeconds.ToString("N1"), strReturn, DateTime.Now, "");
@@ -15874,17 +15892,129 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
         }
     }
 
+    //public static string CleanExceedance(string strResults,Column theColumn)
+    //{
+    //    strResults = CleanWarning(strResults, theColumn);
+    //    strResults = strResults.Replace(" EXCEEDANCE:" + theColumn.DisplayName, "EXCEEDANCE:");
 
-    public static void ets_AdjustValidFormulaChanges(Column theColumn, ref string strErrorMsg, bool IsCalculationChanged)
+    //    strResults = strResults.Replace("EXCEEDANCE: " + theColumn.DisplayName + " – Value outside accepted range.", "");
+    //    strResults = strResults.Replace("EXCEEDANCE: " + theColumn.DisplayName + " – Value outside accepted range", "");
+    //    strResults = strResults.Replace("EXCEEDANCE:" + theColumn.DisplayName + " – Value outside accepted range", "");
+    //    return strResults;
+    //}
+    //public static string CleanWarning(string strResults, Column theColumn)
+    //{
+    //    strResults = strResults.Replace("    ", " ");
+    //    strResults = strResults.Replace("   ", " ");
+    //    strResults = strResults.Replace("  ", " ");
+    //    strResults = strResults.Replace(" WARNING:" + theColumn.DisplayName, "WARNING:");
+
+    //    strResults = strResults.Replace("WARNING: " + theColumn.DisplayName + " – Value outside accepted range.", "");
+    //    strResults = strResults.Replace("WARNING: " + theColumn.DisplayName + " – Value outside accepted range", "");
+    //    strResults = strResults.Replace("WARNING:" + theColumn.DisplayName + " – Value outside accepted range", "");
+    //    return strResults;
+    //}
+
+    //public static string CleanInvalid(string strResults, Column theColumn)
+    //{
+    //    strResults=CleanExceedance(strResults, theColumn);
+    //    strResults = strResults.Replace(" INVALID:" + theColumn.DisplayName, "INVALID:");
+    //    strResults = strResults.Replace(" INVALID (and ignored):" + theColumn.DisplayName, "INVALID (and ignored):");
+
+    //    strResults = strResults.Replace("INVALID: " + theColumn.DisplayName, "");
+    //    strResults = strResults.Replace("INVALID:" + theColumn.DisplayName, "");
+    //    strResults = strResults.Replace(TheDatabase.GetInvalid_msg(theColumn.DisplayName), "");
+
+    //    strResults = strResults.Replace("INVALID (and ignored): " + theColumn.DisplayName, "");
+    //    strResults = strResults.Replace("INVALID (and ignored):" + theColumn.DisplayName, "");
+    //    strResults = strResults.Replace(TheDatabase.GetInvalidIgnored_msg(theColumn.DisplayName), "");
+
+    //    return strResults;
+    //}
+
+    public static string CleanResults(string strResults, Column theColumn)
+    {
+        strResults = strResults.Replace("    ", " ");
+        strResults = strResults.Replace("   ", " ");
+        strResults = strResults.Replace("  ", " ");
+        strResults = strResults.Replace(" WARNING:" + theColumn.DisplayName, "WARNING:");
+
+        strResults = strResults.Replace("WARNING: " + theColumn.DisplayName + " – Value outside accepted range", "");
+        strResults = strResults.Replace("WARNING:" + theColumn.DisplayName + " – Value outside accepted range", "");
+        strResults = strResults.Replace(TheDatabase.GetWarning_msg(theColumn.DisplayName), "");
+
+        strResults = strResults.Replace(" EXCEEDANCE:" + theColumn.DisplayName, "EXCEEDANCE:");
+
+        strResults = strResults.Replace("EXCEEDANCE: " + theColumn.DisplayName + " – Value outside accepted range", "");
+        strResults = strResults.Replace("EXCEEDANCE:" + theColumn.DisplayName + " – Value outside accepted range", "");
+        strResults = strResults.Replace(TheDatabase.GetExceedance_msg(theColumn.DisplayName), "");
+
+
+        strResults = strResults.Replace(" INVALID:" + theColumn.DisplayName, "INVALID:");
+        strResults = strResults.Replace(" INVALID (and ignored):" + theColumn.DisplayName, "INVALID (and ignored):");
+
+        strResults = strResults.Replace("INVALID: " + theColumn.DisplayName, "");
+        strResults = strResults.Replace("INVALID:" + theColumn.DisplayName, "");
+        strResults = strResults.Replace(TheDatabase.GetInvalid_msg(theColumn.DisplayName), "");
+
+        strResults = strResults.Replace("INVALID (and ignored): " + theColumn.DisplayName, "");
+        strResults = strResults.Replace("INVALID (and ignored):" + theColumn.DisplayName, "");
+        strResults = strResults.Replace(TheDatabase.GetInvalidIgnored_msg(theColumn.DisplayName), "");
+        strResults = strResults.Replace(". .", ".");
+        strResults = strResults.Replace("....", ".");
+        strResults = strResults.Replace("...", ".");
+        strResults = strResults.Replace("..", ".");
+        if(strResults.Length<7)
+        {
+            strResults = "";
+        }
+
+
+        return strResults;
+    }
+    public static void ets_AdjustValidFormulaChanges(Column theColumn,
+        ref string strInvalidRecordIDs, ref string strValidRecordIDs, bool bUpdateDB,string strSQL)
     {
         string strTemp = "";
-        string strTempValid = "";
+        strInvalidRecordIDs = "";
+        strValidRecordIDs = "";
 
-        DataTable dtRecords = ets_GetListOfRecordsByOneSys(theColumn.SystemName, (int)theColumn.TableID);
-        double dNoOfRecords = 0;
+        string strTempValid = "";
+        string strTempWarning = "";
+        bool bValidationCanIgnore = false;
+        if (theColumn.ValidationCanIgnore != null && (bool)theColumn.ValidationCanIgnore)
+        {
+            bValidationCanIgnore = true;
+        }
+
+        if (strSQL=="")
+        {
+            //wrong validation result
+            Common.ExecuteText("UPDATE Record SET ValidationResults=NULL WHERE IsActive=1 AND  TableID=" + theColumn.TableID + " AND ValidationResults IS NOT NULL");
+        }
+
+        DataTable dtRecords = null;
+        if(strSQL!="")
+        {
+            dtRecords = Common.DataTableFromText(strSQL);
+        }
+        else
+        {
+            dtRecords = ets_GetListOfRecordsByOneSys(theColumn.SystemName, (int)theColumn.TableID);
+        }
+       
+
+       
+        string strCheckColumnID = Common.GetValueFromSQL("SELECT TOP 1 CheckColumnID FROM [Condition] WHERE ConditionType='V' AND ColumnID=" + theColumn.ColumnID.ToString());
+        bool bEmpty = false;
+        if (theColumn.ValidationOnEntry == "" && strCheckColumnID=="")
+        {
+            bEmpty = true;
+        }
+
         if (dtRecords.Rows.Count > 0)
         {
-            if (theColumn.ValidationOnEntry != "")
+            if (theColumn.ValidationOnEntry != "" || bEmpty==true)
             {
 
                 foreach (DataRow dr in dtRecords.Rows)
@@ -15893,32 +16023,72 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
                     {
 
                         strTempValid = dr["ValidationResults"].ToString();
+                        strTempWarning = dr["WarningResults"].ToString();
 
-                        strTempValid = strTempValid.Replace("INVALID: " + theColumn.DisplayName , "");
-                        strTempValid = strTempValid.Replace("INVALID:" + theColumn.DisplayName, "");
+
+                        strTempValid = CleanResults(strTempValid, theColumn);
+                        strTempWarning = CleanResults(strTempWarning, theColumn);                     
 
                         if (!UploadManager.IsDataValid(dr[theColumn.SystemName].ToString(), theColumn.ValidationOnEntry, ref strTemp))
                         {
-                            //Warning
-                            strTempValid = strTempValid + " INVALID: " + theColumn.DisplayName;
-                            dNoOfRecords = dNoOfRecords + 1;
-                        }
+                            //INVALID
+                            strInvalidRecordIDs = strInvalidRecordIDs + dr[1].ToString() + ",";
+                            if (bValidationCanIgnore)
+                            {
+                                strTempWarning = strTempWarning + TheDatabase.GetInvalidIgnored_msg( theColumn.DisplayName);
+                              
 
-                        if (strTempValid.Trim().Length > 0)
-                        {
-                            Common.ExecuteText("UPDATE Record SET IsActive=0, ValidationResults='" + strTempValid.Replace("'", "''") + "' WHERE RecordID=" + dr["RecordID"].ToString());
+                            }
+                            else
+                            {
+                                strTempValid = strTempValid +  TheDatabase.GetInvalid_msg( theColumn.DisplayName);
+                               
+                            }                            
                         }
                         else
                         {
-                            Common.ExecuteText("UPDATE Record SET ValidationResults=null WHERE RecordID=" + dr["RecordID"].ToString());
+                            if (strTempWarning != dr["WarningResults"].ToString() || strTempValid != dr["ValidationResults"].ToString())
+                            {
+                                //previously invalid   
+                                strValidRecordIDs = strValidRecordIDs + dr[1].ToString() + ",";
+                            }                       
                         }
+
+                        if(bUpdateDB)
+                        {
+                            
+                            if (strTempValid != dr["ValidationResults"].ToString() && bValidationCanIgnore == false)
+                            {
+                                if (strTempValid.Trim().Length > 0)
+                                {
+                                    Common.ExecuteText("UPDATE Record SET IsActive=0, ValidationResults='" + strTempValid.Replace("'", "''") + "' WHERE RecordID=" + dr["RecordID"].ToString());
+                                }
+                                else
+                                {
+                                    Common.ExecuteText("UPDATE Record SET ValidationResults=null WHERE RecordID=" + dr["RecordID"].ToString());
+                                }
+                            }
+
+                            if (strTempWarning != dr["WarningResults"].ToString())
+                            {
+                                if (strTempWarning.Trim().Length > 0)
+                                {
+                                    Common.ExecuteText("UPDATE Record SET  WarningResults='" + strTempWarning.Replace("'", "''") + "' WHERE RecordID=" + dr["RecordID"].ToString());
+                                }
+                                else
+                                {
+                                    Common.ExecuteText("UPDATE Record SET WarningResults=null WHERE RecordID=" + dr["RecordID"].ToString());
+                                }
+                            }
+                        }
+                       
+                        
                     }
                 }
             }
             else
             {
-                string strCheckColumnID = Common.GetValueFromSQL("SELECT TOP 1 CheckColumnID FROM [Condition] WHERE ConditionType='W' AND ColumnID=" + theColumn.ColumnID.ToString());
-
+               
                 if (strCheckColumnID != "")
                 {
                     Column theCheckColumn = RecordManager.ets_Column_Details(int.Parse(strCheckColumnID));
@@ -15936,25 +16106,61 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
                                       "V", strCheckValue);
 
                                 strTempValid = dr["ValidationResults"].ToString();
+                                strTempWarning = dr["WarningResults"].ToString();
 
-                                strTempValid = strTempValid.Replace("INVALID: " + theColumn.DisplayName, "");
-                                strTempValid = strTempValid.Replace("INVALID:" + theColumn.DisplayName, "");
+                                strTempValid = CleanResults(strTempValid, theColumn);
+                                strTempWarning = CleanResults(strTempWarning, theColumn); 
 
                                 if (!UploadManager.IsDataValid(dr[theColumn.SystemName].ToString(), strEachFormula, ref strTemp))
                                 {
-                                    //Warning
-                                    strTempValid = strTempValid + " INVALID: " + theColumn.DisplayName;
-                                    dNoOfRecords = dNoOfRecords + 1;
-                                }
-
-                                if (strTempValid.Trim().Length > 0)
-                                {
-                                    Common.ExecuteText("UPDATE Record SET IsActive=0, ValidationResults='" + strTempValid.Replace("'", "''") + "' WHERE RecordID=" + dr["RecordID"].ToString());
+                                    //INVALID
+                                    strInvalidRecordIDs = strInvalidRecordIDs + dr[1].ToString() + ",";
+                                    if (bValidationCanIgnore)
+                                    {
+                                        strTempWarning = strTempWarning + TheDatabase.GetInvalidIgnored_msg(theColumn.DisplayName);
+                                    }
+                                    else
+                                    {
+                                        strTempValid = strTempValid + TheDatabase.GetWarning_msg(theColumn.DisplayName);
+                                    }      
                                 }
                                 else
                                 {
-                                    Common.ExecuteText("UPDATE Record SET ValidationResults=null WHERE RecordID=" + dr["RecordID"].ToString());
+                                    if (strTempWarning != dr["WarningResults"].ToString() || strTempValid != dr["ValidationResults"].ToString())
+                                    {
+                                        //previously invalid   
+                                        strValidRecordIDs = strValidRecordIDs + dr[1].ToString() + ",";
+
+                                    }    
                                 }
+
+
+                                if (bUpdateDB)
+                                {
+                                    if (strTempValid != dr["ValidationResults"].ToString() && bValidationCanIgnore == false)
+                                    {
+                                        if (strTempValid.Trim().Length > 0)
+                                        {
+                                            Common.ExecuteText("UPDATE Record SET IsActive=0, ValidationResults='" + strTempValid.Replace("'", "''") + "' WHERE RecordID=" + dr["RecordID"].ToString());
+                                        }
+                                        else
+                                        {
+                                            Common.ExecuteText("UPDATE Record SET ValidationResults=null WHERE RecordID=" + dr["RecordID"].ToString());
+                                        }
+                                    }
+                                    if (strTempWarning != dr["WarningResults"].ToString())
+                                    {
+                                        if (strTempWarning.Trim().Length > 0)
+                                        {
+                                            Common.ExecuteText("UPDATE Record SET  WarningResults='" + strTempWarning.Replace("'", "''") + "' WHERE RecordID=" + dr["RecordID"].ToString());
+                                        }
+                                        else
+                                        {
+                                            Common.ExecuteText("UPDATE Record SET WarningResults=null WHERE RecordID=" + dr["RecordID"].ToString());
+                                        }
+                                    }
+                                   
+                                }                              
 
                             }
                         }
@@ -15964,26 +16170,52 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
             }
 
 
+            if(bUpdateDB)
+            {
+                string strTempRef="";
+                if (strSQL != "")
+                {
+                    dtRecords = Common.DataTableFromText(strSQL);
+                }
+                else
+                {
+                    dtRecords = ets_GetListOfRecordsByOneSys(theColumn.SystemName, (int)theColumn.TableID);
+                }
+                ets_AdjustExceedanceFormulaChanges(theColumn, ref strTempRef, false,dtRecords);
 
-            //lets send email
-            if (IsCalculationChanged == true)
-                strErrorMsg = dNoOfRecords.ToString();
-
-
+                strTempRef = "";
+                if (strSQL != "")
+                {
+                    dtRecords = Common.DataTableFromText(strSQL);
+                }
+                else
+                {
+                    dtRecords = ets_GetListOfRecordsByOneSys(theColumn.SystemName, (int)theColumn.TableID);
+                }
+                ets_AdjustWarningFormulaChanges(theColumn, ref strTempRef, false, dtRecords);
+            }
 
         }
 
     }
-    public static void ets_AdjustWarningFormulaChanges(Column theColumn, ref string strErrorMsg, bool IsCalculationChanged)
+    public static void ets_AdjustWarningFormulaChanges(Column theColumn, ref string strCount, bool IsCalculationChanged, DataTable dtRecords)
     {
         string strTemp = "";
         string strTempWarning = "";
-
-        DataTable dtRecords = ets_GetListOfRecordsByOneSys(theColumn.SystemName, (int)theColumn.TableID);
+        if (dtRecords==null)
+            dtRecords = ets_GetListOfRecordsByOneSys(theColumn.SystemName, (int)theColumn.TableID);
         double dNoOfRecords = 0;
+
+        string strCheckColumnID = Common.GetValueFromSQL("SELECT TOP 1 CheckColumnID FROM [Condition] WHERE ConditionType='W' AND ColumnID=" + theColumn.ColumnID.ToString());
+        bool bEmpty = false;
+        if (theColumn.ValidationOnEntry == "" && strCheckColumnID == "")
+        {
+            bEmpty = true;
+        }
+
         if (dtRecords.Rows.Count > 0)
         {
-            if (theColumn.ValidationOnWarning!="")
+            if (theColumn.ValidationOnWarning != "" || bEmpty == true)
             {
                
                 foreach (DataRow dr in dtRecords.Rows)
@@ -15993,35 +16225,40 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
                        
                         strTempWarning = dr["WarningResults"].ToString();
 
-                        strTempWarning = strTempWarning.Replace("WARNING: " + theColumn.DisplayName + " – Value outside accepted range.", "");
-                        strTempWarning = strTempWarning.Replace("WARNING: " + theColumn.DisplayName + " – Value outside accepted range", "");
-                        strTempWarning = strTempWarning.Replace("WARNING:" + theColumn.DisplayName + " – Value outside accepted range", "");
+                       
                         bool bHasExceedance = false;
-                        if (strTempWarning.IndexOf("EXCEEDANCE: " + theColumn.DisplayName) > -1)
+                        if (TheDatabase.HasExceedance_msg(strTempWarning, theColumn.DisplayName, "") || TheDatabase.HasInvalidIgnored_msg(strTempWarning, theColumn.DisplayName, ""))
                             bHasExceedance = true;
 
-                        if (bHasExceedance==false && !UploadManager.IsDataValid(dr[theColumn.SystemName].ToString(), theColumn.ValidationOnWarning, ref strTemp))
+                        
+                        if(bHasExceedance==false)
                         {
-                            //Warning
-                            strTempWarning = strTempWarning + " WARNING: " + theColumn.DisplayName + " – Value outside accepted range.";
-                            dNoOfRecords = dNoOfRecords + 1;
-                        }
-
-                        if (strTempWarning.Trim().Length > 0)
-                        {
-                            Common.ExecuteText("UPDATE Record SET WarningResults='" + strTempWarning.Replace("'", "''") + "' WHERE RecordID=" + dr["RecordID"].ToString());
-                        }
-                        else
-                        {
-                            Common.ExecuteText("UPDATE Record SET WarningResults=null WHERE RecordID=" + dr["RecordID"].ToString());
-                        }
+                            strTempWarning = CleanResults(strTempWarning, theColumn);
+                            if (!UploadManager.IsDataValid(dr[theColumn.SystemName].ToString(), theColumn.ValidationOnWarning, ref strTemp))
+                            {
+                                //Warning
+                                strTempWarning = strTempWarning + TheDatabase.GetWarning_msg(theColumn.DisplayName);
+                                dNoOfRecords = dNoOfRecords + 1;
+                            }
+                            if (strTempWarning != dr["WarningResults"].ToString())
+                            {
+                                if (strTempWarning.Trim().Length > 0)
+                                {
+                                    Common.ExecuteText("UPDATE Record SET WarningResults='" + strTempWarning.Replace("'", "''") + "' WHERE RecordID=" + dr["RecordID"].ToString());
+                                }
+                                else
+                                {
+                                    Common.ExecuteText("UPDATE Record SET WarningResults=null WHERE RecordID=" + dr["RecordID"].ToString());
+                                }
+                            }
+                          
+                        }                   
+                       
                     }
                 }
             }
             else
             {
-                string strCheckColumnID = Common.GetValueFromSQL("SELECT TOP 1 CheckColumnID FROM [Condition] WHERE ConditionType='W' AND ColumnID=" + theColumn.ColumnID.ToString());
-
                 if (strCheckColumnID != "")
                 {
                     Column theCheckColumn = RecordManager.ets_Column_Details(int.Parse(strCheckColumnID));
@@ -16039,82 +16276,60 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
                                       "W", strCheckValue);
 
                                 strTempWarning = dr["WarningResults"].ToString();
-
-                                strTempWarning = strTempWarning.Replace("WARNING: " + theColumn.DisplayName + " – Value outside accepted range.", "");
-                                strTempWarning = strTempWarning.Replace("WARNING: " + theColumn.DisplayName + " – Value outside accepted range", "");
-                                strTempWarning = strTempWarning.Replace("WARNING:" + theColumn.DisplayName + " – Value outside accepted range", "");
-
+                                                               
                                 bool bHasExceedance = false;
-                                if (strTempWarning.IndexOf("EXCEEDANCE: " + theColumn.DisplayName) > -1)
+                                if (TheDatabase.HasExceedance_msg(strTempWarning, theColumn.DisplayName, "") || TheDatabase.HasInvalidIgnored_msg(strTempWarning, theColumn.DisplayName, ""))
                                     bHasExceedance = true;
 
-                                if (bHasExceedance==false && !UploadManager.IsDataValid(dr[theColumn.SystemName].ToString(), strEachFormula, ref strTemp))
-                                {
-                                    //Warning
-                                    strTempWarning = strTempWarning + " WARNING: " + theColumn.DisplayName + " – Value outside accepted range.";
-                                    dNoOfRecords = dNoOfRecords + 1;
-                                }
 
-                                if (strTempWarning.Trim().Length > 0)
+                                if (bHasExceedance == false)
                                 {
-                                    Common.ExecuteText("UPDATE Record SET WarningResults='" + strTempWarning.Replace("'", "''") + "' WHERE RecordID=" + dr["RecordID"].ToString());
-                                }
-                                else
-                                {
-                                    Common.ExecuteText("UPDATE Record SET WarningResults=null WHERE RecordID=" + dr["RecordID"].ToString());
-                                }
+                                    strTempWarning = CleanResults(strTempWarning, theColumn);
+                                    if (!UploadManager.IsDataValid(dr[theColumn.SystemName].ToString(), strEachFormula, ref strTemp))
+                                    {
+                                        //Warning
+                                        strTempWarning = strTempWarning + TheDatabase.GetWarning_msg(theColumn.DisplayName);
+                                        dNoOfRecords = dNoOfRecords + 1;
+                                    }
+                                     if (strTempWarning != dr["WarningResults"].ToString())
+                                     {
+                                         if (strTempWarning.Trim().Length > 0)
+                                         {
+                                             Common.ExecuteText("UPDATE Record SET WarningResults='" + strTempWarning.Replace("'", "''") + "' WHERE RecordID=" + dr["RecordID"].ToString());
+                                         }
+                                         else
+                                         {
+                                             Common.ExecuteText("UPDATE Record SET WarningResults=null WHERE RecordID=" + dr["RecordID"].ToString());
+                                         }
+                                     }
 
+                                }
                             }
                         }
-
                     }
-                }
-                else
-                {
-                    foreach (DataRow dr in dtRecords.Rows)
-                    {
-                        if (dr[theColumn.SystemName].ToString() != "")
-                        {
-                            strTempWarning = dr["WarningResults"].ToString();
-
-                            strTempWarning = strTempWarning.Replace("WARNING: " + theColumn.DisplayName + " – Value outside accepted range.", "");
-                            strTempWarning = strTempWarning.Replace("WARNING: " + theColumn.DisplayName + " – Value outside accepted range", "");
-                            strTempWarning = strTempWarning.Replace("WARNING:" + theColumn.DisplayName + " – Value outside accepted range", "");
-                            if (strTempWarning.Trim().Length > 0)
-                            {
-                                Common.ExecuteText("UPDATE Record SET WarningResults='" + strTempWarning.Replace("'", "''") + "' WHERE RecordID=" + dr["RecordID"].ToString());
-                            }
-                            else
-                            {
-                                Common.ExecuteText("UPDATE Record SET WarningResults=null WHERE RecordID=" + dr["RecordID"].ToString());
-                            }
-                        }
-                        
-
-                    }
-                    
-                }
+                }               
             }
             
-
-
             //lets send email
             if (IsCalculationChanged==false)
-             SendAdjustWanrningSMSandEmail(theColumn, dNoOfRecords, ref strErrorMsg, IsCalculationChanged);
+             SendAdjustWanrningSMSandEmail(theColumn, dNoOfRecords, ref strCount, IsCalculationChanged);
 
             //if (IsCalculationChanged == true)
-                strErrorMsg = dNoOfRecords.ToString();
+                strCount = dNoOfRecords.ToString();
 
         }
 
     }
 
 
-    public static void ets_AdjustExceedanceFormulaChanges(Column theColumn, ref string strErrorMsg, bool IsCalculationChanged)
+    public static void ets_AdjustExceedanceFormulaChanges(Column theColumn, ref string strCount, bool IsCalculationChanged, DataTable dtRecords)
     {
         string strTemp = "";
         Table theTable = RecordManager.ets_Table_Details((int)theColumn.TableID);
-        DataTable dtRecords = ets_GetListOfRecordsByOneSys(theColumn.SystemName, (int)theColumn.TableID);
+
+        if (dtRecords==null)
+            dtRecords = ets_GetListOfRecordsByOneSys(theColumn.SystemName, (int)theColumn.TableID);
+        
         double dNoOfRecords = 0;
 
 
@@ -16126,11 +16341,19 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
             bCheckIgnoreMidnight = true;
         }
 
+        string strCheckColumnID = Common.GetValueFromSQL("SELECT TOP 1 CheckColumnID FROM [Condition] WHERE ConditionType='E' AND ColumnID=" + theColumn.ColumnID.ToString());
+        bool bEmpty = false;
+        if (theColumn.ValidationOnEntry == "" && strCheckColumnID == "")
+        {
+            bEmpty = true;
+        }
+
+
         if (dtRecords.Rows.Count > 0)
         {
            
             string strTempWarning = "";
-            if (theColumn.ValidationOnExceedance != "")
+            if (theColumn.ValidationOnExceedance != "" || bEmpty==true)
             {
 
                 foreach (DataRow dr in dtRecords.Rows)
@@ -16140,32 +16363,48 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
 
                         strTempWarning = dr["WarningResults"].ToString();
 
-                        strTempWarning = strTempWarning.Replace("EXCEEDANCE: " + theColumn.DisplayName + " – Value outside accepted range.", "");
-                        strTempWarning = strTempWarning.Replace("EXCEEDANCE: " + theColumn.DisplayName + " – Value outside accepted range", "");
-                        strTempWarning = strTempWarning.Replace("EXCEEDANCE:" + theColumn.DisplayName + " – Value outside accepted range", "");
+                        bool bHasInvalid = false;
+                        if (TheDatabase.HasInvalidIgnored_msg(strTempWarning, theColumn.DisplayName, "") )
+                            bHasInvalid = true;
+                      
+                        if(bHasInvalid==false)
+                        {
 
-                        if (!UploadManager.IsDataValid(dr[theColumn.SystemName].ToString(), theColumn.ValidationOnExceedance, ref strTemp))
-                        {
-                            //Warning
-                            strTempWarning = strTempWarning + " EXCEEDANCE: " + theColumn.DisplayName + " – Value outside accepted range.";
-                            dNoOfRecords = dNoOfRecords + 1;
-                        }
+                            strTempWarning = CleanResults(strTempWarning, theColumn);
+                            if (!UploadManager.IsDataValid(dr[theColumn.SystemName].ToString(), theColumn.ValidationOnExceedance, ref strTemp))
+                            {
+                                //Warning
+                                strTempWarning = strTempWarning + TheDatabase.GetExceedance_msg(theColumn.DisplayName);
+                                dNoOfRecords = dNoOfRecords + 1;
+                            }
 
-                        if (strTempWarning.Trim().Length > 0)
-                        {
-                            Common.ExecuteText("UPDATE Record SET WarningResults='" + strTempWarning.Replace("'", "''") + "' WHERE RecordID=" + dr["RecordID"].ToString());
+                            if (strTempWarning != dr["WarningResults"].ToString())
+                            {
+                                if (strTempWarning.Trim().Length > 0)
+                                {
+                                    Common.ExecuteText("UPDATE Record SET WarningResults='" + strTempWarning.Replace("'", "''") + "' WHERE RecordID=" + dr["RecordID"].ToString());
+                                }
+                                else
+                                {
+                                    Common.ExecuteText("UPDATE Record SET WarningResults=null WHERE RecordID=" + dr["RecordID"].ToString());
+                                }
+                            }
                         }
-                        else
-                        {
-                            Common.ExecuteText("UPDATE Record SET WarningResults=null WHERE RecordID=" + dr["RecordID"].ToString());
-                        }
+                        //else
+                        //{
+                        //    strTempWarning = strTempWarning + TheDatabase.GetInvalidIgnored_msg(theColumn.DisplayName);
+                        //    if (strTempWarning.Trim().Length > 0)
+                        //    {
+                        //        Common.ExecuteText("UPDATE Record SET WarningResults='" + strTempWarning.Replace("'", "''") + "' WHERE RecordID=" + dr["RecordID"].ToString());
+                        //    }
+                        //}
+                       
+                      
                     }
                 }
             }
             else
             {
-                string strCheckColumnID = Common.GetValueFromSQL("SELECT TOP 1 CheckColumnID FROM [Condition] WHERE ConditionType='E' AND ColumnID=" + theColumn.ColumnID.ToString());
-
                 if (strCheckColumnID != "")
                 {
                     Column theCheckColumn = RecordManager.ets_Column_Details(int.Parse(strCheckColumnID));
@@ -16184,66 +16423,56 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
 
                                 strTempWarning = dr["WarningResults"].ToString();
 
-                                strTempWarning = strTempWarning.Replace("EXCEEDANCE: " + theColumn.DisplayName + " – Value outside accepted range.", "");
-                                strTempWarning = strTempWarning.Replace("EXCEEDANCE: " + theColumn.DisplayName + " – Value outside accepted range", "");
-                                strTempWarning = strTempWarning.Replace("EXCEEDANCE:" + theColumn.DisplayName + " – Value outside accepted range", "");
-
-                                if (!UploadManager.IsDataValid(dr[theColumn.SystemName].ToString(), strEachFormula, ref strTemp))
+                                bool bHasInvalid = false;
+                                if (TheDatabase.HasInvalidIgnored_msg(strTempWarning, theColumn.DisplayName, "") )
+                                    bHasInvalid = true;
+                             
+                                if (bHasInvalid == false)
                                 {
-                                    //Warning
-                                    strTempWarning = strTempWarning + " EXCEEDANCE: " + theColumn.DisplayName + " – Value outside accepted range.";
-                                    dNoOfRecords = dNoOfRecords + 1;
+                                    strTempWarning = CleanResults(strTempWarning, theColumn);
+                                    if (!UploadManager.IsDataValid(dr[theColumn.SystemName].ToString(), strEachFormula, ref strTemp))
+                                    {
+                                        //Warning
+                                        strTempWarning = strTempWarning + TheDatabase.GetExceedance_msg(theColumn.DisplayName);
+                                        dNoOfRecords = dNoOfRecords + 1;
+                                    }
+                                    if (strTempWarning != dr["WarningResults"].ToString())
+                                    {
+                                        if (strTempWarning.Trim().Length > 0)
+                                        {
+                                            Common.ExecuteText("UPDATE Record SET WarningResults='" + strTempWarning.Replace("'", "''") + "' WHERE RecordID=" + dr["RecordID"].ToString());
+                                        }
+                                        else
+                                        {
+                                            Common.ExecuteText("UPDATE Record SET WarningResults=null WHERE RecordID=" + dr["RecordID"].ToString());
+                                        }
+                                    }
+                                  
                                 }
-
-                                if (strTempWarning.Trim().Length > 0)
-                                {
-                                    Common.ExecuteText("UPDATE Record SET WarningResults='" + strTempWarning.Replace("'", "''") + "' WHERE RecordID=" + dr["RecordID"].ToString());
-                                }
-                                else
-                                {
-                                    Common.ExecuteText("UPDATE Record SET WarningResults=null WHERE RecordID=" + dr["RecordID"].ToString());
-                                }
+                                //else
+                                //{
+                                //    strTempWarning = strTempWarning + TheDatabase.GetInvalidIgnored_msg(theColumn.DisplayName);
+                                //    if (strTempWarning.Trim().Length > 0)
+                                //    {
+                                //        Common.ExecuteText("UPDATE Record SET WarningResults='" + strTempWarning.Replace("'", "''") + "' WHERE RecordID=" + dr["RecordID"].ToString());
+                                //    }
+                                //}
+                                
 
                             }
                         }
 
                     }
-                }
-                else
-                {
-                    foreach (DataRow dr in dtRecords.Rows)
-                    {
-                        if (dr[theColumn.SystemName].ToString() != "")
-                        {
-                            strTempWarning = dr["WarningResults"].ToString();
-
-                            strTempWarning = strTempWarning.Replace("EXCEEDANCE: " + theColumn.DisplayName + " – Value outside accepted range.", "");
-                            strTempWarning = strTempWarning.Replace("EXCEEDANCE: " + theColumn.DisplayName + " – Value outside accepted range", "");
-                            strTempWarning = strTempWarning.Replace("EXCEEDANCE:" + theColumn.DisplayName + " – Value outside accepted range", "");
-                            if (strTempWarning.Trim().Length > 0)
-                            {
-                                Common.ExecuteText("UPDATE Record SET WarningResults='" + strTempWarning.Replace("'", "''") + "' WHERE RecordID=" + dr["RecordID"].ToString());
-                            }
-                            else
-                            {
-                                Common.ExecuteText("UPDATE Record SET WarningResults=null WHERE RecordID=" + dr["RecordID"].ToString());
-                            }
-                        }
-                       
-
-                    }
-
-                }
+                }              
             }
-
-
+            
             //lets send email
             if (IsCalculationChanged == false)
-                SendAdjustExceedanceSMSandEmail(theColumn, dNoOfRecords, ref strErrorMsg, IsCalculationChanged);
+                SendAdjustExceedanceSMSandEmail(theColumn, dNoOfRecords, ref strCount, IsCalculationChanged);
 
 
             //if (strErrorMsg == true)
-                strErrorMsg = dNoOfRecords.ToString();
+                strCount = dNoOfRecords.ToString();
         }
 
     }
@@ -16323,7 +16552,7 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
     }
 
 
-    public static void SendAdjustValidationSMSandEmail(Column theColumn, double dNoOfRecords, ref string strErrorMsg, bool IsCalculationChanged)
+    public static void SendAdjustValidationSMSandEmail(Column theColumn, double dNoOfRecords, ref string strError, bool IsCalculationChanged)
     {
 
         Content theContent = SystemData.Content_Details_ByKey("adjustValidationEmail",null);
@@ -16445,7 +16674,7 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
             catch (Exception)
             {
 
-                strErrorMsg = "Server could not send validation Email & SMS";
+                strError = "Server could not send validation Email & SMS";
             }
 
 
@@ -16515,7 +16744,7 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
                     catch (Exception)
                     {
 
-                        strErrorMsg = "Server could not send validation Email & SMS";
+                        strError = "Server could not send validation Email & SMS";
                     }
                 }
             }

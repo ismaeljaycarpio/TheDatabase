@@ -1387,7 +1387,11 @@ public partial class User_Detail : SecurePage
                                        }
                                        else
                                        {
-                                           btnRestoreUser.CommandArgument = vUser.UserID.ToString();
+                                            //oliver <begin> Ticket 940
+                                            Session["tdbmsgpb"] = null;
+                                            //oliver <end>
+
+                                            btnRestoreUser.CommandArgument = vUser.UserID.ToString();
                                            hlAddUserLink.NavigateUrl = "~/Pages/Help/FancyConfirm.aspx?message=" +
                                                 Cryptography.Encrypt("The user with the email " + vUser.Email + " is already in the database but has been deleted. Do you wish to restore " + vUser.Email + "?")
                                                 + "&okbutton=" + Cryptography.Encrypt(btnRestoreUser.ClientID);
