@@ -5584,20 +5584,22 @@ public class ImportTemplateItem
 public class ColumnColour
 {
     public int? ColumnColourID { get; set; }
-    public int? ColumnID { get; set; }
+    public int? ID { get; set; }
     public int? ControllingColumnID { get; set; }
     public string Operator { get; set; }
     public string Value { get; set; }
     public string Colour { get; set; }
+    public string Context { get; set; }
     public ColumnColour()
     {
 
     }
-    public ColumnColour(int? p_ColumnColourID,  int? p_ColumnID,int p_ControllingColumnID,
+    public ColumnColour(int? p_ColumnColourID,string p_Context,  int? p_ID,int p_ControllingColumnID,
         string p_Operator, string p_Value, string p_Colour)
     {
         ColumnColourID = p_ColumnColourID;
-        ColumnID = p_ColumnID;
+        Context = p_Context;
+        ID = p_ID;
         ControllingColumnID = p_ControllingColumnID;
         Operator = p_Operator;
         Value = p_Value;

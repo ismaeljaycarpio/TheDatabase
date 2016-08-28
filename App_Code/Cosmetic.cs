@@ -37,7 +37,9 @@ public class Cosmetic
                 pRV.Direction = ParameterDirection.Output;
 
                 command.Parameters.Add(pRV);
-                command.Parameters.Add(new SqlParameter("@nColumnID", p_ColumnColour.ColumnID));
+
+                command.Parameters.Add(new SqlParameter("@sContext", p_ColumnColour.Context));
+                command.Parameters.Add(new SqlParameter("@nID", p_ColumnColour.ID));
 
                 command.Parameters.Add(new SqlParameter("@nControllingColumnID", p_ColumnColour.ControllingColumnID));
 
@@ -81,7 +83,7 @@ public class Cosmetic
                 command.CommandType = CommandType.StoredProcedure;
 
                 command.Parameters.Add(new SqlParameter("@nColumnColourID", p_ColumnColour.ColumnColourID));
-                command.Parameters.Add(new SqlParameter("@nColumnID", p_ColumnColour.ColumnID));
+                command.Parameters.Add(new SqlParameter("@nID", p_ColumnColour.ID));
 
                 command.Parameters.Add(new SqlParameter("@nControllingColumnID", p_ColumnColour.ControllingColumnID));
 
@@ -113,9 +115,44 @@ public class Cosmetic
 
     }
 
+    public static string fnGetColumnColour(int nRecordID, int nID, string Context)
+    {
+        using (SqlConnection connection = new SqlConnection(DBGurus.strGlobalConnectionString))
+        {
+            using (SqlCommand command = new SqlCommand("dbo.fnGetColumnColour", connection))
+            {
+
+                command.CommandType = CommandType.StoredProcedure;
+                SqlParameter pRV = new SqlParameter("@Result", SqlDbType.VarChar);
+                pRV.Direction = ParameterDirection.ReturnValue;
+
+                command.Parameters.Add(pRV);
+                command.Parameters.Add(new SqlParameter("@nRecordID", nRecordID));
+
+                command.Parameters.Add(new SqlParameter("@nID", nID));
+                command.Parameters.Add(new SqlParameter("@Context", Context));
 
 
-    public static DataTable dbg_ColumnColour_Select(int? nColumnID)
+                connection.Open();
+                try
+                {
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                    connection.Dispose();
+                    return pRV.Value.ToString();
+                }
+                catch
+                {
+                    connection.Close();
+                    connection.Dispose();
+
+                }
+                return "";
+            }
+        }
+    }
+
+    public static DataTable dbg_ColumnColour_Select(string sContext, int nID)
     {
 
         using (SqlConnection connection = new SqlConnection(DBGurus.strGlobalConnectionString))
@@ -124,8 +161,8 @@ public class Cosmetic
             {
                 command.CommandType = CommandType.StoredProcedure;
 
-                command.Parameters.Add(new SqlParameter("@nColumnID", nColumnID));
-
+                command.Parameters.Add(new SqlParameter("@nID", nID));
+                command.Parameters.Add(new SqlParameter("@sContext", sContext));
 
 
 
@@ -221,8 +258,8 @@ public class Cosmetic
                         while (reader.Read())
                         {
                             ColumnColour temp = new ColumnColour(
-                                (int)reader["ColumnColourID"],
-                                 (int)reader["ColumnID"],
+                                (int)reader["ColumnColourID"],(string)reader["Context"],
+                                 (int)reader["ID"],
                                (int)reader["ControllingColumnID"],
                                 (string)reader["Operator"],
                                reader["Value"] == DBNull.Value ? "" : (string)reader["Value"],

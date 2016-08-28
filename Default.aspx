@@ -1,13 +1,15 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Home/Home.master" AutoEventWireup="true"
-    EnableTheming="true" ValidateRequest="false"
-    CodeFile="Default.aspx.cs" Inherits="DocGen.Document.DashBoard" %>
+ EnableTheming="true"  ValidateRequest="false" 
+CodeFile="Default.aspx.cs" Inherits="DocGen.Document.DashBoard" %>
 
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
     <asp:Literal ID="ltTextStyles" runat="server"></asp:Literal>
     <asp:Literal ID="ltCommonStyles" runat="server">
         <style type="text/css">
-            .TopRightClose {
+
+             .TopRightClose
+            {
                 position: absolute;
                 top: -15px;
                 right: -15px;
@@ -16,59 +18,68 @@
                 background: transparent url('fancybox/fancybox.png') -40px 0px;
                 cursor: pointer;
                 z-index: 1103;
-            }
+            }                   
 
 
-            /*h1, h2, h3, h4, h5, h6, p, span, label, li, th, td
+            h1, h2, h3, h4, h5, h6, p, span, label, li, th, td
             {
                 font-family: Verdana,Arial,Helvetica,sans-serif;
-            }*/
+            }
 
-            th {
+            th
+            {
                 background: #f1f1f1;
             }
 
-            .ReportContentContainer * {
+            .ReportContentContainer *
+            {
                 color: #000000;
             }
 
-            table.TableSection {
+            table.TableSection
+            {
                 border-collapse: collapse;
-                border-color: Black;
+                border-color:Black;
             }
 
-                table.TableSection th {
-                    background-color: #f8f8f8;
-                }
-
-            table.RecordTableSection {
-                border-collapse: collapse;
-                border-color: Black;
+            table.TableSection th
+            {
+                background-color: #f8f8f8;
             }
 
-                table.RecordTableSection th {
-                    background-color: #f8f8f8;
-                }
-
-
-
-            table.CalendarSection {
+             table.RecordTableSection
+            {
                 border-collapse: collapse;
-                border-color: Black;
+                border-color:Black;
             }
 
-                table.CalendarSection th {
-                    background-color: #f8f8f8;
-                }
+            table.RecordTableSection th
+            {
+                background-color: #f8f8f8;
+            }
+            
+            
+             table.CalendarSection
+            {
+                border-collapse: collapse;
+                border-color:Black;
+            }
 
-            .MsoTocHeading {
+            table.CalendarSection th
+            {
+                background-color: #f8f8f8;
+            }
+
+            .MsoTocHeading
+            {
                 font-family: Verdana,Arial,Helvetica,sans-serif;
                 font-weight: bold;
                 font-size: 20px;
                 text-align: center;
             }
-
-            p.MsoToc1, li.MsoToc1, div.MsoToc1, p.MsoToc2, li.MsoToc2, div.MsoToc2, p.MsoToc3, li.MsoToc3, div.MsoToc3 {
+            
+            p.MsoToc1, li.MsoToc1, div.MsoToc1, p.MsoToc2, li.MsoToc2, div.MsoToc2, p.MsoToc3, li.MsoToc3, div.MsoToc3
+            {
                 mso-style-update: auto;
                 mso-style-priority: 39;
                 mso-style-next: Normal;
@@ -88,142 +99,165 @@
                 mso-bidi-theme-font: minor-bidi;
                 text-decoration: none;
             }
-
-            p.MsoToc1, li.MsoToc1, div.MsoToc1 {
+            
+            p.MsoToc1, li.MsoToc1, div.MsoToc1
+            {
                 margin-left: 0pt;
             }
 
-            p.MsoToc2, li.MsoToc2, div.MsoToc2 {
+            p.MsoToc2, li.MsoToc2, div.MsoToc2
+            {
                 margin-left: 11.0pt;
             }
 
-            p.MsoToc3, li.MsoToc3, div.MsoToc3 {
+            p.MsoToc3, li.MsoToc3, div.MsoToc3
+            {
                 margin-left: 22.0pt;
             }
 
-            p.MsoToc4, li.MsoToc4, div.MsoToc4 {
+            p.MsoToc4, li.MsoToc4, div.MsoToc4
+            {
                 margin-left: 33.0pt;
             }
 
-            p.MsoToc5, li.MsoToc5, div.MsoToc5 {
+            p.MsoToc5, li.MsoToc5, div.MsoToc5
+            {
                 margin-left: 44.0pt;
             }
 
-            p.MsoToc6, li.MsoToc6, div.MsoToc6 {
+            p.MsoToc6, li.MsoToc6, div.MsoToc6
+            {
                 margin-left: 55.0pt;
             }
-
-            .MsoHyperlink a {
+            
+            .MsoHyperlink a
+            {
                 text-decoration: none;
             }
-
-            h1 {
+            
+            h1
+            {
                 font-size: 18px;
                 color: #000;
                 margin: 0px;
             }
-
-            h2 {
+            h2
+            {
                 font-size: 15px;
                 color: #000;
                 margin: 0px;
             }
 
 
-            h3 {
+            h3
+            {
                 font-size: 13px;
                 margin: 0px;
             }
-
-            h4 {
+            h4
+            {
                 font-size: 12px;
                 margin: 0px;
             }
 
 
-            p {
+            p
+            {
                 font-size: 11px;
                 margin: 0px;
             }
-
-
-            #EditAreaContainer {
+            
+            
+            #EditAreaContainer
+            {
                 width: 100%;
                 clear: both;
             }
-
-            #EditArea {
+            #EditArea
+            {
                 z-index: 9999;
+
             }
 
-                #EditArea.Empty {
-                    height: 100px;
-                    border: solid 1px #f8f8f8;
-                    margin: 10px 0px;
-                    border-left-width: 25px;
-                    border-radius: 5px 0px 0px 5px;
-                    background-color: #FFFFFF;
-                }
+            #EditArea.Empty
+            {
+                height: 100px;
+                border: solid 1px #f8f8f8;
+                margin: 10px 0px;
+                border-left-width: 25px;
+                border-radius: 5px 0px 0px 5px;
+                background-color: #FFFFFF;
+            }
 
-                #EditArea div.Section {
-                    border: solid 1px #f8f8f8;
-                    margin: 0px 0px;
-                    padding: 20px 0px 0px 0px;
-                    position: relative;
-                    min-height: 50px;
-                    border-radius: 5px 0px 0px 5px;
-                    background-color: #FFFFFF;
-                    cursor: move;
-                    overflow: hidden;
-                }
+            #EditArea div.Section
+            {
+                border: solid 1px #f8f8f8;
+                margin: 0px 0px;
+                padding: 20px 0px 0px 0px;
+                position: relative;
+                min-height: 50px;
+                border-radius: 5px 0px 0px 5px;
+                background-color: #FFFFFF;
+                cursor: move;
+                overflow:hidden;
+            }
 
-                    #EditArea div.Section:hover {
-                        border-color: #e6e6e6;
-                        background-color: #FCFBED;
-                    }
+            #EditArea div.Section:hover
+            {
+                border-color: #e6e6e6;
+                background-color: #FCFBED;
+            }
 
-                    #EditArea div.Section > .Toolbar {
-                        display: none;
-                        width: 100%;
-                    }
+            #EditArea div.Section > .Toolbar
+            {
+                display: none;
+                width:100%;
+            }
 
-                        #EditArea div.Section > .Toolbar > .section-type {
-                            float: right;
-                            padding-right: 20px;
-                        }
-
-
-                    #EditArea div.Section:hover > .Toolbar {
-                        display: block;
-                    }
-
-
-                #EditArea .Toolbar a {
-                    cursor: pointer;
-                }
+            #EditArea div.Section > .Toolbar > .section-type
+            {
+                float:right;
+                padding-right:20px;
+            }
 
 
-                #EditArea .Toolbar span #EditArea > div.Section {
-                }
+            #EditArea div.Section:hover > .Toolbar
+            {
+                display: block;
+            }
 
 
-                #EditArea div.Section > .Toolbar {
-                    position: absolute;
-                    left: 0px;
-                    top: 0px;
-                    background: #e6e6e6;
-                    border-radius: 5px 0px 0px 0px;
-                    padding: 3px 6px;
-                }
+            #EditArea .Toolbar a
+            {
+                cursor: pointer;
+            }
 
 
-                    #EditArea div.Section > .Toolbar > a {
-                        display: inline-block !important;
-                    }
+            #EditArea .Toolbar span #EditArea > div.Section
+            {
+            }
+
+
+            #EditArea div.Section > .Toolbar
+            {
+                position: absolute;
+                left: 0px;
+                top: 0px;
+                background:#e6e6e6;
+                border-radius: 5px 0px 0px 0px;
+                padding:3px 6px;
+            }
+
+
+            #EditArea div.Section > .Toolbar > a
+            {
+                display:inline-block !important;
+            }
 
 
 
-            #Toolbox {
+            #Toolbox
+            {
                 width: 100px;
                 position: fixed;
                 bottom: 30px;
@@ -234,51 +268,58 @@
                 border-color: #BDBFBC;
             }
 
-                #Toolbox > div {
-                    margin: 3px 5px;
-                    padding: 5px;
-                }
+            #Toolbox > div
+            {
+                margin: 3px 5px;
+                padding: 5px;
+            }
+            #Toolbox .ui-draggable
+            {
+                cursor: move;
+            }
+            #Toolbox .Toolbar
+            {
+                display: none;
+            }
 
-                #Toolbox .ui-draggable {
-                    cursor: move;
-                }
-
-                #Toolbox .Toolbar {
-                    display: none;
-                }
-
-            #EditArea .Toolbar a.ui-icon-carat-2-n-s {
+            #EditArea .Toolbar a.ui-icon-carat-2-n-s
+            {
                 cursor: move;
             }
 
-            .LayoutTable {
+            .LayoutTable
+            {
             }
-
-            td.Zone {
+            td.Zone
+            {
+               
                 vertical-align: top;
             }
 
-                td.Zone .ZoneInner {
-                    padding: 0px;
-                    min-height: 50px;
-                    border: 1px dotted #CACACA;
-                }
+            td.Zone .ZoneInner
+            {
+                padding: 0px;
+                min-height: 50px;
+                border: 1px dotted #CACACA;
+            }
 
-            .position-indicator {
+            .position-indicator
+            {
                 position: relative;
                 background: red;
             }
 
-                .position-indicator > hr {
-                    position: absolute;
-                    top: -2px;
-                    height: 0px;
-                    width: 100%;
-                    margin: 0px;
-                    height: 2px;
-                    border: none;
-                    background: orange;
-                }
+            .position-indicator > hr
+            {
+                position: absolute;
+                top: -2px;
+                height: 0px;
+                width: 100%;
+                margin: 0px;
+                height: 2px;
+                border: none;
+                background: orange;
+            }
         </style>
     </asp:Literal>
 
@@ -298,124 +339,126 @@
             readyFancy();
         }
     </script>--%>
+
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="HomeContentPlaceHolder" runat="server">
-    <link href="<%=ResolveUrl("~/Styles/jquery-ui-1.7.3.custom.css")%>" rel="stylesheet"
-        type="text/css" />
+    <link href="<%=ResolveUrl("~/Styles/jquery-ui-1.7.3.custom.css")%>" rel="stylesheet" 
+    type="text/css" />     
     <script type="text/javascript" src="<%=ResolveUrl("~/Script/jquery-ui-1.9.2.custom.min.js")%>"></script>
 
 
 
+   
+ <script type="text/javascript" language="JavaScript">
 
-    <script type="text/javascript" language="JavaScript">
+     //function autoResize(id) {
 
-        //function autoResize(id) {
-
-        //    try
-        //    {
-        //        setTimeout(function () { autoResize1(id);}, 1000);
-        //    }
-        //    catch(err)
-        //    {
-        //        //
-        //    }         
+     //    try
+     //    {
+     //        setTimeout(function () { autoResize1(id);}, 1000);
+     //    }
+     //    catch(err)
+     //    {
+     //        //
+     //    }         
         
-        //}
+     //}
 
-        function ResizeDashboardControl(id) {
-            try
-            {
-                var newwidth=$(window).width();
-                var theControl=document.getElementById(id);
-                theControl.style.width = ((newwidth*5)/6) + "px";
-            }
-            catch(err)
-            {
-                //
-            }
+     function ResizeDashboardControl(id) {
+         try
+         {
+             var newwidth=$(window).width();
+             var theControl=document.getElementById(id);
+             theControl.style.width = ((newwidth*5)/6) + "px";
+         }
+         catch(err)
+         {
+             //
+         }
 
-        }
+     }
 
     
-        function autoResize(id) {
+     function autoResize(id) {
 
-            try
-            {
-                var newheight;
-                var newwidth;
-                var theIframe= document.getElementById(id);
-                if (document.getElementById) {
-                    newheight =theIframe.contentWindow.document.body.scrollHeight;
-                    newwidth =  $(window).width(); //theIframe.contentWindow.document.body.scrollWidth;
-                    //newwidth = $(window).width() -100;
-                    theIframe.style.height = (newheight) + "px";
-                    theIframe.style.width = ((newwidth*5)/6) + "px";
-                }
-            }
-            catch(err)
-            {
-                //
-                //alert(err.message);
-            }         
+         try
+         {
+             var newheight;
+             var newwidth;
+             var theIframe= document.getElementById(id);
+             if (document.getElementById) {
+                 newheight =theIframe.contentWindow.document.body.scrollHeight;
+                 newwidth =  $(window).width(); //theIframe.contentWindow.document.body.scrollWidth;
+                 //newwidth = $(window).width() -100;
+                 theIframe.style.height = (newheight) + "px";
+                 theIframe.style.width = ((newwidth*5)/6) + "px";
+             }
+         }
+         catch(err)
+         {
+             //
+             //alert(err.message);
+         }         
         
-        }
+     }
 
      
      
-        function autoResizeRecord(id,w) {
+     function autoResizeRecord(id,w) {
 
-            try
-            {
-                var newheight;
-                var newwidth;
-                var theIframe= document.getElementById(id);
-                if (document.getElementById) {
-                    newheight = theIframe.contentWindow.document.body.scrollHeight;
-                    newwidth = theIframe.contentWindow.document.body.scrollWidth;
-                    //newwidth = $(window).width() -100;
+         try
+         {
+             var newheight;
+             var newwidth;
+             var theIframe= document.getElementById(id);
+             if (document.getElementById) {
+                 newheight = theIframe.contentWindow.document.body.scrollHeight;
+                 newwidth = theIframe.contentWindow.document.body.scrollWidth;
+                 //newwidth = $(window).width() -100;
 
-                    theIframe.style.height = (newheight) + "px";
-                    theIframe.style.width =(newwidth) + "px";  
+                 theIframe.style.height = (newheight) + "px";
+                 theIframe.style.width =(newwidth) + "px";  
              
-                }
-            }
-            catch(err)
-            {
-                //
-            }     
+             }
+         }
+         catch(err)
+         {
+             //
+         }     
        
-        }
+     }
 
 
 
 
-        $(document).ready(function () {
-            ResizeDashboardControl('tblEditDashboard');
-        });
+     $(document).ready(function () {
+         ResizeDashboardControl('tblEditDashboard');
+     });
 
 
 
-    </script>
+</script>
 
 
 
 
-    <%--<a href="#" id="sampleVT"></a>--%>
+      <%--<a href="#" id="sampleVT"></a>--%> 
     <br />
     <span class="failureNotification">
         <asp:Literal ID="ErrorMessage" runat="server"></asp:Literal>
     </span>
     <asp:ValidationSummary ID="MainValidationSummary" runat="server" CssClass="failureNotification" ValidationGroup="MainValidationGroup" />
-
-
-    <div class="demo" runat="server" id="divEditDashboard" style="width: 100%;">
+   
+    
+    <div class="demo" runat="server" id="divEditDashboard" style="width:100%;">
         <div id="Toolbox">
 
-            <asp:LinkButton ID="lnkNoEditDashboard" ToolTip="Exit Editing" CssClass="TopRightClose" runat="server" ClientIDMode="Static" OnClick="lnkNoEditDashboard_Click">
+             <asp:LinkButton ID="lnkNoEditDashboard" ToolTip="Exit Editing" CssClass="TopRightClose" runat="server" ClientIDMode="Static" OnClick="lnkNoEditDashboard_Click" >
                          
             </asp:LinkButton>
 
-            <h3>&nbsp; Drag to add</h3>
+            <h3>
+                &nbsp; Drag to add</h3>
             <div class="Section NewSection MapSection" ondblclick="EditSection($(this));">
                 <div class="Toolbar">
                     <a class="ui-icon ui-icon-carat-2-n-s" title="Drag and drop to change order"></a>
@@ -425,27 +468,27 @@
                     <div class="section-type">Map</div>
                 </div>
                 <div class="Content" style="padding-left: 23px;">
-                    <asp:Image ID="Image5" runat="server" ImageUrl="~/App_Themes/Default/images/Map.png" ToolTip="Map" />
+                    <asp:Image ID="Image5" runat="server"  ImageUrl="~/App_Themes/Default/images/Map.png"  ToolTip="Map" />
                 </div>
             </div>
 
-            <div class="Section NewSection DashChartSection" ondblclick="EditSection($(this));">
+             <div class="Section NewSection DashChartSection" ondblclick="EditSection($(this));">
                 <div class="Toolbar">
                     <a class="ui-icon ui-icon-carat-2-n-s" title="Drag and drop to change order"></a><a class="ui-icon ui-icon-pencil" onclick="EditSection($(this).parent().parent())" title="Edit section"></a><a class="ui-icon ui-icon-trash" onclick="RemoveSection($(this).parent().parent())" title="Delete section"></a>
                     <div class="section-type">Chart</div>
                 </div>
                 <div class="Content" style="padding-left: 23px;">
-                    <asp:Image ID="Image4" runat="server" ImageUrl="~/App_Themes/Default/images/chart_big.png" ToolTip="Chart" />
+                    <asp:Image ID="Image4" runat="server" ImageUrl="~/App_Themes/Default/images/chart_big.png"  ToolTip="Chart" />
                 </div>
             </div>
 
-            <div class="Section NewSection DialSection" ondblclick="EditSection($(this));">
+           <div class="Section NewSection DialSection" ondblclick="EditSection($(this));">
                 <div class="Toolbar">
                     <a class="ui-icon ui-icon-carat-2-n-s" title="Drag and drop to change order"></a><a class="ui-icon ui-icon-pencil" onclick="EditSection($(this).parent().parent())" title="Edit section"></a><a class="ui-icon ui-icon-trash" onclick="RemoveSection($(this).parent().parent())" title="Delete section"></a>
                     <div class="section-type">Dial</div>
                 </div>
                 <div class="Content" style="padding-left: 23px;">
-                    <asp:Image ID="Image7" runat="server" ImageUrl="~/App_Themes/Default/images/clock_select_remain.png" ToolTip="Dial" />
+                    <asp:Image ID="Image7" runat="server"  ImageUrl="~/App_Themes/Default/images/clock_select_remain.png"  ToolTip="Dial" />
                 </div>
             </div>
 
@@ -460,7 +503,7 @@
                     <asp:Image ID="Image1" runat="server" ImageUrl="~/App_Themes/Default/images/text_big.png" ToolTip="Text" />
                 </div>
             </div>--%>
-            <%-- <div class="Section NewSection TableSection" ondblclick="EditSection($(this));">
+           <%-- <div class="Section NewSection TableSection" ondblclick="EditSection($(this));">
                 <div class="Toolbar">
                     <a class="ui-icon ui-icon-carat-2-n-s" title="Drag and drop to change order"></a><a class="ui-icon ui-icon-pencil" onclick="EditSection($(this).parent().parent())" title="Edit section"></a><a class="ui-icon ui-icon-trash" onclick="RemoveSection($(this).parent().parent())" title="Delete section"></a>
                     <div class="section-type">Table</div>
@@ -470,7 +513,7 @@
                 </div>
             </div>--%>
 
-            <div class="Section NewSection CalendarSection" ondblclick="EditSection($(this));">
+             <div class="Section NewSection CalendarSection" ondblclick="EditSection($(this));">
                 <div class="Toolbar">
                     <a class="ui-icon ui-icon-carat-2-n-s" title="Drag and drop to change order"></a><a class="ui-icon ui-icon-pencil" onclick="EditSection($(this).parent().parent())" title="Edit section"></a><a class="ui-icon ui-icon-trash" onclick="RemoveSection($(this).parent().parent())" title="Delete section"></a>
                     <div class="section-type">Calendar</div>
@@ -479,14 +522,14 @@
                     <asp:Image ID="Image2" runat="server" ImageUrl="~/App_Themes/Default/images/Calendar.png" ToolTip="Calendar" />
                 </div>
             </div>
-
+           
             <div class="Section NewSection ImageSection" ondblclick="EditSection($(this));">
                 <div class="Toolbar">
                     <a class="ui-icon ui-icon-carat-2-n-s" title="Drag and drop to change order"></a><a class="ui-icon ui-icon-pencil" onclick="EditSection($(this).parent().parent())" title="Edit section"></a><a class="ui-icon ui-icon-trash" onclick="RemoveSection($(this).parent().parent())" title="Delete section"></a>
                     <div class="section-type">Image</div>
                 </div>
                 <div class="Content" style="padding-left: 23px;">
-                    <asp:Image ID="ImageButton3" runat="server" ImageUrl="~/App_Themes/Default/images/picture_big.png" ToolTip="Image" />
+                    <asp:Image ID="ImageButton3" runat="server" ImageUrl="~/App_Themes/Default/images/picture_big.png"  ToolTip="Image" />
                 </div>
             </div>
             <div class="Section NewSection HTMLSection" ondblclick="EditSection($(this));">
@@ -504,7 +547,7 @@
                     <div class="section-type">Column</div>
                 </div>
                 <div class="Content" style="padding-left: 23px;">
-                    <asp:Image ID="Image8" runat="server" ImageUrl="~/App_Themes/Default/images/columns_big.png" ToolTip="Columns" />
+                    <asp:Image ID="Image8" runat="server" ImageUrl="~/App_Themes/Default/images/columns_big.png"  ToolTip="Columns" />
                 </div>
             </div>
 
@@ -517,8 +560,8 @@
                     <asp:Image ID="Image1" runat="server" ImageUrl="~/App_Themes/Default/images/Record_table.png" ToolTip="Record Table" />
                 </div>
             </div>
-
-            <div style="text-align: center; padding-bottom: 5px; margin: 0px;" runat="server" visible="false" id="divMakeDefaultDashBoard">
+          
+            <div style="text-align: center; padding-bottom:5px; margin:0px;" runat="server" visible="false" id="divMakeDefaultDashBoard">
                 <%--<asp:LinkButton ID="lnkMakeDefaultDashBoard" runat="server" ClientIDMode="Static" OnClick="lnkMakeDefaultDashBoard_Click">
                            Make Default
                 </asp:LinkButton>--%>
@@ -533,7 +576,7 @@
                         <div class='Section <%# ((DocGen.DAL.DocumentSectionType)Eval("DocumentSectionType")).SectionType %>Section' id='SECTION_<%# Eval("DocumentSectionID")%>' ondblclick="EditSection($(this))">
                             <div class="Toolbar">
                                 <a class="ui-icon ui-icon-carat-2-n-s" title="Drag and drop to change order"></a><a class="ui-icon ui-icon-pencil" onclick="EditSection($(this).parent().parent())" title="Edit section"></a><a class="ui-icon ui-icon-trash" onclick="RemoveSection($(this).parent().parent())" title="Delete section"></a>
-                                <div style="float: right"><%# SectionName(((DocGen.DAL.DocumentSectionType)Eval("DocumentSectionType")).SectionType)%></div>
+                                <div style="float:right"><%# SectionName(((DocGen.DAL.DocumentSectionType)Eval("DocumentSectionType")).SectionType)%></div>
                             </div>
                             <div class="Content">
                                 Loading content..
@@ -546,40 +589,41 @@
         <div class="ui-widget">
             <div style="margin-top: 20px; padding: 0 .7em;">
                 <p>
-                    <span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-info"></span><strong>Note:</strong> Double click on section to edit it, drag and drop to re-order.
-                </p>
+                    <span style="float: left; margin-right: .3em;" class="ui-icon ui-icon-info"></span><strong>Note:</strong> Double click on section to edit it, drag and drop to re-order.</p>
             </div>
         </div>
-        <div style="width: 100%; padding-left: 10px;">
-
+        <div  style="width:100%;padding-left:10px;">
+           
             <br />
-            <table cellpadding="3" style="min-width: 700px; width: 100%; max-width: 1000px;">
-                <tr>
+              <table  cellpadding="3" style="min-width: 700px; width: 100%;max-width:1000px;">
+                  <tr>
                     <td align="right">
-                        <asp:LinkButton ID="lnkViewDashboard" runat="server" ClientIDMode="Static" OnClick="lnkNoEditDashboard_Click" Visible="false">
+                        <asp:LinkButton ID="lnkViewDashboard"  runat="server" ClientIDMode="Static" OnClick="lnkNoEditDashboard_Click" Visible="false" >
                             View dashboard
-                        </asp:LinkButton>
+                         </asp:LinkButton>
                     </td>
-                </tr>
-            </table>
-        </div>
+                  </tr>
+              </table>
+          </div>
     </div>
-
-    <div runat="server" id="divNotEditDashboard">
-        <asp:Literal ID="ltReportContent" runat="server"></asp:Literal>
-        <br />
-        <table id="tblEditDashboard" cellpadding="3" style="min-width: 700px; width: 100%; max-width: 1000px;">
-            <tr>
-                <td align="right">
-                    <asp:LinkButton ID="lnkEditDashboard" runat="server" ClientIDMode="Static" OnClick="lnkEditDashboard_Click" Visible="false">
+   
+          <div runat="server" id="divNotEditDashboard" style="width:100%;padding-left:10px;">
+            <asp:Literal ID="ltReportContent" runat="server"></asp:Literal>
+            <br />
+              <table id="tblEditDashboard" cellpadding="3" style="min-width: 700px; width: 100%;max-width:1000px;">
+                  <tr>
+                    <td align="right">
+                         <asp:LinkButton ID="lnkEditDashboard"  runat="server" ClientIDMode="Static" OnClick="lnkEditDashboard_Click" Visible="false" >
                             Edit dashboard
-                    </asp:LinkButton>
-                </td>
-            </tr>
-        </table>
-    </div>
-    <br />
-    <%--<table cellpadding="3" style="min-width: 700px; width: 100%;">
+                         </asp:LinkButton>
+                         
+                        
+                    </td>
+                  </tr>
+              </table>
+          </div>
+          <br />
+          <%--<table cellpadding="3" style="min-width: 700px; width: 100%;">
                   <tr>
                     <td align="right">
                      
@@ -587,17 +631,17 @@
                     </td>
                   </tr>
               </table>--%>
-
+  
     <asp:HiddenField runat="server" ClientIDMode="Static" ID="hfDocumentID" Value="0" />
     <asp:HiddenField runat="server" ClientIDMode="Static" ID="hfTableCount" Value="" />
-
+    
     <div>
         <div>
             <asp:Button runat="server" ID="btnRefresh" ClientIDMode="Static" Style="display: none;" OnClick="btnRefresh_Click" />
-            <asp:HyperLink ID="hlShowDemoTips" ClientIDMode="Static" runat="server" NavigateUrl="~/DemoTips.aspx"
-                Style="display: none;"></asp:HyperLink>
+             <asp:HyperLink ID="hlShowDemoTips" ClientIDMode="Static" runat="server" NavigateUrl="~/DemoTips.aspx"
+            Style="display: none;"></asp:HyperLink>
             <asp:HyperLink ID="hlShowWelcomeTips" ClientIDMode="Static" runat="server" NavigateUrl="~/Welcome.aspx"
-                Style="display: none;"></asp:HyperLink>
+            Style="display: none;"></asp:HyperLink>
 
             <asp:Button runat="server" ID="btnMakeDefaultDashBoard" ClientIDMode="Static" Style="display: none;" OnClick="btnMakeDefaultDashBoard_Click" />
 
@@ -689,18 +733,18 @@
                 iW = 1000;
                 iH = 700;
             }
-            else if (section.hasClass("CalendarSection")) {
+              else if (section.hasClass("CalendarSection")) {
                 sType = "Calendar";
                 iW = 1000;
                 iH = 700;
             }
-            else if (section.hasClass("RecordTableSection")) {
-                if(sectionID!='')
-                {
-                    editingSection=null;
-                    alert('Please edit view.')
-                    return;
-                }
+              else if (section.hasClass("RecordTableSection")) {
+                  if(sectionID!='')
+                  {
+                      editingSection=null;
+                     alert('Please edit view.')
+                      return;
+                  }
                    
                 sType = "RecordTable";
                 iW = 1200;
@@ -761,38 +805,38 @@
                 //alert('not null');
                 var id = section.attr('id').toString().replace('SECTION_', '');
                 //alert(id);
-                //                $.ajax({               
-                //                    url: 'Pages/DocGen/REST/SectionREST.svc/section/delete/' + id,
-                //                    type: 'POST',
-                //                    success: function (result) {
-                //                        if (result) {
-                //                            section.remove();
-                //                        }
-                //                        else {
-                //                            alert('Error!');
-                //                        }
-                //                    },
-                //                    error: function (a, b, c) {
-                //                        //                         alert(a.responseText);
-                //                        section.remove();
-                //                    }
-                //                });
+//                $.ajax({               
+//                    url: 'Pages/DocGen/REST/SectionREST.svc/section/delete/' + id,
+//                    type: 'POST',
+//                    success: function (result) {
+//                        if (result) {
+//                            section.remove();
+//                        }
+//                        else {
+//                            alert('Error!');
+//                        }
+//                    },
+//                    error: function (a, b, c) {
+//                        //                         alert(a.responseText);
+//                        section.remove();
+//                    }
+//                });
 
-                $.ajax({
+                 $.ajax({
                     url: 'Pages/DocGen/REST/SectionREST.ashx?type=section_delete&sectionId=' + id,
                     cache: false,
                     success: function (content) {                    
-                        if (content=='False') {
-                            alert('Error!');
-                        }  
-                        else
-                        {
-                            section.remove();
-                            if($("#EditArea > .Section:first").length == 0)
-                                $("#EditArea").addClass("Empty");
-                            else
-                                $("#EditArea").removeClass("Empty");
-                        }                          
+                       if (content=='False') {
+                        alert('Error!');
+                       }  
+                       else
+                       {
+                           section.remove();
+                           if($("#EditArea > .Section:first").length == 0)
+                               $("#EditArea").addClass("Empty");
+                           else
+                               $("#EditArea").removeClass("Empty");
+                       }                          
                                    
                     },
                     error: function (a, b, c) {
@@ -809,17 +853,17 @@
             }
         }
 
-        //        function LoadSectionContent(id) {
-        //            var $sectionDiv = $('#SECTION_' + id);
-        //            $(".Content:first", $sectionDiv).html('Loading content..');
-        //            $.ajax({
-        //                url: 'SectionContent.ashx?DocumentSectionID=' + id,
-        //                cache: false,
-        //                success: function (content) {
-        //                    $(".Content:first", $sectionDiv).html(content);
-        //                }
-        //            });
-        //        }
+//        function LoadSectionContent(id) {
+//            var $sectionDiv = $('#SECTION_' + id);
+//            $(".Content:first", $sectionDiv).html('Loading content..');
+//            $.ajax({
+//                url: 'SectionContent.ashx?DocumentSectionID=' + id,
+//                cache: false,
+//                success: function (content) {
+//                    $(".Content:first", $sectionDiv).html(content);
+//                }
+//            });
+//        }
 
         function SaveSectionsOrder()
         {
@@ -885,22 +929,22 @@
 		                'modal': true
 		            }
 	            );                        
-                //                $.ajax({                
-                //                    url: 'Pages/DocGen/REST/SectionREST.svc/sections/displayorder/' + OrderedIDs,
-                //                    type: 'POST',
-                //                    success: function (result) {
-                //                        if (!result) {
-                //                            alert('Error!');
-                //                        }
-                //                        isBusy = false;
-                //                        setTimeout(function () { $.fancybox.close(); }, 300);
-                //                    },
-                //                    error: function (a, b, c) {
-                //                        isBusy = false;
-                //                        alert(a.responseText);                                
-                //                        $.fancybox.close();
-                //                    }
-                //                });
+//                $.ajax({                
+//                    url: 'Pages/DocGen/REST/SectionREST.svc/sections/displayorder/' + OrderedIDs,
+//                    type: 'POST',
+//                    success: function (result) {
+//                        if (!result) {
+//                            alert('Error!');
+//                        }
+//                        isBusy = false;
+//                        setTimeout(function () { $.fancybox.close(); }, 300);
+//                    },
+//                    error: function (a, b, c) {
+//                        isBusy = false;
+//                        alert(a.responseText);                                
+//                        $.fancybox.close();
+//                    }
+//                });
 
                 
 
@@ -908,10 +952,10 @@
                     url: 'Pages/DocGen/REST/SectionREST.ashx?type=sections_displayorder&sectionIds=' + OrderedIDs,
                     cache: false,
                     success: function (content) {                    
-                        if (content=='False') {
-                            alert('Error!');
-                        }  
-                        //alert(content);
+                       if (content=='False') {
+                        alert('Error!');
+                       }  
+                       //alert(content);
                         //setTimeout(function () { $.fancybox.close(); }, 300);  
                         isBusy = false;         
                         $.fancybox.close();
@@ -919,7 +963,7 @@
                     error: function (a, b, c) {
                         alert('Error!');
                         isBusy = false;
-                        $.fancybox.close();
+                         $.fancybox.close();
                     }
                 });
 
@@ -981,27 +1025,27 @@
 
         function  Readonlymode()
         {
-            // $("#EditArea .Toolbar").fadeOut();
-            $("#lnkNoEditDashboard").css({ "display": 'none'});
-            $("#lnkEditDashboard").css({ "display": 'block'});
-            $("#Toolbox").css({ "display": 'none'});
-            $("#EditArea .Toolbar").css({ "display": 'none'});
-            $("#EditArea div.Section").css({ "border-left-width": '0px',"border":'solid 0px #f8f8f8',"cursor":'default'});
-            $("#EditArea, .ZoneInner").sortable('disable');
+             // $("#EditArea .Toolbar").fadeOut();
+              $("#lnkNoEditDashboard").css({ "display": 'none'});
+              $("#lnkEditDashboard").css({ "display": 'block'});
+              $("#Toolbox").css({ "display": 'none'});
+              $("#EditArea .Toolbar").css({ "display": 'none'});
+               $("#EditArea div.Section").css({ "border-left-width": '0px',"border":'solid 0px #f8f8f8',"cursor":'default'});
+               $("#EditArea, .ZoneInner").sortable('disable');
         }
 
-        function  EditMode()
+          function  EditMode()
         {
-            //$("#EditArea .Toolbar").fadeIn();
-            $("#lnkNoEditDashboard").css({ "display": 'block'});
-            $("#lnkEditDashboard").css({ "display": 'none'});
-            $("#Toolbox").css({ "display": 'block'});
-            $("#EditArea .Toolbar").css({ "display": 'block'});
-            $("#EditArea div.Section").css({ "border":'solid 1px #f8f8f8',"margin":'10px 0px', "padding":'0px',"position":'relative',"min-height":'50px',"border-radius":'5px 0px 0px 5px',"background-color":'#FFFFFF',"cursor":'move'});
-            $("#EditArea, .ZoneInner").sortable('enable');
-            $("#EditArea div.Section:hover").css({ "border-color": '#e6e6e6',"background-color":'#FCFBED'});
-            // $("#EditArea div.Section > .Toolbar").css({ "display": 'none'});
-            // $("#EditArea div.Section:hover > .Toolbar").css({ "display": 'block'});
+              //$("#EditArea .Toolbar").fadeIn();
+              $("#lnkNoEditDashboard").css({ "display": 'block'});
+              $("#lnkEditDashboard").css({ "display": 'none'});
+               $("#Toolbox").css({ "display": 'block'});
+               $("#EditArea .Toolbar").css({ "display": 'block'});
+                $("#EditArea div.Section").css({ "border":'solid 1px #f8f8f8',"margin":'10px 0px', "padding":'0px',"position":'relative',"min-height":'50px',"border-radius":'5px 0px 0px 5px',"background-color":'#FFFFFF',"cursor":'move'});
+                 $("#EditArea, .ZoneInner").sortable('enable');
+                  $("#EditArea div.Section:hover").css({ "border-color": '#e6e6e6',"background-color":'#FCFBED'});
+                  // $("#EditArea div.Section > .Toolbar").css({ "display": 'none'});
+                  // $("#EditArea div.Section:hover > .Toolbar").css({ "display": 'block'});
         }
 
 
@@ -1061,9 +1105,9 @@
                 width: 700,
                 height: 550,
                 titleShow: false,
-                //                onClosed: function (currentArray, currentIndex, currentOpts) {
-                //                    setTimeout(function () { OpenAlertBox(); }, currentOpts.speedOut);
-                //                }
+//                onClosed: function (currentArray, currentIndex, currentOpts) {
+//                    setTimeout(function () { OpenAlertBox(); }, currentOpts.speedOut);
+//                }
             });
         });
 
@@ -1077,11 +1121,11 @@
                 height: 250,
                 titleShow: false,
                 onClosed: function (currentArray, currentIndex, currentOpts) {
-                    //                    setTimeout(function () { OpenAlertBox(); }, currentOpts.speedOut);
-                    if(document.getElementById('hfTableCount').value=='')
-                    {
-                        window.location.href='/Pages/Record/TableOption.aspx?FirstTime=yes&MenuID=kdUxjBEM5oo=&SearchCriteria=kdUxjBEM5oo=';
-                    }
+//                    setTimeout(function () { OpenAlertBox(); }, currentOpts.speedOut);
+                if(document.getElementById('hfTableCount').value=='')
+                {
+                    window.location.href='/Pages/Record/TableOption.aspx?FirstTime=yes&MenuID=kdUxjBEM5oo=&SearchCriteria=kdUxjBEM5oo=';
+                }
                 }
             });
         });

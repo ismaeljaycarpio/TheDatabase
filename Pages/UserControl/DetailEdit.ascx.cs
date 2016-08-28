@@ -594,9 +594,21 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                 //lets create Tabs
 
+                string strHavePageColour = "";
+
+                if (childRecord != null)
+                {
+                    strHavePageColour = Common.GetValueFromSQL(@"SELECT TOP 1 CC.ColumnColourID FROM [ColumnColour] CC JOIN [TableTab] TT
+                                             ON CC.ID=TT.TableTabID
+	                                            WHERE CC.Context='tabletabid' AND TT.TableID=" + childRecord.TableID.ToString());
+                }
                
                 for (int t = 0; t < _dtDBTableTab.Rows.Count; t++)
                 {
+                    string strColour = "";
+
+                    if (childRecord != null && strHavePageColour != "")
+                        strColour = Cosmetic.fnGetColumnColour((int)childRecord.RecordID, int.Parse(_dtDBTableTab.Rows[t]["TableTabID"].ToString()), "tabletabid");
 
 
                     if (t == 0)
@@ -609,6 +621,13 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         _strClickFirstTab = "ShowHideMainDivs" + _theTable.TableID.ToString() + "('" + pnlDetailTab.ClientID + "',this," + _dtDBTableTab.Rows[t]["TableTabID"].ToString() + ");";
                         lnkDetialTab.Attributes.Add("onclick", "ShowHideMainDivs" + _theTable.TableID.ToString() + "('" + pnlDetailTab.ClientID + "',this," + _dtDBTableTab.Rows[t]["TableTabID"].ToString() + "); return false");
                         lnkDetialTab.CssClass = "TablLinkClass" + _theTable.TableID.ToString();
+
+                        if (strColour != "")
+                        {
+                            lnkDetialTab.Style.Add("color", "#" + strColour);
+                        }
+                        
+                        
                         lnkDetialTab.CausesValidation = false;
                         pnlTabHeading.Controls.Add(new LiteralControl("&nbsp&nbsp&nbsp&nbsp"));
                         pnlTabHeading.Controls.Add(lnkDetialTab);
@@ -632,6 +651,13 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         lnkDetialTabD.OnClientClick = "ShowHideMainDivs" + _theTable.TableID.ToString() + "('" + _pnlDetailTabD[t].ClientID + "',this," + _dtDBTableTab.Rows[t]["TableTabID"].ToString() + "); return false";
 
                         lnkDetialTabD.CssClass = "TablLinkClass" + _theTable.TableID.ToString();
+
+                        if (strColour != "")
+                        {
+                            lnkDetialTabD.Style.Add("color", "#" + strColour );
+                        }
+
+
                         lnkDetialTabD.CausesValidation = false;
                         if (Common.IsIn(_dtDBTableTab.Rows[t]["TableTabID"].ToString(), strHiddenTableTabID))
                         {

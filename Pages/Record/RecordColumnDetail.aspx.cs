@@ -1029,7 +1029,7 @@ FROM         [Table] INNER JOIN
 
 
                     hlShowWhen.NavigateUrl = "~/Pages/Record/ShowHide.aspx?ColumnID=" + _qsColumnID;
-                    hlColumnColour.NavigateUrl = "~/Pages/Record/ColumnColourList.aspx?ColumnID=" + _qsColumnID;
+                    //hlColumnColour.NavigateUrl = "~/Pages/Record/ColumnColourList.aspx?Context=columnid&ID=" + _qsColumnID;
 
                     hfColumnID.Value = _qsColumnID;
                     _iColumnID = int.Parse(_qsColumnID);
@@ -1073,7 +1073,7 @@ FROM         [Table] INNER JOIN
                 {
                     //PopulateRetriverDDL();
 
-
+                    hlColumnColour.NavigateUrl = "~/Pages/Record/ColumnColourList.aspx?Context=columnid&ID=" + _qsColumnID + "&TableID=" + _qsTableID;
 
                     PopulateAvgColumn();
                     PopulateMapPinHoverColumn();
@@ -1237,7 +1237,7 @@ FROM         [Table] INNER JOIN
                 }
                 divHistoryRoot.Visible = false;
                 hlShowWhen.NavigateUrl = "~/Pages/Record/ShowHide.aspx?ColumnID=-1&TableID=" + _qsTableID;
-                hlColumnColour.NavigateUrl = "~/Pages/Record/ColumnColourList.aspx?ColumnID=-1&TableID=" + _qsTableID;
+                //hlColumnColour.NavigateUrl = "~/Pages/Record/ColumnColourList.aspx?Context=columnid&ID=-1&TableID=" + _qsTableID;
                 break;
 
             case "view":
@@ -1248,12 +1248,12 @@ FROM         [Table] INNER JOIN
                 EnableTheRecordControls(false);
                 divSave.Visible = false;
                 hlShowWhen.NavigateUrl = "~/Pages/Record/ShowHide.aspx?ColumnID=" + _qsColumnID + "&TableID=" + _qsTableID + "&mode=view";
-                hlColumnColour.NavigateUrl = "~/Pages/Record/ColumnColourList.aspx?ColumnID=" + _qsColumnID + "&TableID=" + _qsTableID + "&mode=view";
+                //hlColumnColour.NavigateUrl = "~/Pages/Record/ColumnColourList.aspx?Context=columnid&ID" + _qsColumnID + "&TableID=" + _qsTableID + "&mode=view";
                 break;
 
             case "edit":
                 hlShowWhen.NavigateUrl = "~/Pages/Record/ShowHide.aspx?ColumnID=" + _qsColumnID + "&TableID=" + _qsTableID;
-                hlColumnColour.NavigateUrl = "~/Pages/Record/ColumnColourList.aspx?ColumnID=" + _qsColumnID + "&TableID=" + _qsTableID;
+                
                 divHistoryRoot.Visible = true;
                 strTitle = "Edit Field";
                 if (!IsPostBack)
@@ -1559,7 +1559,7 @@ FROM         [Table] INNER JOIN
     protected void PopulateColumnColour()
     {
 
-        DataTable dtTemp = Cosmetic.dbg_ColumnColour_Select(int.Parse(_qsColumnID));
+        DataTable dtTemp = Cosmetic.dbg_ColumnColour_Select("columnid", int.Parse(_qsColumnID));
 
         if (dtTemp.Rows.Count == 0)
         {
@@ -1577,7 +1577,7 @@ FROM         [Table] INNER JOIN
 
     protected void PopulateTheRecord()
     {
-
+        //hlColumnColour.NavigateUrl = "~/Pages/Record/ColumnColourList.aspx?Context=columnid&ID=" + _qsColumnID + "&TableID=" + _qsTableID;
         hlResetIDs.Visible = true;
         hlResetIDs.NavigateUrl = "~/Pages/Help/FancyConfirm.aspx?message=" +
                    Cryptography.Encrypt("Would you like to reallocate all records ID?")
@@ -5298,8 +5298,8 @@ FROM         [Table] INNER JOIN
                                 }
 
                                 ColumnColour theColumnColour = new ColumnColour();
-
-                                theColumnColour.ColumnID = iColumnID;
+                                theColumnColour.Context = "columnid";
+                                theColumnColour.ID = iColumnID;
                                 theColumnColour.ControllingColumnID = int.Parse(drCC["ControllingColumnID"].ToString());
                                 theColumnColour.Value = drCC["Value"].ToString();
                                 theColumnColour.Operator = drCC["Operator"].ToString();

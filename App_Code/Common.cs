@@ -237,9 +237,6 @@ public class Common
                 //SystemData.ErrorLog_Insert(theErrorLog);
             }
 
-
-        
-
     }
     public static bool ChangeAccount(int iUserID,int iAccountID)
     {

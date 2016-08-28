@@ -11,15 +11,21 @@ public partial class Pages_Record_ColumnColour : System.Web.UI.Page
 {
    
     int _iTableID = -1;
-    int _iColumnID = -1;
+    int _iID = -1;
+    string _sContext="columnid";
     protected void Page_Load(object sender, EventArgs e)
     {
         _iTableID =int.Parse( Request.QueryString["TableID"].ToString());
-        _iColumnID = int.Parse( Request.QueryString["ColumnID"].ToString());
+        _iID = int.Parse( Request.QueryString["ID"].ToString());
+        _sContext = Request.QueryString["Context"].ToString();
+        
 
         if (!IsPostBack)
         {
-
+            if(_sContext=="tabletabid")
+            {
+                lblTopTitle.Text = "Page Link Colour";
+            }
             PopulateColumnColour();
            
         }
@@ -65,7 +71,9 @@ public partial class Pages_Record_ColumnColour : System.Web.UI.Page
 
                 Pages_UserControl_ShowWhenCondition swcColumnColour = e.Row.FindControl("swcColumnColour") as Pages_UserControl_ShowWhenCondition;
                 swcColumnColour.TableID = _iTableID;
-                swcColumnColour.ColumnID = _iColumnID;
+
+                if(_sContext=="columnid")
+                    swcColumnColour.ColumnID = _iID;
                 
                 swcColumnColour.ShowJoinOperator = false;
                 swcColumnColour.ddlJoinOperatorV = "";
@@ -78,9 +86,9 @@ public partial class Pages_Record_ColumnColour : System.Web.UI.Page
                 ddlTextColour.SelectedValue = DataBinder.Eval(e.Row.DataItem, "Colour").ToString(); 
 
                 lblColumnColourID.Text = DataBinder.Eval(e.Row.DataItem, "ColumnColourID").ToString();
-                lblID.Text = DataBinder.Eval(e.Row.DataItem, "ID").ToString();
-                imgbtnMinus.CommandArgument = DataBinder.Eval(e.Row.DataItem, "ID").ToString();
-                imgbtnPlus.CommandArgument = DataBinder.Eval(e.Row.DataItem, "ID").ToString();
+                lblID.Text = DataBinder.Eval(e.Row.DataItem, "pID").ToString();
+                imgbtnMinus.CommandArgument = DataBinder.Eval(e.Row.DataItem, "pID").ToString();
+                imgbtnPlus.CommandArgument = DataBinder.Eval(e.Row.DataItem, "pID").ToString();
 
 
             }
@@ -112,7 +120,7 @@ public partial class Pages_Record_ColumnColour : System.Web.UI.Page
                     Pages_UserControl_ShowWhenCondition swcColumnColour = gvRow.FindControl("swcColumnColour") as Pages_UserControl_ShowWhenCondition;
 
 
-                    dtColumnColour.Rows.Add(lblID.Text, lblColumnColourID.Text, _iColumnID.ToString(), swcColumnColour.ddlHideColumnV,
+                    dtColumnColour.Rows.Add(lblID.Text, lblColumnColourID.Text,_sContext,  _iID.ToString(), swcColumnColour.ddlHideColumnV,
                          swcColumnColour.ddlOperatorV, swcColumnColour.hfHideColumnValueV, ddlTextColour.SelectedValue);
                     //iDisplayOrder = iDisplayOrder + 1;
                 }
@@ -127,25 +135,26 @@ public partial class Pages_Record_ColumnColour : System.Web.UI.Page
     protected void PopulateColumnColour()
     {
         DataTable dtColumnColour = new DataTable();
-        dtColumnColour.Columns.Add("ID");
+        dtColumnColour.Columns.Add("pID");
         dtColumnColour.Columns.Add("ColumnColourID");
-        dtColumnColour.Columns.Add("ColumnID");
+        dtColumnColour.Columns.Add("Context");
+        dtColumnColour.Columns.Add("ID");
         dtColumnColour.Columns.Add("ControllingColumnID");
         dtColumnColour.Columns.Add("Operator");
         dtColumnColour.Columns.Add("Value");
         dtColumnColour.Columns.Add("Colour");
         dtColumnColour.AcceptChanges();
 
-        if (_iColumnID != -1 && ViewState["dtColumnColour"] == null)
+        if (_iID != -1 && ViewState["dtColumnColour"] == null)
         {
 
 
-            DataTable dtColumnColourDB = Cosmetic.dbg_ColumnColour_Select(_iColumnID);
+            DataTable dtColumnColourDB = Cosmetic.dbg_ColumnColour_Select(_sContext, _iID);
 
             if (dtColumnColour != null && dtColumnColourDB != null)
             {
 
-                //dtColumnColour.Columns.Add("ID");
+                //dtColumnColour.Columns.Add("pID");
 
                 //dtColumnColour.AcceptChanges();
 
@@ -158,20 +167,21 @@ public partial class Pages_Record_ColumnColour : System.Web.UI.Page
                     newRow[3] = dr[2].ToString();
                     newRow[4] = dr[3].ToString();
                     newRow[5] = dr[4].ToString();
-                    newRow[6] = dr[5].ToString();                  
+                    newRow[6] = dr[5].ToString();
+                    newRow[7] = dr[6].ToString(); 
 
                     dtColumnColour.Rows.Add(newRow);
                 }
 
                 //foreach(DataRow dr in dtColumnColour.Rows)
                 //{
-                //    dr["ID"] = Guid.NewGuid().ToString();
+                //    dr["pID"] = Guid.NewGuid().ToString();
                 //}
                 dtColumnColour.AcceptChanges();
 
                 if(dtColumnColour.Rows.Count==0)
                 {
-                    dtColumnColour.Rows.Add(Guid.NewGuid().ToString(), "-1", _iColumnID.ToString(), "-1", "equals", "", "000000");
+                    dtColumnColour.Rows.Add(Guid.NewGuid().ToString(), "-1",_sContext, _iID.ToString(), "-1", "equals", "", "000000");
                     dtColumnColour.AcceptChanges();
                 }
 
@@ -188,7 +198,7 @@ public partial class Pages_Record_ColumnColour : System.Web.UI.Page
             {
                 if (Session["dtColumnColour"] == null)
                {
-                   dtColumnColour.Rows.Add(Guid.NewGuid().ToString(), "-1", _iColumnID.ToString(), "-1", "equals", "", "000000");
+                   dtColumnColour.Rows.Add(Guid.NewGuid().ToString(), "-1",_sContext, _iID.ToString(), "-1", "equals", "", "000000");
 
                    grdColumnColour.DataSource = dtColumnColour;
                    grdColumnColour.DataBind();
@@ -238,7 +248,7 @@ public partial class Pages_Record_ColumnColour : System.Web.UI.Page
                     for (int i = dtColumnColour.Rows.Count - 1; i >= 0; i--)
                     {
                         DataRow dr = dtColumnColour.Rows[i];
-                        if (dr["id"].ToString() == e.CommandArgument.ToString())
+                        if (dr["pID"].ToString() == e.CommandArgument.ToString())
                         {
                             dr.Delete();
                             break;
@@ -279,11 +289,12 @@ public partial class Pages_Record_ColumnColour : System.Web.UI.Page
                     DataRow newRow = dtColumnColour.NewRow();
                     newRow[0] = Guid.NewGuid().ToString();
                     newRow[1] = "-1";
-                    newRow[2] = _iColumnID.ToString();
-                    newRow[3] = "-1";
-                    newRow[4] = "equals";
-                    newRow[5] = "";
-                    newRow[6] = "000000";
+                    newRow[2] = _sContext;
+                    newRow[3] = _iID.ToString();
+                    newRow[4] = "-1";
+                    newRow[5] = "equals";
+                    newRow[6] = "";
+                    newRow[7] = "000000";
                    
 
 
@@ -315,9 +326,9 @@ public partial class Pages_Record_ColumnColour : System.Web.UI.Page
 
         SetColumnColourRowData();
 
-        if (_iColumnID != -1 && ViewState["dtColumnColour"] != null)
+        if (_iID != -1 && ViewState["dtColumnColour"] != null)
         {
-            DataTable dtOldColumnColour = Cosmetic.dbg_ColumnColour_Select(_iColumnID);
+            DataTable dtOldColumnColour = Cosmetic.dbg_ColumnColour_Select(_sContext, _iID);
 
             DataTable dtColumnColour = (DataTable)ViewState["dtColumnColour"];
 
@@ -348,9 +359,9 @@ public partial class Pages_Record_ColumnColour : System.Web.UI.Page
                 if (theColumnColour==null || iOldRowsCount<iDO)
                 {
                     bInsert = true;
-                }   
-
-                theColumnColour.ColumnID = _iColumnID;
+                }
+                theColumnColour.Context = _sContext;
+                theColumnColour.ID = _iID;
                 theColumnColour.ControllingColumnID = int.Parse(drCC["ControllingColumnID"].ToString());
                 theColumnColour.Value = drCC["Value"].ToString();
                 theColumnColour.Operator = drCC["Operator"].ToString();
@@ -372,11 +383,11 @@ public partial class Pages_Record_ColumnColour : System.Web.UI.Page
             }
 
             
-            Common.ExecuteText(@"DELETE ColumnColour WHERE ColumnID=" + _iColumnID.ToString() + @" AND ColumnColourID NOT IN (" + strActiveColumnColourIDs + @")");
+            Common.ExecuteText(@"DELETE ColumnColour WHERE Context='"+_sContext+"' AND ID=" + _iID.ToString() + @" AND ColumnColourID NOT IN (" + strActiveColumnColourIDs + @")");
             
         }
 
-        if (_iColumnID == -1 && ViewState["dtColumnColour"] != null)
+        if (_iID == -1 && ViewState["dtColumnColour"] != null)
         {
             Session["dtColumnColour"] = (DataTable)ViewState["dtColumnColour"];
         }

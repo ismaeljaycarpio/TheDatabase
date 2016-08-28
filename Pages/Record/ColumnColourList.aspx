@@ -15,9 +15,6 @@
 
     function GetBackValueAdd() {
         window.parent.document.getElementById('chkColumnColour').checked = true;
-
-
-
         parent.$.fancybox.close();
 
     }
@@ -47,8 +44,8 @@
         <table>
             <tr>
                 <td align="left" colspan="4">
-                  <h3>Text Colour</h3>  
-                
+                 
+                        <asp:Label runat="server" ID="lblTopTitle" CssClass="TopTitle" Text="Text Colour"></asp:Label>
                 </td>
                
             </tr>

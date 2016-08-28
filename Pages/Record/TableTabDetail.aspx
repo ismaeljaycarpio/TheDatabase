@@ -21,6 +21,17 @@
                     titleShow: false
                 });
             });
+
+            $(function () {
+                $(".colourlink").fancybox({
+                    scrolling: 'auto',
+                    type: 'iframe',
+                    width: 900,
+                    height: 500,
+                    titleShow: false
+                });
+            });
+
             $("#chkShowWhen").click(function () {
                 var chkShowWhen = document.getElementById("chkShowWhen");
                 if (chkShowWhen.checked == true) {
@@ -28,7 +39,13 @@
                 }
 
             });
+            $("#chkColumnColour").click(function () {
+                var chkColumnColour = document.getElementById("chkColumnColour");
+                if (chkColumnColour.checked == true) {
+                    $("#hlColumnColour").trigger("click");
+                }
 
+            });
 
             function abc() {
                 var b = document.getElementById('<%= lnkSave.ClientID %>');
@@ -106,7 +123,7 @@
                                                 ErrorMessage="Page - Required"></asp:RequiredFieldValidator>
                                         </td>
                                     </tr>
-                                    <tr id="rrShowWhen" runat="server">
+                                    <tr id="trShowWhen" runat="server">
                                         <td></td>
                                         <td align="left">
                                             <asp:CheckBox runat="server" ID="chkShowWhen" Text="" TextAlign="Right" Font-Bold="true"
@@ -115,6 +132,18 @@
                                                 ID="hlShowWhen" ClientIDMode="Static">Show When...</asp:HyperLink>
                                             <asp:HiddenField runat="server" ClientIDMode="Static" ID="hfShowHref" />
                                             <br />
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td align="right">
+                                            
+                                        </td>
+                                        <td align="left">
+                                            <asp:CheckBox runat="server" ID="chkColumnColour" Text="" TextAlign="Right" Font-Bold="true"
+                                                ClientIDMode="Static" />
+                                            <asp:HyperLink runat="server" NavigateUrl="~/Pages/Record/ColumnColourList.aspx" CssClass="colourlink"
+                                                ID="hlColumnColour" ClientIDMode="Static">Set colour by value...</asp:HyperLink>
                                         </td>
                                     </tr>
                                     

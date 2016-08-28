@@ -36,7 +36,9 @@ public partial class Pages_Record_TableTabDetail : SecurePage
         if (!IsPostBack)
         {
             Session["dtShowWhen"] = null;
+            Session["dtColumnColour"] = null;
             string strShowWhenID = "";
+            string strColumnColourID = "";
             if(_qsTableTabID=="")
             {
                 hlShowWhen.NavigateUrl = "~/Pages/Record/ShowHide.aspx?TableID="+_qsTableID+"&Context=tabletab";
@@ -45,12 +47,18 @@ public partial class Pages_Record_TableTabDetail : SecurePage
             {
                 hlShowWhen.NavigateUrl = "~/Pages/Record/ShowHide.aspx?TableID=" + _qsTableID + "&Context=tabletab&tabletabid=" + _qsTableTabID;
                 strShowWhenID = Common.GetValueFromSQL("SELECT TOP 1 ShowWhenID FROM ShowWhen WHERE tabletabid=" + _qsTableTabID);
-            } 
+
+                strColumnColourID = Common.GetValueFromSQL("SELECT TOP 1 ColumnColourID FROM ColumnColour WHERE Context='tabletabid' AND ID=" + _qsTableTabID);
+            }
+
+            hlColumnColour.NavigateUrl = "~/Pages/Record/ColumnColourList.aspx?Context=tabletabid&ID=" + (_qsTableTabID == "" ? "-1" : _qsTableTabID) + "&TableID=" + _qsTableID;
+
 
             if (strShowWhenID != "")
-            {
                 chkShowWhen.Checked = true;
-            }
+
+            if (strColumnColourID != "")
+                chkColumnColour.Checked = true;
         }
            
         if (Request.QueryString["mode"] == null)
@@ -65,18 +73,13 @@ public partial class Pages_Record_TableTabDetail : SecurePage
                 _qsMode == "view" ||
                 _qsMode == "edit")
             {
-                _strActionMode = _qsMode;
-                             
-
+                _strActionMode = _qsMode;                            
             }
             else
             {
                 Server.Transfer("~/Default.aspx");
             }
-
-
-        }
-      
+        }     
 
 
         // checking permission
@@ -258,6 +261,33 @@ public partial class Pages_Record_TableTabDetail : SecurePage
                                     iDO = iDO + 1;
 
                                 }
+                            }
+
+                        }
+
+                        if (chkColumnColour.Checked && Session["dtColumnColour"] != null)
+                        {
+
+                            DataTable dtColumnColour = (DataTable)Session["dtColumnColour"];
+                            foreach (DataRow drCC in dtColumnColour.Rows)
+                            {
+
+                                if (drCC["ControllingColumnID"].ToString() == "" || drCC["Operator"].ToString() == "" || drCC["Value"].ToString() == "" || drCC["Colour"].ToString() == "")
+                                {
+                                    continue;
+                                }
+
+                                ColumnColour theColumnColour = new ColumnColour();
+                                theColumnColour.Context = "tabletabid";
+                                theColumnColour.ID = iTableTabID;
+                                theColumnColour.ControllingColumnID = int.Parse(drCC["ControllingColumnID"].ToString());
+                                theColumnColour.Value = drCC["Value"].ToString();
+                                theColumnColour.Operator = drCC["Operator"].ToString();
+                                theColumnColour.Colour = drCC["Colour"].ToString();
+
+                                Cosmetic.dbg_ColumnColour_Insert(theColumnColour);
+
+
                             }
 
                         }

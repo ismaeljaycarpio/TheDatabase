@@ -1401,9 +1401,9 @@ public partial class User_Detail : SecurePage
 
                                     }
                                 }
-                              
 
 
+                                //Session["tdbmsgpb"] = null;
                                 hlAddUserLink.NavigateUrl = "~/Pages/Help/FancyConfirm.aspx?message=" +
                   Cryptography.Encrypt("User " + txtEmail.Text + " has at least one account. Do you want to add " + txtEmail.Text + " to your account too?")
                   + "&okbutton=" + Cryptography.Encrypt(btnAddUserLinkOK.ClientID);

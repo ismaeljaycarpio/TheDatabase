@@ -741,11 +741,22 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
                 //lets create Tabs
+                string strHavePageColour = "";
 
-
-
+                if (_theRecord != null)
+                {
+                    strHavePageColour = Common.GetValueFromSQL(@"SELECT TOP 1 CC.ColumnColourID FROM [ColumnColour] CC JOIN [TableTab] TT
+                                             ON CC.ID=TT.TableTabID
+	                                            WHERE CC.Context='tabletabid' AND TT.TableID=" + _theRecord.TableID.ToString());
+                }
                 for (int t = 0; t < _dtDBTableTab.Rows.Count; t++)
                 {
+
+                   
+                    string strColour = "";
+
+                    if (_theRecord != null && strHavePageColour!="")
+                        strColour = Cosmetic.fnGetColumnColour((int)_theRecord.RecordID, int.Parse(_dtDBTableTab.Rows[t]["TableTabID"].ToString()), "tabletabid");
 
                     if (t == 0)
                     {
@@ -754,7 +765,18 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         lnkDetialTab.Text = _dtDBTableTab.Rows[t]["TabName"].ToString(); //"Detail";
                         lnkDetialTab.Font.Bold = true;
                         lnkDetialTab.Attributes.Add("onclick", "ShowHideMainDivs(" + pnlDetailTab.ClientID + ",this); return false");
+
                         lnkDetialTab.CssClass = "TablLinkClass";
+                        
+                        if (strColour!="")
+                        {
+                            lnkDetialTab.Style.Add("color", "#" + strColour );
+                        }
+                       
+                       
+
+
+
                         pnlTabHeading.Controls.Add(new LiteralControl("&nbsp&nbsp&nbsp&nbsp"));
                         pnlTabHeading.Controls.Add(lnkDetialTab);
                         pnlTabHeading.Controls.Add(new LiteralControl("&nbsp&nbsp&nbsp&nbsp"));
@@ -772,6 +794,12 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         lnkDetialTabD.Text = _dtDBTableTab.Rows[t]["TabName"].ToString();
                         lnkDetialTabD.OnClientClick = "ShowHideMainDivs(" + "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + _pnlDetailTabD[t].ClientID + ",this); return false";
                         lnkDetialTabD.CssClass = "TablLinkClass";
+
+                        if (strColour != "")
+                        {
+                            lnkDetialTabD.Style.Add("color", "#" + strColour );
+                        }
+
                         if (Common.IsIn(_dtDBTableTab.Rows[t]["TableTabID"].ToString(), strHiddenTableTabID))
                         {
                             _pnlDetailTabD[t].CssClass = "showhidedivs_hide";

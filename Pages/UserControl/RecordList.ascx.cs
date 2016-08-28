@@ -9794,11 +9794,11 @@ function checkAllHR(objRef,GridView) {
                 string strNotification = "";
 
                 if (iDuplicateRecord > 0)
-                    strNotification = "Total duplicate recrods:" + iDuplicateRecord.ToString()+".";
+                    strNotification = "Total duplicate records:" + iDuplicateRecord.ToString()+". ";
                 if(iTotalInvalid>0)
-                    strNotification = strNotification+"Total invalid recrods:" + iTotalInvalid.ToString() + ".";
+                    strNotification = strNotification + "Total invalid records:" + iTotalInvalid.ToString() + ". ";
                 if(iTotalRestoredRecords>0)
-                    strNotification = strNotification + "Total restored recrods:" + iTotalRestoredRecords.ToString() + ".";
+                    strNotification = strNotification + "Total restored records:" + iTotalRestoredRecords.ToString() + ".";
 
                 if (strNotification!="")
                     Session["tdbmsgpb"] = strNotification;

@@ -21,6 +21,16 @@ body {
     z-index: 1;
 }
 
+/*.navbar-brand{
+    padding: 0px;
+}
+
+.navbar-brand > img{
+    height: 100%;
+    padding:15px;
+    width: auto;
+}*/
+
 @media (min-width: 1200px) {
   .container {
     width: 1055px;
