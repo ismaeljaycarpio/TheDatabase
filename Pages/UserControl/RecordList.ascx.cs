@@ -232,7 +232,16 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
         return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&accountid=";
 
     }
+    // get last minute controls
+    //protected override void OnPreRender(EventArgs e)
+    //{
+    //    base.OnPreRender(e);
 
+    //    // start scanning from page subcontrols
+    //    ControlCollection _collection = this.Controls;
+    //    lblMsg.Visible = true;
+    //    lblMsg.Text =TheDatabase.GetCode(_collection,_strDynamictabPart).Replace("\r\n", "<br/>");
+    //}
     protected void Page_Init(object sender, EventArgs e)
     {
 
@@ -958,7 +967,7 @@ function checkAllHR(objRef,GridView) {
                 revNumberLowerLimit.ErrorMessage = "*";
                 revNumberLowerLimit.ToolTip = "Number only!";
                 revNumberLowerLimit.ValidationExpression = @"(^-?\d{1,20}\.$)|(^-?\d{1,20}$)|(^-?\d{0,20}\.\d{1,10}$)";
-                revNumberLowerLimit.ValidationGroup = "MKE";
+                //revNumberLowerLimit.ValidationGroup = "MKE";
 
                 RegularExpressionValidator revNumberUpperLimit = new RegularExpressionValidator();
                 revNumberUpperLimit.ID = "revNumberUpperLimit_" + dr["SystemName"].ToString();
@@ -966,7 +975,7 @@ function checkAllHR(objRef,GridView) {
                 revNumberUpperLimit.ErrorMessage = "*";
                 revNumberUpperLimit.ToolTip = "Number only!";
                 revNumberUpperLimit.ValidationExpression = @"(^-?\d{1,20}\.$)|(^-?\d{1,20}$)|(^-?\d{0,20}\.\d{1,10}$)";
-                revNumberUpperLimit.ValidationGroup = "MKE";
+                //revNumberUpperLimit.ValidationGroup = "MKE";
 
 
                 string strValue = "";
@@ -3471,9 +3480,11 @@ function checkAllHR(objRef,GridView) {
         }
 
 
-
-
-
+        ControlCollection _collection = this.Controls;
+        //lblMsg.Visible = true;
+        //lblMsg.Text = TheDatabase.GetCode(_collection, _strDynamictabPart).Replace("\r\n", "<br/>");
+        TheDatabase.SetValidationGroup(_collection, _strDynamictabPart);
+        SetOtherValidationGroup();
         //put speed test here       
         if (Session["RunSpeedLog"] != null && _theTable != null)
         {
@@ -8587,7 +8598,28 @@ function checkAllHR(objRef,GridView) {
     //{
     //    mpeCog.Show();
     //}
+    protected void SetOtherValidationGroup()
+    {
+        //delete related
+        //txtDeleteReason.ValidationGroup = "DE" + _strDynamictabPart;
+        //rfvDeleteReason.ValidationGroup = "DE" + _strDynamictabPart;
+        //lnkDeleteAllOK.ValidationGroup = "DE" + _strDynamictabPart;
+        TheDatabase.SetValidationGroup(pnlDeleteAll.Controls, "DE" + _strDynamictabPart);
+        //edit many related
+        TheDatabase.SetValidationGroup(pnlEditMany.Controls, "DE" + _strDynamictabPart);
+        //ddlYAxisBulk.ValidationGroup = "EM" + _strDynamictabPart;
+        ////rfvddlYAxisBulk.ValidationGroup = "EM" + _strDynamictabPart;
+        //txtBulkTime.ValidationGroup = "EM" + _strDynamictabPart;
+        //txtDateBulk.ValidationGroup = "EM" + _strDynamictabPart;
+        //txtNumberBulk.ValidationGroup = "EM" + _strDynamictabPart;
+       
 
+        //rvDateBulk.ValidationGroup = "EM" + _strDynamictabPart;
+        //revNumberBulk.ValidationGroup = "EM" + _strDynamictabPart;
+        //lnkEditManyOK.ValidationGroup = "EM" + _strDynamictabPart;
+        //lnkEditManyCancel.ValidationGroup = "EM" + _strDynamictabPart;
+        //lnkEditManyCancel2.ValidationGroup = "EM" + _strDynamictabPart;
+    }
     protected void Pager_AllExport(object sender, EventArgs e)
     {
         EnsureSecurity();
@@ -8693,7 +8725,7 @@ function checkAllHR(objRef,GridView) {
     {
         lblMsgBullk.Text = "";
         string strValue = "";
-        if (ddlYAxisBulk.SelectedValue == "-1")
+        if (ddlYAxisBulk.SelectedValue == "")
         {
             lblMsgBullk.Text = "Please select a column.";
             mpeEditMany.Show();
@@ -8912,7 +8944,7 @@ function checkAllHR(objRef,GridView) {
         if (ddlDropdownBulk.Items.Count > 0)
             ddlDropdownBulk.SelectedIndex = 0;
 
-        if (ddlYAxisBulk.SelectedValue == "-1")
+        if (ddlYAxisBulk.SelectedValue == "")
         {
             //
         }
@@ -10923,7 +10955,9 @@ function checkAllHR(objRef,GridView) {
                     {
                         if (item.Selected)
                         {
-                            strHeaderXML = strHeaderXML + "<Records>";
+                            //oliver <begin> Ticket 1461
+                            //strHeaderXML = strHeaderXML + "<Records>";
+                            //oliver <end>
 
                             Column theColumn = RecordManager.ets_Column_Details(int.Parse(item.Value));
 
@@ -10957,17 +10991,69 @@ function checkAllHR(objRef,GridView) {
                                 }
                             }
 
-                            strHeaderXML = strHeaderXML + "<ColumnID>" + item.Value + "</ColumnID>";
-                            strHeaderXML = strHeaderXML + "<DisplayText>" + System.Security.SecurityElement.Escape(item.Text) + "</DisplayText>";
-                            strHeaderXML = strHeaderXML + "<SystemName>" + theColumn.SystemName + "</SystemName>";
-                            strHeaderXML = strHeaderXML + "<FieldsToShow>" + System.Security.SecurityElement.Escape(strFieldsToShow) + "</FieldsToShow>";
-                            strHeaderXML = strHeaderXML + "<ParentTableID>" + strParentTableID + "</ParentTableID>";
-                            strHeaderXML = strHeaderXML + "<ParentJoinColumnName>" + strParentJoinColumnName + "</ParentJoinColumnName>";
-                            strHeaderXML = strHeaderXML + "<ChildJoinColumnName>" + strChildJoinColumnName + "</ChildJoinColumnName>";
-                            strHeaderXML = strHeaderXML + "<ShowViewLink>" + strShowViewLink + "</ShowViewLink>";
-                            strHeaderXML = strHeaderXML + "<ColumnType>" + theColumn.ColumnType + "</ColumnType>";
+                            if (theColumn.ColumnType == "datetime")
+                            {
+                                //oliver <begin> Ticket 1461
 
-                            strHeaderXML = strHeaderXML + "</Records>";
+                                //split the date/time by creating separate export field for Date and Time
+
+                                //Create export header for Date:
+                                strHeaderXML = strHeaderXML + "<Records>";
+                                strHeaderXML = strHeaderXML + "<ColumnID>" + item.Value + "</ColumnID>";
+                                strHeaderXML = strHeaderXML + "<DisplayText>" + System.Security.SecurityElement.Escape(item.Text) + ",Date" + "</DisplayText>";
+                                strHeaderXML = strHeaderXML + "<SystemName>" + theColumn.SystemName + "</SystemName>";
+                                strHeaderXML = strHeaderXML + "<FieldsToShow>" + System.Security.SecurityElement.Escape(strFieldsToShow) + "</FieldsToShow>";
+                                strHeaderXML = strHeaderXML + "<ParentTableID>" + strParentTableID + "</ParentTableID>";
+                                strHeaderXML = strHeaderXML + "<ParentJoinColumnName>" + strParentJoinColumnName + "</ParentJoinColumnName>";
+                                strHeaderXML = strHeaderXML + "<ChildJoinColumnName>" + strChildJoinColumnName + "</ChildJoinColumnName>";
+                                strHeaderXML = strHeaderXML + "<ShowViewLink>" + strShowViewLink + "</ShowViewLink>";
+                                strHeaderXML = strHeaderXML + "<ColumnType>" + theColumn.ColumnType + "</ColumnType>";
+                                strHeaderXML = strHeaderXML + "</Records>";
+
+                                //Create export header for Time:
+                                strHeaderXML = strHeaderXML + "<Records>";
+                                strHeaderXML = strHeaderXML + "<ColumnID>" + item.Value + "</ColumnID>";
+                                strHeaderXML = strHeaderXML + "<DisplayText>" + System.Security.SecurityElement.Escape(item.Text) + ",Time" + "</DisplayText>";
+                                strHeaderXML = strHeaderXML + "<SystemName>" + theColumn.SystemName + "</SystemName>";
+                                strHeaderXML = strHeaderXML + "<FieldsToShow>" + System.Security.SecurityElement.Escape(strFieldsToShow) + "</FieldsToShow>";
+                                strHeaderXML = strHeaderXML + "<ParentTableID>" + strParentTableID + "</ParentTableID>";
+                                strHeaderXML = strHeaderXML + "<ParentJoinColumnName>" + strParentJoinColumnName + "</ParentJoinColumnName>";
+                                strHeaderXML = strHeaderXML + "<ChildJoinColumnName>" + strChildJoinColumnName + "</ChildJoinColumnName>";
+                                strHeaderXML = strHeaderXML + "<ShowViewLink>" + strShowViewLink + "</ShowViewLink>";
+                                strHeaderXML = strHeaderXML + "<ColumnType>" + theColumn.ColumnType + "</ColumnType>";
+                                strHeaderXML = strHeaderXML + "</Records>";
+
+                                continue;
+
+                                //oliver <end>
+                            }
+                            else
+                            {
+                                strHeaderXML = strHeaderXML + "<Records>";
+                                strHeaderXML = strHeaderXML + "<ColumnID>" + item.Value + "</ColumnID>";
+                                strHeaderXML = strHeaderXML + "<DisplayText>" + System.Security.SecurityElement.Escape(item.Text) + "</DisplayText>";
+                                strHeaderXML = strHeaderXML + "<SystemName>" + theColumn.SystemName + "</SystemName>";
+                                strHeaderXML = strHeaderXML + "<FieldsToShow>" + System.Security.SecurityElement.Escape(strFieldsToShow) + "</FieldsToShow>";
+                                strHeaderXML = strHeaderXML + "<ParentTableID>" + strParentTableID + "</ParentTableID>";
+                                strHeaderXML = strHeaderXML + "<ParentJoinColumnName>" + strParentJoinColumnName + "</ParentJoinColumnName>";
+                                strHeaderXML = strHeaderXML + "<ChildJoinColumnName>" + strChildJoinColumnName + "</ChildJoinColumnName>";
+                                strHeaderXML = strHeaderXML + "<ShowViewLink>" + strShowViewLink + "</ShowViewLink>";
+                                strHeaderXML = strHeaderXML + "<ColumnType>" + theColumn.ColumnType + "</ColumnType>";
+                                strHeaderXML = strHeaderXML + "<ColumnTypeSplit>" + theColumn.ColumnType + "</ColumnTypeSplit>";
+                                strHeaderXML = strHeaderXML + "</Records>";
+                            }
+
+                            //strHeaderXML = strHeaderXML + "<ColumnID>" + item.Value + "</ColumnID>";
+                            //strHeaderXML = strHeaderXML + "<DisplayText>" + System.Security.SecurityElement.Escape(item.Text) + "</DisplayText>";
+                            //strHeaderXML = strHeaderXML + "<SystemName>" + theColumn.SystemName + "</SystemName>";
+                            //strHeaderXML = strHeaderXML + "<FieldsToShow>" + System.Security.SecurityElement.Escape(strFieldsToShow) + "</FieldsToShow>";
+                            //strHeaderXML = strHeaderXML + "<ParentTableID>" + strParentTableID + "</ParentTableID>";
+                            //strHeaderXML = strHeaderXML + "<ParentJoinColumnName>" + strParentJoinColumnName + "</ParentJoinColumnName>";
+                            //strHeaderXML = strHeaderXML + "<ChildJoinColumnName>" + strChildJoinColumnName + "</ChildJoinColumnName>";
+                            //strHeaderXML = strHeaderXML + "<ShowViewLink>" + strShowViewLink + "</ShowViewLink>";
+                            //strHeaderXML = strHeaderXML + "<ColumnType>" + theColumn.ColumnType + "</ColumnType>";
+
+                            //strHeaderXML = strHeaderXML + "</Records>";
                         }
                     }
 
@@ -11469,6 +11555,34 @@ function checkAllHR(objRef,GridView) {
 
                         }
 
+                        //oliver <begin> Ticket 1461
+                        if (_dtRecordColums.Rows[i]["ColumnType"].ToString() == "datetime")
+                        {
+                            if (dr[j].ToString() != "")
+                            {
+                                DateTime chkDateTime;
+                                if (DateTime.TryParse(dr[j].ToString(), out chkDateTime))
+                                {
+                                    string[] ColumnTypeSplit = dt.Columns[j].ColumnName.ToString().Split(',');
+                                    if (ColumnTypeSplit.Length > 1)
+                                    {
+                                        if (ColumnTypeSplit[1].ToLower() == "date")
+                                        {
+                                            DateTime dtDate = Convert.ToDateTime(Convert.ToDateTime(dr[j]).ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
+                                            dr[j] = dtDate.ToShortDateString();
+                                        }
+                                        if (ColumnTypeSplit[1].ToLower() == "time")
+                                        {
+                                            TimeSpan dtTime = TimeSpan.Parse(Convert.ToDateTime(dr[j]).ToString("hh:mm", CultureInfo.InvariantCulture));
+                                            dr[j] = dtTime.ToString(@"hh\:mm");
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                        //oliver <end>
+
                         //mm:hh
                         if (_dtRecordColums.Rows[i]["SystemName"].ToString().ToLower() == "datetimerecorded")
                         {
@@ -11509,7 +11623,11 @@ function checkAllHR(objRef,GridView) {
 
                 dt.AcceptChanges();
 
-                DBG.Common.ExportUtil.ExportToExcel(dt, "\"" + lblTitle.Text.Replace("Records - ", "") + " " + DateTime.Today.ToString("yyyyMMdd") + ".xls" + "\"");
+                //oliver <begin> Ticket 1461
+                DBG.Common.ExportUtil.ExportToExcel2(dt, "\"" + lblTitle.Text.Replace("Records - ", "") + " " + DateTime.Today.ToString("yyyyMMdd") + ".xls" + "\"");
+                //oliver <end>
+
+                //DBG.Common.ExportUtil.ExportToExcel(dt, "\"" + lblTitle.Text.Replace("Records - ", "") + " " + DateTime.Today.ToString("yyyyMMdd") + ".xls" + "\"");
             }
             if (strExportType == "csv" || strExportType == "email")
             {
@@ -12352,7 +12470,7 @@ function checkAllHR(objRef,GridView) {
 
         }
 
-        System.Web.UI.WebControls.ListItem fItem = new System.Web.UI.WebControls.ListItem("-- None --", "-1");
+        System.Web.UI.WebControls.ListItem fItem = new System.Web.UI.WebControls.ListItem("-- None --", "");
 
         ddlYAxisBulk.Items.Insert(0, fItem);
 

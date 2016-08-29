@@ -1014,9 +1014,10 @@
                                                                         
                                                                     </td>
                                                                     <td>
+                                                                        <%--//oliver <begin> Instructed by Jon to add the word 'Search' during our skype conversation (8/29/2016)--%>
                                                                              <asp:CheckBox runat="server" ID="chkShowAdvancedOptions" Checked="true" TextAlign="Right"
-                                                                                        Font-Bold="true" Text="Show Advanced Options" />
-                                                                        
+                                                                                        Font-Bold="true" Text="Show Advanced Search Options" />
+                                                                        <%--//oliver <end>--%>
                                                                     </td>
                                                                 </tr>
 

@@ -17,7 +17,32 @@
 
         }
     </script>
-    <table border="0" cellpadding="0" cellspacing="0" width="928" align="center">
+
+    <script type="text/javascript">
+        function MouseEvents(objRef, evt) {
+            if (evt.type == "mouseover") {
+                objRef.style.backgroundColor = "#76BAF2";
+                objRef.style.cursor = 'pointer';
+            }
+            else {
+
+                if (evt.type == "mouseout") {
+                    if (objRef.rowIndex % 2 == 0) {
+                        //Alternating Row Color
+                        objRef.style.backgroundColor = "white";
+                    }
+                    else {
+                        objRef.style.backgroundColor = "#DCF2F0";
+                    }
+                }
+            }
+        }
+
+
+
+    </script>
+
+    <table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
         <tr>
             <td colspan="3">
                 <table width="100%" cellpadding="0" cellspacing="0">
@@ -113,15 +138,22 @@
                                            <asp:Label runat="server" ID="lblLink"></asp:Label>
                                         </td>
                                     </tr>
+                                    <tr >
+                                          <td align="left" colspan="2" style="padding-top:20px;">
+                                            <asp:Label runat="server" ID="lblLisOfUsers" Font-Bold="true" Text="Users"></asp:Label>
+                                        </td>
+                                    </tr>
                                     <tr runat="server" id="trUsers">
-                                        <td align="left" colspan="2">
-                                             <strong>Users</strong> <br />
-                                            <asp:GridView ID="grdUser" runat="server" AutoGenerateColumns="False" DataKeyNames="UserID" 
-                                                HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center" CssClass="gridview">
+                                        <td align="left" colspan="2" style="padding-left:10px;">
+                                              
+                                            <asp:GridView ID="grdUser"  GridLines="Both" runat="server" AutoGenerateColumns="False" DataKeyNames="UserID"
+                                                 RowStyle-CssClass="gridview_row" CellSpacing="5"  AlternatingRowStyle-BackColor="#DCF2F0"
+                                                HeaderStyle-HorizontalAlign="Left" RowStyle-HorizontalAlign="Left" CssClass="gridview" OnRowDataBound="grdUser_RowDataBound"  >
                                                 <Columns>
                                                     <asp:TemplateField HeaderText="First Name">
                                                         <ItemTemplate>
-                                                            <asp:Label runat="server" ID="lblFirstName" Text='<%# Eval("FirstName")%>'></asp:Label>
+                                                           
+                                                            <asp:HyperLink runat="server" ID="hlFirstName" Text='<%# Eval("FirstName")%>' ToolTip="Right click and open link in private window"></asp:HyperLink>
                                                         </ItemTemplate>
                                                     </asp:TemplateField>
                                                     <asp:TemplateField HeaderText="Last Name" >
@@ -129,15 +161,15 @@
                                                             <asp:Label runat="server" ID="lblLastName" Text='<%# Eval("LastName")%>'></asp:Label>
                                                         </ItemTemplate>
                                                     </asp:TemplateField>
-                                                    <asp:BoundField DataField="PhoneNumber" SortExpression="PhoneNumber" HeaderText="Phone Number" />
-                                                    <asp:BoundField DataField="Email" SortExpression="Email" HeaderText="Email" />
+                                                    <asp:BoundField DataField="Role"   HeaderText="Role" />
+                                                    <asp:BoundField DataField="PhoneNumber"   HeaderText="Phone Number" />
+                                                    <asp:BoundField DataField="Email"   HeaderText="Email" />
                                                 </Columns>
                                                 <HeaderStyle CssClass="gridview_header" />
+                                                 <RowStyle CssClass="gridview_row" />
+                                                    <AlternatingRowStyle CssClass="gridview_row" />
                                                 <EmptyDataTemplate>No users have been assigned this dashboard yet </EmptyDataTemplate>
                                             </asp:GridView>
-
-
-
                                         
                                         </td>
                                     </tr>

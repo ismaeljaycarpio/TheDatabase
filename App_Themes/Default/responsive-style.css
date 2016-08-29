@@ -37,6 +37,16 @@ body {
   }
 }
 
+@media (min-width: 768px){
+    .navbar-nav.navbar-right:last-child{
+        margin-right:0px;
+    }
+}
+
+.navbar-toggle{
+    margin-right: -10px;
+}
+
 .row-no-padding > [class*="col-"]
 {
     padding-left: 0 !important;

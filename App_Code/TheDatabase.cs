@@ -7,8 +7,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
 using System.Globalization;
-
-
+using System.Text;
+using System.Web.UI;
 /// <summary>
 /// Summary description for TheDatabase
 /// </summary>
@@ -2250,6 +2250,62 @@ public class TheDatabase
 		//
 	}
 
+
+    public static string GetCode(Control _control, string strValidationGroup)
+    {
+        // building helper
+        StringBuilder _output = new StringBuilder();
+
+        // the logic of scanning
+        if (_control.GetType().GetProperty("ValidationGroup") != null && !string.IsNullOrEmpty(_control.ID))
+        {
+            // the desired code
+            _output.AppendFormat("{0}.{1} = {2};", _control.ID, "ValidationGroup", strValidationGroup);
+            _output.AppendLine();
+        }
+
+        // recursive search within children
+        _output.Append(GetCode(_control.Controls, strValidationGroup));
+
+        // outputting
+        return _output.ToString();
+    }
+
+    public static string GetCode(ControlCollection _collection, string strValidationGroup)
+    {
+        // building helper
+        StringBuilder _output = new StringBuilder();
+        foreach (Control _control in _collection)
+        {
+            // get code for each child
+            _output.Append(GetCode(_control, strValidationGroup));
+        }
+        // outputting
+        return _output.ToString();
+    }
+
+    public static void SetValidationGroup(ControlCollection _collection, string strValidationGroup)
+    {      
+        foreach (Control _control in _collection)
+        {
+            // set each child
+            SetValidationGroup(_control, strValidationGroup);
+        }
+      
+    }
+    public static void SetValidationGroup(Control _control, string strValidationGroup)
+    {
+    
+        // the logic of scanning
+        if (_control.GetType().GetProperty("ValidationGroup") != null && !string.IsNullOrEmpty(_control.ID))
+        {
+            _control.GetType().GetProperty("ValidationGroup").SetValue(_control, strValidationGroup);
+          
+        }
+        // recursive search within children
+        SetValidationGroup(_control.Controls, strValidationGroup);
+    
+    }
     public static bool IsRecordDuplicate(Record theRecord, string strUniqueColumnIDSys, string strUniqueColumnID2Sys,int iRecordID)
     {
         if (strUniqueColumnIDSys != "" || strUniqueColumnID2Sys != "")

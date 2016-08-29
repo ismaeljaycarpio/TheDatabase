@@ -59,6 +59,161 @@ namespace DBG.Common
             }
             return strR;
         }
+
+        public static void ExportToExcel2(DataTable sourceTable, string fileName)
+        {
+            ExportToExcel2(sourceTable, "Sheet 1", fileName);
+        }
+
+        public static void ExportToExcel2(DataTable sourceTable, string sheetName, string fileName)
+        {
+            HSSFWorkbook workbook = new HSSFWorkbook();
+            MemoryStream memoryStream = new MemoryStream();
+            HSSFSheet sheet = (HSSFSheet)workbook.CreateSheet(String.IsNullOrEmpty(sheetName) ? "Sheet 1" : sheetName);
+            HSSFRow headerRow = (HSSFRow)sheet.CreateRow(0);
+
+            Dictionary<int, string> dicCellType = new Dictionary<int, string>();
+            //HSSFCellStyle boldStyle =(HSSFCellStyle) workbook.CreateCellStyle();
+            var boldStyle = workbook.CreateCellStyle();
+            var boldFont = workbook.CreateFont();
+            boldFont.Boldweight = (short)FontBoldWeight.BOLD;
+            boldStyle.SetFont(boldFont);
+
+
+            boldStyle.BorderBottom = NPOI.SS.UserModel.BorderStyle.THIN;
+            boldStyle.BorderLeft = NPOI.SS.UserModel.BorderStyle.MEDIUM;
+            boldStyle.BorderRight = NPOI.SS.UserModel.BorderStyle.THIN;
+            boldStyle.BorderTop = NPOI.SS.UserModel.BorderStyle.THIN;
+
+            boldStyle.TopBorderColor = HSSFColor.BLACK.index;
+            boldStyle.RightBorderColor = HSSFColor.BLACK.index;
+            boldStyle.BottomBorderColor = HSSFColor.BLACK.index;
+            boldStyle.LeftBorderColor = HSSFColor.BLACK.index;
+
+            boldStyle.FillPattern = FillPatternType.SOLID_FOREGROUND;
+            NPOI.HSSF.Record.PaletteRecord palette = new NPOI.HSSF.Record.PaletteRecord();
+            HSSFPalette p = new HSSFPalette(palette);
+
+            //p.AddColor(219, 229, 241);
+
+            //boldStyle.FillForegroundColor = ((HSSFColor)p.FindSimilarColor(20, 230, 230)).GetIndex();
+
+            boldStyle.FillForegroundColor = ((HSSFColor)setColor(workbook, 219, 229, 241)).GetIndex();
+
+
+            // handling header.
+            string[] headerColumnTypeSplit;
+            string tmpColumnName;
+            foreach (DataColumn column in sourceTable.Columns)
+            {
+                HSSFCell headerCell = (HSSFCell)headerRow.CreateCell(column.Ordinal);
+                headerCell.CellStyle = boldStyle;
+
+                //oliver <begin> Ticket 1461
+                headerColumnTypeSplit = column.ToString().Split(',');
+                if (headerColumnTypeSplit.Length > 1)
+                {
+                    if (headerColumnTypeSplit[1].ToLower() == "date")
+                    {
+                        tmpColumnName = column.ColumnName.ToString().Replace(",Date", " (Date)");
+                        headerCell.SetCellValue(tmpColumnName);
+                    }
+                    if (headerColumnTypeSplit[1].ToLower() == "time")
+                    {
+                        tmpColumnName = column.ColumnName.ToString().Replace(",Time", " (Time)");
+                        headerCell.SetCellValue(tmpColumnName);
+                    }
+                }
+                else
+                {
+                    headerCell.SetCellValue(column.ColumnName);
+                }
+                //oliver <end>
+
+                //headerCell.SetCellValue(column.ColumnName);
+                dicCellType.Add(column.Ordinal, column.DataType.ToString());
+            }
+
+            // handling value.
+            int rowIndex = 1;
+            foreach (DataRow row in sourceTable.Rows)
+            {
+                HSSFRow dataRow = (HSSFRow)sheet.CreateRow(rowIndex);
+                foreach (DataColumn column in sourceTable.Columns)
+                {
+                    HSSFCell dataCell = (HSSFCell)dataRow.CreateCell(column.Ordinal);
+
+                    switch (dicCellType[column.Ordinal])
+                    {
+                        case "System.Byte":
+                        case "System.Short":
+                        case "System.Int16":
+                        case "System.Int32":
+                        case "System.Int64":
+                        case "System.Double":
+                        case "System.Decimal":
+                            if (row[column] != DBNull.Value)
+                            {
+                                dataCell.SetCellValue(Convert.ToDouble(row[column]));
+                            }
+                            break;
+                        case "System.Bolean":
+                            dataCell.SetCellType(CellType.BOOLEAN);
+                            dataCell.SetCellValue(Convert.ToString(row[column]));
+                            break;
+                        //case "System.DateTime":
+                        //    if(row[column] != DBNull.Value)
+                        //        dataCell.SetCellValue(Convert.ToDateTime(row[column]).ToString("dd/MM/yyyy hh:mm:ss"));
+                        //    break;
+                        default:
+                            try
+                            {
+                                string strF = Convert.ToString(row[column]);
+
+                                if (strF.Length > 32000)
+                                {
+                                    strF = StripTagsCharArray(strF);
+                                }
+                                if (strF.Length > 32000)
+                                {
+                                    strF = strF.Substring(0, 32000);
+                                }
+                                dataCell.SetCellValue(strF);
+                            }
+                            catch
+                            {
+                                //
+                            }
+
+                            break;
+                    }
+                }
+                rowIndex++;
+            }
+            for (int i = 0; i < sourceTable.Columns.Count; i++)
+            {
+                sheet.AutoSizeColumn(i);
+                try
+                {
+                    sheet.SetColumnWidth(i, Convert.ToInt32(sheet.GetColumnWidth(i) * 1.1));
+                }
+                catch
+                {
+                    //sheet.SetColumnWidth(i, 255);
+                }
+            }
+            workbook.Write(memoryStream);
+            memoryStream.Flush();
+
+            HttpResponse response = HttpContext.Current.Response;
+            response.ContentType = "application/vnd.ms-excel";
+            response.AddHeader("Content-Disposition", string.Format("attachment;filename={0}", fileName));
+            response.Clear();
+
+            response.BinaryWrite(memoryStream.GetBuffer());
+            response.End();
+        }
+
         public static void ExportToExcel(DataTable sourceTable, string fileName)
         {
             ExportToExcel(sourceTable, "Sheet 1", fileName);

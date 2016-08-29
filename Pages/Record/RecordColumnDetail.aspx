@@ -2292,7 +2292,7 @@
 
                                                                 <ajaxToolkit:CascadingDropDown runat="server" ID="ddlCompareColumnIDC" Category="Column"
                                                                     ClientIDMode="Static" TargetControlID="ddlCompareColumnID" ServicePath="~/CascadeDropdown.asmx"
-                                                                    ServiceMethod="GetDefaultParentColumns" ParentControlID="ddlCompareTable">
+                                                                    ServiceMethod="GetCompareColumns" ParentControlID="ddlCompareTable">
                                                                 </ajaxToolkit:CascadingDropDown>
                                                             </td>
                                                             <td>

@@ -6762,15 +6762,13 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 rfvReasonForChange.Enabled = true;
                             }
                             stgReasonForChange.InnerText = "Reason for change*";
+                            stgReasonForChange.Style.Add("color", "red");
                         }
 
                         if (_theTable.ReasonChangeType == "none" || _theTable.ReasonChangeType == "")
                         {
                             trReasonForChange.Visible = false;
-                        }
-
-
-
+                        }                       
 
                     }
 
@@ -6916,32 +6914,16 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
             case "view":
 
                 strTitle = "View " + _theTable.TableName;
-                if (!IsPostBack)
-                {
+                //if (!IsPostBack)
+                //{
 
-                    //added and updated part
-                    try
-                    {
-                        if (RecordID != null)
-                        {
-                            Record theRecord = RecordManager.ets_Record_Detail_Full((int)RecordID);
-                            User userAdded = SecurityManager.User_Details((int)theRecord.EnteredBy);
-                            _lblAddedTimeEmail.Text = theRecord.DateAdded.ToString() + "   By " + userAdded.Email;
-                            //txtReasonForChange.Text = theRecord.ChangeReason;
-                            if (theRecord.LastUpdatedUserID != null)
-                            {
-                                User userUpdated = SecurityManager.User_Details((int)theRecord.LastUpdatedUserID);
-                                _lblUpdatedTimeEmail.Text = theRecord.DateUpdated.ToString() + "   By " + userUpdated.Email;
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
+                //    //added and updated part
+                //    if (RecordID != null)
+                //    {
+                //        AddEditInfo();
+                //    }
 
-
-                    }
-
-                }
+                //}
 
                 EnableTheRecordControls(false);
                 //divSave.Visible = false;
@@ -7132,7 +7114,26 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
     }
+    protected void AddEditInfo()
+    {
+        try
+        {
+            
+            //Record theRecord = RecordManager.ets_Record_Detail_Full((int)RecordID);
+            User userAdded = SecurityManager.User_Details((int)_qsRecord.EnteredBy);
+            _lblAddedTimeEmail.Text = _qsRecord.DateAdded.ToString() + "   By " + userAdded.Email;
+            //txtReasonForChange.Text = theRecord.ChangeReason;
+            if (_qsRecord.LastUpdatedUserID != null)
+            {
+                User userUpdated = SecurityManager.User_Details((int)_qsRecord.LastUpdatedUserID);
+                _lblUpdatedTimeEmail.Text = _qsRecord.DateUpdated.ToString() + "   By " + userUpdated.Email;
+            }
+        }
+        catch
+        {
 
+        }
+    }
     protected void PopulateTable()
     {
         //int iTemp = 0;
@@ -7539,8 +7540,17 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
         //RecordID = int.Parse(_qsRecordID);
         _dtRecordedetail = RecordManager.ets_Record_Details((int)RecordID).Tables[1];
         _qsRecord = RecordManager.ets_Record_Detail_Full((int)RecordID);
+        if (Mode.ToLower()=="view")
+            AddEditInfo();
 
-        trReasonForChange.Visible = true;
+        if (_theTable.ReasonChangeType == "none" || _theTable.ReasonChangeType == "")
+        {
+            trReasonForChange.Visible = false;
+        }   
+        else
+        {
+            trReasonForChange.Visible=true;
+        }
 
         if (_strClickFirstTab!="")
         ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strTableTabsJSFirstTab" + _strDynamictabPart, _strClickFirstTab, true);
@@ -9359,7 +9369,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
     protected void EnableTheRecordControls(bool p_bEnable)
     {
         txtReasonForChange.Enabled = p_bEnable;
-        trReasonForChange.Visible = false;
+        //trReasonForChange.Visible = false;
         for (int i = 0; i < _dtRecordTypleColumlns.Rows.Count; i++)
         {
 

@@ -175,26 +175,24 @@
 
             <%-- Header --%>
             <div class="row">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="#">
-                        <asp:Image ID="imgLogo" runat="server" ImageUrl="~/Images/logo.png" alt="The Database Logo" />
-                    </a>
-                </div>
-                <div class="navbar-header">
+                <div class="navbar-header">                    
+                    <a class="navbar-brand visible-xs nounderline pull-right" href="#" id="lblAccountName"></a>
                     <button type="button"
-                        class="navbar-toggle pull-left collapsed"
+                        class="navbar-toggle"
                         data-toggle="collapse"
                         data-target="#userMenu"
                         aria-expanded="false">
                         <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
+                        <asp:Image ID="Image1" runat="server" ImageUrl="~/Images/House.png" />
                     </button>
-                    <a class="navbar-brand visible-xs nounderline" href="#">Account</a>
+                    <a class="navbar-brand" href="#">
+                        <asp:Image ID="imgLogo" runat="server" ImageUrl="~/Images/logo.png" alt="The Database Logo" />
+                    </a>
                 </div>
                 <div class="navbar-collapse collapse" id="userMenu">
                     <div class="nav navbar-nav navbar-right">
+
+                        <%-- Profile --%>
                         <div class="navbar-right">
                             <table>
                                 <tr>
@@ -222,7 +220,7 @@
                             </table>
                         </div>
 
-
+                        <%-- Docs --%>
                         <div class="navbar-right">
                             <table>
                                 <tr>
@@ -250,17 +248,18 @@
                             </table>
                         </div>
 
-
+                        <%-- Account --%>
                         <div class="navbar-right">
                             <table>
                                 <tr>
                                     <td>
-                                        <asp:Image ID="imgHouse" runat="server" ImageUrl="~/Images/House.png" /></td>
+                                        <asp:Image ID="imgHouse" runat="server" ImageUrl="~/Images/House.png" />
+                                    </td>
                                     <td>
                                         <asp:UpdatePanel ID="upMasterUpdatePanel1" runat="server" UpdateMode="Conditional">
                                             <ContentTemplate>
                                                 <asp:Menu ID="menuAccount"
-                                                    Visible="false"
+                                                    Visible="true"
                                                     runat="server"
                                                     Orientation="Horizontal"
                                                     EnableViewState="false"
@@ -301,7 +300,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand visible-xs nounderline" href="#">Menu</a>
+                    <a class="navbar-brand visible-xs nounderline" href="#" id="lblSelectedMenu"></a>
                 </div>
                 <div class="navbar-collapse collapse navbar-right" id="userMenuETS">
                     <asp:Menu ID="menuETS"
@@ -436,6 +435,48 @@
                     root.find('.left-caret').toggleClass('right-caret left-caret');
                     root.find('.sub-menu:visible').hide();
                 });
+
+                //menu account
+                if ($("#ctl00_menuAccount > ul.level1 > li > a").text() != "")
+                {
+                    lblAccountName.text = $("#ctl00_menuAccount > ul.level1 > li > a").text();
+                }
+                else
+                {
+                    lblAccountName.text = $("#ctl00_menuProfile > ul.level1 > li > a").text();
+                }
+
+                //selected menu
+                if($(".TopTitle").is("select"))
+                {
+                    lblSelectedMenu.text = $(".TopTitle").find(":selected").text();
+                }
+                else if ($(".TopTitle > span").text() != "")
+                {
+                    lblSelectedMenu.text = $(".TopTitle > span").text();
+                }
+                else if ($(".TopTitle").text() != "")
+                {
+                    lblSelectedMenu.text = $(".TopTitle").text();
+                }
+                else
+                {
+                    lblSelectedMenu.text = "Default";
+                }
+
+                console.log($(".TopTitle > span").text());
+                console.log($(".TopTitle > span").text());
+                console.log($(".TopTitle").text());
+
+                //$("#ctl00_menuETS > ul > li > a").on('click', function () {
+                //    $("#lblSelectedMenu").val($(this).text());
+                //    console.log($(this).text());
+                //});
+
+                //$(".dropdown-menu li a").click(function () {
+                //    $("#lblSelectedMenu").val($(this).text());
+                //});
+
             });
         </script>
         <script type="text/javascript" src="<%=ResolveUrl("~/Responsive/js/bootstrap.js")%>"></script>

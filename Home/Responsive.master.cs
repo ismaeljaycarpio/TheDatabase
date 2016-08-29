@@ -1041,7 +1041,10 @@ public partial class Home_Responsive : System.Web.UI.MasterPage
                     UserRole INNER JOIN Account ON UserRole.AccountID=Account.AccountID
                     WHERE UserID=" + _objUser.UserID.ToString() + " ORDER BY AccountName");
 
-            if (dtTemp.Rows.Count > 1)
+            //mod by ismael
+            // > 1
+            //to show account menu
+            if (dtTemp.Rows.Count > 0)
             {
                 menuAccount.Visible = true;
                 imgHouse.Visible = true;

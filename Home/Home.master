@@ -146,7 +146,9 @@
                   $("#ctl00_HomeContentPlaceHolder_lnkSave")
                   .click(
                     function () {
-                        $("#loadingredirect").fadeIn();
+                        if (Page_IsValid) {
+                            $("#loadingredirect").fadeIn();
+                        }
                     }
                   );
                   // $("#loadingredirect") 

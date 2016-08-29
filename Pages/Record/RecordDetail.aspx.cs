@@ -9809,6 +9809,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         {
                             rfvReasonForChange.Enabled = true;
                             stgReasonForChange.InnerText = "Reason for change*";
+                            stgReasonForChange.Style.Add("color", "red");
                             lnkNavigateNext.OnClientClick = "ValidatorEnable(document.getElementById('" + rfvReasonForChange.ClientID.ToString() + "'), false);" + "return true;";
                             lnkNavigatePrev.OnClientClick = lnkNavigateNext.OnClientClick;
                             //lnkSaveClose.OnClientClick = "ValidatorEnable(document.getElementById('" + rfvReasonForChange.ClientID.ToString() + "'), true);" + "return true;";
@@ -11199,17 +11200,20 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 if (strValidationType == "w")
                 {
                     lblFullMsg.ForeColor = System.Drawing.Color.Blue;
+                    spnIgnoreTick.Visible = true;
                     //chkIgnore.Enabled = false;
                 }
                 else if (strValidationType == "e")
                 {
                     lblFullMsg.ForeColor = System.Drawing.Color.Orange;
+                    spnIgnoreTick.Visible = true;
                     //chkIgnore.Checked = true;
                     //chkIgnore.Enabled = false;
                 }
                 else if (strValidationType == "c")
                 {
                     lblFullMsg.ForeColor = System.Drawing.Color.DarkRed;
+                    
                     //chkIgnore.Enabled = false;
                 }
                 else
@@ -11227,11 +11231,13 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         {
 
                             chkIgnore.Enabled = true;
+                            spnIgnoreTick.Visible = true;
                         }
                         else
                         {
                             chkIgnore.Checked = false;
                             chkIgnore.Enabled = false;
+                           
                         }
                     }
                     catch
@@ -12689,6 +12695,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         if (dtValidWarningResult.Rows.Count > 0)
                         {
                             divValidWarningGrid.Visible = true;
+                            spnIgnoreTick.Visible = false;
                             gvValidWarningGrid.DataSource = dtValidWarning;
                             gvValidWarningGrid.DataBind();
                             return false;
@@ -14252,6 +14259,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         if (dtValidWarningResult2.Rows.Count > 0)
                         {
                             divValidWarningGrid.Visible = true;
+                            spnIgnoreTick.Visible = false;
                             gvValidWarningGrid.DataSource = dtValidWarning;
                             gvValidWarningGrid.DataBind();
                             return false;

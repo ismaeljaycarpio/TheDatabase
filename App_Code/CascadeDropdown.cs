@@ -822,6 +822,90 @@ public class CascadeDropdown : System.Web.Services.WebService {
     }
 
 
+    [WebMethod]
+    public CascadingDropDownNameValue[] GetCompareColumns(string knownCategoryValues, string category)
+    {
+
+        int iTableID;
+        //This method will return a StringDictionary containing the name/value pairs of the currently selected values
+        StringDictionary categorydetails = AjaxControlToolkit.CascadingDropDown.ParseKnownCategoryValuesString(knownCategoryValues);
+        iTableID = Convert.ToInt32(categorydetails["Tableid"]);
+        int iTN = 0;
+        List<Column> lstColumns = RecordManager.ets_Table_Columns(iTableID,
+               null, null, ref iTN);
+        Column currentColumn = null;
+
+        List<CascadingDropDownNameValue> l = new List<CascadingDropDownNameValue>();
+        l.Add(new CascadingDropDownNameValue("--Select--", ""));
+
+        string strEdit = "";
+        string strCurrentColumnID = "";
+
+       if(!string.IsNullOrEmpty(category))
+       {
+           if(category.IndexOf("edit")>-1)
+           {
+               strEdit = "edit";
+           }
+            if(category.IndexOf(",")>-1)
+            {
+                strCurrentColumnID = category.Replace(",edit", "");
+            }
+            else
+            {
+                strCurrentColumnID = category;
+            }
+            if (strCurrentColumnID != "" && strCurrentColumnID != "Column")
+            {
+                try
+                {
+                    currentColumn = RecordManager.ets_Column_Details(int.Parse(strCurrentColumnID));
+                }
+                catch
+                {
+                    //
+                }
+            }
+              
+
+       }
+        bool bDefaultSet = false;
+        foreach (Column eachColumn in lstColumns)
+        {
+            if(strCurrentColumnID!="" && eachColumn.ColumnID.ToString()==strCurrentColumnID)
+            {
+                continue;
+            }
+
+            if (eachColumn.IsStandard == false)
+            {
+
+                if (strEdit == "" && bDefaultSet==false && currentColumn != null && eachColumn.ColumnType == currentColumn.ColumnType)
+                {
+                    l.Add(new CascadingDropDownNameValue(eachColumn.DisplayName, eachColumn.ColumnID.ToString(), true));
+                    bDefaultSet = true;
+                }
+                else
+                {
+                    l.Add(new CascadingDropDownNameValue(eachColumn.DisplayName, eachColumn.ColumnID.ToString()));
+                }              
+                
+            }
+            else
+            {
+                if (eachColumn.SystemName.ToLower() == "recordid" || eachColumn.SystemName.ToLower() == "datetimerecorded")
+                {
+                    l.Add(new CascadingDropDownNameValue(eachColumn.DisplayName, eachColumn.ColumnID.ToString()));
+                }
+
+            }
+        }
+        
+        return l.ToArray();
+
+    }
+
+
     //[WebMethod]
     //public string[] GetTestList(string strAccountName)
     //{

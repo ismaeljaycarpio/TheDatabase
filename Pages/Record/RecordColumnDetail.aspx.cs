@@ -1609,7 +1609,7 @@ FROM         [Table] INNER JOIN
 
         ddDDLinkedParentColumnC.Category = "edit";
         ddlDefaultParentColumnC.Category = "edit";
-        ddlCompareColumnIDC.Category = "edit";
+       
         Column theColumn = RecordManager.ets_Column_Details(int.Parse(hfColumnID.Value));
 
 
@@ -1623,6 +1623,7 @@ FROM         [Table] INNER JOIN
 
         if (theColumn.CompareColumnID != null && theColumn.CompareOperator != "")
         {
+            ddlCompareColumnIDC.Category = _qsColumnID + ",edit";
             try
             {
                 Column theCompareColumn = RecordManager.ets_Column_Details((int)theColumn.CompareColumnID);
@@ -1636,6 +1637,10 @@ FROM         [Table] INNER JOIN
             {
 
             }
+        }
+        else
+        {
+            ddlCompareColumnIDC.Category = _qsColumnID ;
         }
 
         if (!IsPostBack)

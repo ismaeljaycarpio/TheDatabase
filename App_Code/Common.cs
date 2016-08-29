@@ -205,7 +205,7 @@ public class Common
                                    }
 
 
-                                   if (Common.ChangeAccount((int)loggedUser.UserID, int.Parse(strPageItemAccountID)))
+                                   if (Common.ChangeAccount((int)loggedUser.UserID, int.Parse(strPageItemAccountID),true))
                                    {
                                        try
                                        {
@@ -238,7 +238,7 @@ public class Common
             }
 
     }
-    public static bool ChangeAccount(int iUserID,int iAccountID)
+    public static bool ChangeAccount(int iUserID,int iAccountID,bool bClearSession)
     {
        
 
@@ -246,8 +246,11 @@ public class Common
         {
             if (HttpContext.Current != null && HttpContext.Current.Session!=null)
             {
-                User etUser = (User)HttpContext.Current.Session["User"];
-                HttpContext.Current.Session.Clear();
+                //User etUser = (User)HttpContext.Current.Session["User"];
+                User etUser = SecurityManager.User_Details(iUserID);
+                if (bClearSession)
+                 HttpContext.Current.Session.Clear();
+
                 HttpContext.Current.Session["User"] = etUser;
                 Account theAccount = SecurityManager.Account_Details(iAccountID);
                 string roletype = "";
@@ -1161,7 +1164,7 @@ public class Common
                 }
                 else
                 {
-                    strReturnMessage = strReturnMessage + "greater than: " + strMin + " and less than: " + strMax;
+                    strReturnMessage = strReturnMessage + "is less than " + strMin + " or greater than " + strMax;
                 }
                
             }
@@ -1169,11 +1172,11 @@ public class Common
             {
                 if (strMin != "")
                 {
-                    strReturnMessage = strReturnMessage + "greater than: " + strMin;
+                    strReturnMessage = strReturnMessage + "is less than " + strMin;
                 }
                 if (strMax != "")
                 {
-                    strReturnMessage = strReturnMessage + "less than: " + strMax;
+                    strReturnMessage = strReturnMessage + "is greater than " + strMax;
                 }
             }
                 

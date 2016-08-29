@@ -770,7 +770,7 @@
                                                                     <td>
                                                                         <div>
                                                                             <asp:LinkButton runat="server" ID="lnkSearch" CssClass="btn" OnClick="lnkSearch_Click"
-                                                                                ValidationGroup="MKE"> <strong>Go</strong></asp:LinkButton>
+                                                                                > <strong>Go</strong></asp:LinkButton>
                                                                         </div>
                                                                     </td>
                                                                     <td>
@@ -874,7 +874,7 @@
                                                                                                     <strong>Date Added:</strong>
                                                                                                     <br />
                                                                                                     <asp:TextBox runat="server" ID="txtDateFrom" Width="100px" CssClass="NormalTextBox"
-                                                                                                        ValidationGroup="MKE" BorderWidth="1" BorderStyle="Solid" BorderColor="#909090" />
+                                                                                                         BorderWidth="1" BorderStyle="Solid" BorderColor="#909090" />
 
                                                                                                 </td>
                                                                                                 <td style="padding-bottom: 7px;">
@@ -884,7 +884,7 @@
                                                                                                         Format="dd/MM/yyyy" PopupButtonID="imgDateForm" FirstDayOfWeek="Monday">
                                                                                                     </ajaxToolkit:CalendarExtender>
                                                                                                     <asp:RangeValidator ID="rngDateFrom" runat="server" ControlToValidate="txtDateFrom"
-                                                                                                        ValidationGroup="MKE" ErrorMessage="*" Font-Bold="true" Display="Dynamic" Type="Date"
+                                                                                                         ErrorMessage="*" Font-Bold="true" Display="Dynamic" Type="Date"
                                                                                                         MinimumValue="1/1/1753" MaximumValue="1/1/3000"></asp:RangeValidator>
                                                                                                     <ajaxToolkit:TextBoxWatermarkExtender ID="TextBoxWatermarkExtender3" TargetControlID="txtDateFrom"
                                                                                                         WatermarkText="dd/mm/yyyy" runat="server" WatermarkCssClass="MaskText">
@@ -896,7 +896,7 @@
                                                                                                 </td>
                                                                                                 <td>
                                                                                                     <asp:TextBox runat="server" ID="txtDateTo" Width="100px" CssClass="NormalTextBox"
-                                                                                                        ValidationGroup="MKE" BorderWidth="1" BorderStyle="Solid" BorderColor="#909090" />
+                                                                                                         BorderWidth="1" BorderStyle="Solid" BorderColor="#909090" />
 
                                                                                                 </td>
                                                                                                 <td style="padding-bottom: 7px;">
@@ -905,7 +905,7 @@
                                                                                                     <ajaxToolkit:CalendarExtender ID="ce_txtDateTo" runat="server" TargetControlID="txtDateTo"
                                                                                                         Format="dd/MM/yyyy" PopupButtonID="imgDateTo" FirstDayOfWeek="Monday">
                                                                                                     </ajaxToolkit:CalendarExtender>
-                                                                                                    <asp:RangeValidator ID="rngDateTo" runat="server" ControlToValidate="txtDateTo" ValidationGroup="MKE"
+                                                                                                    <asp:RangeValidator ID="rngDateTo" runat="server" ControlToValidate="txtDateTo" 
                                                                                                         ErrorMessage="*" Font-Bold="true" Display="Dynamic" Type="Date" MinimumValue="1/1/1753"
                                                                                                         MaximumValue="1/1/3000"></asp:RangeValidator>
                                                                                                     <ajaxToolkit:TextBoxWatermarkExtender ID="TextBoxWatermarkExtender4" TargetControlID="txtDateTo"
@@ -966,7 +966,7 @@
                                                                 <tr>
                                                                     <%--<td>
                                                                         <asp:LinkButton runat="server" ID="lnkSearch2" CssClass="btn" OnClick="lnkSearch_Click"
-                                                                            Style="display: none;" ValidationGroup="MKE"> <strong>Go</strong></asp:LinkButton>
+                                                                            Style="display: none;" > <strong>Go</strong></asp:LinkButton>
                                                                     </td>
                                                                     <td>
                                                                         <asp:LinkButton runat="server" ID="lnkReset2" CssClass="btn" OnClick="lnkReset_Click"
@@ -1226,7 +1226,7 @@
         <asp:Label runat="server" ID="lblEditMany" />
         <ajaxToolkit:ModalPopupExtender ID="mpeEditMany" runat="server" TargetControlID="lblEditMany"
             PopupControlID="pnlEditMany" BackgroundCssClass="modalBackground" OkControlID="lnkEditManyCancel" />
-        <asp:Panel ID="pnlEditMany" runat="server" Style="display: none">
+        <asp:Panel ID="pnlEditMany" runat="server"  Style="display: none">
             <div style="border-width: 5px; background-color: #ffffff; border-color: #4F8FDD; height: 235px; border-style: outset;">
                 <div style="padding-top: 50px; padding: 20px;">
                     <table>
@@ -1246,6 +1246,8 @@
                                 <asp:DropDownList ID="ddlYAxisBulk" runat="server" AutoPostBack="true" CssClass="NormalTextBox"
                                     OnSelectedIndexChanged="ddlYAxisBulk_SelectedIndexChanged">
                                 </asp:DropDownList>
+                                <asp:RequiredFieldValidator runat="server" ID="rfvddlYAxisBulk" ControlToValidate="ddlYAxisBulk" 
+                                    ErrorMessage="Mandatory!" Display="Dynamic" ></asp:RequiredFieldValidator>
                             </td>
                         </tr>
                         <tr>
@@ -1282,13 +1284,13 @@
                                                 AutoCompleteValue="00:00" MaskType="Time" Mask="99:99">
                                             </ajaxToolkit:MaskedEditExtender>
 
-                                            <ajaxToolkit:CalendarExtender ID="CalendarExtender1" runat="server" TargetControlID="txtDateBulk"
+                                            <ajaxToolkit:CalendarExtender ID="ceDateBulk" runat="server" TargetControlID="txtDateBulk" 
                                                 Format="dd/MM/yyyy" FirstDayOfWeek="Monday" PopupButtonID="ibBulkDate">
                                             </ajaxToolkit:CalendarExtender>
-                                            <asp:RangeValidator ID="RangeValidator3" runat="server" ControlToValidate="txtDateBulk"
-                                                ValidationGroup="MKE" ErrorMessage="*" Font-Bold="true" Display="Dynamic" Type="Date"
+                                            <asp:RangeValidator ID="rvDateBulk" runat="server" ControlToValidate="txtDateBulk" 
+                                                 ErrorMessage="*" Font-Bold="true" Display="Dynamic" Type="Date"
                                                 MinimumValue="1/1/1753" MaximumValue="1/1/3000"></asp:RangeValidator>
-                                            <asp:RegularExpressionValidator ID="RegularExpressionValidator1" ControlToValidate="txtNumberBulk"
+                                            <asp:RegularExpressionValidator ID="revNumberBulk" ControlToValidate="txtNumberBulk" 
                                                 runat="server" ErrorMessage="Numeric!" Display="Dynamic" ValidationExpression="(^-?\d{1,20}\.$)|(^-?\d{1,20}$)|(^-?\d{0,20}\.\d{1,10}$)">
                                             </asp:RegularExpressionValidator>
                                         </td>
@@ -1314,7 +1316,7 @@
                                                 OnClick="lnkEditManyCancel2_Click"> <strong>Cancel</strong></asp:LinkButton>
                                         </td>
                                         <td>
-                                            <asp:LinkButton runat="server" ID="lnkEditManyOK" CssClass="btn" CausesValidation="false"
+                                            <asp:LinkButton runat="server" ID="lnkEditManyOK" CssClass="btn" CausesValidation="true"
                                                 OnClick="lnkEditManyOK_Click"> <strong>OK</strong></asp:LinkButton>
                                         </td>
                                     </tr>
