@@ -43,6 +43,12 @@ body {
     }
 }
 
+@media (max-width: 767px) {
+    .navbar-nav {
+        margin: 0px 0px;
+    }
+}
+
 .navbar-toggle{
     margin-right: -10px;
 }

@@ -2893,19 +2893,29 @@ function checkAllHR(objRef,GridView) {
             if (Request.UserAgent.Contains("Android"))
             {
                 //lblRecords.Visible = true;
-                ddlTableMenu.Visible = true;
+                //ddlTableMenu.Visible = true;
                 //lblTitle.Visible = false;
             }
             else
             {
                 //lblRecords.Visible = false;
-                ddlTableMenu.Visible = false;
-                //lblTitle.Visible = true;
-                if (ShowTitle)
-                {
-                    lblTitle.Visible = true;
-                }
+                //ddlTableMenu.Visible = false;
+                ////lblTitle.Visible = true;
+                //if (ShowTitle)
+                //{
+                //    lblTitle.Visible = true;
+                //}
             }
+
+            //Ticket 846: Removing dropdown when in mobile
+            //modified by: Ismael
+            ddlTableMenu.Visible = false;
+            if (ShowTitle)
+            {
+                lblTitle.Visible = true;
+            }
+            //End Ticket 846
+
 
             if (!IsPostBack)
             {
@@ -11555,34 +11565,6 @@ function checkAllHR(objRef,GridView) {
 
                         }
 
-                        //oliver <begin> Ticket 1461
-                        if (_dtRecordColums.Rows[i]["ColumnType"].ToString() == "datetime")
-                        {
-                            if (dr[j].ToString() != "")
-                            {
-                                DateTime chkDateTime;
-                                if (DateTime.TryParse(dr[j].ToString(), out chkDateTime))
-                                {
-                                    string[] ColumnTypeSplit = dt.Columns[j].ColumnName.ToString().Split(',');
-                                    if (ColumnTypeSplit.Length > 1)
-                                    {
-                                        if (ColumnTypeSplit[1].ToLower() == "date")
-                                        {
-                                            DateTime dtDate = Convert.ToDateTime(Convert.ToDateTime(dr[j]).ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
-                                            dr[j] = dtDate.ToShortDateString();
-                                        }
-                                        if (ColumnTypeSplit[1].ToLower() == "time")
-                                        {
-                                            TimeSpan dtTime = TimeSpan.Parse(Convert.ToDateTime(dr[j]).ToString("hh:mm", CultureInfo.InvariantCulture));
-                                            dr[j] = dtTime.ToString(@"hh\:mm");
-                                        }
-                                    }
-                                }
-
-                            }
-                        }
-                        //oliver <end>
-
                         //mm:hh
                         if (_dtRecordColums.Rows[i]["SystemName"].ToString().ToLower() == "datetimerecorded")
                         {
@@ -11611,6 +11593,34 @@ function checkAllHR(objRef,GridView) {
 
 
                         }
+
+                        //oliver <begin> Ticket 1461
+                        if (_dtRecordColums.Rows[i]["ColumnType"].ToString() == "datetime")
+                        {
+                            if (dr[j].ToString() != "")
+                            {
+                                DateTime chkDateTime;
+                                if (DateTime.TryParse(dr[j].ToString(), out chkDateTime))
+                                {
+                                    string[] ColumnTypeSplit = dt.Columns[j].ColumnName.ToString().Split(',');
+                                    if (ColumnTypeSplit.Length > 1)
+                                    {
+                                        if (ColumnTypeSplit[1].ToLower() == "date")
+                                        {
+                                            DateTime dtDate = Convert.ToDateTime(Convert.ToDateTime(dr[j]).ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
+                                            dr[j] = dtDate.ToShortDateString();
+                                        }
+                                        if (ColumnTypeSplit[1].ToLower() == "time")
+                                        {
+                                            TimeSpan dtTime = TimeSpan.Parse(Convert.ToDateTime(dr[j]).ToString("hh:mm", CultureInfo.InvariantCulture));
+                                            dr[j] = dtTime.ToString(@"hh\:mm");
+                                        }
+                                    }
+                                }
+
+                            }
+                        }
+                        //oliver <end>
 
                     }
                 }

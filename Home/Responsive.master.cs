@@ -16,6 +16,8 @@ using System.Text;
 using System.Xml;
 
 
+
+
 public partial class Home_Responsive : System.Web.UI.MasterPage
 {
 
@@ -602,6 +604,43 @@ public partial class Home_Responsive : System.Web.UI.MasterPage
                                                     
                                                 ";
             ScriptManager.RegisterStartupScript(this, this.GetType(), "strIsFlashSupportedJS", strIsFlashSupportedJS, true);
+
+
+            //                if(Session["Resize"]!=null)
+            //                {
+            //                    Session["Resize"] = null;
+            //                    string strResize = @"                                                     
+            //                                                   $(document).ready(function () {
+            //
+            //                                                        function resize() {
+            //                                                            try
+            //                                                            {
+            //                                                               var innerWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+            //                                                                var innerHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+            //                                                                var targetWidth =  $(window).width()-200;
+            //                                                                var targetHeight = 600;
+            //                                                                window.resizeBy(targetWidth-innerWidth, targetHeight-innerHeight);
+            //                                                                window.focus();
+            //                                                            }
+            //                                                            catch(err)
+            //                                                            {
+            //                                                                //
+            //                                                            }             
+            //
+            //
+            //                                                        }
+            //                                                        
+            //                                                        if(navigator.userAgent.toLowerCase().indexOf('chrome') > -1)
+            //                                                            setTimeout(function () { resize(); }, 200);
+            //                                                        else
+            //                                                            resize();
+            //
+            //                                                    });
+            //                                                    
+            //                                                ";
+            //                    ScriptManager.RegisterStartupScript(this, this.GetType(), "strResize", strResize, true);
+
+            //                }
             //}
             //hlReport.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Report.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
             //hlDocuments.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt("-1") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
@@ -950,10 +989,8 @@ public partial class Home_Responsive : System.Web.UI.MasterPage
         {
             MenuItem miUserName = new MenuItem();
             miUserName.Text = _objUser.FirstName + " " + _objUser.LastName;
-            //miUserName.NavigateUrl = "~/Default.aspx";
+            miUserName.NavigateUrl = "~/Default.aspx";
             miUserName.Value = "UserName";
-            //miUserName.Selectable = false;
-            //miUserName.Enabled = false;
             menuProfile.Items.Add(miUserName);
             //if (!Common.HaveAccess(Session["roletype"].ToString(), Common.UserRoleType.ReadOnly))
             //{
@@ -995,6 +1032,7 @@ public partial class Home_Responsive : System.Web.UI.MasterPage
             }
 
 
+
             //MenuItem miChangePassword = new MenuItem();
             //miChangePassword.Text = "Change Password";
             //miChangePassword.Value = "UserName";
@@ -1009,7 +1047,7 @@ public partial class Home_Responsive : System.Web.UI.MasterPage
             miSignOut.NavigateUrl = "~/Login.aspx?Logout=Yes";
             miUserName.ChildItems.Add(miSignOut);
 
-            //menuProfile.Attributes.Add("onclick", "alert('hello!')");
+
         }
     }
 
@@ -1029,6 +1067,16 @@ public partial class Home_Responsive : System.Web.UI.MasterPage
     {
         imgHouse.Visible = false;
         menuAccount.Items.Clear();
+
+
+
+        if (Session["HideAccountMenu"] != null)
+        {
+
+            return;
+        }
+
+
         string strAppPath = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath;
 
         //User _objUser = (User)Session["User"];
@@ -1041,10 +1089,7 @@ public partial class Home_Responsive : System.Web.UI.MasterPage
                     UserRole INNER JOIN Account ON UserRole.AccountID=Account.AccountID
                     WHERE UserID=" + _objUser.UserID.ToString() + " ORDER BY AccountName");
 
-            //mod by ismael
-            // > 1
-            //to show account menu
-            if (dtTemp.Rows.Count > 0)
+            if (dtTemp.Rows.Count > 1)
             {
                 menuAccount.Visible = true;
                 imgHouse.Visible = true;
@@ -1059,6 +1104,8 @@ public partial class Home_Responsive : System.Web.UI.MasterPage
                 menuAccount.Items.Add(miAccounts);
                 foreach (DataRow dr in dtTemp.Rows)
                 {
+
+
                     MenuItem miTempChild = new MenuItem();
                     miTempChild.Text = dr["AccountName"].ToString();
                     miTempChild.NavigateUrl = "javascript:document.getElementById('hfAccountIDToChangeAccount').value = '" + dr["AccountID"].ToString() + "';__doPostBack('ctl00$lkChangeAccount','')"; ;
@@ -1083,7 +1130,11 @@ public partial class Home_Responsive : System.Web.UI.MasterPage
                 {
                     miAccounts.Text = theAccountRoot.AccountName;
                 }
+
             }
+
+
+
         }
     }
 
@@ -1861,7 +1912,7 @@ public partial class Home_Responsive : System.Web.UI.MasterPage
 
             try
             {
-                if (Common.ChangeAccount((int)_objUser.UserID, int.Parse(hfAccountIDToChangeAccount.Value)))
+                if (Common.ChangeAccount((int)_objUser.UserID, int.Parse(hfAccountIDToChangeAccount.Value), true))
                 {
                     Response.Redirect("~/Default.aspx", true);
                     return;
@@ -1995,7 +2046,13 @@ public partial class Home_Responsive : System.Web.UI.MasterPage
         {
             //
         }
+
+
+
     }
+
+
+
 
     protected void lnkChangeAccount_Click(object sender, EventArgs e)
     {
@@ -2011,7 +2068,6 @@ public partial class Home_Responsive : System.Web.UI.MasterPage
     {
         Response.Redirect("~/Security/ChangePassword.aspx", false);
     }
-
     //protected void menuETS_MenuItemDataBound(object sender, MenuEventArgs e)
     //{
     //    if (e.Item.Selected == true)
@@ -2058,5 +2114,7 @@ public partial class Home_Responsive : System.Web.UI.MasterPage
         }
         return selectedItem;
     }
+
+
 }
 

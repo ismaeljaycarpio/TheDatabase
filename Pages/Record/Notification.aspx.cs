@@ -95,16 +95,21 @@ public partial class Pages_Record_Notification : SecurePage
             lblMsg.Text = ex.Message;
         }
 
-        if (Request.UserAgent.Contains("Android"))
-        {
-            ddlAdminArea.Visible = true;
-        }
-        else
-        {
-            ddlAdminArea.Visible = false;
-            lblAdminArea.Text = ddlAdminArea.SelectedItem.Text;
-        }
+        //if (Request.UserAgent.Contains("Android"))
+        //{
+        //    ddlAdminArea.Visible = true;
+        //}
+        //else
+        //{
+        //    ddlAdminArea.Visible = false;
+        //    lblAdminArea.Text = ddlAdminArea.SelectedItem.Text;
+        //}
 
+        //Ticket 846: Removing dropdown when in mobile
+        //modified by: Ismael
+        ddlAdminArea.Visible = false;
+        lblAdminArea.Text = ddlAdminArea.SelectedItem.Text;
+        //End Ticket 846
 
     }
 
