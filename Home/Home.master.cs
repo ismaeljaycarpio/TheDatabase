@@ -439,7 +439,7 @@ public partial class Home : System.Web.UI.MasterPage
 
         string strWebsiteMasterPageHeader = SystemData.SystemOption_ValueByKey_Account("Website Master Page Header", int.Parse(Session["AccountID"].ToString()), null);
 
-        if (strWebsiteMasterPageHeader != "")
+        if (strWebsiteMasterPageHeader != "" && this.Page.Title!="")
            this.Page.Title = strWebsiteMasterPageHeader;
 
         if (!Page.IsPostBack)

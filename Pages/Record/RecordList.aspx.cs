@@ -35,6 +35,8 @@ public partial class Record_Record_List : SecurePage
             theSpeedLog.FunctionLineNumber = 33;
             SecurityManager.AddSpeedLog(theSpeedLog);
         }
+
+        
     }
 
 
@@ -58,6 +60,11 @@ public partial class Record_Record_List : SecurePage
         if (Request.QueryString["TableID"] != null)
         {
             _theTable = RecordManager.ets_Table_Details(int.Parse(Cryptography.Decrypt(Request.QueryString["TableID"].ToString())));
+            //reset stack
+            if (_theTable != null)
+            {
+                Session["stackURL"] = null;
+            }
         }
 
 
@@ -85,20 +92,17 @@ public partial class Record_Record_List : SecurePage
     {
         if (!IsPostBack)
         {
-            //reset stack
            
-            if (Request.QueryString["TableID"] != null)
-            {
-                
-                Session["stack"] = null;
-                Session["backcount"] = null;
-
-            }
             if(_theTable!=null && _theTable.SummaryPageContent!="")
             {
                 lblSummaryPageContent.Text = _theTable.SummaryPageContent;
             }
-
+            Session["stackURL"] = null;
+            Session["CopyRecordID"] = null;
+            Session["quickdone"] = null;
+            Session["controlvalue"] = null;
+            Session["tabindex"] = null;
+            Session["edittab"] = null;
         }
        
     }

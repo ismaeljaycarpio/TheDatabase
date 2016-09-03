@@ -8,8 +8,13 @@ using System.Web.UI.WebControls;
 public partial class Pages_Record_ViewEditPage : SecurePage
 {
     Account _theAccount;
+    string _sTableID = "";
     protected override void OnPreInit(EventArgs e)
     {
+
+        if(Request.QueryString["TableID"]!=null)
+            _sTableID= Cryptography.Decrypt(Request.QueryString["TableID"]);
+
 
         if (Request.QueryString["noajax"] != null)
         {

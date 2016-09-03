@@ -1,7 +1,7 @@
 ﻿<%@ Application Language="C#" %>
 
 <script runat="server">
-
+      
 
     //void Application_BeginRequest(Object sender, EventArgs e)
     //{
@@ -9,20 +9,20 @@
     //    System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-GB");
     //    System.Threading.Thread.CurrentThread.CurrentUICulture = System.Threading.Thread.CurrentThread.CurrentCulture;
     //}                             
-    void Application_Start(object sender, EventArgs e)
+    void Application_Start(object sender, EventArgs e) 
     {
         // Code that runs on application startup
 
     }
-
-    void Application_End(object sender, EventArgs e)
+    
+    void Application_End(object sender, EventArgs e) 
     {
         //  Code that runs on application shutdown
 
     }
-
-    void Application_Error(object sender, EventArgs e)
-    {
+        
+    void Application_Error(object sender, EventArgs e) 
+    { 
         //// Code that runs when an unhandled error occurs        
         //Exception exc = Server.GetLastError();
 
@@ -33,17 +33,17 @@
         //    {
         //        ErrorLog theErrorLog = new ErrorLog(null, "The DB- Global.asax", ex.Message, ex.StackTrace, DateTime.Now, HttpContext.Current.Request.Url.ToString());
         //       int iErrroLogID= SystemData.ErrorLog_Insert(theErrorLog);
-
-
+                                  
+                
         //        //now send the email   
         //       string strAccountInfo = "</br> No Account and user info";
-
+                
         //        try
         //        {
         //            if (HttpContext.Current.Session != null && HttpContext.Current.Session["AccountID"] != null)
         //            {
         //                strAccountInfo = " </br> A ID: ";
-
+                        
         //                strAccountInfo = strAccountInfo + HttpContext.Current.Session["AccountID"].ToString();
 
         //                if (HttpContext.Current.Session["User"] != null)
@@ -60,8 +60,8 @@
         //        {
         //            //
         //        }
-
-
+               
+                
         //       string strError = "";
         //       string strTo = SystemData.SystemOption_ValueByKey_Account("ErrorMessageEmail",-1,null);
         //       foreach (string sEach in strTo.Split(','))
@@ -73,7 +73,7 @@
         //            + ex.Message + " </br> Error Stack: " + ex.StackTrace + strAccountInfo, ref strError);
         //           }
         //       }
-
+                
 
         //        //DBGurus.SendEmail("TheDB Error - " + ex.Message + " Path=" + HttpContext.Current.Request.Url.ToString(),
         //        //    "<a href='" + HttpContext.Current.Request.Url.ToString() + "'>" + HttpContext.Current.Request.Url.ToString() + "</a></br>" + ex.Message + " </br> Error Stack: " + ex.StackTrace,
@@ -101,7 +101,7 @@
 
     }
 
-    void Session_Start(object sender, EventArgs e)
+    void Session_Start(object sender, EventArgs e) 
     {
         // Code that runs when a new session is started
 
@@ -127,11 +127,11 @@
         //    //}
         //}
 
-
+        
 
     }
 
-    void Session_End(object sender, EventArgs e)
+    void Session_End(object sender, EventArgs e) 
     {
         // Code that runs when a session ends. 
         // Note: The Session_End event is raised only when the sessionstate mode
@@ -150,5 +150,5 @@
     //}
 
 
-
+       
 </script>

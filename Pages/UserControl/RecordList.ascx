@@ -817,7 +817,7 @@
                                                                             </tr>
 
                                                                             <%-- Show Warning Only checkbox --%>
-                                                                            <tr id="trChkShowOnlyWarning">
+                                                                            <tr id="trChkShowOnlyWarning" runat="server">
                                                                                 <td style="text-align: right;">
                                                                                     <asp:CheckBox ID="chkShowOnlyWarning" Checked="false" runat="server" AutoPostBack="true" OnCheckedChanged="chkShowOnlyWarning_CheckedChanged" /></td>
                                                                                 <td style="text-align: left;">Show Only Warning</td>

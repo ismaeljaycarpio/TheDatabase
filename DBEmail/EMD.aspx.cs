@@ -37,13 +37,16 @@ public partial class DBEmail_Emd : System.Web.UI.Page
             {
                 try
                 {
-                    ALSLive();
 
+                    Application["ALSLive"] = "yes";
+                    ALSLive();
+                    Application["ALSLive"] = null;
                     Response.Redirect("~/DBEmail/WinSchedules.aspx?AutoImportRecords=yes", false);
                     return;
                 }
                 catch (Exception ex)
                 {
+                    Application["ALSLive"] = null;
                     ErrorLog theErrorLog = new ErrorLog(null, " DBEmail -ALSLive", ex.Message, ex.StackTrace, DateTime.Now, Request.Path);
                     SystemData.ErrorLog_Insert(theErrorLog);
                 }

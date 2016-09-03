@@ -113,7 +113,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
     Label[] _lblValue;
     string _strJS = "";
     string _strJSPostBack = "";
-    DataTable _dtRecordTypleColumlns;
+    DataTable _dtColumnsDetail;
     DataTable _dtColumnsNotDetail;
     DataTable _dtColumnsAll;
     DataTable _dtRecordedetail;
@@ -333,7 +333,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-        _dtRecordTypleColumlns = RecordManager.ets_Table_Columns_Detail(TableID);
+        _dtColumnsDetail = RecordManager.ets_Table_Columns_Detail(TableID);
         _dtColumnsNotDetail = RecordManager.ets_Table_Columns_NotDetail(TableID);
         _dtColumnsAll = RecordManager.ets_Table_Columns_All(TableID);
 
@@ -343,9 +343,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
         {
             if ((bool)_theTable.BoxAroundField)
             {
-                for (int i = 0; i < _dtRecordTypleColumlns.Rows.Count; i++)
+                for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
                 {
-                    if (bool.Parse(_dtRecordTypleColumlns.Rows[i]["DisplayRight"].ToString()))
+                    if (bool.Parse(_dtColumnsDetail.Rows[i]["DisplayRight"].ToString()))
                     {
                         bHasRight = true;
                     }
@@ -375,56 +375,56 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
         //Menu theMenu = RecordManager.ets_Menu_Details((int)_theTable.MenuID);
 
 
-        _lbl = new Label[_dtRecordTypleColumlns.Rows.Count];
-        _txtValue = new TextBox[_dtRecordTypleColumlns.Rows.Count];
-        _txtValue2 = new TextBox[_dtRecordTypleColumlns.Rows.Count];
-        _ibValue = new ImageButton[_dtRecordTypleColumlns.Rows.Count];
-        _lnkValue = new LinkButton[_dtRecordTypleColumlns.Rows.Count];
-        _hlValue = new HyperLink[_dtRecordTypleColumlns.Rows.Count];
+        _lbl = new Label[_dtColumnsDetail.Rows.Count];
+        _txtValue = new TextBox[_dtColumnsDetail.Rows.Count];
+        _txtValue2 = new TextBox[_dtColumnsDetail.Rows.Count];
+        _ibValue = new ImageButton[_dtColumnsDetail.Rows.Count];
+        _lnkValue = new LinkButton[_dtColumnsDetail.Rows.Count];
+        _hlValue = new HyperLink[_dtColumnsDetail.Rows.Count];
         //_heeValue = new HtmlEditorExtender[_dtRecordTypleColumlns.Rows.Count];
-        _htmValue = new WYSIWYGEditor[_dtRecordTypleColumlns.Rows.Count];
+        _htmValue = new WYSIWYGEditor[_dtColumnsDetail.Rows.Count];
 
-        _ddlValue = new DropDownList[_dtRecordTypleColumlns.Rows.Count];
-        _ddlValue2 = new DropDownList[_dtRecordTypleColumlns.Rows.Count];
+        _ddlValue = new DropDownList[_dtColumnsDetail.Rows.Count];
+        _ddlValue2 = new DropDownList[_dtColumnsDetail.Rows.Count];
 
-        _radioList = new RadioButtonList[_dtRecordTypleColumlns.Rows.Count];
-        _lstValue = new ListBox[_dtRecordTypleColumlns.Rows.Count];
-        _cblValue = new CheckBoxList[_dtRecordTypleColumlns.Rows.Count];
-        _chkValue = new CheckBox[_dtRecordTypleColumlns.Rows.Count];
-        _ccddl = new CascadingDropDown[_dtRecordTypleColumlns.Rows.Count];
-        _hfValue = new HiddenField[_dtRecordTypleColumlns.Rows.Count];
-        _hfValue2 = new HiddenField[_dtRecordTypleColumlns.Rows.Count];
-        _hfValue3 = new HiddenField[_dtRecordTypleColumlns.Rows.Count];
+        _radioList = new RadioButtonList[_dtColumnsDetail.Rows.Count];
+        _lstValue = new ListBox[_dtColumnsDetail.Rows.Count];
+        _cblValue = new CheckBoxList[_dtColumnsDetail.Rows.Count];
+        _chkValue = new CheckBox[_dtColumnsDetail.Rows.Count];
+        _ccddl = new CascadingDropDown[_dtColumnsDetail.Rows.Count];
+        _hfValue = new HiddenField[_dtColumnsDetail.Rows.Count];
+        _hfValue2 = new HiddenField[_dtColumnsDetail.Rows.Count];
+        _hfValue3 = new HiddenField[_dtColumnsDetail.Rows.Count];
 
         //_hlSensorInfo = new HyperLink[_dtRecordTypleColumlns.Rows.Count];
-        _imgWarning = new Image[_dtRecordTypleColumlns.Rows.Count];
-        _imgValues = new Image[_dtRecordTypleColumlns.Rows.Count];
-        _revValue = new RegularExpressionValidator[_dtRecordTypleColumlns.Rows.Count];
-        _rfvValue = new RequiredFieldValidator[_dtRecordTypleColumlns.Rows.Count];
-        _cvValue = new CompareValidator[_dtRecordTypleColumlns.Rows.Count];
-        _cusvValue = new CustomValidator[_dtRecordTypleColumlns.Rows.Count];
-        _ftbExt = new FilteredTextBoxExtender[_dtRecordTypleColumlns.Rows.Count];
-        _fuValue = new FileUpload[_dtRecordTypleColumlns.Rows.Count];
-        _fuValue2 = new FileUpload[_dtRecordTypleColumlns.Rows.Count];
-        _pnlDIV = new Panel[_dtRecordTypleColumlns.Rows.Count];
-        _pnlDIV2 = new Panel[_dtRecordTypleColumlns.Rows.Count];
-        _lblValue = new Label[_dtRecordTypleColumlns.Rows.Count];
+        _imgWarning = new Image[_dtColumnsDetail.Rows.Count];
+        _imgValues = new Image[_dtColumnsDetail.Rows.Count];
+        _revValue = new RegularExpressionValidator[_dtColumnsDetail.Rows.Count];
+        _rfvValue = new RequiredFieldValidator[_dtColumnsDetail.Rows.Count];
+        _cvValue = new CompareValidator[_dtColumnsDetail.Rows.Count];
+        _cusvValue = new CustomValidator[_dtColumnsDetail.Rows.Count];
+        _ftbExt = new FilteredTextBoxExtender[_dtColumnsDetail.Rows.Count];
+        _fuValue = new FileUpload[_dtColumnsDetail.Rows.Count];
+        _fuValue2 = new FileUpload[_dtColumnsDetail.Rows.Count];
+        _pnlDIV = new Panel[_dtColumnsDetail.Rows.Count];
+        _pnlDIV2 = new Panel[_dtColumnsDetail.Rows.Count];
+        _lblValue = new Label[_dtColumnsDetail.Rows.Count];
 
-        _seValue = new SliderExtender[_dtRecordTypleColumlns.Rows.Count];
+        _seValue = new SliderExtender[_dtColumnsDetail.Rows.Count];
 
-        _ceDateTimeRecorded = new AjaxControlToolkit.CalendarExtender[_dtRecordTypleColumlns.Rows.Count];
+        _ceDateTimeRecorded = new AjaxControlToolkit.CalendarExtender[_dtColumnsDetail.Rows.Count];
         //_meeDate = new AjaxControlToolkit.MaskedEditExtender[_dtRecordTypleColumlns.Rows.Count];
         //_mevDate = new AjaxControlToolkit.MaskedEditValidator[_dtRecordTypleColumlns.Rows.Count];
-        _twmValue = new AjaxControlToolkit.TextBoxWatermarkExtender[_dtRecordTypleColumlns.Rows.Count];
+        _twmValue = new AjaxControlToolkit.TextBoxWatermarkExtender[_dtColumnsDetail.Rows.Count];
 
-        _rvDate = new RangeValidator[_dtRecordTypleColumlns.Rows.Count];
-        _meeTime = new AjaxControlToolkit.MaskedEditExtender[_dtRecordTypleColumlns.Rows.Count];
-        _cvTime = new CustomValidator[_dtRecordTypleColumlns.Rows.Count];
-        _lblTime = new Label[_dtRecordTypleColumlns.Rows.Count];
-        _txtTime = new TextBox[_dtRecordTypleColumlns.Rows.Count];
+        _rvDate = new RangeValidator[_dtColumnsDetail.Rows.Count];
+        _meeTime = new AjaxControlToolkit.MaskedEditExtender[_dtColumnsDetail.Rows.Count];
+        _cvTime = new CustomValidator[_dtColumnsDetail.Rows.Count];
+        _lblTime = new Label[_dtColumnsDetail.Rows.Count];
+        _txtTime = new TextBox[_dtColumnsDetail.Rows.Count];
 
-        trX = new HtmlTableRow[_dtRecordTypleColumlns.Rows.Count + 4];
-        cell = new HtmlTableCell[(_dtRecordTypleColumlns.Rows.Count + 4) * 2];
+        trX = new HtmlTableRow[_dtColumnsDetail.Rows.Count + 4];
+        cell = new HtmlTableCell[(_dtColumnsDetail.Rows.Count + 4) * 2];
         ////HtmlTableCell[] cellB = new HtmlTableCell[(_dtRecordTypleColumlns.Rows.Count + 4) * 2];
 
 
@@ -744,27 +744,27 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
         int iTN = 0;
 
-        for (int i = 0; i < _dtRecordTypleColumlns.Rows.Count; i++)
+        for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
         {
             bool bDisplayRight = false;
             bool bSlider = false;
-            bDisplayRight = bool.Parse(_dtRecordTypleColumlns.Rows[i]["DisplayRight"].ToString());
+            bDisplayRight = bool.Parse(_dtColumnsDetail.Rows[i]["DisplayRight"].ToString());
 
             _lbl[i] = new Label();
-            _lbl[i].ID = "lbl" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
-            if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
+            _lbl[i].ID = "lbl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+            if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
             {
-                _lbl[i].Text = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + "*";
+                _lbl[i].Text = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "*";
                 _lbl[i].ForeColor = System.Drawing.Color.Red;
             }
-            else if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "r")
+            else if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "r")
             {
-                _lbl[i].Text = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() ;
+                _lbl[i].Text = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() ;
                 _lbl[i].ForeColor = System.Drawing.Color.Red;
             }
             else
             {
-                _lbl[i].Text = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + "";
+                _lbl[i].Text = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "";
             }
 
             _lbl[i].Text = _lbl[i].Text.Replace("\r\n", "<br/>");
@@ -777,15 +777,15 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-            if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "file"
-                       || _dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "image")
+            if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "file"
+                       || _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image")
             {
                 cell[i * 2].VAlign = "top";
             }
-            if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "radiobutton"
-                      && _dtRecordTypleColumlns.Rows[i]["VerticalList"] != DBNull.Value)
+            if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "radiobutton"
+                      && _dtColumnsDetail.Rows[i]["VerticalList"] != DBNull.Value)
             {
-                if (bool.Parse(_dtRecordTypleColumlns.Rows[i]["VerticalList"].ToString()))
+                if (bool.Parse(_dtColumnsDetail.Rows[i]["VerticalList"].ToString()))
                 {
                     cell[i * 2].VAlign = "top";
                 }
@@ -824,13 +824,13 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
             }
 
 
-            switch (_dtRecordTypleColumlns.Rows[i]["SystemName"].ToString().ToLower())
+            switch (_dtColumnsDetail.Rows[i]["SystemName"].ToString().ToLower())
             {
 
                 case "datetimerecorded":
 
                     _txtValue[i] = new TextBox();
-                    _txtValue[i].ID = "txt" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                    _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                     _txtValue[i].Width = 100;
                     _txtValue[i].AutoCompleteType = AutoCompleteType.Disabled;
                     _txtValue[i].CssClass = "NormalTextBox";
@@ -838,15 +838,15 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     _txtValue[i].ValidationGroup = _strDynamictabPart;
 
                     _ibValue[i] = new ImageButton();
-                    _ibValue[i].ID = "ib" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                    _ibValue[i].ID = "ib" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                     _ibValue[i].ImageUrl = "~/Images/Calendar.png";
                     _ibValue[i].Style.Add("padding-left", "3px");
                     _ibValue[i].CausesValidation = false;
                     _ibValue[i].Visible = false;
 
-                    if (_dtRecordTypleColumlns.Rows[i]["Notes"] != DBNull.Value)
+                    if (_dtColumnsDetail.Rows[i]["Notes"] != DBNull.Value)
                     {
-                        _txtValue[i].ToolTip = _dtRecordTypleColumlns.Rows[i]["Notes"].ToString();
+                        _txtValue[i].ToolTip = _dtColumnsDetail.Rows[i]["Notes"].ToString();
                     }
 
                     _ceDateTimeRecorded[i] = new AjaxControlToolkit.CalendarExtender();
@@ -858,7 +858,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     
 
                     _twmValue[i] = new TextBoxWatermarkExtender();
-                    _twmValue[i].ID = "twm" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                    _twmValue[i].ID = "twm" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                     _twmValue[i].TargetControlID = _txtValue[i].ID;
                     _twmValue[i].WatermarkText = "dd/mm/yyyy";
                     _twmValue[i].WatermarkCssClass = "MaskText";
@@ -888,10 +888,10 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     //_mevDate[i].IsValidEmpty = true;
 
                     _rvDate[i] = new RangeValidator();
-                    _rvDate[i].ID = "rvDate" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                    _rvDate[i].ID = "rvDate" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                     _rvDate[i].Display = ValidatorDisplay.None;
                     _rvDate[i].ControlToValidate = _txtValue[i].ID;
-                    _rvDate[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + "- Date is invalid.";
+                    _rvDate[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "- Date is invalid.";
                     _rvDate[i].Type = ValidationDataType.Date;
                     _rvDate[i].Font.Bold = true;
                     _rvDate[i].MinimumValue = "1/1/1753";
@@ -899,15 +899,15 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     if (ContentPage == "record")
                     _rvDate[i].ValidationGroup = _strDynamictabPart;
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "datetime")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "datetime")
                     {
                         _lblTime[i] = new Label();
-                        _lblTime[i].ID = "lblTime" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _lblTime[i].ID = "lblTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _lblTime[i].Text = "  Time ";
                         _lblTime[i].Font.Bold = true;
 
                         _txtTime[i] = new TextBox();
-                        _txtTime[i].ID = "txtTime" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _txtTime[i].ID = "txtTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _txtTime[i].Width = 80;
                         _txtTime[i].AutoCompleteType = AutoCompleteType.Disabled;
                         _txtTime[i].CssClass = "NormalTextBox";
@@ -915,13 +915,13 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         if (ContentPage == "record")
                         _txtTime[i].ValidationGroup = _strDynamictabPart;
 
-                        if (_dtRecordTypleColumlns.Rows[i]["Notes"] != DBNull.Value)
+                        if (_dtColumnsDetail.Rows[i]["Notes"] != DBNull.Value)
                         {
-                            _txtTime[i].ToolTip = _dtRecordTypleColumlns.Rows[i]["Notes"].ToString();
+                            _txtTime[i].ToolTip = _dtColumnsDetail.Rows[i]["Notes"].ToString();
                         }
 
                         _meeTime[i] = new AjaxControlToolkit.MaskedEditExtender();
-                        _meeTime[i].ID = "meeTime" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _meeTime[i].ID = "meeTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _meeTime[i].TargetControlID = _txtTime[i].ClientID; //"ctl00_HomeContentPlaceHolder_txtTime";
                         _meeTime[i].AutoCompleteValue = "00:00";
                         _meeTime[i].Mask = "99:99";
@@ -930,10 +930,10 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
                         _cvTime[i] = new CustomValidator();
-                        _cvTime[i].ID = "cvTime" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _cvTime[i].ID = "cvTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _cvTime[i].ControlToValidate = _txtTime[i].ClientID;  //"ctl00_HomeContentPlaceHolder_txtTime";
                         _cvTime[i].ClientValidationFunction = "CheckMyText";
-                        _cvTime[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + "- hh:mm format (24 hrs) please!";
+                        _cvTime[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "- hh:mm format (24 hrs) please!";
                         _cvTime[i].Display = ValidatorDisplay.None;
                         if (ContentPage == "record")
                         _cvTime[i].ValidationGroup = _strDynamictabPart;
@@ -963,7 +963,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     cell[(i * 2) + 1].Controls.Add(_rvDate[i]);
                     cell[(i * 2) + 1].Controls.Add(_twmValue[i]);
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "datetime")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "datetime")
                     {
                         cell[(i * 2) + 1].Controls.Add(_lblTime[i]);
                         cell[(i * 2) + 1].Controls.Add(_txtTime[i]);
@@ -971,14 +971,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                    if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
+                    if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                     {
 
                         _rfvValue[i] = new RequiredFieldValidator();
-                        _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _rfvValue[i].Display = ValidatorDisplay.None;//
                         _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
-                        _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
+                        _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                         if (ContentPage == "record")
                         _rfvValue[i].ValidationGroup = _strDynamictabPart;
 
@@ -986,7 +986,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                     }
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "datetime")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "datetime")
                     {
                         cell[(i * 2) + 1].Controls.Add(_meeTime[i]);
                         cell[(i * 2) + 1].Controls.Add(_cvTime[i]);
@@ -997,7 +997,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 case "recordid":
 
                     _txtValue[i] = new TextBox();
-                    _txtValue[i].ID = "txt" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                    _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                     _txtValue[i].Width = 198;
                     _txtValue[i].Enabled = false;
                     _txtValue[i].CssClass = "NormalTextBox";
@@ -1005,9 +1005,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     if (ContentPage == "record")
                     _txtValue[i].ValidationGroup = _strDynamictabPart;
 
-                    if (_dtRecordTypleColumlns.Rows[i]["Notes"] != DBNull.Value)
+                    if (_dtColumnsDetail.Rows[i]["Notes"] != DBNull.Value)
                     {
-                        _txtValue[i].ToolTip = _dtRecordTypleColumlns.Rows[i]["Notes"].ToString();
+                        _txtValue[i].ToolTip = _dtColumnsDetail.Rows[i]["Notes"].ToString();
                     }
 
                     //cell[(i * 2) + 1] = new HtmlTableCell();
@@ -1035,41 +1035,41 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 case "notes":
 
                     _txtValue[i] = new TextBox();
-                    _txtValue[i].ID = "txt" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                    _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                     _txtValue[i].Width = 270; //30*9
                     _txtValue[i].Height = 54; //18 * 3
                     _txtValue[i].TextMode = TextBoxMode.MultiLine;
                     if (ContentPage == "record")
                     _txtValue[i].ValidationGroup = _strDynamictabPart;
-                    if (_dtRecordTypleColumlns.Rows[i]["TextWidth"] != null && _dtRecordTypleColumlns.Rows[i]["TextWidth"].ToString() != "")
+                    if (_dtColumnsDetail.Rows[i]["TextWidth"] != null && _dtColumnsDetail.Rows[i]["TextWidth"].ToString() != "")
                     {
-                        _txtValue[i].Width = int.Parse(_dtRecordTypleColumlns.Rows[i]["TextWidth"].ToString()) * 9;
+                        _txtValue[i].Width = int.Parse(_dtColumnsDetail.Rows[i]["TextWidth"].ToString()) * 9;
                     }
 
-                    if (_dtRecordTypleColumlns.Rows[i]["TextHeight"] != null && _dtRecordTypleColumlns.Rows[i]["TextHeight"].ToString() != "")
+                    if (_dtColumnsDetail.Rows[i]["TextHeight"] != null && _dtColumnsDetail.Rows[i]["TextHeight"].ToString() != "")
                     {
-                        if (int.Parse(_dtRecordTypleColumlns.Rows[i]["TextHeight"].ToString()) > 1)
+                        if (int.Parse(_dtColumnsDetail.Rows[i]["TextHeight"].ToString()) > 1)
                         {
-                            _txtValue[i].Height = int.Parse(_dtRecordTypleColumlns.Rows[i]["TextHeight"].ToString()) * 18;
+                            _txtValue[i].Height = int.Parse(_dtColumnsDetail.Rows[i]["TextHeight"].ToString()) * 18;
 
                         }
                     }
 
                     _txtValue[i].CssClass = "MultiLineTextBox";
 
-                    if (_dtRecordTypleColumlns.Rows[i]["Notes"] != DBNull.Value)
+                    if (_dtColumnsDetail.Rows[i]["Notes"] != DBNull.Value)
                     {
-                        _txtValue[i].ToolTip = _dtRecordTypleColumlns.Rows[i]["Notes"].ToString();
+                        _txtValue[i].ToolTip = _dtColumnsDetail.Rows[i]["Notes"].ToString();
                     }
 
                     if (Mode != null)
                     {
-                        if (_dtRecordTypleColumlns.Rows[i]["DefaultValue"].ToString() != "")
+                        if (_dtColumnsDetail.Rows[i]["DefaultValue"].ToString() != "")
                         {
 
                             if (Mode.ToLower() == "add" || Mode.ToLower() == "edit")
                             {
-                                _txtValue[i].Text = _dtRecordTypleColumlns.Rows[i]["DefaultValue"].ToString();
+                                _txtValue[i].Text = _dtColumnsDetail.Rows[i]["DefaultValue"].ToString();
                             }
 
                         }
@@ -1080,14 +1080,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     cell[(i * 2) + 1].Controls.Add(_txtValue[i]);
 
 
-                    if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
+                    if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                     {
 
                         _rfvValue[i] = new RequiredFieldValidator();
-                        _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _rfvValue[i].Display = ValidatorDisplay.None;
                         _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
-                        _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
+                        _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                         if (ContentPage == "record")
                         _rfvValue[i].ValidationGroup = _strDynamictabPart;
 
@@ -1101,15 +1101,15 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 case "tableid":
 
                     _txtValue[i] = new TextBox();
-                    _txtValue[i].ID = "txt" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                    _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                     _txtValue[i].Width = 198;
                     _txtValue[i].Enabled = false;
                     _txtValue[i].CssClass = "NormalTextBox";
                     if (ContentPage == "record")
                     _txtValue[i].ValidationGroup = _strDynamictabPart;
-                    if (_dtRecordTypleColumlns.Rows[i]["Notes"] != DBNull.Value)
+                    if (_dtColumnsDetail.Rows[i]["Notes"] != DBNull.Value)
                     {
-                        _txtValue[i].ToolTip = _dtRecordTypleColumlns.Rows[i]["Notes"].ToString();
+                        _txtValue[i].ToolTip = _dtColumnsDetail.Rows[i]["Notes"].ToString();
                     }
 
                     _iTableIndex = i;
@@ -1137,9 +1137,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     _ddlEnteredBy.DataBind();
                     _iEnteredByIndex = i;
 
-                    if (_dtRecordTypleColumlns.Rows[i]["Notes"] != DBNull.Value)
+                    if (_dtColumnsDetail.Rows[i]["Notes"] != DBNull.Value)
                     {
-                        _ddlEnteredBy.ToolTip = _dtRecordTypleColumlns.Rows[i]["Notes"].ToString();
+                        _ddlEnteredBy.ToolTip = _dtColumnsDetail.Rows[i]["Notes"].ToString();
                     }
 
                     //cell[(i * 2) + 1] = new HtmlTableCell();
@@ -1151,10 +1151,10 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 default:
 
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "date")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "date")
                     {
                         _txtValue[i] = new TextBox();
-                        _txtValue[i].ID = "txt" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _txtValue[i].Width = 100;
                         _txtValue[i].AutoCompleteType = AutoCompleteType.Disabled;
                         _txtValue[i].CssClass = "NormalTextBox";
@@ -1162,26 +1162,26 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         _txtValue[i].ValidationGroup = _strDynamictabPart;
 
                         _ibValue[i] = new ImageButton();
-                        _ibValue[i].ID = "ib" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _ibValue[i].ID = "ib" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _ibValue[i].ImageUrl = "~/Images/Calendar.png";
                         _ibValue[i].Style.Add("padding-left", "3px");
                         _ibValue[i].CausesValidation = false;
 
 
-                        if (_dtRecordTypleColumlns.Rows[i]["Notes"] != DBNull.Value)
+                        if (_dtColumnsDetail.Rows[i]["Notes"] != DBNull.Value)
                         {
-                            _txtValue[i].ToolTip = _dtRecordTypleColumlns.Rows[i]["Notes"].ToString();
+                            _txtValue[i].ToolTip = _dtColumnsDetail.Rows[i]["Notes"].ToString();
                         }
 
                         _ceDateTimeRecorded[i] = new AjaxControlToolkit.CalendarExtender();
-                        _ceDateTimeRecorded[i].ID = "ceDateTimeRecorded" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _ceDateTimeRecorded[i].ID = "ceDateTimeRecorded" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _ceDateTimeRecorded[i].TargetControlID = _txtValue[i].ID;
                         _ceDateTimeRecorded[i].Format = "dd/MM/yyyy";
                         _ceDateTimeRecorded[i].PopupButtonID = _ibValue[i].ID;
                         _ceDateTimeRecorded[i].FirstDayOfWeek = FirstDayOfWeek.Monday;
 
                         _twmValue[i] = new TextBoxWatermarkExtender();
-                        _twmValue[i].ID = "twm" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _twmValue[i].ID = "twm" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _twmValue[i].TargetControlID = _txtValue[i].ID;
                         _twmValue[i].WatermarkText = "dd/mm/yyyy";
                         _twmValue[i].WatermarkCssClass = "MaskText";
@@ -1211,9 +1211,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         //_mevDate[i].IsValidEmpty = true;
 
                         _rvDate[i] = new RangeValidator();
-                        _rvDate[i].ID = "rvDate" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _rvDate[i].ID = "rvDate" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _rvDate[i].ControlToValidate = _txtValue[i].ID;
-                        _rvDate[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + "- Date is invalid.";
+                        _rvDate[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "- Date is invalid.";
                         _rvDate[i].Type = ValidationDataType.Date;
                         _rvDate[i].Font.Bold = true;
                         _rvDate[i].MinimumValue = "1/1/1753";
@@ -1235,14 +1235,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         cell[(i * 2) + 1].Controls.Add(_rvDate[i]);
                         cell[(i * 2) + 1].Controls.Add(_twmValue[i]);
 
-                        if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
+                        if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                         {
                             //_txtValue[i].Text = DateTime.Now.Day.ToString("00") + "/" + DateTime.Now.Month.ToString("00") + "/" + DateTime.Now.Year.ToString();
                             _rfvValue[i] = new RequiredFieldValidator();
-                            _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                            _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                             _rfvValue[i].Display = ValidatorDisplay.None;
                             _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
-                            _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
+                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
                             if (ContentPage == "record")
                             _rfvValue[i].ValidationGroup = _strDynamictabPart;
@@ -1253,7 +1253,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                         if (Mode != null)
                         {
-                            if (_dtRecordTypleColumlns.Rows[i]["DefaultValue"].ToString() != "")
+                            if (_dtColumnsDetail.Rows[i]["DefaultValue"].ToString() != "")
                             {
 
                                 if (Mode.ToLower() == "add" || Mode.ToLower() == "edit")
@@ -1270,34 +1270,34 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     }
 
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "time")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "time")
                     {
                         _txtValue[i] = new TextBox();
-                        _txtValue[i].ID = "txt" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _txtValue[i].Width = 100;
                         _txtValue[i].AutoCompleteType = AutoCompleteType.Disabled;
                         _txtValue[i].CssClass = "NormalTextBox";
                         if (ContentPage == "record")
                         _txtValue[i].ValidationGroup = _strDynamictabPart;
 
-                        if (_dtRecordTypleColumlns.Rows[i]["Notes"] != DBNull.Value)
+                        if (_dtColumnsDetail.Rows[i]["Notes"] != DBNull.Value)
                         {
-                            _txtValue[i].ToolTip = _dtRecordTypleColumlns.Rows[i]["Notes"].ToString();
+                            _txtValue[i].ToolTip = _dtColumnsDetail.Rows[i]["Notes"].ToString();
                         }
 
 
                         _meeTime[i] = new AjaxControlToolkit.MaskedEditExtender();
-                        _meeTime[i].ID = "meeTime" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _meeTime[i].ID = "meeTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _meeTime[i].TargetControlID = _txtValue[i].ClientID; //"ctl00_HomeContentPlaceHolder_txtTime";
                         _meeTime[i].AutoCompleteValue = "00:00";
                         _meeTime[i].Mask = "99:99";
                         _meeTime[i].MaskType = MaskedEditType.Time;
 
                         _cvTime[i] = new CustomValidator();
-                        _cvTime[i].ID = "cvTime" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _cvTime[i].ID = "cvTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _cvTime[i].ControlToValidate = _txtValue[i].ClientID;  //"ctl00_HomeContentPlaceHolder_txtTime";
                         _cvTime[i].ClientValidationFunction = "CheckMyText";
-                        _cvTime[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + "- hh:mm:ss format (24 hrs) please!";
+                        _cvTime[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "- hh:mm:ss format (24 hrs) please!";
                         _cvTime[i].Display = ValidatorDisplay.None;
                         if (ContentPage == "record")
                         _cvTime[i].ValidationGroup = _strDynamictabPart;
@@ -1309,14 +1309,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                        if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
+                        if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                         {
                             //_txtValue[i].Text = "00:00:00";
                             _rfvValue[i] = new RequiredFieldValidator();
-                            _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                            _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                             _rfvValue[i].Display = ValidatorDisplay.None;
                             _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
-                            _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
+                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                             if (ContentPage == "record")
                             _rfvValue[i].ValidationGroup = _strDynamictabPart;
 
@@ -1329,7 +1329,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                         if (Mode != null)
                         {
-                            if (_dtRecordTypleColumlns.Rows[i]["DefaultValue"].ToString() != "")
+                            if (_dtColumnsDetail.Rows[i]["DefaultValue"].ToString() != "")
                             {
 
                                 if (Mode.ToLower() == "add" || Mode.ToLower() == "edit")
@@ -1346,10 +1346,10 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "datetime")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "datetime")
                     {
                         _txtValue[i] = new TextBox();
-                        _txtValue[i].ID = "txt" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _txtValue[i].Width = 100;
                         _txtValue[i].AutoCompleteType = AutoCompleteType.Disabled;
                         _txtValue[i].CssClass = "NormalTextBox";
@@ -1358,27 +1358,27 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
                         _ibValue[i] = new ImageButton();
-                        _ibValue[i].ID = "ib" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _ibValue[i].ID = "ib" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _ibValue[i].ImageUrl = "~/Images/Calendar.png";
                         _ibValue[i].AlternateText = "Click to show calendar";
                         _ibValue[i].Style.Add("padding-left", "3px");
                         _ibValue[i].CausesValidation = false;
 
-                        if (_dtRecordTypleColumlns.Rows[i]["Notes"] != DBNull.Value)
+                        if (_dtColumnsDetail.Rows[i]["Notes"] != DBNull.Value)
                         {
-                            _txtValue[i].ToolTip = _dtRecordTypleColumlns.Rows[i]["Notes"].ToString();
+                            _txtValue[i].ToolTip = _dtColumnsDetail.Rows[i]["Notes"].ToString();
                         }
 
 
                         _ceDateTimeRecorded[i] = new AjaxControlToolkit.CalendarExtender();
-                        _ceDateTimeRecorded[i].ID = "ceDateTimeRecorded" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _ceDateTimeRecorded[i].ID = "ceDateTimeRecorded" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _ceDateTimeRecorded[i].TargetControlID = _txtValue[i].ID;
                         _ceDateTimeRecorded[i].Format = "dd/MM/yyyy";
                         _ceDateTimeRecorded[i].PopupButtonID = _ibValue[i].ID;
                         _ceDateTimeRecorded[i].FirstDayOfWeek = FirstDayOfWeek.Monday;
 
                         _twmValue[i] = new TextBoxWatermarkExtender();
-                        _twmValue[i].ID = "twm" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _twmValue[i].ID = "twm" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _twmValue[i].TargetControlID = _txtValue[i].ID;
                         _twmValue[i].WatermarkText = "dd/mm/yyyy";
                         _twmValue[i].WatermarkCssClass = "MaskText";
@@ -1409,10 +1409,10 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         //_mevDate[i].IsValidEmpty = true;
 
                         _rvDate[i] = new RangeValidator();
-                        _rvDate[i].ID = "rvDate" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _rvDate[i].ID = "rvDate" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _rvDate[i].Display = ValidatorDisplay.None;
                         _rvDate[i].ControlToValidate = _txtValue[i].ID;
-                        _rvDate[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + "- Date is invalid";
+                        _rvDate[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "- Date is invalid";
                         _rvDate[i].Type = ValidationDataType.Date;
                         //_rvDate[i].Font.Bold = true;
                         _rvDate[i].MinimumValue = "1/1/1753";
@@ -1422,36 +1422,36 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         _rvDate[i].ValidationGroup = _strDynamictabPart;
 
                         _lblTime[i] = new Label();
-                        _lblTime[i].ID = "lblTime" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _lblTime[i].ID = "lblTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _lblTime[i].Text = "  Time ";
                         _lblTime[i].Font.Bold = true;
 
                         _txtTime[i] = new TextBox();
-                        _txtTime[i].ID = "txtTime" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _txtTime[i].ID = "txtTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _txtTime[i].Width = 80;
                         _txtTime[i].AutoCompleteType = AutoCompleteType.Disabled;
                         _txtTime[i].CssClass = "NormalTextBox";
                         if (ContentPage == "record")
                         _txtTime[i].ValidationGroup = _strDynamictabPart;
 
-                        if (_dtRecordTypleColumlns.Rows[i]["Notes"] != DBNull.Value)
+                        if (_dtColumnsDetail.Rows[i]["Notes"] != DBNull.Value)
                         {
-                            _txtTime[i].ToolTip = _dtRecordTypleColumlns.Rows[i]["Notes"].ToString();
+                            _txtTime[i].ToolTip = _dtColumnsDetail.Rows[i]["Notes"].ToString();
                         }
 
 
                         _meeTime[i] = new AjaxControlToolkit.MaskedEditExtender();
-                        _meeTime[i].ID = "meeTime" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _meeTime[i].ID = "meeTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _meeTime[i].TargetControlID = _txtTime[i].ClientID; //"ctl00_HomeContentPlaceHolder_txtTime";
                         _meeTime[i].AutoCompleteValue = "00:00";
                         _meeTime[i].Mask = "99:99";
                         _meeTime[i].MaskType = MaskedEditType.Time;
 
                         _cvTime[i] = new CustomValidator();
-                        _cvTime[i].ID = "cvTime" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _cvTime[i].ID = "cvTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _cvTime[i].ControlToValidate = _txtTime[i].ClientID;  //"ctl00_HomeContentPlaceHolder_txtTime";
                         _cvTime[i].ClientValidationFunction = "CheckMyText";
-                        _cvTime[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + "- hh:mm format (24 hrs) please!";
+                        _cvTime[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "- hh:mm format (24 hrs) please!";
                         _cvTime[i].Display = ValidatorDisplay.None;
                         if (ContentPage == "record")
                         _cvTime[i].ValidationGroup = _strDynamictabPart;
@@ -1476,15 +1476,15 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         cell[(i * 2) + 1].Controls.Add(_lblTime[i]);
                         cell[(i * 2) + 1].Controls.Add(_txtTime[i]);
 
-                        if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
+                        if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                         {
                             //_txtValue[i].Text = DateTime.Now.Day.ToString("00") + "/" + DateTime.Now.Month.ToString("00") + "/" + DateTime.Now.Year.ToString();
                             //_txtTime[i].Text = "00:00";
                             _rfvValue[i] = new RequiredFieldValidator();
-                            _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                            _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                             _rfvValue[i].Display = ValidatorDisplay.None;
                             _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
-                            _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
+                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                             if (ContentPage == "record")
                             _rfvValue[i].ValidationGroup = _strDynamictabPart;
 
@@ -1498,7 +1498,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                         if (_qsMode != "")
                         {
-                            if (_dtRecordTypleColumlns.Rows[i]["DefaultValue"].ToString() != "")
+                            if (_dtColumnsDetail.Rows[i]["DefaultValue"].ToString() != "")
                             {
 
                                 if (Mode.ToLower() == "add" || Mode.ToLower() == "edit")
@@ -1523,7 +1523,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     }
 
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "trafficlight")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "trafficlight")
                     {
                         _imgValues[i] = new Image();
                         //_imgValues[i].ImageUrl = "~/App_Themes/Default/Images/dropdown.png";
@@ -1531,17 +1531,17 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                         cell[(i * 2) + 1].Controls.Add(_imgValues[i]);
                     }
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "button")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "button")
                     {
                         _lnkValue[i] = new LinkButton();
-                        _lnkValue[i].ID = "lnk" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _lnkValue[i].ID = "lnk" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _lnkValue[i].ClientIDMode = ClientIDMode.Static;
                         _lnkValue[i].CausesValidation = false ;
                         _lnkValue[i].Enabled = false;
                         bool bVisible = false;
-                        if (_dtRecordTypleColumlns.Rows[i]["ButtonInfo"] != DBNull.Value && _dtRecordTypleColumlns.Rows[i]["ButtonInfo"].ToString() != "")
+                        if (_dtColumnsDetail.Rows[i]["ButtonInfo"] != DBNull.Value && _dtColumnsDetail.Rows[i]["ButtonInfo"].ToString() != "")
                         {
-                            ColumnButtonInfo theButtonInfo = JSONField.GetTypedObject<ColumnButtonInfo>(_dtRecordTypleColumlns.Rows[i]["ButtonInfo"].ToString());
+                            ColumnButtonInfo theButtonInfo = JSONField.GetTypedObject<ColumnButtonInfo>(_dtColumnsDetail.Rows[i]["ButtonInfo"].ToString());
                             if (theButtonInfo != null)
                             {
                                 if (!string.IsNullOrEmpty(theButtonInfo.SPToRun))
@@ -1569,14 +1569,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                     _lnkValue[i].CssClass = "btn";
                                     _lnkValue[i].ToolTip = "Disabled button";
                                     _lnkValue[i].ForeColor = System.Drawing.Color.Gray;
-                                    if (_dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"] != DBNull.Value && _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() != "")
+                                    if (_dtColumnsDetail.Rows[i]["DisplayTextDetail"] != DBNull.Value && _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() != "")
                                     {
-                                        _lnkValue[i].Text = "<strong>" + _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + "</strong>";
+                                        _lnkValue[i].Text = "<strong>" + _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "</strong>";
                                     }
                                     else
                                     {
                                         //
-                                        _lnkValue[i].Text = "<strong>" + _dtRecordTypleColumlns.Rows[i]["DisplayName"].ToString() + "</strong>";
+                                        _lnkValue[i].Text = "<strong>" + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + "</strong>";
                                     }
                                     //if (_dtRecordTypleColumlns.Rows[i]["TextWidth"] != null && _dtRecordTypleColumlns.Rows[i]["TextWidth"].ToString() != "")
                                     //{
@@ -1594,8 +1594,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         cell[(i * 2) + 1].Controls.Add(_lnkValue[i]);
                     }
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "file"
-                        || _dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "image")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "file"
+                        || _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image")
                     {
 
                         //ScriptManager theScriptManager1 = (ScriptManager)this.Page.Master.FindControl("ScriptManager1");
@@ -1604,29 +1604,29 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         //    theScriptManager1.EnablePartialRendering = false;
 
                         _fuValue[i] = new FileUpload();
-                        _fuValue[i].ID = "fu" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _fuValue[i].ID = "fu" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
 
                         //_fuValue[i].ClientIDMode = ClientIDMode.Static;
                         _hfValue[i] = new HiddenField();
-                        _hfValue[i].ID = "hf" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _hfValue[i].ID = "hf" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         //_hfValue[i].ClientIDMode = ClientIDMode.Static;
 
                         _hfValue2[i] = new HiddenField();
-                        _hfValue2[i].ID = "hf2" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _hfValue2[i].ID = "hf2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         //_hfValue2[i].ClientIDMode = ClientIDMode.Static;
 
 
                         _lblValue[i] = new Label();
-                        _lblValue[i].ID = "lblV" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _lblValue[i].ID = "lblV" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         //_lblValue[i].ClientIDMode = ClientIDMode.Static;
 
                         _pnlDIV[i] = new Panel();
-                        _pnlDIV[i].ID = "pnl" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _pnlDIV[i].ID = "pnl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         //_pnlDIV[i].ClientIDMode = ClientIDMode.Static;
 
-                        if (_dtRecordTypleColumlns.Rows[i]["Notes"] != DBNull.Value)
+                        if (_dtColumnsDetail.Rows[i]["Notes"] != DBNull.Value)
                         {
-                            _lblValue[i].ToolTip = _dtRecordTypleColumlns.Rows[i]["Notes"].ToString();
+                            _lblValue[i].ToolTip = _dtColumnsDetail.Rows[i]["Notes"].ToString();
                         }
 
                         //cell[(i * 2) + 1] = new HtmlTableCell();
@@ -1635,7 +1635,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         _pnlDIV[i].Controls.Add(_fuValue[i]);
 
                         string strFileExtension = "*.*";
-                        if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "image")
+                        if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image")
                         {
 
                             strFileExtension = "*.jpg;*.gif;*.png";
@@ -1653,13 +1653,13 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
                         _fuValue2[i] = new FileUpload();
-                        _fuValue2[i].ID = "fu2" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _fuValue2[i].ID = "fu2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         //_fuValue2[i].ClientIDMode = ClientIDMode.Static;
 
                         cell[(i * 2) + 1].Controls.Add(_fuValue2[i]);
 
                         _lnkValue[i] = new LinkButton();
-                        _lnkValue[i].ID = "lnk" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _lnkValue[i].ID = "lnk" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _lnkValue[i].Text = "Use basic version";
                         _lnkValue[i].CausesValidation = false;
                         _lnkValue[i].OnClientClick = "UserBasic" + _strDynamictabPart + i.ToString() + "(); return false";
@@ -1732,7 +1732,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                         string strValidatorT = "";
                         string strValidatorF = "";
-                        if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m"
+                        if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m"
                 && _rfvValue[i] != null)
                         {
                             strValidatorT = "if(document.getElementById('" + _strDynamictabPart + _rfvValue[i].ID.ToString() + "')!=null){ValidatorEnable(document.getElementById('" + _strDynamictabPart + _rfvValue[i].ID.ToString() + "'), true)};";
@@ -1746,12 +1746,12 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                         string strScriptPath = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/"+_strRecordFolder+"/Handler.ashx";
 
-                        if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "image")
+                        if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image")
                         {
                             string strMaxHeight = "50";
-                            if (_dtRecordTypleColumlns.Rows[i]["TextHeight"] != DBNull.Value)
+                            if (_dtColumnsDetail.Rows[i]["TextHeight"] != DBNull.Value)
                             {
-                                strMaxHeight = _dtRecordTypleColumlns.Rows[i]["TextHeight"].ToString();
+                                strMaxHeight = _dtColumnsDetail.Rows[i]["TextHeight"].ToString();
                             }
                             string strFilePath = _strFilesLocation + "/UserFiles/AppFiles/";
 
@@ -1884,21 +1884,21 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "dropdown"
-                        && (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "table"
-                        || _dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "tabledd")
-                        && _dtRecordTypleColumlns.Rows[i]["TableTableID"] != DBNull.Value
-                        && _dtRecordTypleColumlns.Rows[i]["DisplayColumn"].ToString() != ""
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "dropdown"
+                        && (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "table"
+                        || _dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "tabledd")
+                        && _dtColumnsDetail.Rows[i]["TableTableID"] != DBNull.Value
+                        && _dtColumnsDetail.Rows[i]["DisplayColumn"].ToString() != ""
                         )
                     {
-                        if (_dtRecordTypleColumlns.Rows[i]["ParentColumnID"] == DBNull.Value)
+                        if (_dtColumnsDetail.Rows[i]["ParentColumnID"] == DBNull.Value)
                         {
                             //this is a table
 
-                            if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "table")
+                            if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "table")
                             {
                                 _txtValue[i] = new TextBox();
-                                _txtValue[i].ID = "txt" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                                _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                 _txtValue[i].Width = 198;
                                 _txtValue[i].CssClass = "NormalTextBox";
                                 //_txtValue[i].ClientIDMode = ClientIDMode.Static;
@@ -1906,9 +1906,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 if (ContentPage == "record")
                                 _txtValue[i].ValidationGroup = _strDynamictabPart;
 
-                                if (_dtRecordTypleColumlns.Rows[i]["TextWidth"] != null && _dtRecordTypleColumlns.Rows[i]["TextWidth"].ToString() != "")
+                                if (_dtColumnsDetail.Rows[i]["TextWidth"] != null && _dtColumnsDetail.Rows[i]["TextWidth"].ToString() != "")
                                 {
-                                    _txtValue[i].Width = int.Parse(_dtRecordTypleColumlns.Rows[i]["TextWidth"].ToString()) * 9;
+                                    _txtValue[i].Width = int.Parse(_dtColumnsDetail.Rows[i]["TextWidth"].ToString()) * 9;
                                 }
 
                                 _imgValues[i] = new Image();
@@ -1916,7 +1916,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 _imgValues[i].ToolTip = "Start typing and matching values will be shown";
 
                                 _hfValue[i] = new HiddenField();
-                                _hfValue[i].ID = "hf" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                                _hfValue[i].ID = "hf" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                 //_hfValue[i].ClientIDMode = ClientIDMode.Static;
 
 
@@ -1945,13 +1945,13 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 cell[(i * 2) + 1].Controls.Add(tblQuickLink);
                                 cell[(i * 2) + 1].Controls.Add(_hfValue[i]);
 
-                                if (_dtRecordTypleColumlns.Rows[i]["QuickAddLink"] != DBNull.Value
+                                if (_dtColumnsDetail.Rows[i]["QuickAddLink"] != DBNull.Value
                                     && Request.QueryString["quickadd"] == null)
                                 {
-                                    if (_dtRecordTypleColumlns.Rows[i]["QuickAddLink"].ToString().ToLower() == "true")
+                                    if (_dtColumnsDetail.Rows[i]["QuickAddLink"].ToString().ToLower() == "true")
                                     {
                                         _hlValue[i] = new HyperLink();
-                                        _hlValue[i].ID = "hl" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                                        _hlValue[i].ID = "hl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                         _hlValue[i].Text = "Add";
 
                                         string xml = null;
@@ -1960,10 +1960,10 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                                " <TableID>" + HttpUtility.HtmlEncode(TableID.ToString()) + "</TableID>" +
                                                " <SearchCriteriaID>" + HttpUtility.HtmlEncode(Request.QueryString["SearchCriteriaID"].ToString()) + "</SearchCriteriaID>" +
                                                " <control>" + HttpUtility.HtmlEncode(_txtValue[i].ID.ToString()) + "</control>" +
-                                                " <TableTableID>" + HttpUtility.HtmlEncode(_dtRecordTypleColumlns.Rows[i]["TableTableID"].ToString()) + "</TableTableID>" +
-                                                 " <DisplayColumn>" + HttpUtility.HtmlEncode(_dtRecordTypleColumlns.Rows[i]["DisplayColumn"].ToString()) + "</DisplayColumn>" +
-                                                  " <LinkedParentColumnID>" + HttpUtility.HtmlEncode(_dtRecordTypleColumlns.Rows[i]["LinkedParentColumnID"].ToString()) + "</LinkedParentColumnID>" +
-                                                  " <DropDownType>" + HttpUtility.HtmlEncode(_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString()) + "</DropDownType>" +
+                                                " <TableTableID>" + HttpUtility.HtmlEncode(_dtColumnsDetail.Rows[i]["TableTableID"].ToString()) + "</TableTableID>" +
+                                                 " <DisplayColumn>" + HttpUtility.HtmlEncode(_dtColumnsDetail.Rows[i]["DisplayColumn"].ToString()) + "</DisplayColumn>" +
+                                                  " <LinkedParentColumnID>" + HttpUtility.HtmlEncode(_dtColumnsDetail.Rows[i]["LinkedParentColumnID"].ToString()) + "</LinkedParentColumnID>" +
+                                                  " <DropDownType>" + HttpUtility.HtmlEncode(_dtColumnsDetail.Rows[i]["DropDownType"].ToString()) + "</DropDownType>" +
                                                   " <_hfValue>" + HttpUtility.HtmlEncode(_hfValue[i].ID.ToString()) + "</_hfValue>" +
                                                   " <RecordID>" + HttpUtility.HtmlEncode(RecordID == null ? "-1" : RecordID.ToString()) + "</RecordID>" +
                                               "</root>";
@@ -1972,9 +1972,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                         int iSearchCriteriaID = SystemData.SearchCriteria_Insert(theSearchCriteria);
 
                                         _hlValue[i].NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" +
-                                            Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(_dtRecordTypleColumlns.Rows[i]["TableTableID"].ToString())
+                                            Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(_dtColumnsDetail.Rows[i]["TableTableID"].ToString())
                                             + "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&quickadd=" + Cryptography.Encrypt(iSearchCriteriaID.ToString());
-
+                                        _hlValue[i].Visible = false;
                                         cellQL2.Controls.Add(new LiteralControl("&nbsp;"));
                                         cellQL2.Controls.Add(_hlValue[i]);
                                     }
@@ -1984,14 +1984,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                                if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
+                                if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                                 {
 
                                     _rfvValue[i] = new RequiredFieldValidator();
-                                    _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                                    _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                     _rfvValue[i].Display = ValidatorDisplay.None;
                                     _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
-                                    _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
+                                    _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                                     if (ContentPage == "record")
                                     _rfvValue[i].ValidationGroup = _strDynamictabPart;
 
@@ -2004,7 +2004,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                     source: function (request, response) {
                                         $.ajax({
                                             url: ""../../CascadeDropdown.asmx/GetDisplayColumns"",
-                                            data: ""{'Columnid':'" + _dtRecordTypleColumlns.Rows[i]["ColumnID"].ToString() + @"', 'search': '"" + request.term + ""' }"",
+                                            data: ""{'Columnid':'" + _dtColumnsDetail.Rows[i]["ColumnID"].ToString() + @"', 'search': '"" + request.term + ""' }"",
                                             dataType: ""json"",
                                             type: ""POST"",
                                             contentType: ""application/json; charset=utf-8"",
@@ -2047,30 +2047,30 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                            if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "tabledd")
+                            if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "tabledd")
                             {
                                 //this is drop down
                                 _ddlValue[i] = new DropDownList();
-                                _ddlValue[i].ID = "ddl" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                                _ddlValue[i].ID = "ddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                 _ddlValue[i].Width = 198;
                                 _ddlValue[i].CssClass = "NormalTextBox";
                                 if (ContentPage == "record")
                                 _ddlValue[i].ValidationGroup = _strDynamictabPart;
 
 
-                                if (_dtRecordTypleColumlns.Rows[i]["TextWidth"] != null && _dtRecordTypleColumlns.Rows[i]["TextWidth"].ToString() != "")
+                                if (_dtColumnsDetail.Rows[i]["TextWidth"] != null && _dtColumnsDetail.Rows[i]["TextWidth"].ToString() != "")
                                 {
-                                    _ddlValue[i].Width = int.Parse(_dtRecordTypleColumlns.Rows[i]["TextWidth"].ToString()) * 9;
+                                    _ddlValue[i].Width = int.Parse(_dtColumnsDetail.Rows[i]["TextWidth"].ToString()) * 9;
                                 }
 
 
-                                if (_dtRecordTypleColumlns.Rows[i]["Notes"] != DBNull.Value)
+                                if (_dtColumnsDetail.Rows[i]["Notes"] != DBNull.Value)
                                 {
-                                    _ddlValue[i].ToolTip = _dtRecordTypleColumlns.Rows[i]["Notes"].ToString();
+                                    _ddlValue[i].ToolTip = _dtColumnsDetail.Rows[i]["Notes"].ToString();
                                 }
                                 try
                                 {
-                                    RecordManager.PopulateTableDropDown(int.Parse(_dtRecordTypleColumlns.Rows[i]["ColumnID"].ToString()), ref _ddlValue[i]);
+                                    RecordManager.PopulateTableDropDown(int.Parse(_dtColumnsDetail.Rows[i]["ColumnID"].ToString()), ref _ddlValue[i]);
                                 }
                                 catch
                                 {
@@ -2111,13 +2111,13 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                                if (_dtRecordTypleColumlns.Rows[i]["QuickAddLink"] != DBNull.Value
+                                if (_dtColumnsDetail.Rows[i]["QuickAddLink"] != DBNull.Value
                                     && Request.QueryString["quickadd"] == null)
                                 {
-                                    if (_dtRecordTypleColumlns.Rows[i]["QuickAddLink"].ToString().ToLower() == "true")
+                                    if (_dtColumnsDetail.Rows[i]["QuickAddLink"].ToString().ToLower() == "true")
                                     {
                                         _hlValue[i] = new HyperLink();
-                                        _hlValue[i].ID = "hl" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                                        _hlValue[i].ID = "hl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                         _hlValue[i].Text = "Add";
                                         string xml = null;
                                         xml = @"<root>" +
@@ -2125,10 +2125,10 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                                 " <TableID>" + HttpUtility.HtmlEncode(TableID.ToString()) + "</TableID>" +
                                                 " <SearchCriteriaID>" + HttpUtility.HtmlEncode(Request.QueryString["SearchCriteriaID"].ToString()) + "</SearchCriteriaID>" +
                                                 " <control>" + HttpUtility.HtmlEncode(_ddlValue[i].ID.ToString()) + "</control>" +
-                                                 " <TableTableID>" + HttpUtility.HtmlEncode(_dtRecordTypleColumlns.Rows[i]["TableTableID"].ToString()) + "</TableTableID>" +
-                                                 " <DisplayColumn>" + HttpUtility.HtmlEncode(_dtRecordTypleColumlns.Rows[i]["DisplayColumn"].ToString()) + "</DisplayColumn>" +
-                                                 " <LinkedParentColumnID>" + HttpUtility.HtmlEncode(_dtRecordTypleColumlns.Rows[i]["LinkedParentColumnID"].ToString()) + "</LinkedParentColumnID>" +
-                                                  " <DropDownType>" + HttpUtility.HtmlEncode(_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString()) + "</DropDownType>" +
+                                                 " <TableTableID>" + HttpUtility.HtmlEncode(_dtColumnsDetail.Rows[i]["TableTableID"].ToString()) + "</TableTableID>" +
+                                                 " <DisplayColumn>" + HttpUtility.HtmlEncode(_dtColumnsDetail.Rows[i]["DisplayColumn"].ToString()) + "</DisplayColumn>" +
+                                                 " <LinkedParentColumnID>" + HttpUtility.HtmlEncode(_dtColumnsDetail.Rows[i]["LinkedParentColumnID"].ToString()) + "</LinkedParentColumnID>" +
+                                                  " <DropDownType>" + HttpUtility.HtmlEncode(_dtColumnsDetail.Rows[i]["DropDownType"].ToString()) + "</DropDownType>" +
                                                   " <RecordID>" + HttpUtility.HtmlEncode(RecordID == null ? "-1" : RecordID.ToString()) + "</RecordID>" +
                                                "</root>";
 
@@ -2136,23 +2136,23 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                         int iSearchCriteriaID = SystemData.SearchCriteria_Insert(theSearchCriteria);
 
                                         _hlValue[i].NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" +
-                                            Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(_dtRecordTypleColumlns.Rows[i]["TableTableID"].ToString())
+                                            Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(_dtColumnsDetail.Rows[i]["TableTableID"].ToString())
                                             + "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&quickadd=" + Cryptography.Encrypt(iSearchCriteriaID.ToString());
-
+                                        _hlValue[i].Visible = false;
                                         cellQL2.Controls.Add(new LiteralControl("&nbsp;"));
                                         cellQL2.Controls.Add(_hlValue[i]);
                                     }
                                 }
 
 
-                                if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
+                                if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                                 {
 
                                     _rfvValue[i] = new RequiredFieldValidator();
-                                    _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                                    _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                     _rfvValue[i].Display = ValidatorDisplay.None;
                                     _rfvValue[i].ControlToValidate = _ddlValue[i].ClientID;
-                                    _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
+                                    _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                                     if (ContentPage == "record")
                                     _rfvValue[i].ValidationGroup = _strDynamictabPart;
 
@@ -2171,31 +2171,31 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                             //filterted table
 
                             _ddlValue2[i] = new DropDownList();
-                            _ddlValue2[i].ID = "ddl2" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                            _ddlValue2[i].ID = "ddl2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                             _ddlValue2[i].Width = 198;
                             _ddlValue2[i].CssClass = "NormalTextBox";
                             if (ContentPage == "record")
                             _ddlValue2[i].ValidationGroup = _strDynamictabPart;
 
 
-                            if (_dtRecordTypleColumlns.Rows[i]["TextWidth"] != null && _dtRecordTypleColumlns.Rows[i]["TextWidth"].ToString() != "")
+                            if (_dtColumnsDetail.Rows[i]["TextWidth"] != null && _dtColumnsDetail.Rows[i]["TextWidth"].ToString() != "")
                             {
-                                _ddlValue2[i].Width = int.Parse(_dtRecordTypleColumlns.Rows[i]["TextWidth"].ToString()) * 9;
+                                _ddlValue2[i].Width = int.Parse(_dtColumnsDetail.Rows[i]["TextWidth"].ToString()) * 9;
                             }
 
-                            if (_dtRecordTypleColumlns.Rows[i]["Notes"] != DBNull.Value)
+                            if (_dtColumnsDetail.Rows[i]["Notes"] != DBNull.Value)
                             {
-                                _ddlValue2[i].ToolTip = _dtRecordTypleColumlns.Rows[i]["Notes"].ToString();
+                                _ddlValue2[i].ToolTip = _dtColumnsDetail.Rows[i]["Notes"].ToString();
                             }
 
                             //ParentColumnID
 
-                            Column scParentColumnID = RecordManager.ets_Column_Details(int.Parse(_dtRecordTypleColumlns.Rows[i]["ParentColumnID"].ToString()));
+                            Column scParentColumnID = RecordManager.ets_Column_Details(int.Parse(_dtColumnsDetail.Rows[i]["ParentColumnID"].ToString()));
 
 
                             if (scParentColumnID != null)
                             {
-                                DataTable dtParentData = Common.DataTableFromText("SELECT DISTINCT(" + scParentColumnID.SystemName + ") FilterValue FROM Record WHERE IsActive=1 AND TableID=" + _dtRecordTypleColumlns.Rows[i]["TableTableID"].ToString());
+                                DataTable dtParentData = Common.DataTableFromText("SELECT DISTINCT(" + scParentColumnID.SystemName + ") FilterValue FROM Record WHERE IsActive=1 AND TableID=" + _dtColumnsDetail.Rows[i]["TableTableID"].ToString());
                                 _ddlValue2[i].DataTextField = "FilterValue";
                                 _ddlValue2[i].DataValueField = "FilterValue";
                                 _ddlValue2[i].DataSource = dtParentData;
@@ -2207,29 +2207,29 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
                             _ddlValue[i] = new DropDownList();
-                            _ddlValue[i].ID = "ddl" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                            _ddlValue[i].ID = "ddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                             _ddlValue[i].Width = 198;
                             _ddlValue[i].CssClass = "NormalTextBox";
                             if (ContentPage == "record")
                             _ddlValue[i].ValidationGroup = _strDynamictabPart;
 
 
-                            if (_dtRecordTypleColumlns.Rows[i]["TextWidth"] != null && _dtRecordTypleColumlns.Rows[i]["TextWidth"].ToString() != "")
+                            if (_dtColumnsDetail.Rows[i]["TextWidth"] != null && _dtColumnsDetail.Rows[i]["TextWidth"].ToString() != "")
                             {
-                                _ddlValue[i].Width = int.Parse(_dtRecordTypleColumlns.Rows[i]["TextWidth"].ToString()) * 9;
+                                _ddlValue[i].Width = int.Parse(_dtColumnsDetail.Rows[i]["TextWidth"].ToString()) * 9;
                             }
 
-                            if (_dtRecordTypleColumlns.Rows[i]["Notes"] != DBNull.Value)
+                            if (_dtColumnsDetail.Rows[i]["Notes"] != DBNull.Value)
                             {
-                                _ddlValue[i].ToolTip = _dtRecordTypleColumlns.Rows[i]["Notes"].ToString();
+                                _ddlValue[i].ToolTip = _dtColumnsDetail.Rows[i]["Notes"].ToString();
                             }
 
                             _ccddl[i] = new CascadingDropDown();
-                            _ccddl[i].ID = "ccddl" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                            _ccddl[i].ID = "ccddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
 
-                            _ccddl[i].Category = _dtRecordTypleColumlns.Rows[i]["ColumnID"].ToString() + "," + _dtRecordTypleColumlns.Rows[i]["ParentColumnID"].ToString();
+                            _ccddl[i].Category = _dtColumnsDetail.Rows[i]["ColumnID"].ToString() + "," + _dtColumnsDetail.Rows[i]["ParentColumnID"].ToString();
                             _ccddl[i].TargetControlID = _ddlValue[i].ID;
-                            _ccddl[i].ParentControlID = "ddl2" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                            _ccddl[i].ParentControlID = "ddl2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
 
                             _ccddl[i].ServicePath = "~/CascadeDropdown.asmx";
                             _ccddl[i].ServiceMethod = "GetFilteredData"; //filtered
@@ -2266,14 +2266,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                             cell[(i * 2) + 1].Controls.Add(_ccddl[i]);
 
-                            if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
+                            if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                             {
 
                                 _rfvValue[i] = new RequiredFieldValidator();
-                                _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                                _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                 _rfvValue[i].Display = ValidatorDisplay.None;
                                 _rfvValue[i].ControlToValidate = _ddlValue[i].ClientID;
-                                _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
+                                _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                                 if (ContentPage == "record")
                                 _rfvValue[i].ValidationGroup = _strDynamictabPart;
 
@@ -2295,22 +2295,22 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "radiobutton")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "radiobutton")
                     {
                         _radioList[i] = new RadioButtonList();
                         _radioList[i].RepeatDirection = System.Web.UI.WebControls.RepeatDirection.Horizontal;
                         _radioList[i].RepeatLayout = RepeatLayout.Flow;
                         //_radioList[i].CssClass = "";//_dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
-                        _radioList[i].ID = "radio" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _radioList[i].ID = "radio" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         if (ContentPage == "record")
                         _radioList[i].ValidationGroup = _strDynamictabPart;
-                        _radioList[i].ToolTip = _dtRecordTypleColumlns.Rows[i]["Notes"].ToString();
+                        _radioList[i].ToolTip = _dtColumnsDetail.Rows[i]["Notes"].ToString();
 
                         //cell[(i * 2) + 1] = new HtmlTableCell();
 
-                        if (_dtRecordTypleColumlns.Rows[i]["VerticalList"] != DBNull.Value)
+                        if (_dtColumnsDetail.Rows[i]["VerticalList"] != DBNull.Value)
                         {
-                            if (bool.Parse(_dtRecordTypleColumlns.Rows[i]["VerticalList"].ToString()))
+                            if (bool.Parse(_dtColumnsDetail.Rows[i]["VerticalList"].ToString()))
                             {
                                 _radioList[i].RepeatDirection = System.Web.UI.WebControls.RepeatDirection.Vertical;
 
@@ -2321,27 +2321,27 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         }
 
                         //_radioList[i].CssClass = "NormalTextBox";
-                        if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "values")
+                        if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "values")
                         {
-                            Common.PutRadioList(_dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString(), ref _radioList[i]);
+                            Common.PutRadioList(_dtColumnsDetail.Rows[i]["DropdownValues"].ToString(), ref _radioList[i]);
 
-                            if (_dtRecordTypleColumlns.Rows[i]["DefaultValue"].ToString() != "")
+                            if (_dtColumnsDetail.Rows[i]["DefaultValue"].ToString() != "")
                             {
                                 if (Mode.ToLower() == "add" || Mode.ToLower() == "edit")
                                 {
-                                    _radioList[i].SelectedValue = _dtRecordTypleColumlns.Rows[i]["DefaultValue"].ToString();
+                                    _radioList[i].SelectedValue = _dtColumnsDetail.Rows[i]["DefaultValue"].ToString();
                                 }
                             }
                         }
-                        else if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "value_text")
+                        else if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "value_text")
                         {
-                            Common.PutRadioListValue_Text(_dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString(), ref _radioList[i]);
+                            Common.PutRadioListValue_Text(_dtColumnsDetail.Rows[i]["DropdownValues"].ToString(), ref _radioList[i]);
 
-                            if (_dtRecordTypleColumlns.Rows[i]["DefaultValue"].ToString() != "")
+                            if (_dtColumnsDetail.Rows[i]["DefaultValue"].ToString() != "")
                             {
                                 if (Mode.ToLower() == "add" || Mode.ToLower() == "edit")
                                 {
-                                    string strDefaultValue = _dtRecordTypleColumlns.Rows[i]["DefaultValue"].ToString();
+                                    string strDefaultValue = _dtColumnsDetail.Rows[i]["DefaultValue"].ToString();
                                     if (strDefaultValue.IndexOf(",") > -1)
                                     {
                                         _radioList[i].SelectedValue = strDefaultValue.Substring(0, strDefaultValue.IndexOf(","));
@@ -2351,12 +2351,12 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         }
                         else
                         {
-                            Common.PutRadioListValue_Image(_dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString(), ref _radioList[i],_strFilesLocation);
-                            if (_dtRecordTypleColumlns.Rows[i]["DefaultValue"].ToString() != "")
+                            Common.PutRadioListValue_Image(_dtColumnsDetail.Rows[i]["DropdownValues"].ToString(), ref _radioList[i],_strFilesLocation);
+                            if (_dtColumnsDetail.Rows[i]["DefaultValue"].ToString() != "")
                             {
                                 if (Mode.ToLower() == "add" || Mode.ToLower() == "edit")
                                 {
-                                    string strDefaultValue = _dtRecordTypleColumlns.Rows[i]["DefaultValue"].ToString();
+                                    string strDefaultValue = _dtColumnsDetail.Rows[i]["DefaultValue"].ToString();
                                     if (strDefaultValue!="")
                                     {
                                         _radioList[i].SelectedValue = strDefaultValue;
@@ -2368,22 +2368,22 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         cell[(i * 2) + 1].Controls.Add(_radioList[i]);
 
 
-                        if (_dtRecordTypleColumlns.Rows[i]["VerticalList"] != DBNull.Value)
+                        if (_dtColumnsDetail.Rows[i]["VerticalList"] != DBNull.Value)
                         {
-                            if (bool.Parse(_dtRecordTypleColumlns.Rows[i]["VerticalList"].ToString()))
+                            if (bool.Parse(_dtColumnsDetail.Rows[i]["VerticalList"].ToString()))
                             {
                                 cell[(i * 2) + 1].Controls.Add(new LiteralControl("<hr />"));
                             }
                         }
 
-                        if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
+                        if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                         {
 
                             _rfvValue[i] = new RequiredFieldValidator();
-                            _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                            _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                             _rfvValue[i].Display = ValidatorDisplay.None;
                             _rfvValue[i].ControlToValidate = _radioList[i].ClientID;
-                            _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
+                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                             if (ContentPage == "record")
                             _rfvValue[i].ValidationGroup = _strDynamictabPart;
 
@@ -2393,14 +2393,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
                     }
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "location")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "location")
                     {
 
 
                         //cell[(i * 2) + 1] = new HtmlTableCell();
 
                         _hfValue[i] = new HiddenField();
-                        _hfValue[i].ID = "hf" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _hfValue[i].ID = "hf" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         //_hfValue[i].ClientIDMode = ClientIDMode.Static;
                         if (_theAccount.MapCentreLat != null)
                         {
@@ -2412,7 +2412,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         }
 
                         _hfValue2[i] = new HiddenField();
-                        _hfValue2[i].ID = "hf2" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _hfValue2[i].ID = "hf2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         //_hfValue2[i].ClientIDMode = ClientIDMode.Static;
                         if (_theAccount.MapCentreLong != null)
                         {
@@ -2424,7 +2424,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         }
 
                         _hfValue3[i] = new HiddenField();
-                        _hfValue3[i].ID = "hf3" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _hfValue3[i].ID = "hf3" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         //_hfValue3[i].ClientIDMode = ClientIDMode.Static;
                         _hfValue3[i].Value = "3";
 
@@ -2437,11 +2437,11 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         string strMapWidth = "";
                         string strSearchAddressJS = "";
                         bool bShowMap = false;
-                        if (_dtRecordTypleColumlns.Rows[i]["TextHeight"] != DBNull.Value
-                            && _dtRecordTypleColumlns.Rows[i]["TextWidth"] != DBNull.Value)
+                        if (_dtColumnsDetail.Rows[i]["TextHeight"] != DBNull.Value
+                            && _dtColumnsDetail.Rows[i]["TextWidth"] != DBNull.Value)
                         {
-                            strMapHeight = _dtRecordTypleColumlns.Rows[i]["TextHeight"].ToString();
-                            strMapWidth = _dtRecordTypleColumlns.Rows[i]["TextWidth"].ToString();
+                            strMapHeight = _dtColumnsDetail.Rows[i]["TextHeight"].ToString();
+                            strMapWidth = _dtColumnsDetail.Rows[i]["TextWidth"].ToString();
                             bShowMap = true;
                         }
                        
@@ -2449,9 +2449,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         if(bShowMap)
                             cell[(i * 2) + 1].Controls.Add(new LiteralControl("<div align='left' id='map" + _strDynamictabPart + i.ToString() + "' style='width: " + strMapWidth + "px; height: " + strMapHeight + "px; margin-top: 10px;'></div>"));
 
-                        if (_dtRecordTypleColumlns.Rows[i]["ShowTotal"] != DBNull.Value)
+                        if (_dtColumnsDetail.Rows[i]["ShowTotal"] != DBNull.Value)
                         {
-                            if (_dtRecordTypleColumlns.Rows[i]["ShowTotal"].ToString().ToLower() == "true")
+                            if (_dtColumnsDetail.Rows[i]["ShowTotal"].ToString().ToLower() == "true")
                             {
                                 if (bShowMap)
                                     cell[(i * 2) + 1].Controls.Add(new LiteralControl("<br/>"));
@@ -2493,7 +2493,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                                     cell[(i * 2) + 1].Controls.Add(new LiteralControl("&nbsp;"));
                                     _lnkValue[i] = new LinkButton();
-                                    _lnkValue[i].ID = "lnk" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                                    _lnkValue[i].ID = "lnk" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                     _lnkValue[i].Text = "Search";
                                     _lnkValue[i].CausesValidation = false;
                                     _lnkValue[i].OnClientClick = "showAddress" + _strDynamictabPart + i.ToString() + "(); return false";
@@ -2558,15 +2558,15 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                         string strShowLatLong = @"";
 
-                        if (_dtRecordTypleColumlns.Rows[i]["IsRound"] != DBNull.Value)
+                        if (_dtColumnsDetail.Rows[i]["IsRound"] != DBNull.Value)
                         {
-                            if (_dtRecordTypleColumlns.Rows[i]["IsRound"].ToString().ToLower() == "true")
+                            if (_dtColumnsDetail.Rows[i]["IsRound"].ToString().ToLower() == "true")
                             {
                                 cell[(i * 2) + 1].Controls.Add(new LiteralControl("<br/>"));
                                 cell[(i * 2) + 1].Controls.Add(new LiteralControl("<br/>"));
                                 cell[(i * 2) + 1].Controls.Add(new LiteralControl("Latitude:&nbsp;"));
                                 _txtValue[i] = new TextBox();
-                                _txtValue[i].ID = "txtLat" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                                _txtValue[i].ID = "txtLat" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                 _txtValue[i].Width = 145;
                                 _txtValue[i].CssClass = "NormalTextBox";
                                 if (ContentPage == "record")
@@ -2577,7 +2577,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 cell[(i * 2) + 1].Controls.Add(new LiteralControl("&nbsp;&nbsp;Longitude:&nbsp;"));
 
                                 _txtTime[i] = new TextBox();
-                                _txtTime[i].ID = "txtLong" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                                _txtTime[i].ID = "txtLong" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                 _txtTime[i].Width = 145;
                                 _txtTime[i].CssClass = "NormalTextBox";
                                 if (ContentPage == "record")
@@ -2641,17 +2641,17 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                        
                     }
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "checkbox")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "checkbox")
                     {
                         _chkValue[i] = new CheckBox();
-                        _chkValue[i].ID = "chk" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _chkValue[i].ID = "chk" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         if (ContentPage == "record")
                         _chkValue[i].ValidationGroup = _strDynamictabPart;
-                        Common.PutCheckBoxDefault(_dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString(), ref _chkValue[i]);
+                        Common.PutCheckBoxDefault(_dtColumnsDetail.Rows[i]["DropdownValues"].ToString(), ref _chkValue[i]);
 
-                        if (_dtRecordTypleColumlns.Rows[i]["Notes"] != DBNull.Value)
+                        if (_dtColumnsDetail.Rows[i]["Notes"] != DBNull.Value)
                         {
-                            _chkValue[i].ToolTip = _dtRecordTypleColumlns.Rows[i]["Notes"].ToString();
+                            _chkValue[i].ToolTip = _dtColumnsDetail.Rows[i]["Notes"].ToString();
                         }
 
                         //cell[(i * 2) + 1] = new HtmlTableCell();
@@ -2659,11 +2659,11 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     }
 
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "content")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "content")
                     {
 
                         _htmValue[i] = new WYSIWYGEditor();
-                        _htmValue[i].ID = "htm" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _htmValue[i].ID = "htm" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _htmValue[i].AssetManager = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Editor/assetmanager/assetmanager.aspx";
                         _htmValue[i].ButtonFeatures = new string[] { "FullScreen", "XHTMLFullSource", "RemoveFormat", "Undo", "Redo", "|", "Paragraph", "FontName", "FontSize", "|", "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyFull", "Bold", "Italic", "Underline", "Hyperlink" };
                         _htmValue[i].scriptPath = "../../Editor/scripts/";
@@ -2671,9 +2671,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         _htmValue[i].Width = 520;
                         _htmValue[i].Height = 250;
 
-                        if (_dtRecordTypleColumlns.Rows[i]["DropDownValues"].ToString() != "")
+                        if (_dtColumnsDetail.Rows[i]["DropDownValues"].ToString() != "")
                         {
-                            _htmValue[i].Text = _dtRecordTypleColumlns.Rows[i]["DropDownValues"].ToString();
+                            _htmValue[i].Text = _dtColumnsDetail.Rows[i]["DropDownValues"].ToString();
                         }
 
                         //cell[(i * 2) + 1] = new HtmlTableCell();
@@ -2681,33 +2681,33 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                     }
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "content")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "content")
                     {
                         _lbl[i].Visible = false;
                     }
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "button")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "button")
                     {
                         _lbl[i].Visible = false;
                     }
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "staticcontent")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "staticcontent")
                     {
                         _lbl[i].Visible = false;
                         _lblValue[i] = new Label();
-                        _lblValue[i].ID = "lblV" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _lblValue[i].ID = "lblV" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
 
-                        if (_dtRecordTypleColumlns.Rows[i]["DropDownValues"].ToString() != "")
+                        if (_dtColumnsDetail.Rows[i]["DropDownValues"].ToString() != "")
                         {
-                            _lblValue[i].Text = Server.HtmlDecode(_dtRecordTypleColumlns.Rows[i]["DropDownValues"].ToString());
+                            _lblValue[i].Text = Server.HtmlDecode(_dtColumnsDetail.Rows[i]["DropDownValues"].ToString());
                         }
                         //cell[(i * 2) + 1] = new HtmlTableCell();
                         cell[(i * 2) + 1].Controls.Add(_lblValue[i]);
                     }
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "listbox"
-                        && _dtRecordTypleColumlns.Rows[i]["DateCalculationType"].ToString() == "")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "listbox"
+                        && _dtColumnsDetail.Rows[i]["DateCalculationType"].ToString() == "")
                     {
                         _lstValue[i] = new ListBox();
-                        _lstValue[i].ID = "lst" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _lstValue[i].ID = "lst" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _lstValue[i].SelectionMode = ListSelectionMode.Multiple;
                         _lstValue[i].Style.Add("min-width", "198px");
                         _lstValue[i].Style.Add("min-height", "100px");
@@ -2715,32 +2715,32 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         if (ContentPage == "record")
                         _lstValue[i].ValidationGroup = _strDynamictabPart;
 
-                        if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "values")
+                        if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "values")
                         {
-                            Common.PutListValues(_dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString(), ref _lstValue[i]);
+                            Common.PutListValues(_dtColumnsDetail.Rows[i]["DropdownValues"].ToString(), ref _lstValue[i]);
                         }
                         else
                         {
-                            Common.PutListValues_Text(_dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString(), ref _lstValue[i]);
+                            Common.PutListValues_Text(_dtColumnsDetail.Rows[i]["DropdownValues"].ToString(), ref _lstValue[i]);
                         }
 
-                        if (_dtRecordTypleColumlns.Rows[i]["Notes"] != DBNull.Value)
+                        if (_dtColumnsDetail.Rows[i]["Notes"] != DBNull.Value)
                         {
-                            _lstValue[i].ToolTip = _dtRecordTypleColumlns.Rows[i]["Notes"].ToString();
+                            _lstValue[i].ToolTip = _dtColumnsDetail.Rows[i]["Notes"].ToString();
                         }
 
                         //cell[(i * 2) + 1] = new HtmlTableCell();
                         cell[(i * 2) + 1].Controls.Add(_lstValue[i]);
 
 
-                        if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
+                        if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                         {
 
                             _rfvValue[i] = new RequiredFieldValidator();
-                            _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                            _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                             _rfvValue[i].Display = ValidatorDisplay.None;
                             _rfvValue[i].ControlToValidate = _lstValue[i].ClientID;
-                            _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
+                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                             if (ContentPage == "record")
                             _rfvValue[i].ValidationGroup = _strDynamictabPart;
                             
@@ -2753,11 +2753,11 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "listbox"
-                       && _dtRecordTypleColumlns.Rows[i]["DateCalculationType"].ToString() == "checkbox")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "listbox"
+                       && _dtColumnsDetail.Rows[i]["DateCalculationType"].ToString() == "checkbox")
                     {
                         _cblValue[i] = new CheckBoxList();
-                        _cblValue[i].ID = "cbl" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _cblValue[i].ID = "cbl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         //_cblValue[i].SelectionMode = ListSelectionMode.Multiple;
                         _cblValue[i].Style.Add("min-width", "198px");
                         _cblValue[i].Style.Add("min-height", "100px");
@@ -2768,11 +2768,11 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         _cblValue[i].CssClass = "multiple_cbl";
 
 
-                        if (_dtRecordTypleColumlns.Rows[i]["TextHeight"] != null && _dtRecordTypleColumlns.Rows[i]["TextHeight"].ToString() != "")
+                        if (_dtColumnsDetail.Rows[i]["TextHeight"] != null && _dtColumnsDetail.Rows[i]["TextHeight"].ToString() != "")
                         {
-                            if (int.Parse(_dtRecordTypleColumlns.Rows[i]["TextHeight"].ToString()) > 1)
+                            if (int.Parse(_dtColumnsDetail.Rows[i]["TextHeight"].ToString()) > 1)
                             {
-                                int iH = int.Parse(_dtRecordTypleColumlns.Rows[i]["TextHeight"].ToString());
+                                int iH = int.Parse(_dtColumnsDetail.Rows[i]["TextHeight"].ToString());
 
                                 if (iH < 7)
                                     iH = 7;
@@ -2783,18 +2783,18 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         }
 
 
-                        if (_dtRecordTypleColumlns.Rows[i]["TextWidth"] != null && _dtRecordTypleColumlns.Rows[i]["TextWidth"].ToString() != "")
+                        if (_dtColumnsDetail.Rows[i]["TextWidth"] != null && _dtColumnsDetail.Rows[i]["TextWidth"].ToString() != "")
                         {
-                            _cblValue[i].Width = int.Parse(_dtRecordTypleColumlns.Rows[i]["TextWidth"].ToString()) * 9;
+                            _cblValue[i].Width = int.Parse(_dtColumnsDetail.Rows[i]["TextWidth"].ToString()) * 9;
                         }
 
-                        if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "values")
+                        if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "values")
                         {
-                            Common.PutCheckBoxListValues(_dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString(), ref _cblValue[i]);
+                            Common.PutCheckBoxListValues(_dtColumnsDetail.Rows[i]["DropdownValues"].ToString(), ref _cblValue[i]);
                         }
                         else
                         {
-                            Common.PutCheckBoxListValues_Text(_dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString(), ref _cblValue[i]);
+                            Common.PutCheckBoxListValues_Text(_dtColumnsDetail.Rows[i]["DropdownValues"].ToString(), ref _cblValue[i]);
                         }
 
 
@@ -2803,9 +2803,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                             li.Attributes.Add("DataValue", li.Value);
                         }
 
-                        if (_dtRecordTypleColumlns.Rows[i]["Notes"] != DBNull.Value)
+                        if (_dtColumnsDetail.Rows[i]["Notes"] != DBNull.Value)
                         {
-                            _cblValue[i].ToolTip = _dtRecordTypleColumlns.Rows[i]["Notes"].ToString();
+                            _cblValue[i].ToolTip = _dtColumnsDetail.Rows[i]["Notes"].ToString();
                         }
 
                         //cell[(i * 2) + 1] = new HtmlTableCell();
@@ -2825,46 +2825,46 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         //}
                     }
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "dropdown"
-                        && _dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString() != ""
-                        && (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "values"
-                        || _dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "value_text"))
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "dropdown"
+                        && _dtColumnsDetail.Rows[i]["DropdownValues"].ToString() != ""
+                        && (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "values"
+                        || _dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "value_text"))
                     {
                         _ddlValue[i] = new DropDownList();
                         _ddlValue[i].Width = 198;
-                        _ddlValue[i].ID = "ddl" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _ddlValue[i].ID = "ddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _ddlValue[i].CssClass = "NormalTextBox";
 
-                        if (_dtRecordTypleColumlns.Rows[i]["TextWidth"] != null && _dtRecordTypleColumlns.Rows[i]["TextWidth"].ToString() != "")
+                        if (_dtColumnsDetail.Rows[i]["TextWidth"] != null && _dtColumnsDetail.Rows[i]["TextWidth"].ToString() != "")
                         {
-                            _ddlValue[i].Width = int.Parse(_dtRecordTypleColumlns.Rows[i]["TextWidth"].ToString()) * 9;
+                            _ddlValue[i].Width = int.Parse(_dtColumnsDetail.Rows[i]["TextWidth"].ToString()) * 9;
                         }
 
                         if (ContentPage == "record")
                         _ddlValue[i].ValidationGroup = _strDynamictabPart;
 
 
-                        if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "values")
+                        if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "values")
                         {
-                            Common.PutDDLValues(_dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString(), ref _ddlValue[i]);
+                            Common.PutDDLValues(_dtColumnsDetail.Rows[i]["DropdownValues"].ToString(), ref _ddlValue[i]);
 
-                            if (_dtRecordTypleColumlns.Rows[i]["DefaultValue"].ToString() != "")
+                            if (_dtColumnsDetail.Rows[i]["DefaultValue"].ToString() != "")
                             {
                                 if (Mode.ToLower() == "add" || Mode.ToLower() == "edit")
                                 {
-                                    _ddlValue[i].SelectedValue = _dtRecordTypleColumlns.Rows[i]["DefaultValue"].ToString();
+                                    _ddlValue[i].SelectedValue = _dtColumnsDetail.Rows[i]["DefaultValue"].ToString();
                                 }
                             }
                         }
                         else
                         {
-                            Common.PutDDLValue_Text(_dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString(), ref _ddlValue[i]);
+                            Common.PutDDLValue_Text(_dtColumnsDetail.Rows[i]["DropdownValues"].ToString(), ref _ddlValue[i]);
 
-                            if (_dtRecordTypleColumlns.Rows[i]["DefaultValue"].ToString() != "")
+                            if (_dtColumnsDetail.Rows[i]["DefaultValue"].ToString() != "")
                             {
                                 if (Mode.ToLower() == "add" || Mode.ToLower() == "edit")
                                 {
-                                    string strDefaultValue = _dtRecordTypleColumlns.Rows[i]["DefaultValue"].ToString();
+                                    string strDefaultValue = _dtColumnsDetail.Rows[i]["DefaultValue"].ToString();
                                     if (strDefaultValue.IndexOf(",") > -1)
                                     {
                                         _ddlValue[i].SelectedValue = strDefaultValue.Substring(0, strDefaultValue.IndexOf(","));
@@ -2874,9 +2874,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         }
 
 
-                        if (_dtRecordTypleColumlns.Rows[i]["Notes"] != DBNull.Value)
+                        if (_dtColumnsDetail.Rows[i]["Notes"] != DBNull.Value)
                         {
-                            _ddlValue[i].ToolTip = _dtRecordTypleColumlns.Rows[i]["Notes"].ToString();
+                            _ddlValue[i].ToolTip = _dtColumnsDetail.Rows[i]["Notes"].ToString();
                         }
 
                         //cell[(i * 2) + 1] = new HtmlTableCell();
@@ -2895,14 +2895,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         cell[(i * 2) + 1].Controls.Add(_pnlDIV[i]);
 
 
-                        if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
+                        if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                         {
 
                             _rfvValue[i] = new RequiredFieldValidator();
-                            _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                            _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                             _rfvValue[i].Display = ValidatorDisplay.None;
                             _rfvValue[i].ControlToValidate = _ddlValue[i].ClientID;
-                            _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
+                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                             if (ContentPage == "record")
                             _rfvValue[i].ValidationGroup = _strDynamictabPart;
 
@@ -2935,10 +2935,10 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "calculation")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "calculation")
                     {
                         _txtValue[i] = new TextBox();
-                        _txtValue[i].ID = "txt" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _txtValue[i].Width = 198;
                         _txtValue[i].CssClass = "NormalTextBox";
                         _txtValue[i].ToolTip = "Calculated value - will be refreshed on save.";
@@ -2946,61 +2946,69 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         if (ContentPage == "record")
                         _txtValue[i].ValidationGroup = _strDynamictabPart;
 
-                        if (_dtRecordTypleColumlns.Rows[i]["TextType"].ToString() == "f"
-                         && _dtRecordTypleColumlns.Rows[i]["RegEx"].ToString() != "")
+                        if (_dtColumnsDetail.Rows[i]["TextType"].ToString() == "f"
+                         && _dtColumnsDetail.Rows[i]["RegEx"].ToString() != "")
                         {
-                            _lbl[i].Text = _lbl[i].Text + "&nbsp;" + _dtRecordTypleColumlns.Rows[i]["RegEx"].ToString();
+                            _lbl[i].Text = _lbl[i].Text + "&nbsp;" + _dtColumnsDetail.Rows[i]["RegEx"].ToString();
                         }
 
                         //cell[(i * 2) + 1] = new HtmlTableCell();
 
                         cell[(i * 2) + 1].Controls.Add(_txtValue[i]);
+
+                        _imgWarning[i] = new Image();
+                        _imgWarning[i].ImageUrl = "~/Images/warning.png";
+                        _imgWarning[i].Visible = false;
+                        cell[(i * 2) + 1].Controls.Add(new LiteralControl("&nbsp;"));
+                        cell[(i * 2) + 1].Controls.Add(_imgWarning[i]);
+
+
                     }
 
 
 
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "text"
-                        || _dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "number")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "text"
+                        || _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "number")
                     {
                         _txtValue[i] = new TextBox();
-                        _txtValue[i].ID = "txt" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _txtValue[i].Width = 198;
                         _txtValue[i].CssClass = "NormalTextBox";
                         if (ContentPage == "record")
                         _txtValue[i].ValidationGroup = _strDynamictabPart;
 
-                        if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "number" &&
-                            _dtRecordTypleColumlns.Rows[i]["NumberType"] != null)
+                        if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "number" &&
+                            _dtColumnsDetail.Rows[i]["NumberType"] != null)
                         {
-                            if (_dtRecordTypleColumlns.Rows[i]["NumberType"].ToString() == "7")
+                            if (_dtColumnsDetail.Rows[i]["NumberType"].ToString() == "7")
                             {
                                 bSlider = true;
                             }
 
-                            if (_dtRecordTypleColumlns.Rows[i]["NumberType"].ToString() == "8")
+                            if (_dtColumnsDetail.Rows[i]["NumberType"].ToString() == "8")
                             {
                                 _txtValue[i].Enabled = false;
                             }
                         }
 
 
-                        if (_dtRecordTypleColumlns.Rows[i]["Notes"] != DBNull.Value)
+                        if (_dtColumnsDetail.Rows[i]["Notes"] != DBNull.Value)
                         {
-                            _txtValue[i].ToolTip = _dtRecordTypleColumlns.Rows[i]["Notes"].ToString();
+                            _txtValue[i].ToolTip = _dtColumnsDetail.Rows[i]["Notes"].ToString();
                         }
 
-                        if (_dtRecordTypleColumlns.Rows[i]["TextWidth"] != null && _dtRecordTypleColumlns.Rows[i]["TextWidth"].ToString() != "")
+                        if (_dtColumnsDetail.Rows[i]["TextWidth"] != null && _dtColumnsDetail.Rows[i]["TextWidth"].ToString() != "")
                         {
-                            _txtValue[i].Width = int.Parse(_dtRecordTypleColumlns.Rows[i]["TextWidth"].ToString()) * 9;
+                            _txtValue[i].Width = int.Parse(_dtColumnsDetail.Rows[i]["TextWidth"].ToString()) * 9;
                         }
 
-                        if (_dtRecordTypleColumlns.Rows[i]["TextHeight"] != null && _dtRecordTypleColumlns.Rows[i]["TextHeight"].ToString() != "")
+                        if (_dtColumnsDetail.Rows[i]["TextHeight"] != null && _dtColumnsDetail.Rows[i]["TextHeight"].ToString() != "")
                         {
-                            if (int.Parse(_dtRecordTypleColumlns.Rows[i]["TextHeight"].ToString()) > 1)
+                            if (int.Parse(_dtColumnsDetail.Rows[i]["TextHeight"].ToString()) > 1)
                             {
                                 _txtValue[i].TextMode = TextBoxMode.MultiLine;
-                                _txtValue[i].Height = int.Parse(_dtRecordTypleColumlns.Rows[i]["TextHeight"].ToString()) * 18;
+                                _txtValue[i].Height = int.Parse(_dtColumnsDetail.Rows[i]["TextHeight"].ToString()) * 18;
 
                             }
                         }
@@ -3019,10 +3027,10 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                             _txtValue[i].Text = "0";
 
                             _lblValue[i] = new Label();
-                            _lblValue[i].ID = "lblV" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                            _lblValue[i].ID = "lblV" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
 
                             _seValue[i] = new SliderExtender();
-                            _seValue[i].ID = "se" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                            _seValue[i].ID = "se" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                             _seValue[i].BehaviorID = _txtValue[i].ID;
                             _seValue[i].TargetControlID = _txtValue[i].ID;
                             _seValue[i].BoundControlID = _lblValue[i].ID;
@@ -3030,11 +3038,11 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                             _seValue[i].Maximum = 100;
                             _seValue[i].Steps = 100;
 
-                            if (_dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString() != "")
+                            if (_dtColumnsDetail.Rows[i]["DropdownValues"].ToString() != "")
                             {
                                 try
                                 {
-                                    SliderField theSliderField = JSONField.GetTypedObject<SliderField>(_dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString());
+                                    SliderField theSliderField = JSONField.GetTypedObject<SliderField>(_dtColumnsDetail.Rows[i]["DropdownValues"].ToString());
                                     if (theSliderField != null)
                                     {
                                         if (theSliderField.Min != null && theSliderField.Max != null)
@@ -3053,11 +3061,11 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                            if (_dtRecordTypleColumlns.Rows[i]["DefaultValue"].ToString() != "")
+                            if (_dtColumnsDetail.Rows[i]["DefaultValue"].ToString() != "")
                             {
                                 if (Mode.ToLower() == "add" || Mode.ToLower() == "edit")
                                 {
-                                    _txtValue[i].Text = _dtRecordTypleColumlns.Rows[i]["DefaultValue"].ToString();
+                                    _txtValue[i].Text = _dtColumnsDetail.Rows[i]["DefaultValue"].ToString();
                                 }
                             }
 
@@ -3078,53 +3086,53 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         }
 
 
-                        if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "text")
+                        if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "text")
                         {
 
 
-                            if (_dtRecordTypleColumlns.Rows[i]["TextType"] != DBNull.Value)
+                            if (_dtColumnsDetail.Rows[i]["TextType"] != DBNull.Value)
                             {
 
-                                if (_dtRecordTypleColumlns.Rows[i]["TextType"].ToString() == "readonly")
+                                if (_dtColumnsDetail.Rows[i]["TextType"].ToString() == "readonly")
                                 {
                                     if (_txtValue[i] != null)
                                         _txtValue[i].Enabled = false;
 
                                 }
-                                if (_dtRecordTypleColumlns.Rows[i]["TextType"].ToString() != ""
-                                    && _dtRecordTypleColumlns.Rows[i]["TextType"].ToString() != "readonly")
+                                if (_dtColumnsDetail.Rows[i]["TextType"].ToString() != ""
+                                    && _dtColumnsDetail.Rows[i]["TextType"].ToString() != "readonly")
                                 {
                                     _revValue[i] = new RegularExpressionValidator();
-                                    _revValue[i].ID = "rev" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                                    _revValue[i].ID = "rev" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                     _revValue[i].Display = ValidatorDisplay.None;
                                     _revValue[i].ControlToValidate = _txtValue[i].ClientID;
-                                    _revValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + "- Invalid!";
+                                    _revValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "- Invalid!";
                                     if (ContentPage == "record")
                                     _revValue[i].ValidationGroup = _strDynamictabPart;
 
-                                    switch (_dtRecordTypleColumlns.Rows[i]["TextType"].ToString().ToLower())
+                                    switch (_dtColumnsDetail.Rows[i]["TextType"].ToString().ToLower())
                                     {
                                         case "text":
                                             _revValue[i].ValidationExpression = TextTypeRegEx.text;
-                                            _revValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + "- Only Text!";
+                                            _revValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "- Only Text!";
                                             break;
 
                                         case "email":
                                             _revValue[i].ValidationExpression = TextTypeRegEx.email;
-                                            _revValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + "- Invalid Email!";
+                                            _revValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "- Invalid Email!";
 
                                             break;
 
                                         case "isbn":
                                             _revValue[i].ValidationExpression = TextTypeRegEx.isbn;
-                                            _revValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + "- Invalid ISBN!";
+                                            _revValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "- Invalid ISBN!";
                                             break;
 
                                         case "link":
                                             //if (Mode.ToLower() != "add")
                                             //{
                                             _hlValue[i] = new HyperLink();
-                                            _hlValue[i].ID = "hl" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                                            _hlValue[i].ID = "hl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                             _hlValue[i].Target = "_blank";
                                             _hlValue[i].Text = "Go";
                                             cell[(i * 2) + 1].Controls.Add(new LiteralControl("&nbsp"));
@@ -3157,15 +3165,15 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
                                             _revValue[i].ValidationExpression = TextTypeRegEx.link;
-                                            _revValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + "- Invalid Link!";
+                                            _revValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "- Invalid Link!";
                                             break;
 
                                         case "own":
-                                            if (_dtRecordTypleColumlns.Rows[i]["RegEx"] != DBNull.Value)
+                                            if (_dtColumnsDetail.Rows[i]["RegEx"] != DBNull.Value)
                                             {
-                                                if (_dtRecordTypleColumlns.Rows[i]["RegEx"].ToString() != "")
+                                                if (_dtColumnsDetail.Rows[i]["RegEx"].ToString() != "")
                                                 {
-                                                    _revValue[i].ValidationExpression = _dtRecordTypleColumlns.Rows[i]["RegEx"].ToString();
+                                                    _revValue[i].ValidationExpression = _dtColumnsDetail.Rows[i]["RegEx"].ToString();
                                                 }
                                             }
 
@@ -3194,11 +3202,11 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                        if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "number" && bSlider == false)
+                        if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "number" && bSlider == false)
                         {
 
                             //Disabled calculation field
-                            if (_dtRecordTypleColumlns.Rows[i]["Calculation"].ToString() != "")
+                            if (_dtColumnsDetail.Rows[i]["Calculation"].ToString() != "")
                             {
                                 //_txtValue[i].ReadOnly = true;
                                 if (Mode != null)
@@ -3221,36 +3229,36 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                             {
 
                                 //make constant readonly
-                                if (_dtRecordTypleColumlns.Rows[i]["Constant"].ToString() != "")
+                                if (_dtColumnsDetail.Rows[i]["Constant"].ToString() != "")
                                 {
                                     //_txtValue[i].ReadOnly = true;
                                     if (Mode.ToLower() == "add")
                                     {
-                                        _txtValue[i].Text = _dtRecordTypleColumlns.Rows[i]["Constant"].ToString();
+                                        _txtValue[i].Text = _dtColumnsDetail.Rows[i]["Constant"].ToString();
                                     }
                                     _txtValue[i].Enabled = false;
                                 }
 
 
-                                if (_dtRecordTypleColumlns.Rows[i]["DefaultValue"].ToString() != "")
+                                if (_dtColumnsDetail.Rows[i]["DefaultValue"].ToString() != "")
                                 {
                                     if (Mode.ToLower() == "add" || Mode.ToLower() == "edit")
                                     {
-                                        _txtValue[i].Text = _dtRecordTypleColumlns.Rows[i]["DefaultValue"].ToString();
+                                        _txtValue[i].Text = _dtColumnsDetail.Rows[i]["DefaultValue"].ToString();
                                     }
                                 }
 
                             }
 
 
-                            if (bool.Parse(_dtRecordTypleColumlns.Rows[i]["IgnoreSymbols"].ToString()) == false
-                                && _dtRecordTypleColumlns.Rows[i]["Calculation"].ToString() == "")
+                            if (bool.Parse(_dtColumnsDetail.Rows[i]["IgnoreSymbols"].ToString()) == false
+                                && _dtColumnsDetail.Rows[i]["Calculation"].ToString() == "")
                             {
                                 _revValue[i] = new RegularExpressionValidator();
-                                _revValue[i].ID = "rev" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                                _revValue[i].ID = "rev" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                 _revValue[i].Display = ValidatorDisplay.None;
                                 _revValue[i].ControlToValidate = _txtValue[i].ClientID;
-                                _revValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + "- Numeric value please!";
+                                _revValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "- Numeric value please!";
                                 //_revValue[i].ErrorMessage = " Numeric please!";
                                 _revValue[i].ValidationExpression = @"(^-?\d{1,20}\.$)|(^-?\d{1,20}$)|(^-?\d{0,20}\.\d{1,15}$)";
                                 if (ContentPage == "record")
@@ -3259,7 +3267,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
                                 _ftbExt[i] = new FilteredTextBoxExtender();
-                                _ftbExt[i].ID = "ftb" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                                _ftbExt[i].ID = "ftb" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                 _ftbExt[i].TargetControlID = _txtValue[i].ClientID;
                                 _ftbExt[i].FilterType = FilterTypes.Custom;
                                 _ftbExt[i].FilterMode = FilterModes.ValidChars;
@@ -3272,34 +3280,34 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                            if (_dtRecordTypleColumlns.Rows[i]["NumberType"] != null)
+                            if (_dtColumnsDetail.Rows[i]["NumberType"] != null)
                             {
                                 //Avg
-                                if (_dtRecordTypleColumlns.Rows[i]["NumberType"].ToString() == "4")
+                                if (_dtColumnsDetail.Rows[i]["NumberType"].ToString() == "4")
                                 {
 
                                     _txtValue[i].Enabled = false;
 
                                 }
                                 //Record Count
-                                if (_dtRecordTypleColumlns.Rows[i]["NumberType"].ToString() == "5")
+                                if (_dtColumnsDetail.Rows[i]["NumberType"].ToString() == "5")
                                 {
 
                                     _txtValue[i].Visible = false;
                                     _lblValue[i] = new Label();
-                                    _lblValue[i].ID = "lblV" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                                    _lblValue[i].ID = "lblV" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
 
 
                                     cell[(i * 2) + 1].Controls.Add(_lblValue[i]);
 
                                 }
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "number"
-                                     && _dtRecordTypleColumlns.Rows[i]["NumberType"] != null)
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "number"
+                                     && _dtColumnsDetail.Rows[i]["NumberType"] != null)
                                 {
-                                    if (_dtRecordTypleColumlns.Rows[i]["NumberType"].ToString() == "6")
+                                    if (_dtColumnsDetail.Rows[i]["NumberType"].ToString() == "6")
                                     {
-                                        if (_dtRecordTypleColumlns.Rows[i]["TextType"].ToString() != "")
-                                            _lbl[i].Text = _lbl[i].Text + "&nbsp;" + _dtRecordTypleColumlns.Rows[i]["TextType"].ToString();
+                                        if (_dtColumnsDetail.Rows[i]["TextType"].ToString() != "")
+                                            _lbl[i].Text = _lbl[i].Text + "&nbsp;" + _dtColumnsDetail.Rows[i]["TextType"].ToString();
                                     }
                                 }
 
@@ -3308,14 +3316,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         }
 
 
-                        if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m")
+                        if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                         {
 
                             _rfvValue[i] = new RequiredFieldValidator();
-                            _rfvValue[i].ID = "rfv" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                            _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                             _rfvValue[i].Display = ValidatorDisplay.None;
                             _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
-                            _rfvValue[i].ErrorMessage = _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
+                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                             if (ContentPage == "record")
                             _rfvValue[i].ValidationGroup = _strDynamictabPart;
 
@@ -3353,7 +3361,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
             //}
 
-            if (_dtRecordTypleColumlns.Rows[i]["TableTabID"] == DBNull.Value)
+            if (_dtColumnsDetail.Rows[i]["TableTabID"] == DBNull.Value)
             {
                 if (bDisplayRight)
                 {
@@ -3375,7 +3383,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                     for (int t = 0; t < _dtDBTableTab.Rows.Count; t++)
                     {
-                        if (_dtDBTableTab.Rows[t]["TableTabID"].ToString() == _dtRecordTypleColumlns.Rows[i]["TableTabID"].ToString())
+                        if (_dtDBTableTab.Rows[t]["TableTabID"].ToString() == _dtColumnsDetail.Rows[i]["TableTabID"].ToString())
                         {
                             _tblRightD[t].Rows.Add(trX[i]);
                         }
@@ -3387,7 +3395,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 {
                     for (int t = 0; t < _dtDBTableTab.Rows.Count; t++)
                     {
-                        if (_dtDBTableTab.Rows[t]["TableTabID"].ToString() == _dtRecordTypleColumlns.Rows[i]["TableTabID"].ToString())
+                        if (_dtDBTableTab.Rows[t]["TableTabID"].ToString() == _dtColumnsDetail.Rows[i]["TableTabID"].ToString())
                         {
                             _tblLeftD[t].Rows.Add(trX[i]);
                         }
@@ -3496,48 +3504,48 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-        cell[_dtRecordTypleColumlns.Rows.Count * 2] = new HtmlTableCell();
+        cell[_dtColumnsDetail.Rows.Count * 2] = new HtmlTableCell();
         //cellB[_dtRecordTypleColumlns.Rows.Count * 2] = new HtmlTableCell();
 
-        cell[_dtRecordTypleColumlns.Rows.Count * 2].Align = "Right";
-        cell[_dtRecordTypleColumlns.Rows.Count * 2].Controls.Add(_lblWarningResults);
-        cell[(_dtRecordTypleColumlns.Rows.Count * 2) + 1] = new HtmlTableCell();
+        cell[_dtColumnsDetail.Rows.Count * 2].Align = "Right";
+        cell[_dtColumnsDetail.Rows.Count * 2].Controls.Add(_lblWarningResults);
+        cell[(_dtColumnsDetail.Rows.Count * 2) + 1] = new HtmlTableCell();
         //cellB[(_dtRecordTypleColumlns.Rows.Count * 2) + 1] = new HtmlTableCell();
 
-        cell[(_dtRecordTypleColumlns.Rows.Count * 2) + 1].Controls.Add(_lblWarningResultsValue);
+        cell[(_dtColumnsDetail.Rows.Count * 2) + 1].Controls.Add(_lblWarningResultsValue);
 
         //cell[(_dtRecordTypleColumlns.Rows.Count * 2) + 1].Controls.Add(hlTest);
 
-        trX[_dtRecordTypleColumlns.Rows.Count] = new HtmlTableRow();
+        trX[_dtColumnsDetail.Rows.Count] = new HtmlTableRow();
         //trXB[_dtRecordTypleColumlns.Rows.Count] = new HtmlTableRow();
 
-        trX[_dtRecordTypleColumlns.Rows.Count].Cells.Add(cell[_dtRecordTypleColumlns.Rows.Count * 2]);
-        trX[_dtRecordTypleColumlns.Rows.Count].Cells.Add(cell[(_dtRecordTypleColumlns.Rows.Count * 2) + 1]);
+        trX[_dtColumnsDetail.Rows.Count].Cells.Add(cell[_dtColumnsDetail.Rows.Count * 2]);
+        trX[_dtColumnsDetail.Rows.Count].Cells.Add(cell[(_dtColumnsDetail.Rows.Count * 2) + 1]);
 
-        tblLeft.Rows.Add(trX[_dtRecordTypleColumlns.Rows.Count]);
+        tblLeft.Rows.Add(trX[_dtColumnsDetail.Rows.Count]);
 
 
         //validation
 
-        cell[(_dtRecordTypleColumlns.Rows.Count + 1) * 2] = new HtmlTableCell();
+        cell[(_dtColumnsDetail.Rows.Count + 1) * 2] = new HtmlTableCell();
         //cellB[(_dtRecordTypleColumlns.Rows.Count + 1) * 2] = new HtmlTableCell();
 
-        cell[(_dtRecordTypleColumlns.Rows.Count + 1) * 2].Align = "Right";
-        cell[(_dtRecordTypleColumlns.Rows.Count + 1) * 2].Controls.Add(_lblValidationResults);
-        cell[((_dtRecordTypleColumlns.Rows.Count + 1) * 2) + 1] = new HtmlTableCell();
+        cell[(_dtColumnsDetail.Rows.Count + 1) * 2].Align = "Right";
+        cell[(_dtColumnsDetail.Rows.Count + 1) * 2].Controls.Add(_lblValidationResults);
+        cell[((_dtColumnsDetail.Rows.Count + 1) * 2) + 1] = new HtmlTableCell();
         //cellB[((_dtRecordTypleColumlns.Rows.Count + 1) * 2) + 1] = new HtmlTableCell();
 
-        cell[((_dtRecordTypleColumlns.Rows.Count + 1) * 2) + 1].Controls.Add(_txtValidationResults);
+        cell[((_dtColumnsDetail.Rows.Count + 1) * 2) + 1].Controls.Add(_txtValidationResults);
 
         //cell[(_dtRecordTypleColumlns.Rows.Count * 2) + 1].Controls.Add(hlTest);
 
-        trX[_dtRecordTypleColumlns.Rows.Count + 1] = new HtmlTableRow();
+        trX[_dtColumnsDetail.Rows.Count + 1] = new HtmlTableRow();
         //trXB[_dtRecordTypleColumlns.Rows.Count + 1] = new HtmlTableRow();
 
-        trX[_dtRecordTypleColumlns.Rows.Count + 1].Cells.Add(cell[(_dtRecordTypleColumlns.Rows.Count + 1) * 2]);
-        trX[_dtRecordTypleColumlns.Rows.Count + 1].Cells.Add(cell[((_dtRecordTypleColumlns.Rows.Count + 1) * 2) + 1]);
+        trX[_dtColumnsDetail.Rows.Count + 1].Cells.Add(cell[(_dtColumnsDetail.Rows.Count + 1) * 2]);
+        trX[_dtColumnsDetail.Rows.Count + 1].Cells.Add(cell[((_dtColumnsDetail.Rows.Count + 1) * 2) + 1]);
 
-        tblLeft.Rows.Add(trX[_dtRecordTypleColumlns.Rows.Count + 1]);
+        tblLeft.Rows.Add(trX[_dtColumnsDetail.Rows.Count + 1]);
 
 
         if (Session["RunSpeedLog"] != null)
@@ -3566,21 +3574,21 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 //_lblAddedTimeEmail.Font.Bold = true;
 
 
-                cell[(_dtRecordTypleColumlns.Rows.Count + 2) * 2] = new HtmlTableCell();
+                cell[(_dtColumnsDetail.Rows.Count + 2) * 2] = new HtmlTableCell();
                 //cellB[(_dtRecordTypleColumlns.Rows.Count + 2) * 2] = new HtmlTableCell();
 
-                cell[(_dtRecordTypleColumlns.Rows.Count + 2) * 2].Align = "Right";
-                cell[(_dtRecordTypleColumlns.Rows.Count + 2) * 2].Controls.Add(_lblAddedCaption);
-                cell[((_dtRecordTypleColumlns.Rows.Count + 2) * 2) + 1] = new HtmlTableCell();
+                cell[(_dtColumnsDetail.Rows.Count + 2) * 2].Align = "Right";
+                cell[(_dtColumnsDetail.Rows.Count + 2) * 2].Controls.Add(_lblAddedCaption);
+                cell[((_dtColumnsDetail.Rows.Count + 2) * 2) + 1] = new HtmlTableCell();
                 //cellB[((_dtRecordTypleColumlns.Rows.Count + 2) * 2) + 1] = new HtmlTableCell();
-                cell[((_dtRecordTypleColumlns.Rows.Count + 2) * 2) + 1].Controls.Add(_lblAddedTimeEmail);
-                trX[_dtRecordTypleColumlns.Rows.Count + 2] = new HtmlTableRow();
+                cell[((_dtColumnsDetail.Rows.Count + 2) * 2) + 1].Controls.Add(_lblAddedTimeEmail);
+                trX[_dtColumnsDetail.Rows.Count + 2] = new HtmlTableRow();
                 //trXB[_dtRecordTypleColumlns.Rows.Count + 2] = new HtmlTableRow();
 
-                trX[_dtRecordTypleColumlns.Rows.Count + 2].Cells.Add(cell[(_dtRecordTypleColumlns.Rows.Count + 2) * 2]);
-                trX[_dtRecordTypleColumlns.Rows.Count + 2].Cells.Add(cell[((_dtRecordTypleColumlns.Rows.Count + 2) * 2) + 1]);
+                trX[_dtColumnsDetail.Rows.Count + 2].Cells.Add(cell[(_dtColumnsDetail.Rows.Count + 2) * 2]);
+                trX[_dtColumnsDetail.Rows.Count + 2].Cells.Add(cell[((_dtColumnsDetail.Rows.Count + 2) * 2) + 1]);
 
-                tblLeft.Rows.Add(trX[_dtRecordTypleColumlns.Rows.Count + 2]);
+                tblLeft.Rows.Add(trX[_dtColumnsDetail.Rows.Count + 2]);
 
 
                 _lblUpdatedCaption = new Label();
@@ -3594,22 +3602,22 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 //_lblUpdatedTimeEmail.Font.Bold = true;
 
 
-                cell[(_dtRecordTypleColumlns.Rows.Count + 3) * 2] = new HtmlTableCell();
+                cell[(_dtColumnsDetail.Rows.Count + 3) * 2] = new HtmlTableCell();
                 //cellB[(_dtRecordTypleColumlns.Rows.Count + 3) * 2] = new HtmlTableCell();
 
-                cell[(_dtRecordTypleColumlns.Rows.Count + 3) * 2].Align = "Right";
-                cell[(_dtRecordTypleColumlns.Rows.Count + 3) * 2].Controls.Add(_lblUpdatedCaption);
-                cell[((_dtRecordTypleColumlns.Rows.Count + 3) * 2) + 1] = new HtmlTableCell();
+                cell[(_dtColumnsDetail.Rows.Count + 3) * 2].Align = "Right";
+                cell[(_dtColumnsDetail.Rows.Count + 3) * 2].Controls.Add(_lblUpdatedCaption);
+                cell[((_dtColumnsDetail.Rows.Count + 3) * 2) + 1] = new HtmlTableCell();
                 //cellB[((_dtRecordTypleColumlns.Rows.Count + 3) * 2) + 1] = new HtmlTableCell();
 
-                cell[((_dtRecordTypleColumlns.Rows.Count + 3) * 2) + 1].Controls.Add(_lblUpdatedTimeEmail);
-                trX[_dtRecordTypleColumlns.Rows.Count + 3] = new HtmlTableRow();
+                cell[((_dtColumnsDetail.Rows.Count + 3) * 2) + 1].Controls.Add(_lblUpdatedTimeEmail);
+                trX[_dtColumnsDetail.Rows.Count + 3] = new HtmlTableRow();
                 //trXB[_dtRecordTypleColumlns.Rows.Count + 3] = new HtmlTableRow();
 
-                trX[_dtRecordTypleColumlns.Rows.Count + 3].Cells.Add(cell[(_dtRecordTypleColumlns.Rows.Count + 3) * 2]);
-                trX[_dtRecordTypleColumlns.Rows.Count + 3].Cells.Add(cell[((_dtRecordTypleColumlns.Rows.Count + 3) * 2) + 1]);
+                trX[_dtColumnsDetail.Rows.Count + 3].Cells.Add(cell[(_dtColumnsDetail.Rows.Count + 3) * 2]);
+                trX[_dtColumnsDetail.Rows.Count + 3].Cells.Add(cell[((_dtColumnsDetail.Rows.Count + 3) * 2) + 1]);
 
-                tblLeft.Rows.Add(trX[_dtRecordTypleColumlns.Rows.Count + 3]);
+                tblLeft.Rows.Add(trX[_dtColumnsDetail.Rows.Count + 3]);
             }
         }
 
@@ -3634,14 +3642,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 			                ORDER BY DisplayOrder");
                     for (int i = 0; i < dtRecordedetail.Rows.Count; i++)
                     {
-                        if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "dropdown"
-                                && (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "table"
-                                || _dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "tabledd")
-                              && _dtRecordTypleColumlns.Rows[i]["TableTableID"] != DBNull.Value
-                              && _dtRecordTypleColumlns.Rows[i]["LinkedParentColumnID"] != DBNull.Value
-                              && _dtRecordTypleColumlns.Rows[i]["DisplayColumn"].ToString() != "") //
+                        if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "dropdown"
+                                && (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "table"
+                                || _dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "tabledd")
+                              && _dtColumnsDetail.Rows[i]["TableTableID"] != DBNull.Value
+                              && _dtColumnsDetail.Rows[i]["LinkedParentColumnID"] != DBNull.Value
+                              && _dtColumnsDetail.Rows[i]["DisplayColumn"].ToString() != "") //
                         {
-                            if ((int)theParentRecord.TableID == int.Parse(_dtRecordTypleColumlns.Rows[i]["TableTableID"].ToString()))
+                            if ((int)theParentRecord.TableID == int.Parse(_dtColumnsDetail.Rows[i]["TableTableID"].ToString()))
                             {
 
                                 string strParentRecordID = Cryptography.Decrypt(Request.QueryString["parentRecordid"].ToString());
@@ -3649,12 +3657,12 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 {
 
                                     int iTableRecordID = int.Parse(strParentRecordID);
-                                    Column theLinkedColumn = RecordManager.ets_Column_Details(int.Parse(_dtRecordTypleColumlns.Rows[i]["LinkedParentColumnID"].ToString()));
+                                    Column theLinkedColumn = RecordManager.ets_Column_Details(int.Parse(_dtColumnsDetail.Rows[i]["LinkedParentColumnID"].ToString()));
 
                                     Record theLinkedRecord = RecordManager.ets_Record_Detail_Full(iTableRecordID);
                                     string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
 
-                                    if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "table")
+                                    if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "table")
                                     {
 
                                         _hfValue[i].Value = strLinkedColumnValue;
@@ -3662,9 +3670,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                                         DataTable dtTableTableSC = Common.DataTableFromText(@"SELECT SystemName,DisplayName FROM 
                                             [Column] WHERE   TableID ="
-                                   + _dtRecordTypleColumlns.Rows[i]["TableTableID"].ToString());
+                                   + _dtColumnsDetail.Rows[i]["TableTableID"].ToString());
 
-                                        string strDisplayColumn = _dtRecordTypleColumlns.Rows[i]["DisplayColumn"].ToString();
+                                        string strDisplayColumn = _dtColumnsDetail.Rows[i]["DisplayColumn"].ToString();
 
                                         foreach (DataRow dr in dtTableTableSC.Rows)
                                         {
@@ -3688,7 +3696,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                         _txtValue[i].Enabled = false;
 
                                     }
-                                    if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "tabledd")
+                                    if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "tabledd")
                                     {
                                         _ddlValue[i].Text = strLinkedColumnValue;// strParentRecordID;
                                         _ddlValue[i].Enabled = false;
@@ -3722,14 +3730,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 			                ORDER BY DisplayOrder");
                     for (int i = 0; i < dtRecordedetail.Rows.Count; i++)
                     {
-                        if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "dropdown"
-                                && (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "table"
-                                || _dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "tabledd")
-                              && _dtRecordTypleColumlns.Rows[i]["TableTableID"] != DBNull.Value
-                              && _dtRecordTypleColumlns.Rows[i]["LinkedParentColumnID"] != DBNull.Value
-                              && _dtRecordTypleColumlns.Rows[i]["DisplayColumn"].ToString() != "") //
+                        if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "dropdown"
+                                && (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "table"
+                                || _dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "tabledd")
+                              && _dtColumnsDetail.Rows[i]["TableTableID"] != DBNull.Value
+                              && _dtColumnsDetail.Rows[i]["LinkedParentColumnID"] != DBNull.Value
+                              && _dtColumnsDetail.Rows[i]["DisplayColumn"].ToString() != "") //
                         {
-                            if ((int)theParentRecord.TableID == int.Parse(_dtRecordTypleColumlns.Rows[i]["TableTableID"].ToString()))
+                            if ((int)theParentRecord.TableID == int.Parse(_dtColumnsDetail.Rows[i]["TableTableID"].ToString()))
                             {
 
                                 string strParentRecordID = Cryptography.Decrypt(Request.QueryString["parentRecordid"].ToString());
@@ -3737,11 +3745,11 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 {
 
                                     int iTableRecordID = int.Parse(strParentRecordID);
-                                    Column theLinkedColumn = RecordManager.ets_Column_Details(int.Parse(_dtRecordTypleColumlns.Rows[i]["LinkedParentColumnID"].ToString()));
+                                    Column theLinkedColumn = RecordManager.ets_Column_Details(int.Parse(_dtColumnsDetail.Rows[i]["LinkedParentColumnID"].ToString()));
 
                                     Record theLinkedRecord = RecordManager.ets_Record_Detail_Full(iTableRecordID);
                                     string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
-                                    if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "table")
+                                    if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "table")
                                     {
 
 
@@ -3749,9 +3757,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                                         DataTable dtTableTableSC = Common.DataTableFromText(@"SELECT SystemName,DisplayName FROM 
                                             [Column] WHERE   TableID ="
-                                   + _dtRecordTypleColumlns.Rows[i]["TableTableID"].ToString());
+                                   + _dtColumnsDetail.Rows[i]["TableTableID"].ToString());
 
-                                        string strDisplayColumn = _dtRecordTypleColumlns.Rows[i]["DisplayColumn"].ToString();
+                                        string strDisplayColumn = _dtColumnsDetail.Rows[i]["DisplayColumn"].ToString();
 
                                         foreach (DataRow dr in dtTableTableSC.Rows)
                                         {
@@ -3775,7 +3783,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
                                     }
-                                    if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "tabledd")
+                                    if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "tabledd")
                                     {
                                         _ddlValue[i].Text = strLinkedColumnValue;
                                         _ddlValue[i].Enabled = false;
@@ -3857,27 +3865,27 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         //find default
                         
                         
-                        for (int i = 0; i < _dtRecordTypleColumlns.Rows.Count; i++)
+                        for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
                         {
                             string strValue = "";
-                            if (_dtRecordTypleColumlns.Rows[i]["DefaultType"].ToString() == "value")
+                            if (_dtColumnsDetail.Rows[i]["DefaultType"].ToString() == "value")
                             {
-                                strValue = _dtRecordTypleColumlns.Rows[i]["DefaultValue"].ToString();
+                                strValue = _dtColumnsDetail.Rows[i]["DefaultValue"].ToString();
 
-                                RecordManager.MakeTheRecord(ref theRecord, _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString(), strValue);
+                                RecordManager.MakeTheRecord(ref theRecord, _dtColumnsDetail.Rows[i]["SystemName"].ToString(), strValue);
                             }
 
-                            if (_dtRecordTypleColumlns.Rows[i]["DefaultType"].ToString() == "parent"
-                                && _dtRecordTypleColumlns.Rows[i]["DefaultColumnID"] != DBNull.Value && _ParentRecord!=null)
+                            if (_dtColumnsDetail.Rows[i]["DefaultType"].ToString() == "parent"
+                                && _dtColumnsDetail.Rows[i]["DefaultColumnID"] != DBNull.Value && _ParentRecord!=null)
                             {
-                                Column theDefaultColumn = RecordManager.ets_Column_Details(int.Parse(_dtRecordTypleColumlns.Rows[i]["DefaultColumnID"].ToString()));
+                                Column theDefaultColumn = RecordManager.ets_Column_Details(int.Parse(_dtColumnsDetail.Rows[i]["DefaultColumnID"].ToString()));
 
                                 if (theDefaultColumn != null )
                                 {
                                     //strValue = RecordManager.GetRecordValue(ref _ParentRecord, theDefaultColumn.SystemName);
                                     strValue=  TheDatabaseS.spGetValueFromRelatedTable((int)_ParentRecord.RecordID, (int)theDefaultColumn.TableID, theDefaultColumn.SystemName);
 
-                                    RecordManager.MakeTheRecord(ref theRecord, _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString(), strValue);
+                                    RecordManager.MakeTheRecord(ref theRecord, _dtColumnsDetail.Rows[i]["SystemName"].ToString(), strValue);
                                 }
 
                             }
@@ -3935,23 +3943,23 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-        for (int i = 0; i < _dtRecordTypleColumlns.Rows.Count; i++)
+        for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
         {
-            if (_dtRecordTypleColumlns.Rows[i]["CompareColumnID"] != DBNull.Value
-                && _dtRecordTypleColumlns.Rows[i]["CompareOperator"] != DBNull.Value)
+            if (_dtColumnsDetail.Rows[i]["CompareColumnID"] != DBNull.Value
+                && _dtColumnsDetail.Rows[i]["CompareOperator"] != DBNull.Value)
             {
-                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "datetime"
-                    || _dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "time")
+                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "datetime"
+                    || _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "time")
                 {
                     _cusvValue[i] = new CustomValidator();
-                    _cusvValue[i].ID = "cusv" + _dtRecordTypleColumlns.Rows[i]["SystemName"];
-                    _cusvValue[i].ErrorMessage = "Comparison error:" + _dtRecordTypleColumlns.Rows[i]["DisplayName"].ToString() + " " + Common.CompareOperatorErrorMsg( _dtRecordTypleColumlns.Rows[i]["CompareOperator"].ToString()) + " ";
+                    _cusvValue[i].ID = "cusv" + _dtColumnsDetail.Rows[i]["SystemName"];
+                    _cusvValue[i].ErrorMessage = "Comparison error:" + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + " " + Common.CompareOperatorErrorMsg( _dtColumnsDetail.Rows[i]["CompareOperator"].ToString()) + " ";
 
                     if (ContentPage == "record")
                         _cusvValue[i].ValidationGroup = _strDynamictabPart;
                     
                     string strComparerOperator = "";
-                    switch (_dtRecordTypleColumlns.Rows[i]["CompareOperator"].ToString())
+                    switch (_dtColumnsDetail.Rows[i]["CompareOperator"].ToString())
                     {
                         case "Equal":
                             strComparerOperator = "==";
@@ -3982,22 +3990,22 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "time")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "time")
                     {
 
                         if (_txtValue[i] != null)
                             _cusvValue[i].ControlToValidate = _txtValue[i].ID;
 
                         string strControlToCompare = "";
-                        for (int j = 0; j < _dtRecordTypleColumlns.Rows.Count; j++)
+                        for (int j = 0; j < _dtColumnsDetail.Rows.Count; j++)
                         {
-                            if (_dtRecordTypleColumlns.Rows[i]["CompareColumnID"].ToString()
-                                == _dtRecordTypleColumlns.Rows[j]["ColumnID"].ToString())
+                            if (_dtColumnsDetail.Rows[i]["CompareColumnID"].ToString()
+                                == _dtColumnsDetail.Rows[j]["ColumnID"].ToString())
                             {
-                                _cusvValue[i].ErrorMessage = _cusvValue[i].ErrorMessage + _dtRecordTypleColumlns.Rows[j]["DisplayName"].ToString();
+                                _cusvValue[i].ErrorMessage = _cusvValue[i].ErrorMessage + _dtColumnsDetail.Rows[j]["DisplayName"].ToString();
 
 
-                                if (_dtRecordTypleColumlns.Rows[j]["ColumnType"].ToString() == "time")
+                                if (_dtColumnsDetail.Rows[j]["ColumnType"].ToString() == "time")
                                 {
                                     if (_txtValue[j] != null)
                                         strControlToCompare = _txtValue[j].ClientID;
@@ -4057,14 +4065,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         //this is date and time
 
                         _cvValue[i] = new CompareValidator();
-                        _cvValue[i].ID = "cv" + _dtRecordTypleColumlns.Rows[i]["SystemName"];
+                        _cvValue[i].ID = "cv" + _dtColumnsDetail.Rows[i]["SystemName"];
                         _cvValue[i].ErrorMessage = "";
                         _cvValue[i].Type = ValidationDataType.Date;
 
                         if (ContentPage == "record")
                             _cvValue[i].ValidationGroup = _strDynamictabPart;
 
-                        switch (_dtRecordTypleColumlns.Rows[i]["CompareOperator"].ToString())
+                        switch (_dtColumnsDetail.Rows[i]["CompareOperator"].ToString())
                         {
                             case "Equal":
                                 _cvValue[i].Operator = ValidationCompareOperator.Equal;
@@ -4104,12 +4112,12 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                         string strControlToCompareDate = "";
                         string strControlToCompareTime = "";
-                        for (int j = 0; j < _dtRecordTypleColumlns.Rows.Count; j++)
+                        for (int j = 0; j < _dtColumnsDetail.Rows.Count; j++)
                         {
-                            if (_dtRecordTypleColumlns.Rows[i]["CompareColumnID"].ToString()
-                                == _dtRecordTypleColumlns.Rows[j]["ColumnID"].ToString())
+                            if (_dtColumnsDetail.Rows[i]["CompareColumnID"].ToString()
+                                == _dtColumnsDetail.Rows[j]["ColumnID"].ToString())
                             {
-                                _cusvValue[i].ErrorMessage = _cusvValue[i].ErrorMessage + _dtRecordTypleColumlns.Rows[j]["DisplayName"].ToString();
+                                _cusvValue[i].ErrorMessage = _cusvValue[i].ErrorMessage + _dtColumnsDetail.Rows[j]["DisplayName"].ToString();
                                 if (_txtValue[j] != null && _txtTime[j] != null)
                                 {
                                     strControlToCompareDate = _txtValue[j].ClientID;
@@ -4190,11 +4198,11 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 else
                 {
                     _cvValue[i] = new CompareValidator();
-                    _cvValue[i].ID = "cv" + _dtRecordTypleColumlns.Rows[i]["SystemName"];
-                    _cvValue[i].ErrorMessage = "Comparison error:" + _dtRecordTypleColumlns.Rows[i]["DisplayName"].ToString() + " " + Common.CompareOperatorErrorMsg( _dtRecordTypleColumlns.Rows[i]["CompareOperator"].ToString()) + " ";
+                    _cvValue[i].ID = "cv" + _dtColumnsDetail.Rows[i]["SystemName"];
+                    _cvValue[i].ErrorMessage = "Comparison error:" + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + " " + Common.CompareOperatorErrorMsg( _dtColumnsDetail.Rows[i]["CompareOperator"].ToString()) + " ";
                     if (ContentPage == "record")
                         _cvValue[i].ValidationGroup = _strDynamictabPart;
-                    switch (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString())
+                    switch (_dtColumnsDetail.Rows[i]["ColumnType"].ToString())
                     {
                         case "datetime":
                             _cvValue[i].Type = ValidationDataType.Date;
@@ -4219,7 +4227,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                    switch (_dtRecordTypleColumlns.Rows[i]["CompareOperator"].ToString())
+                    switch (_dtColumnsDetail.Rows[i]["CompareOperator"].ToString())
                     {
                         case "Equal":
                             _cvValue[i].Operator = ValidationCompareOperator.Equal;
@@ -4270,13 +4278,13 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     //now lets find the ControlToCompare function
 
 
-                    for (int j = 0; j < _dtRecordTypleColumlns.Rows.Count; j++)
+                    for (int j = 0; j < _dtColumnsDetail.Rows.Count; j++)
                     {
-                        if (_dtRecordTypleColumlns.Rows[i]["CompareColumnID"].ToString()
-                            == _dtRecordTypleColumlns.Rows[j]["ColumnID"].ToString())
+                        if (_dtColumnsDetail.Rows[i]["CompareColumnID"].ToString()
+                            == _dtColumnsDetail.Rows[j]["ColumnID"].ToString())
                         {
 
-                            _cvValue[i].ErrorMessage = _cvValue[i].ErrorMessage  + _dtRecordTypleColumlns.Rows[j]["DisplayName"].ToString();
+                            _cvValue[i].ErrorMessage = _cvValue[i].ErrorMessage  + _dtColumnsDetail.Rows[j]["DisplayName"].ToString();
 
                             if (_ddlValue[j] != null)
                                 _cvValue[i].ControlToCompare = _ddlValue[j].ID;
@@ -4464,20 +4472,20 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
     public void ShowHideControls()
     {
 
-        for (int i = 0; i < _dtRecordTypleColumlns.Rows.Count; i++)
+        for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
         {
-            if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "image")
+            if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image")
             {
                 trX[i].Style.Add("vertical-align", "top");
             }
 
 
-            if (_dtRecordTypleColumlns.Rows[i]["OnlyForAdmin"] != DBNull.Value)
+            if (_dtColumnsDetail.Rows[i]["OnlyForAdmin"] != DBNull.Value)
             {
 
                 bool bHide = false;
 
-                if (_dtRecordTypleColumlns.Rows[i]["OnlyForAdmin"].ToString().ToLower() == "1")
+                if (_dtColumnsDetail.Rows[i]["OnlyForAdmin"].ToString().ToLower() == "1")
                 {
                     if (!Common.HaveAccess(_strRecordRightID, "1,2"))
                     {
@@ -4486,7 +4494,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                     }
                 }
-                if (_dtRecordTypleColumlns.Rows[i]["OnlyForAdmin"].ToString().ToLower() == "2")
+                if (_dtColumnsDetail.Rows[i]["OnlyForAdmin"].ToString().ToLower() == "2")
                 {
                     if (_qsMode != "")
                     {
@@ -4509,11 +4517,11 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                 if (bHide)
                 {
-                    trX[i].ID = "trX" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                    trX[i].ID = "trX" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                     string targetID = "#" + _strDynamictabPart + trX[i].ID;
                     string strOnlyAdminJS = @"$('" + targetID + @"').fadeOut();";
 
-                    if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m"
+                    if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m"
                         && _rfvValue[i] != null)
                     {
                         strOnlyAdminJS = strOnlyAdminJS + "if(document.getElementById('" + _strDynamictabPart + _rfvValue[i].ID.ToString() + "')!=null){ValidatorEnable(document.getElementById('" + _strDynamictabPart + _rfvValue[i].ID.ToString() + "'), false)};";
@@ -4529,11 +4537,11 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
             //perform unlimited showwhen
 
-            DataTable dtShowWhen = RecordManager.dbg_ShowWhen_Select(int.Parse(_dtRecordTypleColumlns.Rows[i]["ColumnID"].ToString()), null, null);
+            DataTable dtShowWhen = RecordManager.dbg_ShowWhen_Select(int.Parse(_dtColumnsDetail.Rows[i]["ColumnID"].ToString()), null, null);
 
             if (dtShowWhen.Rows.Count > 0)
             {
-                trX[i].ID = "trX" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+                trX[i].ID = "trX" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                 //string strTargetTRID = "#" + trX[i].ClientID.Substring(0, trX[i].ClientID.Length - 7) + trX[i].ID;
                 string strTargetTRID = "#" + _strDynamictabPart + trX[i].ID;
 
@@ -4547,7 +4555,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 string strValidatorT = "";
                 string strValidatorF = "";
                 string strBeforeShowHideFunction = "";
-                 if (_dtRecordTypleColumlns.Rows[i]["Importance"].ToString() == "m" && _rfvValue[i] != null)
+                 if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m" && _rfvValue[i] != null)
                 {
                     strValidatorT = "if(document.getElementById('" + _strDynamictabPart + _rfvValue[i].ID.ToString() + "')!=null){ValidatorEnable(document.getElementById('" + _strDynamictabPart + _rfvValue[i].ID.ToString() + "'), true)};";
                     strValidatorF = "if(document.getElementById('" + _strDynamictabPart + _rfvValue[i].ID.ToString() + "')!=null){ValidatorEnable(document.getElementById('" + _strDynamictabPart + _rfvValue[i].ID.ToString() + "'), false)};";
@@ -4560,11 +4568,11 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     {
                         //Lets's go inside eash driver column
 
-                        for (int m = 0; m < _dtRecordTypleColumlns.Rows.Count; m++)
+                        for (int m = 0; m < _dtColumnsDetail.Rows.Count; m++)
                         {
-                            if (drSW["HideColumnID"].ToString() == _dtRecordTypleColumlns.Rows[m]["ColumnID"].ToString() && trX[m] != null)
+                            if (drSW["HideColumnID"].ToString() == _dtColumnsDetail.Rows[m]["ColumnID"].ToString() && trX[m] != null)
                             {
-                                trX[m].ID = "trX" + _dtRecordTypleColumlns.Rows[m]["SystemName"].ToString();
+                                trX[m].ID = "trX" + _dtColumnsDetail.Rows[m]["SystemName"].ToString();
                                 //string strEachDriverID = "#" + trX[m].ClientID.Substring(0, trX[m].ClientID.Length - 7);
 
                                 string strEachDriverID = "#" + _strDynamictabPart;
@@ -4607,22 +4615,22 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 }
 
                                 if (_ddlValue[m] != null)
-                                    strEachDriverID = strEachDriverID + "ddl" + _dtRecordTypleColumlns.Rows[m]["SystemName"].ToString();
+                                    strEachDriverID = strEachDriverID + "ddl" + _dtColumnsDetail.Rows[m]["SystemName"].ToString();
 
                                 if (_txtValue[m] != null)
-                                    strEachDriverID = strEachDriverID + "txt" + _dtRecordTypleColumlns.Rows[m]["SystemName"].ToString();
+                                    strEachDriverID = strEachDriverID + "txt" + _dtColumnsDetail.Rows[m]["SystemName"].ToString();
 
                                 if (_chkValue[m] != null)
-                                    strEachDriverID = strEachDriverID + "chk" + _dtRecordTypleColumlns.Rows[m]["SystemName"].ToString();
+                                    strEachDriverID = strEachDriverID + "chk" + _dtColumnsDetail.Rows[m]["SystemName"].ToString();
 
                                 if (_lstValue[m] != null)
-                                    strEachDriverID = strEachDriverID + "lst" + _dtRecordTypleColumlns.Rows[m]["SystemName"].ToString();
+                                    strEachDriverID = strEachDriverID + "lst" + _dtColumnsDetail.Rows[m]["SystemName"].ToString();
 
                                 if (_cblValue[m] != null)
-                                    strEachDriverID = strEachDriverID + "cbl" + _dtRecordTypleColumlns.Rows[m]["SystemName"].ToString();
+                                    strEachDriverID = strEachDriverID + "cbl" + _dtColumnsDetail.Rows[m]["SystemName"].ToString();
 
                                 if (_radioList[m] != null)
-                                    strEachDriverID = strEachDriverID + "radio" + _dtRecordTypleColumlns.Rows[m]["SystemName"].ToString();
+                                    strEachDriverID = strEachDriverID + "radio" + _dtColumnsDetail.Rows[m]["SystemName"].ToString();
 
                                 bool bUseCommonCode = false;
 
@@ -4671,7 +4679,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 {
                                     string strTrue = "";
                                     string strFalse = "";
-                                    Common.GetCheckTcikedUnTicked(_dtRecordTypleColumlns.Rows[m]["DropDownValues"].ToString(), ref strTrue, ref strFalse);
+                                    Common.GetCheckTcikedUnTicked(_dtColumnsDetail.Rows[m]["DropDownValues"].ToString(), ref strTrue, ref strFalse);
                                     strTrue = HttpUtility.JavaScriptStringEncode(strTrue);
                                     strFalse = HttpUtility.JavaScriptStringEncode(strFalse);
 
@@ -4898,7 +4906,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                         }
                                         else
                                         {
-                                            string strCY = _dtRecordTypleColumlns.Rows[m]["ColumnType"].ToString();
+                                            string strCY = _dtColumnsDetail.Rows[m]["ColumnType"].ToString();
                                             if (_txtValue[m] != null && (strCY == "number" || strCY == "date" || strCY == "datetime" || strCY == "time")) //
                                             {
                                                 if (strCY == "number")
@@ -6069,13 +6077,13 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
         {
             strparentRecordid = Request.QueryString["Recordid"].ToString();
         }
-        else if (Request.QueryString["CopyRecordID"] != null)
+        else if (Session["CopyRecordID"] != null)
         {
-            strparentRecordid = Request.QueryString["CopyRecordID"].ToString();
+            strparentRecordid = Session["CopyRecordID"].ToString();
         }
 
 
-        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?tabindex=" + DetailTabIndex.ToString() + "&backurl=" + Cryptography.Encrypt(Request.RawUrl.ToString()) + "&onlyback=yes&mode=" + Cryptography.Encrypt("edit") + "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&Recordid=" + Cryptography.Encrypt(RecordID.ToString()) + "&parentRecordid=" + strparentRecordid;
+        return Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&tabindex=" + DetailTabIndex.ToString() + "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&Recordid=" + Cryptography.Encrypt(RecordID.ToString()) + "&parentRecordid=" + strparentRecordid;
 
     }
 
@@ -6088,7 +6096,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
         }
         else
         {
-            return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?tabindex=" + DetailTabIndex.ToString() + "&backurl=" + Cryptography.Encrypt(Request.RawUrl.ToString()) + "&onlyback=yes&parentRecordid=" + Request.QueryString["Recordid"].ToString() + "&mode=" + Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+            return Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&tabindex=" + DetailTabIndex.ToString() + "&parentRecordid=" + Request.QueryString["Recordid"].ToString() + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
         }
 
 
@@ -6575,150 +6583,146 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "ShowHideMainDivsOnlyOne"+_theTable.TableID.ToString(), "ShowHideMainDivs"+_theTable.TableID.ToString()+"('" + pnlDetailTab.ClientID + "',this,0);", true);
             }
 
-            if (Request.QueryString["quickdone"] != null && Request.QueryString["controlvalue"] != null)
-            {
-                try
-                {
-                    SearchCriteria theSearchCriteria = SystemData.SearchCriteria_Detail(int.Parse(Cryptography.Decrypt(Request.QueryString["quickdone"].ToString())));
-                    if (theSearchCriteria != null)
-                    {
-                        System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
+//            if (Request.QueryString["quickdone"] != null && Request.QueryString["controlvalue"] != null)
+//            {
+//                try
+//                {
+//                    SearchCriteria theSearchCriteria = SystemData.SearchCriteria_Detail(int.Parse(Cryptography.Decrypt(Request.QueryString["quickdone"].ToString())));
+//                    if (theSearchCriteria != null)
+//                    {
+//                        System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
 
-                        xmlDoc.Load(new StringReader(theSearchCriteria.SearchText));
-                        string strControl = xmlDoc.FirstChild["control"].InnerText;
-                        string strControlValue = Cryptography.Decrypt(Request.QueryString["controlvalue"].ToString());
+//                        xmlDoc.Load(new StringReader(theSearchCriteria.SearchText));
+//                        string strControl = xmlDoc.FirstChild["control"].InnerText;
+//                        string strControlValue = Cryptography.Decrypt(Request.QueryString["controlvalue"].ToString());
 
-                        string strDisplayColumn = xmlDoc.FirstChild["DisplayColumn"].InnerText;
-                        string strTableTableID = xmlDoc.FirstChild["TableTableID"].InnerText;
-                        string strLinkedParentColumnID = xmlDoc.FirstChild["LinkedParentColumnID"].InnerText;
-                        string strDropDownType = xmlDoc.FirstChild["DropDownType"].InnerText;
-
-
-
-
-                        if (strDropDownType == "table")
-                        {
-                            string str_hfValue = xmlDoc.FirstChild["_hfValue"].InnerText;
-                            TextBox txtP = (TextBox)pnlDetail.FindControl(strControl);
-                            HiddenField _hfValue = (HiddenField)pnlDetail.FindControl(str_hfValue);
-
-
-                            try
-                            {
-                                //int iTableRecordID = int.Parse(_dtRecordedetail.Rows[0][i].ToString());
-
-                                Column theLinkedColumn = RecordManager.ets_Column_Details(int.Parse(strLinkedParentColumnID));
-
-                                Record theLinkedRecord = RecordManager.ets_Record_Detail_Full(int.Parse(strControlValue));
-                                string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
-
-
-                                //Record theLinkedRecord = RecordManager.ets_Record_Detail_Full(iTableRecordID);
-                                //string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
+//                        string strDisplayColumn = xmlDoc.FirstChild["DisplayColumn"].InnerText;
+//                        string strTableTableID = xmlDoc.FirstChild["TableTableID"].InnerText;
+//                        string strLinkedParentColumnID = xmlDoc.FirstChild["LinkedParentColumnID"].InnerText;
+//                        string strDropDownType = xmlDoc.FirstChild["DropDownType"].InnerText;
 
 
 
 
-                                _hfValue.Value = strLinkedColumnValue;
-                                DataTable dtTableTableSC = Common.DataTableFromText(@"SELECT SystemName,DisplayName 
-                                FROM [Column] WHERE   TableID ="
-                           + strTableTableID);
+//                        if (strDropDownType == "table" )
+//                        {
+//                            string str_hfValue = xmlDoc.FirstChild["_hfValue"].InnerText;
+//                            TextBox txtP = (TextBox)pnlDetail.FindControl(strControl);
+//                            HiddenField _hfValue = (HiddenField)pnlDetail.FindControl(str_hfValue);
 
-                                //string strDisplayColumn = _dtRecordTypleColumlns.Rows[i]["DisplayColumn"].ToString();
 
-                                foreach (DataRow dr in dtTableTableSC.Rows)
-                                {
-                                    strDisplayColumn = strDisplayColumn.Replace("[" + dr["DisplayName"].ToString() + "]", "[" + dr["SystemName"].ToString() + "]");
+//                            try
+//                            {
+//                                //int iTableRecordID = int.Parse(_dtRecordedetail.Rows[0][i].ToString());
 
-                                }
+//                                Column theLinkedColumn = RecordManager.ets_Column_Details(int.Parse(strLinkedParentColumnID));
 
-                                string sstrDisplayColumnOrg = strDisplayColumn;
-                                string strFilterSQL = "";
-                                if (theLinkedColumn.SystemName.ToLower() == "recordid")
-                                {
-                                    strFilterSQL = strLinkedColumnValue;
-                                }
-                                else
-                                {
-                                    strFilterSQL = "'" + strLinkedColumnValue.Replace("'", "''") + "'";
-                                }
+//                                Record theLinkedRecord = RecordManager.ets_Record_Detail_Full(int.Parse(strControlValue));
+//                                string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
+
+
+//                                //Record theLinkedRecord = RecordManager.ets_Record_Detail_Full(iTableRecordID);
+//                                //string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
 
 
 
-                                //DataTable dtTheRecord = Common.DataTableFromText("SELECT * FROM Record WHERE RecordID=" + _dtRecordedetail.Rows[0][i].ToString());
 
-                                DataTable dtTheRecord = Common.DataTableFromText("SELECT * FROM Record WHERE TableID=" + theLinkedColumn.TableID.ToString() + " AND " + theLinkedColumn.SystemName + "=" + strFilterSQL);
+//                                _hfValue.Value = strLinkedColumnValue;
+//                                DataTable dtTableTableSC = Common.DataTableFromText(@"SELECT SystemName,DisplayName 
+//                                FROM [Column] WHERE   TableID ="
+//                           + strTableTableID);
 
-                                if (dtTheRecord.Rows.Count > 0)
-                                {
+//                                //string strDisplayColumn = _dtRecordTypleColumlns.Rows[i]["DisplayColumn"].ToString();
 
-                                    foreach (DataColumn dc in dtTheRecord.Columns)
-                                    {
+//                                foreach (DataRow dr in dtTableTableSC.Rows)
+//                                {
+//                                    strDisplayColumn = strDisplayColumn.Replace("[" + dr["DisplayName"].ToString() + "]", "[" + dr["SystemName"].ToString() + "]");
 
-                                        //strDisplayColumn = strDisplayColumn.Replace("[" + dc.ColumnName + "]", dtTheRecord.Rows[0][dc.ColumnName].ToString());
+//                                }
 
-                                        Column theColumn = RecordManager.ets_Column_Details_By_Sys((int)theLinkedColumn.TableID, dc.ColumnName);
-                                        if (theColumn != null)
-                                        {
-                                            if (theColumn.ColumnType == "date")
-                                            {
-                                                string strDatePartOnly = dtTheRecord.Rows[0][dc.ColumnName].ToString();
-
-                                                if (strDatePartOnly.Length > 9)
-                                                {
-                                                    strDatePartOnly = strDatePartOnly.Substring(0, 10);
-                                                }
-
-                                                strDisplayColumn = strDisplayColumn.Replace("[" + dc.ColumnName + "]", strDatePartOnly);
-                                            }
-                                            else
-                                            {
-                                                strDisplayColumn = strDisplayColumn.Replace("[" + dc.ColumnName + "]", dtTheRecord.Rows[0][dc.ColumnName].ToString());
-                                            }
-                                        }
-
-                                    }
-                                }
-                                if (sstrDisplayColumnOrg != strDisplayColumn)
-                                    txtP.Text = strDisplayColumn;
+//                                string sstrDisplayColumnOrg = strDisplayColumn;
+//                                string strFilterSQL = "";
+//                                if (theLinkedColumn.SystemName.ToLower() == "recordid")
+//                                {
+//                                    strFilterSQL = strLinkedColumnValue;
+//                                }
+//                                else
+//                                {
+//                                    strFilterSQL = "'" + strLinkedColumnValue.Replace("'", "''") + "'";
+//                                }
 
 
 
-                            }
-                            catch
-                            {
-                                //
-                            }
+//                                //DataTable dtTheRecord = Common.DataTableFromText("SELECT * FROM Record WHERE RecordID=" + _dtRecordedetail.Rows[0][i].ToString());
+
+//                                DataTable dtTheRecord = Common.DataTableFromText("SELECT * FROM Record WHERE TableID=" + theLinkedColumn.TableID.ToString() + " AND " + theLinkedColumn.SystemName + "=" + strFilterSQL);
+
+//                                if (dtTheRecord.Rows.Count > 0)
+//                                {
+
+//                                    foreach (DataColumn dc in dtTheRecord.Columns)
+//                                    {
+
+//                                        //strDisplayColumn = strDisplayColumn.Replace("[" + dc.ColumnName + "]", dtTheRecord.Rows[0][dc.ColumnName].ToString());
+
+//                                        Column theColumn = RecordManager.ets_Column_Details_By_Sys((int)theLinkedColumn.TableID, dc.ColumnName);
+//                                        if (theColumn != null)
+//                                        {
+//                                            if (theColumn.ColumnType == "date")
+//                                            {
+//                                                string strDatePartOnly = dtTheRecord.Rows[0][dc.ColumnName].ToString();
+
+//                                                if (strDatePartOnly.Length > 9)
+//                                                {
+//                                                    strDatePartOnly = strDatePartOnly.Substring(0, 10);
+//                                                }
+
+//                                                strDisplayColumn = strDisplayColumn.Replace("[" + dc.ColumnName + "]", strDatePartOnly);
+//                                            }
+//                                            else
+//                                            {
+//                                                strDisplayColumn = strDisplayColumn.Replace("[" + dc.ColumnName + "]", dtTheRecord.Rows[0][dc.ColumnName].ToString());
+//                                            }
+//                                        }
+
+//                                    }
+//                                }
+//                                if (sstrDisplayColumnOrg != strDisplayColumn)
+//                                    txtP.Text = strDisplayColumn;
 
 
 
-                        }
-                        else
-                        {
-
-                            Column theLinkedColumn = RecordManager.ets_Column_Details(int.Parse(strLinkedParentColumnID));
-
-                            Record theLinkedRecord = RecordManager.ets_Record_Detail_Full(int.Parse(strControlValue));
-                            string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
+//                            }
+//                            catch
+//                            {
+//                                //
+//                            }
 
 
-                            DropDownList ddlP = (DropDownList)pnlDetail.FindControl(strControl);
-                            ddlP.SelectedValue = strLinkedColumnValue;
-                        }
-                    }
-                }
-                catch
-                {
 
-                }
+//                        }
+//                        else
+//                        {
 
-            }
+//                            Column theLinkedColumn = RecordManager.ets_Column_Details(int.Parse(strLinkedParentColumnID));
 
-            if (Request.QueryString["FromAdd"] != null)
-            {
-                lblMsg.Text = "Successfully saved!";
-                lblMsg.ForeColor = System.Drawing.Color.Green;
-            }
+//                            Record theLinkedRecord = RecordManager.ets_Record_Detail_Full(int.Parse(strControlValue));
+//                            string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
+
+
+//                            DropDownList ddlP = (DropDownList)divDynamic.FindControl(strControl);
+//                            ddlP.SelectedValue = strLinkedColumnValue;
+//                        }
+//                    }
+//                }
+//                catch
+//                {
+
+//                }
+
+//            }
+
+         
 
         }
         else
@@ -6868,38 +6872,38 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 }
             }
 
-            if (Request.QueryString["quickadd"] != null)
-            {
-                try
-                {
-                    SearchCriteria theSearchCriteria = SystemData.SearchCriteria_Detail(int.Parse(Cryptography.Decrypt(Request.QueryString["quickadd"].ToString())));
-                    if (theSearchCriteria != null)
-                    {
-                        System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
+            //if (Request.QueryString["quickadd"] != null)
+            //{
+            //    try
+            //    {
+            //        SearchCriteria theSearchCriteria = SystemData.SearchCriteria_Detail(int.Parse(Cryptography.Decrypt(Request.QueryString["quickadd"].ToString())));
+            //        if (theSearchCriteria != null)
+            //        {
+            //            System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
 
-                        xmlDoc.Load(new StringReader(theSearchCriteria.SearchText));
+            //            xmlDoc.Load(new StringReader(theSearchCriteria.SearchText));
 
-                        if (xmlDoc.FirstChild["RecordID"].InnerText == "-1")
-                        {
-                            hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode="
-                                + xmlDoc.FirstChild["mode"].InnerText + "&TableID=" + xmlDoc.FirstChild["TableID"].InnerText
-                                + "&SearchCriteriaID=" + xmlDoc.FirstChild["SearchCriteriaID"].InnerText;
-                        }
-                        else
-                        {
-                            hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode="
-                              + xmlDoc.FirstChild["mode"].InnerText + "&TableID=" + xmlDoc.FirstChild["TableID"].InnerText
-                              + "&SearchCriteriaID=" + xmlDoc.FirstChild["SearchCriteriaID"].InnerText + "&RecordID=" + xmlDoc.FirstChild["RecordID"].InnerText;
-                        }
-                    }
-                }
-                catch
-                {
+            //            if (xmlDoc.FirstChild["RecordID"].InnerText == "-1")
+            //            {
+            //                hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode="
+            //                    + xmlDoc.FirstChild["mode"].InnerText + "&TableID=" + xmlDoc.FirstChild["TableID"].InnerText
+            //                    + "&SearchCriteriaID=" + xmlDoc.FirstChild["SearchCriteriaID"].InnerText;
+            //            }
+            //            else
+            //            {
+            //                hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode="
+            //                  + xmlDoc.FirstChild["mode"].InnerText + "&TableID=" + xmlDoc.FirstChild["TableID"].InnerText
+            //                  + "&SearchCriteriaID=" + xmlDoc.FirstChild["SearchCriteriaID"].InnerText + "&RecordID=" + xmlDoc.FirstChild["RecordID"].InnerText;
+            //            }
+            //        }
+            //    }
+            //    catch
+            //    {
 
-                }
+            //    }
 
 
-            }
+            //}
         }
 
 
@@ -6973,13 +6977,13 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
         ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "FancyBox" + _strDynamictabPart, strFancy, true);
 
 
-        if (Request.QueryString["onlyback"] != null)
-        {
+        //if (Request.QueryString["onlyback"] != null)
+        //{
 
-            //divEdit.Visible = false;
-            //hlEdit.Visible = false;
+        //    divEdit.Visible = false;
+        //    hlEdit.Visible = false;
 
-        }
+        //}
 
 
         if (IsPostBack)
@@ -6988,9 +6992,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
             //{
             try
             {
-                for (int i = 0; i < _dtRecordTypleColumlns.Rows.Count; i++)
+                for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
                 {
-                    if (_hfValue2[i] != null && _dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "file")
+                    if (_hfValue2[i] != null && _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "file")
                     {
                         if (_hfValue2[i].Value != "")
                         {
@@ -7004,7 +7008,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                             }
                         }
                     }
-                    if (_hfValue2[i] != null && _dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "image")
+                    if (_hfValue2[i] != null && _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image")
                     {
                         if (_hfValue2[i].Value != "")
                         {
@@ -7019,7 +7023,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         }
                     }
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "file" &&
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "file" &&
                         _hfValue[i] != null && Mode.ToLower() != "view"
                         && _hfValue2[i] != null)
                     {
@@ -7052,16 +7056,16 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                         }
                     }
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "image" &&
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image" &&
                         _hfValue[i] != null && Mode.ToLower() != "view"
                         && _hfValue2[i] != null)
                     {
                         if (_hfValue[i].Value != "" && _hfValue2[i].Value == "")
                         {
                             string strMaxHeight = "50";
-                            if (_dtRecordTypleColumlns.Rows[i]["TextHeight"] != DBNull.Value)
+                            if (_dtColumnsDetail.Rows[i]["TextHeight"] != DBNull.Value)
                             {
-                                strMaxHeight = _dtRecordTypleColumlns.Rows[i]["TextHeight"].ToString();
+                                strMaxHeight = _dtColumnsDetail.Rows[i]["TextHeight"].ToString();
                             }
 
                             string strFilePath = _strFilesLocation + "/UserFiles/AppFiles/"
@@ -7426,7 +7430,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-        for (int i = 0; i < _dtRecordTypleColumlns.Rows.Count; i++)
+        for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
         {
             if (_txtValue[i] != null)
                 _txtValue[i].Text = "";
@@ -7626,7 +7630,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     if (strWarning.IndexOf( WarningMsg.MaxtimebetweenRecords ) >= 0)
                 {
                     _txtValue[i].ForeColor = System.Drawing.Color.Blue;
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() != "date")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() != "date")
                     {
                         if (_txtTime[i] != null)
                         _txtTime[i].ForeColor = System.Drawing.Color.Blue;
@@ -7644,6 +7648,17 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
             //    _ddlLocation.Text = _dtRecordedetail.Rows[0][i].ToString();
             //}
             //else 
+            string strEachFormulaV = "";
+            string strEachFormulaW = "";
+            string strEachFormulaE = "";
+            string strEachFormulaV_Msg = "";
+            string strEachFormulaW_Msg = "";
+            string strEachFormulaE_Msg = "";
+
+
+
+
+
             if (i == _iEnteredByIndex)
             {
                 _ddlEnteredBy.Text = _dtRecordedetail.Rows[0][i].ToString();
@@ -7669,7 +7684,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 if (strWarning.IndexOf("" + WarningMsg.MaxtimebetweenRecords + "") >= 0)
                 {
                     _txtValue[i].ForeColor = System.Drawing.Color.Blue;
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() != "date")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() != "date")
                     {
                         _txtTime[i].ForeColor = System.Drawing.Color.Blue;
                     }
@@ -7701,7 +7716,71 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
             }
             else
             {
-                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "date" &&
+
+                if (_dtColumnsDetail.Rows[i]["ConV"] != DBNull.Value)
+                {
+                    Column theCheckColumn = RecordManager.ets_Column_Details(int.Parse(_dtColumnsDetail.Rows[i]["ConV"].ToString()));
+                    if (theCheckColumn != null)
+                    {
+                        string strCheckValue = RecordManager.GetRecordValue(ref _qsRecord, theCheckColumn.SystemName);
+                        strEachFormulaV = UploadWorld.Condition_GetFormula(int.Parse(_dtColumnsDetail.Rows[i]["ColumnID"].ToString()), theCheckColumn.ColumnID,
+                            "V", strCheckValue);
+                    }
+                }
+                else
+                {
+                    if (_dtColumnsDetail.Rows[i]["ValidationOnEntry"] != DBNull.Value && _dtColumnsDetail.Rows[i]["ValidationOnEntry"].ToString().Length > 0)
+                    {
+                        strEachFormulaV = _dtColumnsDetail.Rows[i]["ValidationOnEntry"].ToString();
+                    }
+                }
+
+                if (_dtColumnsDetail.Rows[i]["ConW"] != DBNull.Value)
+                {
+                    Column theCheckColumn = RecordManager.ets_Column_Details(int.Parse(_dtColumnsDetail.Rows[i]["ConW"].ToString()));
+                    if (theCheckColumn != null)
+                    {
+                        string strCheckValue = RecordManager.GetRecordValue(ref _qsRecord, theCheckColumn.SystemName);
+                        strEachFormulaW = UploadWorld.Condition_GetFormula(int.Parse(_dtColumnsDetail.Rows[i]["ColumnID"].ToString()), theCheckColumn.ColumnID,
+                            "W", strCheckValue);
+                    }
+                }
+                else
+                {
+                    if (_dtColumnsDetail.Rows[i]["ValidationOnWarning"] != DBNull.Value && _dtColumnsDetail.Rows[i]["ValidationOnWarning"].ToString().Length > 0)
+                    {
+                        strEachFormulaW = _dtColumnsDetail.Rows[i]["ValidationOnWarning"].ToString();
+                    }
+                }
+
+
+
+                if (_dtColumnsDetail.Rows[i]["ConE"] != DBNull.Value)
+                {
+                    Column theCheckColumn = RecordManager.ets_Column_Details(int.Parse(_dtColumnsDetail.Rows[i]["ConE"].ToString()));
+                    if (theCheckColumn != null)
+                    {
+                        string strCheckValue = RecordManager.GetRecordValue(ref _qsRecord, theCheckColumn.SystemName);
+                        strEachFormulaE = UploadWorld.Condition_GetFormula(int.Parse(_dtColumnsDetail.Rows[i]["ColumnID"].ToString()), theCheckColumn.ColumnID,
+                            "E", strCheckValue);
+                    }
+                }
+                else
+                {
+                    if (_dtColumnsDetail.Rows[i]["ValidationOnExceedance"] != DBNull.Value && _dtColumnsDetail.Rows[i]["ValidationOnExceedance"].ToString().Length > 0)
+                    {
+                        strEachFormulaE = _dtColumnsDetail.Rows[i]["ValidationOnExceedance"].ToString();
+                    }
+                }
+
+                strEachFormulaV_Msg = Common.GetFromulaMsg("i", _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), strEachFormulaV);
+                strEachFormulaW_Msg = Common.GetFromulaMsg("w", _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), strEachFormulaW);
+                strEachFormulaE_Msg = Common.GetFromulaMsg("e", _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), strEachFormulaE);
+
+
+
+
+                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "date" &&
                     _dtRecordedetail.Rows[0][i].ToString() != "")
                 {
                     try
@@ -7717,7 +7796,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                 }
 
-                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "time" &&
+                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "time" &&
                    _dtRecordedetail.Rows[0][i].ToString() != "")
                 {
                     try
@@ -7730,7 +7809,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     }
                 }
 
-                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "datetime" &&
+                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "datetime" &&
                    _dtRecordedetail.Rows[0][i].ToString() != "")
                 {
                     try
@@ -7750,7 +7829,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 }
 
 
-                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "file" &&
+                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "file" &&
                     _dtRecordedetail.Rows[0][i].ToString() != "")
                 {
                     //_lblValue[i].Text = "<a target='_blank' href='" + _strFilesLocation + "/UserFiles/AppFiles/"
@@ -7785,15 +7864,15 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     }
                 }
 
-                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "trafficlight"
-                        && _dtRecordTypleColumlns.Rows[i]["TrafficLightColumnID"] != DBNull.Value
-                        && _dtRecordTypleColumlns.Rows[i]["TrafficLightValues"] != DBNull.Value)
+                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "trafficlight"
+                        && _dtColumnsDetail.Rows[i]["TrafficLightColumnID"] != DBNull.Value
+                        && _dtColumnsDetail.Rows[i]["TrafficLightValues"] != DBNull.Value)
                 {
-                    Column theTrafficLightColumn = RecordManager.ets_Column_Details(int.Parse(_dtRecordTypleColumlns.Rows[i]["TrafficLightColumnID"].ToString()));
+                    Column theTrafficLightColumn = RecordManager.ets_Column_Details(int.Parse(_dtColumnsDetail.Rows[i]["TrafficLightColumnID"].ToString()));
                     if (theTrafficLightColumn != null && _imgValues[i] != null)
                     {
                         string strTLValue = Common.GetValueFromSQL("SELECT " + theTrafficLightColumn.SystemName + " FROM [Record] WHERE RecordID=" + _qsRecord.RecordID.ToString());
-                        string strImageURL = Common.TrafficLightURL(theTrafficLightColumn, strTLValue, _dtRecordTypleColumlns.Rows[i]["TrafficLightValues"].ToString());
+                        string strImageURL = Common.TrafficLightURL(theTrafficLightColumn, strTLValue, _dtColumnsDetail.Rows[i]["TrafficLightValues"].ToString());
 
 
                         if (strImageURL != "")
@@ -7805,13 +7884,13 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 }
 
 
-                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "image" &&
+                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image" &&
                     _dtRecordedetail.Rows[0][i].ToString() != "")
                 {
                     string strMaxHeight = "50";
-                    if (_dtRecordTypleColumlns.Rows[i]["TextHeight"] != DBNull.Value)
+                    if (_dtColumnsDetail.Rows[i]["TextHeight"] != DBNull.Value)
                     {
-                        strMaxHeight = _dtRecordTypleColumlns.Rows[i]["TextHeight"].ToString();
+                        strMaxHeight = _dtColumnsDetail.Rows[i]["TextHeight"].ToString();
                     }
 
                     string strFilePath = _strFilesLocation + "/UserFiles/AppFiles/"
@@ -7846,21 +7925,21 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 }
 
 
-                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "dropdown"
-                        && (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "table"
-                        || _dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "tabledd")
-                      && _dtRecordTypleColumlns.Rows[i]["TableTableID"] != DBNull.Value
-                      && _dtRecordTypleColumlns.Rows[i]["TableTableID"].ToString() == "-1"
-                        && _dtRecordTypleColumlns.Rows[i]["LinkedParentColumnID"] == DBNull.Value
-                      && _dtRecordTypleColumlns.Rows[i]["DisplayColumn"].ToString() != "")
+                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "dropdown"
+                        && (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "table"
+                        || _dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "tabledd")
+                      && _dtColumnsDetail.Rows[i]["TableTableID"] != DBNull.Value
+                      && _dtColumnsDetail.Rows[i]["TableTableID"].ToString() == "-1"
+                        && _dtColumnsDetail.Rows[i]["LinkedParentColumnID"] == DBNull.Value
+                      && _dtColumnsDetail.Rows[i]["DisplayColumn"].ToString() != "")
                 {
                     if (_dtRecordedetail.Rows[0][i].ToString() != "")
                     {
                         string strColumnUserID = _dtRecordedetail.Rows[0][i].ToString();
-                        if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "table")
+                        if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "table")
                         {
                             _hfValue[i].Value = strColumnUserID;
-                            _txtValue[i].Text = RecordManager.GetUserDisplayName(_dtRecordTypleColumlns.Rows[i]["DisplayColumn"].ToString(),
+                            _txtValue[i].Text = RecordManager.GetUserDisplayName(_dtColumnsDetail.Rows[i]["DisplayColumn"].ToString(),
                                 _hfValue[i].Value);
                         }
                         else
@@ -7873,12 +7952,12 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 }
 
 
-                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "dropdown"
-                    && (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "table"
-                    || _dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "tabledd")
-                  && _dtRecordTypleColumlns.Rows[i]["TableTableID"] != DBNull.Value
-                    && _dtRecordTypleColumlns.Rows[i]["LinkedParentColumnID"] != DBNull.Value
-                  && _dtRecordTypleColumlns.Rows[i]["DisplayColumn"].ToString() != "")
+                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "dropdown"
+                    && (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "table"
+                    || _dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "tabledd")
+                  && _dtColumnsDetail.Rows[i]["TableTableID"] != DBNull.Value
+                    && _dtColumnsDetail.Rows[i]["LinkedParentColumnID"] != DBNull.Value
+                  && _dtColumnsDetail.Rows[i]["DisplayColumn"].ToString() != "")
                 {
 
                     //if (_dtRecordTypleColumlns.Rows[i]["ParentColumnID"] == DBNull.Value)
@@ -7891,10 +7970,10 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                                 //string strLinkedColumnValue = _dtRecordedetail.Rows[0][i].ToString();
                                 string strParentRecordID = _dtRecordedetail.Rows[0][i].ToString();
-                                if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "table")
+                                if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "table")
                                 {
                                     _hfValue[i].Value = strParentRecordID;
-                                    _txtValue[i].Text = Common.GetLinkedDisplayText(_dtRecordTypleColumlns.Rows[i]["DisplayColumn"].ToString(), int.Parse(_dtRecordTypleColumlns.Rows[i]["TableTableID"].ToString()), null, " AND Record.RecordID=" + strParentRecordID, "");
+                                    _txtValue[i].Text = Common.GetLinkedDisplayText(_dtColumnsDetail.Rows[i]["DisplayColumn"].ToString(), int.Parse(_dtColumnsDetail.Rows[i]["TableTableID"].ToString()), null, " AND Record.RecordID=" + strParentRecordID, "");
 //                                    _hfValue[i].Value = strLinkedColumnValue;
 //                                    DataTable dtTableTableSC = Common.DataTableFromText(@"SELECT SystemName,DisplayName 
 //                                FROM [Column] WHERE   TableID ="
@@ -7953,7 +8032,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                                 }
 
-                                if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "tabledd")
+                                if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "tabledd")
                                 {
                                     //_ddlValue[i].Text = strLinkedColumnValue;
                                     if (_ddlValue[i].Items.FindByValue(strParentRecordID) != null)
@@ -8040,17 +8119,17 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "calculation")
+                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "calculation")
                 {
 
                     _txtValue[i].Text = _dtRecordedetail.Rows[0][i].ToString();
 
-                    if (_dtRecordTypleColumlns.Rows[i]["Calculation"] != DBNull.Value)
+                    if (_dtColumnsDetail.Rows[i]["Calculation"] != DBNull.Value)
                     {
                         bool bDateCal = false;
                         bool bTextCal = false;
-                        if (_dtRecordTypleColumlns.Rows[i]["TextType"] != DBNull.Value
-                            && _dtRecordTypleColumlns.Rows[i]["TextType"].ToString().ToLower() == "d")
+                        if (_dtColumnsDetail.Rows[i]["TextType"] != DBNull.Value
+                            && _dtColumnsDetail.Rows[i]["TextType"].ToString().ToLower() == "d")
                         {
                             bDateCal = true;
                             //string strCalculation = _dtRecordTypleColumlns.Rows[i]["Calculation"].ToString();
@@ -8065,8 +8144,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                             //}
                         }
-                        else if (_dtRecordTypleColumlns.Rows[i]["TextType"] != DBNull.Value
-                           && _dtRecordTypleColumlns.Rows[i]["TextType"].ToString().ToLower() == "t")
+                        else if (_dtColumnsDetail.Rows[i]["TextType"] != DBNull.Value
+                           && _dtColumnsDetail.Rows[i]["TextType"].ToString().ToLower() == "t")
                         {
                             bTextCal = true;
                         }
@@ -8079,21 +8158,21 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         //    _txtValue[i].Text = TheDatabaseS.GetCalculationResult(_dtColumnsAll, strFormula, (int)RecordID, i, _iParentRecordID);
                         //}
 
-                        if (_dtRecordTypleColumlns.Rows[i]["RoundNumber"] != DBNull.Value && bDateCal == false && bTextCal==false)
+                        if (_dtColumnsDetail.Rows[i]["RoundNumber"] != DBNull.Value && bDateCal == false && bTextCal==false)
                         {
 
                             if (_txtValue[i].Text.ToString() != "")
                             {
                                 try
                                 {
-                                    if (_dtRecordTypleColumlns.Rows[i]["IgnoreSymbols"].ToString().ToLower() == "true")
+                                    if (_dtColumnsDetail.Rows[i]["IgnoreSymbols"].ToString().ToLower() == "true")
                                     {
                                         if (Common.HasSymbols(_txtValue[i].Text) == false)
-                                            _txtValue[i].Text = Math.Round(double.Parse(Common.IgnoreSymbols(_txtValue[i].Text)), int.Parse(_dtRecordTypleColumlns.Rows[i]["RoundNumber"].ToString())).ToString("N" + _dtRecordTypleColumlns.Rows[i]["RoundNumber"].ToString());
+                                            _txtValue[i].Text = Math.Round(double.Parse(Common.IgnoreSymbols(_txtValue[i].Text)), int.Parse(_dtColumnsDetail.Rows[i]["RoundNumber"].ToString())).ToString("N" + _dtColumnsDetail.Rows[i]["RoundNumber"].ToString());
                                     }
                                     else
                                     {
-                                        _txtValue[i].Text = Math.Round(double.Parse(Common.IgnoreSymbols(_txtValue[i].Text)), int.Parse(_dtRecordTypleColumlns.Rows[i]["RoundNumber"].ToString())).ToString("N" + _dtRecordTypleColumlns.Rows[i]["RoundNumber"].ToString());
+                                        _txtValue[i].Text = Math.Round(double.Parse(Common.IgnoreSymbols(_txtValue[i].Text)), int.Parse(_dtColumnsDetail.Rows[i]["RoundNumber"].ToString())).ToString("N" + _dtColumnsDetail.Rows[i]["RoundNumber"].ToString());
                                     }
 
                                 }
@@ -8136,15 +8215,15 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "text"
-                     || _dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "number")
+                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "text"
+                     || _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "number")
                 {
 
                     _txtValue[i].Text = _dtRecordedetail.Rows[0][i].ToString();
 
 
-                    if (_dtRecordTypleColumlns.Rows[i]["TextType"].ToString().ToLower() == "link"
-                        && _dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "text" && _hlValue[i] != null)
+                    if (_dtColumnsDetail.Rows[i]["TextType"].ToString().ToLower() == "link"
+                        && _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "text" && _hlValue[i] != null)
                     {
                         if (_txtValue[i].Text != "")
                         {
@@ -8160,13 +8239,13 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     }
 
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "number"
-                        && _dtRecordTypleColumlns.Rows[i]["NumberType"] != null)
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "number"
+                        && _dtColumnsDetail.Rows[i]["NumberType"] != null)
                     {
 
 
                         //Financial
-                        if (_dtRecordTypleColumlns.Rows[i]["NumberType"].ToString() == "6")
+                        if (_dtColumnsDetail.Rows[i]["NumberType"].ToString() == "6")
                         {
                             if (_txtValue[i].Text != "")
                             {
@@ -8190,7 +8269,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
                         //Record Count
-                        if (_dtRecordTypleColumlns.Rows[i]["NumberType"].ToString() == "5")
+                        if (_dtColumnsDetail.Rows[i]["NumberType"].ToString() == "5")
                         {
 
                             if (_lblValue[i] != null)
@@ -8200,12 +8279,12 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                                 //foreach (DataRow dr in dtCT.Rows)
                                 //{
-                                Table theTable = RecordManager.ets_Table_Details(int.Parse(_dtRecordTypleColumlns.Rows[i]["TableTableID"].ToString()));
+                                Table theTable = RecordManager.ets_Table_Details(int.Parse(_dtColumnsDetail.Rows[i]["TableTableID"].ToString()));
                                 string strTextSearch = "";
                                 if (theTable != null)
                                 {
 
-                                    DataTable dtTemp = Common.DataTableFromText("SELECT SystemName,ColumnID FROM [Column] WHERE   TableID=" + _dtRecordTypleColumlns.Rows[i]["TableTableID"].ToString() + " AND TableTableID=" + TableID.ToString());
+                                    DataTable dtTemp = Common.DataTableFromText("SELECT SystemName,ColumnID FROM [Column] WHERE   TableID=" + _dtColumnsDetail.Rows[i]["TableTableID"].ToString() + " AND TableTableID=" + TableID.ToString());
                                     foreach (DataRow drCT in dtTemp.Rows)
                                     {
 
@@ -8231,12 +8310,12 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                     int _iTotalDynamicColumnsTem = 0;
                                     int iTNTemp = 0;
                                     string strReturnSQL="";
-                                    RecordManager.ets_Record_List(int.Parse(_dtRecordTypleColumlns.Rows[i]["TableTableID"].ToString()), null, true,
+                                    RecordManager.ets_Record_List(int.Parse(_dtColumnsDetail.Rows[i]["TableTableID"].ToString()), null, true,
                                    false, null, null,
                                    "", "", 0, 1, ref iTNTemp, ref _iTotalDynamicColumnsTem, "", "", strTextSearch, null, null,
                                    "", "", "", null, ref strReturnSQL, ref strReturnSQL);
 
-                                    if (_dtRecordTypleColumlns.Rows[i]["DropDownValues"].ToString() == "no")
+                                    if (_dtColumnsDetail.Rows[i]["DropDownValues"].ToString() == "no")
                                     {
                                         _lblValue[i].Text = iTNTemp.ToString();
                                     }
@@ -8248,7 +8327,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                         }
                                         else
                                         {
-                                            string strChildTableLink = " <a href='RecordList.aspx?TableID=" + Cryptography.Encrypt(_dtRecordTypleColumlns.Rows[i]["TableTableID"].ToString()) + "&TextSearch=" + Cryptography.Encrypt(strTextSearch) + "' target='_blank'>" + iTNTemp.ToString() + "</a>";
+                                            string strChildTableLink = " <a href='RecordList.aspx?TableID=" + Cryptography.Encrypt(_dtColumnsDetail.Rows[i]["TableTableID"].ToString()) + "&TextSearch=" + Cryptography.Encrypt(strTextSearch) + "' target='_blank'>" + iTNTemp.ToString() + "</a>";
                                             _lblValue[i].Text = Server.HtmlDecode(strChildTableLink);
                                         }
 
@@ -8267,29 +8346,29 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     }
 
 
-                    if (_dtRecordTypleColumlns.Rows[i]["IsRound"] != DBNull.Value)
+                    if (_dtColumnsDetail.Rows[i]["IsRound"] != DBNull.Value)
                     {
-                        if (_dtRecordTypleColumlns.Rows[i]["IsRound"].ToString().ToLower() == "true")
+                        if (_dtColumnsDetail.Rows[i]["IsRound"].ToString().ToLower() == "true")
                         {
                             if (_txtValue[i].Text.ToString() != "")
                             {
                                 try
                                 {
-                                    if (_dtRecordTypleColumlns.Rows[i]["IgnoreSymbols"].ToString().ToLower() == "true")
+                                    if (_dtColumnsDetail.Rows[i]["IgnoreSymbols"].ToString().ToLower() == "true")
                                     {
                                         if (Common.HasSymbols(_txtValue[i].Text) == false)
-                                            _txtValue[i].Text = Math.Round(double.Parse(Common.IgnoreSymbols(_txtValue[i].Text)), int.Parse(_dtRecordTypleColumlns.Rows[i]["RoundNumber"].ToString())).ToString("N" + _dtRecordTypleColumlns.Rows[i]["RoundNumber"].ToString());
+                                            _txtValue[i].Text = Math.Round(double.Parse(Common.IgnoreSymbols(_txtValue[i].Text)), int.Parse(_dtColumnsDetail.Rows[i]["RoundNumber"].ToString())).ToString("N" + _dtColumnsDetail.Rows[i]["RoundNumber"].ToString());
                                     }
                                     else
                                     {
-                                        _txtValue[i].Text = Math.Round(double.Parse(Common.IgnoreSymbols(_txtValue[i].Text)), int.Parse(_dtRecordTypleColumlns.Rows[i]["RoundNumber"].ToString())).ToString("N" + _dtRecordTypleColumlns.Rows[i]["RoundNumber"].ToString());
+                                        _txtValue[i].Text = Math.Round(double.Parse(Common.IgnoreSymbols(_txtValue[i].Text)), int.Parse(_dtColumnsDetail.Rows[i]["RoundNumber"].ToString())).ToString("N" + _dtColumnsDetail.Rows[i]["RoundNumber"].ToString());
                                     }
 
-                                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "number"
-                       && _dtRecordTypleColumlns.Rows[i]["NumberType"] != null)
+                                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "number"
+                       && _dtColumnsDetail.Rows[i]["NumberType"] != null)
                                     {
                                          //Financial
-                                        if (_dtRecordTypleColumlns.Rows[i]["NumberType"].ToString() == "6")
+                                        if (_dtColumnsDetail.Rows[i]["NumberType"].ToString() == "6")
                                         {
                                             if (_txtValue[i].Text != "")
                                             {
@@ -8310,17 +8389,30 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         }
 
                     }
+                }
+               
 
-
-
+                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "calculation"
+                    || _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "number")
+                {
 
                     //check warning and validation
-                    if (strWarning.IndexOf(": " + _dtRecordTypleColumlns.Rows[i]["DisplayName"].ToString()) >= 0)
+                    if (TheDatabase.HasWarning_msg(strWarning, _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), ""))
                     {
                         _txtValue[i].ForeColor = System.Drawing.Color.Blue;
                     }
+                    if (TheDatabase.HasExceedance_msg(strWarning, _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), ""))
+                    {
+                        _txtValue[i].ForeColor = System.Drawing.Color.Orange;
+                    }
+                    if (TheDatabase.HasInvalidIgnored_msg(strWarning, _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), ""))
+                    {
+                        _txtValue[i].ForeColor = System.Drawing.Color.Red;
+                    }
 
-                    if (strValidation.IndexOf(": " + _dtRecordTypleColumlns.Rows[i]["DisplayName"].ToString()) >= 0)
+
+
+                    if (strValidation.IndexOf(": " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString()) >= 0)
                     {
                         _txtValue[i].ForeColor = System.Drawing.Color.Red;
                     }
@@ -8329,25 +8421,76 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     string strToopTip = "";
                     if (strWarning != "")
                     {
-                        if (strWarning.IndexOf(": " + _dtRecordTypleColumlns.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range") >= 0)
+                        if (TheDatabase.HasWarning_msg(strWarning, _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), "l"))
                         {
                             _imgWarning[i].Visible = true;
-                            strToopTip = "Value outside accepted range(" + _dtRecordTypleColumlns.Rows[i]["ValidationOnWarning"].ToString() + ").";
+                            strToopTip = strEachFormulaW_Msg;// "Value outside accepted range(" + strEachFormulaW + ").";
                             _imgWarning[i].ToolTip = strToopTip;
+                        }
+
+                        if (TheDatabase.HasExceedance_msg(strWarning, _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), ""))
+                        {
+                            _imgWarning[i].Visible = true;
+                            strToopTip = strEachFormulaE_Msg;// "Value outside accepted range(" + strEachFormulaE + ").";
+                            _imgWarning[i].ToolTip = strToopTip;
+                            _imgWarning[i].ImageUrl = _imgWarning[i].ImageUrl.Replace("warning.png", "exceedance.png");
+                        }
+
+                        if (TheDatabase.HasInvalidIgnored_msg(strWarning, _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), ""))
+                        {
+                            _imgWarning[i].Visible = true;
+                            strToopTip = strEachFormulaV_Msg;// "INVALID (and ignored):" + strEachFormulaV + ".";
+                            _imgWarning[i].ToolTip = strToopTip;
+                            _imgWarning[i].ImageUrl = _imgWarning[i].ImageUrl.Replace("warning.png", "Invalid.png");
+                            _imgWarning[i].ImageUrl = _imgWarning[i].ImageUrl.Replace("exceedance.png", "Invalid.png");
                         }
                     }
 
                     if (strWarning != "")
                     {
-                        if (strWarning.IndexOf(": " + _dtRecordTypleColumlns.Rows[i]["DisplayName"].ToString() + " – Unlikely data – outside 3 standard deviations.") >= 0)
+                        if (TheDatabase.HasWarningUnlikely_msg(strWarning, _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), "l"))
                         {
                             _imgWarning[i].Visible = true;
                             _imgWarning[i].ToolTip = strToopTip + "Unlikely data – outside 3 standard deviations.";
                         }
                     }
+
+
+
+                    ////check warning and validation
+                    //if (strWarning.IndexOf(": " + _dtRecordTypleColumlns.Rows[i]["DisplayName"].ToString()) >= 0)
+                    //{
+                    //    _txtValue[i].ForeColor = System.Drawing.Color.Blue;
+                    //}
+
+                    //if (strValidation.IndexOf(": " + _dtRecordTypleColumlns.Rows[i]["DisplayName"].ToString()) >= 0)
+                    //{
+                    //    _txtValue[i].ForeColor = System.Drawing.Color.Red;
+                    //}
+
+                    ////check specific warning
+                    //string strToopTip = "";
+                    //if (strWarning != "")
+                    //{
+                    //    if (strWarning.IndexOf(": " + _dtRecordTypleColumlns.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range") >= 0)
+                    //    {
+                    //        _imgWarning[i].Visible = true;
+                    //        strToopTip = "Value outside accepted range(" + _dtRecordTypleColumlns.Rows[i]["ValidationOnWarning"].ToString() + ").";
+                    //        _imgWarning[i].ToolTip = strToopTip;
+                    //    }
+                    //}
+
+                    //if (strWarning != "")
+                    //{
+                    //    if (strWarning.IndexOf(": " + _dtRecordTypleColumlns.Rows[i]["DisplayName"].ToString() + " – Unlikely data – outside 3 standard deviations.") >= 0)
+                    //    {
+                    //        _imgWarning[i].Visible = true;
+                    //        _imgWarning[i].ToolTip = strToopTip + "Unlikely data – outside 3 standard deviations.";
+                    //    }
+                    //}
                 }
 
-                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "radiobutton")
+                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "radiobutton")
                 {
                     if (_dtRecordedetail.Rows[0][i].ToString() != "")
                     {
@@ -8362,13 +8505,13 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     }
                 }
 
-                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "checkbox")
+                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "checkbox")
                 {
                     if (_dtRecordedetail.Rows[0][i].ToString() != "")
                     {
                         try
                         {
-                            Common.SetCheckBoxValue(_dtRecordTypleColumlns.Rows[i]["DropDownValues"].ToString(), _dtRecordedetail.Rows[0][i].ToString(), ref _chkValue[i]);
+                            Common.SetCheckBoxValue(_dtColumnsDetail.Rows[i]["DropDownValues"].ToString(), _dtRecordedetail.Rows[0][i].ToString(), ref _chkValue[i]);
                         }
                         catch (Exception ex)
                         {
@@ -8376,7 +8519,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         }
                     }
                 }
-                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "location")
+                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "location")
                 {
                     if (_dtRecordedetail.Rows[0][i].ToString() != "")
                     {
@@ -8419,7 +8562,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     }
                 }
 
-                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "content")
+                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "content")
                 {
                     if (_dtRecordedetail.Rows[0][i].ToString() != "")
                     {
@@ -8430,8 +8573,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "listbox"
-                     && _dtRecordTypleColumlns.Rows[i]["DateCalculationType"].ToString() == "")
+                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "listbox"
+                     && _dtColumnsDetail.Rows[i]["DateCalculationType"].ToString() == "")
                 {
                     if (_dtRecordedetail.Rows[0][i].ToString() != "")
                     {
@@ -8439,18 +8582,18 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         {
                             //SetListValues(_dtRecordedetail.Rows[0][i].ToString(), ref _lstValue[i]);
 
-                            if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "values")
+                            if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "values")
                             {
-                                Common.SetListValues(_dtRecordedetail.Rows[0][i].ToString(), ref _lstValue[i], _dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString());
+                                Common.SetListValues(_dtRecordedetail.Rows[0][i].ToString(), ref _lstValue[i], _dtColumnsDetail.Rows[i]["DropdownValues"].ToString());
                             }
-                            else if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "value_text")
+                            else if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "value_text")
                             {
-                                Common.SetListValues_Text(_dtRecordedetail.Rows[0][i].ToString(), ref _lstValue[i], _dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString());
+                                Common.SetListValues_Text(_dtRecordedetail.Rows[0][i].ToString(), ref _lstValue[i], _dtColumnsDetail.Rows[i]["DropdownValues"].ToString());
                             }
                             else
                             {
                                 Common.SetListValues_ForTable(_dtRecordedetail.Rows[0][i].ToString(), ref _lstValue[i],
-                                    (int)_dtRecordTypleColumlns.Rows[i]["TableTableID"], null, _dtRecordTypleColumlns.Rows[i]["DisplayColumn"].ToString());
+                                    (int)_dtColumnsDetail.Rows[i]["TableTableID"], null, _dtColumnsDetail.Rows[i]["DisplayColumn"].ToString());
                             }
 
 
@@ -8463,17 +8606,17 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 }
 
 
-                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "listbox"
-                       && _dtRecordTypleColumlns.Rows[i]["DateCalculationType"].ToString() == "checkbox")
+                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "listbox"
+                       && _dtColumnsDetail.Rows[i]["DateCalculationType"].ToString() == "checkbox")
                 {
 
-                    if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "values")
+                    if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "values")
                     {
-                        Common.PutCheckBoxListValues(_dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString(), ref _cblValue[i]);
+                        Common.PutCheckBoxListValues(_dtColumnsDetail.Rows[i]["DropdownValues"].ToString(), ref _cblValue[i]);
                     }
                     else
                     {
-                        Common.PutCheckBoxListValues_Text(_dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString(), ref _cblValue[i]);
+                        Common.PutCheckBoxListValues_Text(_dtColumnsDetail.Rows[i]["DropdownValues"].ToString(), ref _cblValue[i]);
                     }
 
 
@@ -8481,22 +8624,22 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     {
                         try
                         {
-                            if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "values")
+                            if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "values")
                             {
-                                Common.SetCheckBoxListValues(_dtRecordedetail.Rows[0][i].ToString(), ref _cblValue[i], _dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString());
+                                Common.SetCheckBoxListValues(_dtRecordedetail.Rows[0][i].ToString(), ref _cblValue[i], _dtColumnsDetail.Rows[i]["DropdownValues"].ToString());
                             }
-                            else if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "value_text")
+                            else if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "value_text")
                             {
-                                Common.SetCheckBoxListValues_Text(_dtRecordedetail.Rows[0][i].ToString(), ref _cblValue[i], _dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString());
+                                Common.SetCheckBoxListValues_Text(_dtRecordedetail.Rows[0][i].ToString(), ref _cblValue[i], _dtColumnsDetail.Rows[i]["DropdownValues"].ToString());
                             }
                             else
                             {
-                                if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "table"
-                             && _dtRecordTypleColumlns.Rows[i]["TableTableID"] != DBNull.Value
-                        && _dtRecordTypleColumlns.Rows[i]["DisplayColumn"].ToString() != "")
+                                if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "table"
+                             && _dtColumnsDetail.Rows[i]["TableTableID"] != DBNull.Value
+                        && _dtColumnsDetail.Rows[i]["DisplayColumn"].ToString() != "")
                                 {
                                     Common.SetCheckBoxListValues_ForTable(_dtRecordedetail.Rows[0][i].ToString(), ref _cblValue[i],
-                                        (int)_dtRecordTypleColumlns.Rows[i]["TableTableID"], null, _dtRecordTypleColumlns.Rows[i]["DisplayColumn"].ToString());
+                                        (int)_dtColumnsDetail.Rows[i]["TableTableID"], null, _dtColumnsDetail.Rows[i]["DisplayColumn"].ToString());
                                 }
 
                             }
@@ -8520,10 +8663,10 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "dropdown"
-                   && _dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString() != ""
-                    && (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "values"
-                    || _dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "value_text"))
+                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "dropdown"
+                   && _dtColumnsDetail.Rows[i]["DropdownValues"].ToString() != ""
+                    && (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "values"
+                    || _dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "value_text"))
                 {
                     if (_dtRecordedetail.Rows[0][i].ToString() != "")
                     {
@@ -8538,12 +8681,12 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
                         //check warning and validation
-                        if (strWarning.IndexOf(": " + _dtRecordTypleColumlns.Rows[i]["DisplayName"].ToString()) >= 0)
+                        if (strWarning.IndexOf(": " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString()) >= 0)
                         {
                             _ddlValue[i].ForeColor = System.Drawing.Color.Blue;
                         }
 
-                        if (strValidation.IndexOf(": " + _dtRecordTypleColumlns.Rows[i]["DisplayName"].ToString()) >= 0)
+                        if (strValidation.IndexOf(": " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString()) >= 0)
                         {
                             _ddlValue[i].ForeColor = System.Drawing.Color.Red;
                         }
@@ -8552,10 +8695,10 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         string strToopTip = "";
                         if (strWarning != "")
                         {
-                            if (strWarning.IndexOf(": " + _dtRecordTypleColumlns.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range") >= 0)
+                            if (strWarning.IndexOf(": " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range") >= 0)
                             {
                                 _imgWarning[i].Visible = true;
-                                strToopTip = "Value outside accepted range(" + _dtRecordTypleColumlns.Rows[i]["ValidationOnWarning"].ToString() + ").";
+                                strToopTip = "Value outside accepted range(" + _dtColumnsDetail.Rows[i]["ValidationOnWarning"].ToString() + ").";
                                 _imgWarning[i].ToolTip = strToopTip;
                             }
                         }
@@ -9370,10 +9513,10 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
     {
         txtReasonForChange.Enabled = p_bEnable;
         //trReasonForChange.Visible = false;
-        for (int i = 0; i < _dtRecordTypleColumlns.Rows.Count; i++)
+        for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
         {
 
-            switch (_dtRecordTypleColumlns.Rows[i]["SystemName"].ToString().ToLower())
+            switch (_dtColumnsDetail.Rows[i]["SystemName"].ToString().ToLower())
             {
                 case "recordid":
                     break;
@@ -9386,7 +9529,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     break;
                 default:
 
-                    if (_dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString().ToLower() == "")
+                    if (_dtColumnsDetail.Rows[i]["DropdownValues"].ToString().ToLower() == "")
                     {
                         if (_txtValue[i] != null)
                             _txtValue[i].Enabled = p_bEnable;
@@ -9400,7 +9543,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                             _ddlValue[i].Enabled = p_bEnable;
                     }
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() != "date")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() != "date")
                     {
                         if (_txtTime[i] != null)
                         {
@@ -9408,15 +9551,15 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                             //_imgTrigger.Visible = false;
                         }
                     }
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "file"
-                        || _dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "image")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "file"
+                        || _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image")
                     {
                         if (_fuValue[i] != null)
                             _fuValue[i].Visible = false;
                     }
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "dropdown"
-                        && _dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "table")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "dropdown"
+                        && _dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "table")
                     {
                         if (_ddlValue2[i] != null)
                             _ddlValue2[i].Enabled = false;
@@ -9425,8 +9568,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                             _txtValue[i].Enabled = false;
                     }
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "dropdown"
-                        && _dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "tabledd")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "dropdown"
+                        && _dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "tabledd")
                     {
                         if (_ddlValue[i] != null)
                             _ddlValue[i].Enabled = false;
@@ -9436,25 +9579,25 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                     }
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "radiobutton")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "radiobutton")
                     {
                         if (_radioList[i] != null)
                             _radioList[i].Enabled = false;
                     }
 
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "listbox")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "listbox")
                     {
                         if (_lstValue[i] != null)
                             _lstValue[i].Enabled = false;
                         if (_cblValue[i] != null)
                             _cblValue[i].Enabled = false;
                     }
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "checkbox")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "checkbox")
                     {
                         if (_chkValue[i] != null)
                             _chkValue[i].Enabled = false;
                     }
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "location")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "location")
                     {
                         if (_txtValue[i] != null)
                             _txtValue[i].Enabled = false;
@@ -9463,7 +9606,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         if (_txtTime[i] != null)
                             _txtTime[i].Enabled = false;
                     }
-                    if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "content")
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "content")
                     {
                         if (_htmValue[i] != null)
                             _htmValue[i].Enabled = false;
@@ -9785,17 +9928,17 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                         Record newRecord = new Record();
 
-                        for (int i = 0; i < _dtRecordTypleColumlns.Rows.Count; i++)
+                        for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
                         {
 
 
                             if (i == _iEnteredByIndex)
                             {
-                                RecordManager.MakeTheRecord(ref newRecord, _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString(), _ddlEnteredBy.SelectedValue);
+                                RecordManager.MakeTheRecord(ref newRecord, _dtColumnsDetail.Rows[i]["SystemName"].ToString(), _ddlEnteredBy.SelectedValue);
                             }
                             else if (i == _iIsActiveIndex)
                             {
-                                RecordManager.MakeTheRecord(ref newRecord, _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString(), _chkIsActive.Checked);
+                                RecordManager.MakeTheRecord(ref newRecord, _dtColumnsDetail.Rows[i]["SystemName"].ToString(), _chkIsActive.Checked);
                             }
                             else if (i == _iDateTimeRecorded)
                             {
@@ -9833,7 +9976,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                     strDateTime = _txtValue[i].Text + " " + strTimePart;
                                 }
 
-                                RecordManager.MakeTheRecord(ref newRecord, _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString(), strDateTime);
+                                RecordManager.MakeTheRecord(ref newRecord, _dtColumnsDetail.Rows[i]["SystemName"].ToString(), strDateTime);
                             }
                             else
                             {
@@ -9854,7 +9997,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                     }
                                 }
 
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "datetime")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "datetime")
                                 {
                                     string strDateTime = "";
                                     if (_txtValue[i].Text.Trim() == "")
@@ -9899,7 +10042,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                                 }
 
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "date")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "date")
                                 {
                                     string strDateTime = "";
                                     if (_txtValue[i].Text == "")
@@ -9920,14 +10063,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                                 }
 
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "time")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "time")
                                 {
                                     strValue = _txtValue[i].Text;
 
                                 }
 
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "file"
-                                    || _dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "image")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "file"
+                                    || _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image")
                                 {
 
                                     if (_hfValue2[i].Value == "yes" && _fuValue2[i].HasFile)
@@ -9950,23 +10093,23 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 //    strValue = _txtValue[i].Text;
                                 //}
 
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "text"
-                                        || _dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "number")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "text"
+                                        || _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "number")
                                 {
                                     strValue = _txtValue[i].Text;
 
-                                    if (_dtRecordTypleColumlns.Rows[i]["NumberType"].ToString() == "6" && _dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "number")
+                                    if (_dtColumnsDetail.Rows[i]["NumberType"].ToString() == "6" && _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "number")
                                     {
                                         strValue = strValue.Replace(",", "");
                                     }
 
-                                    if (_dtRecordTypleColumlns.Rows[i]["NumberType"] != null)
+                                    if (_dtColumnsDetail.Rows[i]["NumberType"] != null)
                                     {
-                                        if (_dtRecordTypleColumlns.Rows[i]["NumberType"].ToString() == "8")
+                                        if (_dtColumnsDetail.Rows[i]["NumberType"].ToString() == "8")
                                         {
                                             try
                                             {
-                                                string strMax = Common.GetValueFromSQL("SELECT MAX(CONVERT(INT," + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString() + ")) FROM Record WHERE TableID=" + TableID.ToString());
+                                                string strMax = Common.GetValueFromSQL("SELECT MAX(CONVERT(INT," + _dtColumnsDetail.Rows[i]["SystemName"].ToString() + ")) FROM Record WHERE TableID=" + TableID.ToString());
                                                 if (strMax == "")
                                                 {
                                                     strValue = "1";
@@ -9988,17 +10131,17 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 }
 
 
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "dropdown"
-                           && _dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString() != ""
-                           && (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "values"
-                           || _dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "value_text"))
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "dropdown"
+                           && _dtColumnsDetail.Rows[i]["DropdownValues"].ToString() != ""
+                           && (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "values"
+                           || _dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "value_text"))
                                 {
                                     if (_ddlValue[i].SelectedIndex != 0)
                                     {
                                         strValue = _ddlValue[i].Text;
                                     }
                                 }
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "radiobutton")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "radiobutton")
                                 {
                                     if (_radioList[i].SelectedItem != null)
                                     {
@@ -10006,13 +10149,13 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                     }
 
                                 }
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "checkbox")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "checkbox")
                                 {
-                                    strValue = Common.GetCheckBoxValue(_dtRecordTypleColumlns.Rows[i]["DropDownValues"].ToString(), ref _chkValue[i]);
+                                    strValue = Common.GetCheckBoxValue(_dtColumnsDetail.Rows[i]["DropDownValues"].ToString(), ref _chkValue[i]);
                                 }
 
 
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "location")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "location")
                                 {
                                     LocationColumn newLocationColumn = new LocationColumn();
                                     if (_hfValue3[i] != null)
@@ -10049,16 +10192,16 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                     strValue = newLocationColumn.GetJSONString();
                                 }
 
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "content")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "content")
                                 {
                                     strValue = _htmValue[i].Text;
                                 }
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "staticcontent")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "staticcontent")
                                 {
                                     strValue = "";
                                 }
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "listbox"
-                                    && _dtRecordTypleColumlns.Rows[i]["DateCalculationType"].ToString() == "")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "listbox"
+                                    && _dtColumnsDetail.Rows[i]["DateCalculationType"].ToString() == "")
                                 {
                                     if (_lstValue[i].SelectedItem != null)
                                     {
@@ -10067,8 +10210,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                                 }
 
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "listbox"
-                                 && _dtRecordTypleColumlns.Rows[i]["DateCalculationType"].ToString() == "checkbox")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "listbox"
+                                 && _dtColumnsDetail.Rows[i]["DateCalculationType"].ToString() == "checkbox")
                                 {
                                     if (_cblValue[i].SelectedItem != null)
                                     {
@@ -10249,9 +10392,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                                if (_dtRecordTypleColumlns.Rows[i]["IsRound"] != DBNull.Value && _dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "number")
+                                if (_dtColumnsDetail.Rows[i]["IsRound"] != DBNull.Value && _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "number")
                                 {
-                                    if (_dtRecordTypleColumlns.Rows[i]["IsRound"].ToString().ToLower() == "true")
+                                    if (_dtColumnsDetail.Rows[i]["IsRound"].ToString().ToLower() == "true")
                                     {
                                         if (_txtValue[i].Text.ToString() != "")
                                         {
@@ -10259,14 +10402,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                             try
                                             {
 
-                                                if (_dtRecordTypleColumlns.Rows[i]["IgnoreSymbols"].ToString().ToLower() == "true")
+                                                if (_dtColumnsDetail.Rows[i]["IgnoreSymbols"].ToString().ToLower() == "true")
                                                 {
                                                     if (Common.HasSymbols(_txtValue[i].Text) == false)
-                                                        _txtValue[i].Text = Math.Round(double.Parse(Common.IgnoreSymbols(_txtValue[i].Text)), int.Parse(_dtRecordTypleColumlns.Rows[i]["RoundNumber"].ToString())).ToString("N" + _dtRecordTypleColumlns.Rows[i]["RoundNumber"].ToString());
+                                                        _txtValue[i].Text = Math.Round(double.Parse(Common.IgnoreSymbols(_txtValue[i].Text)), int.Parse(_dtColumnsDetail.Rows[i]["RoundNumber"].ToString())).ToString("N" + _dtColumnsDetail.Rows[i]["RoundNumber"].ToString());
                                                 }
                                                 else
                                                 {
-                                                    _txtValue[i].Text = Math.Round(double.Parse(Common.IgnoreSymbols(_txtValue[i].Text)), int.Parse(_dtRecordTypleColumlns.Rows[i]["RoundNumber"].ToString())).ToString("N" + _dtRecordTypleColumlns.Rows[i]["RoundNumber"].ToString());
+                                                    _txtValue[i].Text = Math.Round(double.Parse(Common.IgnoreSymbols(_txtValue[i].Text)), int.Parse(_dtColumnsDetail.Rows[i]["RoundNumber"].ToString())).ToString("N" + _dtColumnsDetail.Rows[i]["RoundNumber"].ToString());
                                                 }
                                             }
                                             catch
@@ -10291,19 +10434,19 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 //          }
 
 
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "dropdown"
-                           && (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "table"
-                           || _dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "tabledd")
-                           && _dtRecordTypleColumlns.Rows[i]["TableTableID"] != DBNull.Value
-                           && _dtRecordTypleColumlns.Rows[i]["DisplayColumn"].ToString() != "")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "dropdown"
+                           && (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "table"
+                           || _dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "tabledd")
+                           && _dtColumnsDetail.Rows[i]["TableTableID"] != DBNull.Value
+                           && _dtColumnsDetail.Rows[i]["DisplayColumn"].ToString() != "")
                                 {
-                                    if (_dtRecordTypleColumlns.Rows[i]["ParentColumnID"] == DBNull.Value)
+                                    if (_dtColumnsDetail.Rows[i]["ParentColumnID"] == DBNull.Value)
                                     {
-                                        if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "table")
+                                        if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "table")
                                         {
                                             strValue = _hfValue[i].Value;
                                         }
-                                        if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "tabledd")
+                                        if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "tabledd")
                                         {
                                             if (_ddlValue[i].SelectedItem != null)
                                                 strValue = _ddlValue[i].SelectedValue;
@@ -10319,32 +10462,32 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                                RecordManager.MakeTheRecord(ref newRecord, _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString(), strValue);
+                                RecordManager.MakeTheRecord(ref newRecord, _dtColumnsDetail.Rows[i]["SystemName"].ToString(), strValue);
                                 if (strValue.Length > 0)
                                 {
-                                    if (_dtRecordTypleColumlns.Rows[i]["ValidationOnEntry"] == DBNull.Value)
+                                    if (_dtColumnsDetail.Rows[i]["ValidationOnEntry"] == DBNull.Value)
                                     {
                                         //do nothing
                                     }
                                     else
                                     {
-                                        if (_dtRecordTypleColumlns.Rows[i]["ValidationOnEntry"].ToString().Length > 0)
+                                        if (_dtColumnsDetail.Rows[i]["ValidationOnEntry"].ToString().Length > 0)
                                         {
-                                            if (UploadManager.IsDataValid(strValue, _dtRecordTypleColumlns.Rows[i]["ValidationOnEntry"].ToString(), ref strValidationError))
+                                            if (UploadManager.IsDataValid(strValue, _dtColumnsDetail.Rows[i]["ValidationOnEntry"].ToString(), ref strValidationError))
                                             {
                                                 //strValidationResults = strValidationResults + "\n" + _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " - " + "VALID";
                                             }
                                             else
                                             {
-                                                lblMsg.Text = "Invalid data - " + _dtRecordTypleColumlns.Rows[i]["DisplayName"].ToString();
-                                                if (_dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString() == ""
-                                                    && _dtRecordTypleColumlns.Rows[i]["TableTableID"] == DBNull.Value)
+                                                lblMsg.Text = "Invalid data - " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString();
+                                                if (_dtColumnsDetail.Rows[i]["DropdownValues"].ToString() == ""
+                                                    && _dtColumnsDetail.Rows[i]["TableTableID"] == DBNull.Value)
                                                 {
                                                     _txtValue[i].Focus();
                                                 }
-                                                else if (_dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString() != ""
-                                                   && (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "values"
-                                                    || _dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "value_text"))
+                                                else if (_dtColumnsDetail.Rows[i]["DropdownValues"].ToString() != ""
+                                                   && (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "values"
+                                                    || _dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "value_text"))
                                                 {
                                                     _ddlValue[i].Focus();
                                                 }
@@ -10353,17 +10496,17 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                         }
                                     }
 
-                                    if (_dtRecordTypleColumlns.Rows[i]["ValidationOnWarning"] == DBNull.Value)
+                                    if (_dtColumnsDetail.Rows[i]["ValidationOnWarning"] == DBNull.Value)
                                     {
                                         //do nothing
                                     }
                                     else
                                     {
-                                        if (_dtRecordTypleColumlns.Rows[i]["ValidationOnWarning"].ToString().Length > 0)
+                                        if (_dtColumnsDetail.Rows[i]["ValidationOnWarning"].ToString().Length > 0)
                                         {
-                                            if (!UploadManager.IsDataValid(strValue, _dtRecordTypleColumlns.Rows[i]["ValidationOnWarning"].ToString(), ref strValidationError))
+                                            if (!UploadManager.IsDataValid(strValue, _dtColumnsDetail.Rows[i]["ValidationOnWarning"].ToString(), ref strValidationError))
                                             {
-                                                strWarningResults = strWarningResults + " WARNING: " + _dtRecordTypleColumlns.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range.";
+                                                strWarningResults = strWarningResults + " WARNING: " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range.";
 
                                                 string strTemp = "";
                                                 bDataWarning = true;
@@ -10381,15 +10524,15 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                     }
 
                                     //check SD
-                                    if (bool.Parse(_dtRecordTypleColumlns.Rows[i]["CheckUnlikelyValue"].ToString()))
+                                    if (bool.Parse(_dtColumnsDetail.Rows[i]["CheckUnlikelyValue"].ToString()))
                                     {
-                                        int? iCount = RecordManager.ets_Table_GetCount((int)_theTable.TableID, _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString(), -1);
+                                        int? iCount = RecordManager.ets_Table_GetCount((int)_theTable.TableID, _dtColumnsDetail.Rows[i]["SystemName"].ToString(), -1);
                                         if (iCount != null)
                                         {
                                             if (iCount >= Common.MinSTDEVRecords)
                                             {
                                                 string strRecordedate;
-                                                if (_dtRecordTypleColumlns.Rows[i]["IgnoreSymbols"].ToString().ToLower() == "true")
+                                                if (_dtColumnsDetail.Rows[i]["IgnoreSymbols"].ToString().ToLower() == "true")
                                                 {
                                                     strRecordedate = Common.IgnoreSymbols(_txtValue[i].Text);
                                                 }
@@ -10398,9 +10541,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                                     strRecordedate = _txtValue[i].Text;
                                                 }
 
-                                                double? dAVG = RecordManager.ets_Table_GetAVG((int)_theTable.TableID, _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString(), -1);
+                                                double? dAVG = RecordManager.ets_Table_GetAVG((int)_theTable.TableID, _dtColumnsDetail.Rows[i]["SystemName"].ToString(), -1);
 
-                                                double? dSTDEV = RecordManager.ets_Table_GetSTDEV((int)_theTable.TableID, _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString(), -1);
+                                                double? dSTDEV = RecordManager.ets_Table_GetSTDEV((int)_theTable.TableID, _dtColumnsDetail.Rows[i]["SystemName"].ToString(), -1);
 
                                                 double dRecordedate = double.Parse(strRecordedate);
                                                 if (dAVG != null && dSTDEV != null)
@@ -10409,7 +10552,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                                     if (dRecordedate > (dAVG + dSTDEV) || dRecordedate < (dAVG - dSTDEV))
                                                     {
                                                         //deviation happaned
-                                                        strWarningResults = strWarningResults + " WARNING: " + _dtRecordTypleColumlns.Rows[i]["DisplayName"].ToString() + " – Unlikely data – outside 3 standard deviations.";
+                                                        strWarningResults = strWarningResults + " WARNING: " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + " – Unlikely data – outside 3 standard deviations.";
                                                     }
 
                                                 }
@@ -10727,18 +10870,18 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                         if (bDataWarning)
                         {
-                            for (int i = 0; i < _dtRecordTypleColumlns.Rows.Count; i++)
+                            for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
                             {
                                 strValue = "";
-                                if (_dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString() == ""
-                                    && _dtRecordTypleColumlns.Rows[i]["TableTableID"] == DBNull.Value)
+                                if (_dtColumnsDetail.Rows[i]["DropdownValues"].ToString() == ""
+                                    && _dtColumnsDetail.Rows[i]["TableTableID"] == DBNull.Value)
                                 {
                                     if (_txtValue[i] != null)
                                         strValue = _txtValue[i].Text;
                                 }
-                                else if (_dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString() != ""
-                                    && (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "values"
-                                    || _dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "value_text"))
+                                else if (_dtColumnsDetail.Rows[i]["DropdownValues"].ToString() != ""
+                                    && (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "values"
+                                    || _dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "value_text"))
                                 {
                                     if (_ddlValue[i].SelectedIndex != 0)
                                     {
@@ -10746,20 +10889,20 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                     }
                                 }
 
-                                if (_dtRecordTypleColumlns.Rows[i]["ValidationOnWarning"] == DBNull.Value)
+                                if (_dtColumnsDetail.Rows[i]["ValidationOnWarning"] == DBNull.Value)
                                 {
                                     //do nothing
                                 }
                                 else
                                 {
-                                    if (_dtRecordTypleColumlns.Rows[i]["ValidationOnWarning"].ToString().Length > 0)
+                                    if (_dtColumnsDetail.Rows[i]["ValidationOnWarning"].ToString().Length > 0)
                                     {
-                                        if (!UploadManager.IsDataValid(strValue, _dtRecordTypleColumlns.Rows[i]["ValidationOnWarning"].ToString(), ref strValidationError))
+                                        if (!UploadManager.IsDataValid(strValue, _dtColumnsDetail.Rows[i]["ValidationOnWarning"].ToString(), ref strValidationError))
                                         {
 
                                             string strTemp = "";
                                             //RecordManager.SendDataWanrningSMSandEmail(int.Parse(_dtRecordTypleColumlns.Rows[i]["ColumnID"].ToString()), strValue, newRecord.DateTimeRecorded.ToString(), ref strTemp, _iSessionAccountID, _strURL);
-                                            RecordManager.BuildDataWanrningSMSandEmail(int.Parse(_dtRecordTypleColumlns.Rows[i]["ColumnID"].ToString()), strValue, newRecord.DateTimeRecorded.ToString(),
+                                            RecordManager.BuildDataWanrningSMSandEmail(int.Parse(_dtColumnsDetail.Rows[i]["ColumnID"].ToString()), strValue, newRecord.DateTimeRecorded.ToString(),
                                                 ref strTemp, _iSessionAccountID, _strURL, ref strEmailFullBody, ref strSMSFullBody, ref iWarningColumnCount);
 
                                         }
@@ -10847,7 +10990,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                         _strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString() + "&TableID=" + TableID.ToString() + "&Recordid=" + Cryptography.Encrypt(RecordID.ToString());
 
-                        for (int i = 0; i < _dtRecordTypleColumlns.Rows.Count; i++)
+                        for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
                         {
 
                             //if (i == _iLocationIndex)
@@ -10860,11 +11003,11 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                             //else
                             if (i == _iEnteredByIndex)
                             {
-                                RecordManager.MakeTheRecord(ref editRecord, _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString(), _ddlEnteredBy.SelectedValue);
+                                RecordManager.MakeTheRecord(ref editRecord, _dtColumnsDetail.Rows[i]["SystemName"].ToString(), _ddlEnteredBy.SelectedValue);
                             }
                             else if (i == _iIsActiveIndex)
                             {
-                                RecordManager.MakeTheRecord(ref editRecord, _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString(), _chkIsActive.Checked);
+                                RecordManager.MakeTheRecord(ref editRecord, _dtColumnsDetail.Rows[i]["SystemName"].ToString(), _chkIsActive.Checked);
                             }
 
                             else if (i == _iDateTimeRecorded)
@@ -10904,7 +11047,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 }
 
                                 //RecordManager.MakeTheRecord(ref newRecord, _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString(), _txtValue[i].Text);
-                                RecordManager.MakeTheRecord(ref editRecord, _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString(), strDateTime);
+                                RecordManager.MakeTheRecord(ref editRecord, _dtColumnsDetail.Rows[i]["SystemName"].ToString(), strDateTime);
                             }
                             else
                             {
@@ -11123,22 +11266,22 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                                if (_dtRecordTypleColumlns.Rows[i]["IsRound"] != DBNull.Value)
+                                if (_dtColumnsDetail.Rows[i]["IsRound"] != DBNull.Value)
                                 {
-                                    if (_dtRecordTypleColumlns.Rows[i]["IsRound"].ToString().ToLower() == "true")
+                                    if (_dtColumnsDetail.Rows[i]["IsRound"].ToString().ToLower() == "true")
                                     {
                                         if (_txtValue[i].Text.ToString() != "")
                                         {
                                             try
                                             {
-                                                if (_dtRecordTypleColumlns.Rows[i]["IgnoreSymbols"].ToString().ToLower() == "true")
+                                                if (_dtColumnsDetail.Rows[i]["IgnoreSymbols"].ToString().ToLower() == "true")
                                                 {
                                                     if (Common.HasSymbols(_txtValue[i].Text) == false)
-                                                     _txtValue[i].Text = Math.Round(double.Parse(Common.IgnoreSymbols(_txtValue[i].Text)), int.Parse(_dtRecordTypleColumlns.Rows[i]["RoundNumber"].ToString())).ToString("N" + _dtRecordTypleColumlns.Rows[i]["RoundNumber"].ToString());
+                                                     _txtValue[i].Text = Math.Round(double.Parse(Common.IgnoreSymbols(_txtValue[i].Text)), int.Parse(_dtColumnsDetail.Rows[i]["RoundNumber"].ToString())).ToString("N" + _dtColumnsDetail.Rows[i]["RoundNumber"].ToString());
                                                 }
                                                 else
                                                 {
-                                                    _txtValue[i].Text = Math.Round(double.Parse(Common.IgnoreSymbols(_txtValue[i].Text)), int.Parse(_dtRecordTypleColumlns.Rows[i]["RoundNumber"].ToString())).ToString("N" + _dtRecordTypleColumlns.Rows[i]["RoundNumber"].ToString());
+                                                    _txtValue[i].Text = Math.Round(double.Parse(Common.IgnoreSymbols(_txtValue[i].Text)), int.Parse(_dtColumnsDetail.Rows[i]["RoundNumber"].ToString())).ToString("N" + _dtColumnsDetail.Rows[i]["RoundNumber"].ToString());
                                                 }
                                             }
                                             catch
@@ -11154,7 +11297,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 strValue = "";
 
 
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "datetime")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "datetime")
                                 {
                                     string strDateTime = "";
                                     if (_txtValue[i].Text.Trim() == "")
@@ -11199,7 +11342,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                                 }
 
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "date")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "date")
                                 {
                                     string strDateTime = "";
                                     if (_txtValue[i].Text == "")
@@ -11220,14 +11363,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                                 }
 
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "time")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "time")
                                 {
                                     strValue = _txtValue[i].Text;
 
                                 }
 
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "file"
-                                    || _dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "image")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "file"
+                                    || _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image")
                                 {
                                     if (_hfValue2[i].Value == "yes" && _fuValue2[i].HasFile)
                                     {
@@ -11248,17 +11391,17 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 //{
                                 //    strValue = _txtValue[i].Text;
                                 //}
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "text"
-                                        || _dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "number")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "text"
+                                        || _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "number")
                                 {
                                     strValue = _txtValue[i].Text;
 
                                 }
 
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "dropdown"
-                                    && _dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString() != ""
-                                    && (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "values"
-                                    || _dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "value_text"))
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "dropdown"
+                                    && _dtColumnsDetail.Rows[i]["DropdownValues"].ToString() != ""
+                                    && (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "values"
+                                    || _dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "value_text"))
                                 {
                                     if (_ddlValue[i].SelectedIndex != 0)
                                     {
@@ -11266,7 +11409,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                     }
                                 }
 
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "radiobutton")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "radiobutton")
                                 {
                                     if (_radioList[i].SelectedItem != null)
                                     {
@@ -11274,15 +11417,15 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                     }
                                 }
 
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "checkbox")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "checkbox")
                                 {
 
-                                    strValue = Common.GetCheckBoxValue(_dtRecordTypleColumlns.Rows[i]["DropDownValues"].ToString(), ref _chkValue[i]);
+                                    strValue = Common.GetCheckBoxValue(_dtColumnsDetail.Rows[i]["DropDownValues"].ToString(), ref _chkValue[i]);
 
                                 }
 
 
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "location")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "location")
                                 {
                                     LocationColumn newLocationColumn = new LocationColumn();
                                     if (_hfValue3[i] != null)
@@ -11323,21 +11466,21 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "content")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "content")
                                 {
 
                                     strValue = _htmValue[i].Text;
 
                                 }
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "staticcontent")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "staticcontent")
                                 {
 
                                     strValue = "";
 
                                 }
 
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "listbox"
-                                    && _dtRecordTypleColumlns.Rows[i]["DateCalculationType"].ToString() == "")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "listbox"
+                                    && _dtColumnsDetail.Rows[i]["DateCalculationType"].ToString() == "")
                                 {
                                     if (_lstValue[i].SelectedItem != null)
                                     {
@@ -11345,8 +11488,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                     }
                                 }
 
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "listbox"
-                                  && _dtRecordTypleColumlns.Rows[i]["DateCalculationType"].ToString() == "checkbox")
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "listbox"
+                                  && _dtColumnsDetail.Rows[i]["DateCalculationType"].ToString() == "checkbox")
                                 {
                                     if (_cblValue[i].SelectedItem != null)
                                     {
@@ -11355,19 +11498,19 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 }
 
 
-                                if (_dtRecordTypleColumlns.Rows[i]["ColumnType"].ToString() == "dropdown" &&
-                                      _dtRecordTypleColumlns.Rows[i]["TableTableID"] != DBNull.Value
-                                      && _dtRecordTypleColumlns.Rows[i]["DisplayColumn"].ToString() != ""
-                                   && (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "table"
-                                   || _dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "tabledd"))
+                                if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "dropdown" &&
+                                      _dtColumnsDetail.Rows[i]["TableTableID"] != DBNull.Value
+                                      && _dtColumnsDetail.Rows[i]["DisplayColumn"].ToString() != ""
+                                   && (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "table"
+                                   || _dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "tabledd"))
                                 {
-                                    if (_dtRecordTypleColumlns.Rows[i]["ParentColumnID"] == DBNull.Value)
+                                    if (_dtColumnsDetail.Rows[i]["ParentColumnID"] == DBNull.Value)
                                     {
-                                        if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "table")
+                                        if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "table")
                                         {
                                             strValue = _hfValue[i].Value;
                                         }
-                                        if (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "tabledd")
+                                        if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "tabledd")
                                         {
                                             if (_ddlValue[i].SelectedItem != null)
                                                 strValue = _ddlValue[i].SelectedValue;
@@ -11384,34 +11527,34 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                                RecordManager.MakeTheRecord(ref editRecord, _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString(), strValue);
+                                RecordManager.MakeTheRecord(ref editRecord, _dtColumnsDetail.Rows[i]["SystemName"].ToString(), strValue);
 
 
                                 if (strValue.Length > 0)
                                 {
-                                    if (_dtRecordTypleColumlns.Rows[i]["ValidationOnEntry"] == DBNull.Value)
+                                    if (_dtColumnsDetail.Rows[i]["ValidationOnEntry"] == DBNull.Value)
                                     {
                                         //do nothing
                                     }
                                     else if (DoValidation == true)
                                     {
-                                        if (_dtRecordTypleColumlns.Rows[i]["ValidationOnEntry"].ToString().Length > 0)
+                                        if (_dtColumnsDetail.Rows[i]["ValidationOnEntry"].ToString().Length > 0)
                                         {
-                                            if (UploadManager.IsDataValid(strValue, _dtRecordTypleColumlns.Rows[i]["ValidationOnEntry"].ToString(), ref strValidationError))
+                                            if (UploadManager.IsDataValid(strValue, _dtColumnsDetail.Rows[i]["ValidationOnEntry"].ToString(), ref strValidationError))
                                             {
                                                 //strValidationResults = strValidationResults + "\n" + _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString() + " - " + "VALID";
                                             }
                                             else
                                             {
-                                                lblMsg.Text = "Invalid data - " + _dtRecordTypleColumlns.Rows[i]["DisplayTextDetail"].ToString();
-                                                if (_dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString() == ""
-                                                    && _dtRecordTypleColumlns.Rows[i]["TableTableID"] == DBNull.Value)
+                                                lblMsg.Text = "Invalid data - " + _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString();
+                                                if (_dtColumnsDetail.Rows[i]["DropdownValues"].ToString() == ""
+                                                    && _dtColumnsDetail.Rows[i]["TableTableID"] == DBNull.Value)
                                                 {
                                                     _txtValue[i].Focus();
                                                 }
-                                                else if (_dtRecordTypleColumlns.Rows[i]["DropdownValues"].ToString() != ""
-                                                   && (_dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "values"
-                                                    || _dtRecordTypleColumlns.Rows[i]["DropDownType"].ToString() == "value_text"))
+                                                else if (_dtColumnsDetail.Rows[i]["DropdownValues"].ToString() != ""
+                                                   && (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "values"
+                                                    || _dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "value_text"))
                                                 {
                                                     _ddlValue[i].Focus();
                                                 }
@@ -11420,17 +11563,17 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                         }
                                     }
 
-                                    if (_dtRecordTypleColumlns.Rows[i]["ValidationOnWarning"] == DBNull.Value)
+                                    if (_dtColumnsDetail.Rows[i]["ValidationOnWarning"] == DBNull.Value)
                                     {
                                         //do nothing
                                     }
                                     else
                                     {
-                                        if (_dtRecordTypleColumlns.Rows[i]["ValidationOnWarning"].ToString().Length > 0)
+                                        if (_dtColumnsDetail.Rows[i]["ValidationOnWarning"].ToString().Length > 0)
                                         {
-                                            if (!UploadManager.IsDataValid(strValue, _dtRecordTypleColumlns.Rows[i]["ValidationOnWarning"].ToString(), ref strValidationError))
+                                            if (!UploadManager.IsDataValid(strValue, _dtColumnsDetail.Rows[i]["ValidationOnWarning"].ToString(), ref strValidationError))
                                             {
-                                                strWarningResults = strWarningResults + " WARNING: " + _dtRecordTypleColumlns.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range.";
+                                                strWarningResults = strWarningResults + " WARNING: " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + " – Value outside accepted range.";
                                                 //bWarning = true;
                                                 //iWarning = i;
                                                 string strTemp = "";
@@ -11443,7 +11586,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                                     {
 
                                                         //RecordManager.SendDataWanrningSMSandEmail(int.Parse(_dtRecordTypleColumlns.Rows[i]["ColumnID"].ToString()), strValue, editRecord.DateTimeRecorded.ToString(), ref strTemp, _iSessionAccountID, _strURL);
-                                                        RecordManager.BuildDataWanrningSMSandEmail(int.Parse(_dtRecordTypleColumlns.Rows[i]["ColumnID"].ToString()), strValue, editRecord.DateTimeRecorded.ToString(),
+                                                        RecordManager.BuildDataWanrningSMSandEmail(int.Parse(_dtColumnsDetail.Rows[i]["ColumnID"].ToString()), strValue, editRecord.DateTimeRecorded.ToString(),
                                                             ref strTemp, _iSessionAccountID, _strURL, ref strEmailFullBody, ref strSMSFullBody, ref iWarningColumnCount);
 
                                                     }
@@ -11462,15 +11605,15 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                     }
 
                                     //check SD
-                                    if (bool.Parse(_dtRecordTypleColumlns.Rows[i]["CheckUnlikelyValue"].ToString()))
+                                    if (bool.Parse(_dtColumnsDetail.Rows[i]["CheckUnlikelyValue"].ToString()))
                                     {
-                                        int? iCount = RecordManager.ets_Table_GetCount((int)_theTable.TableID, _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString(), (int)RecordID);
+                                        int? iCount = RecordManager.ets_Table_GetCount((int)_theTable.TableID, _dtColumnsDetail.Rows[i]["SystemName"].ToString(), (int)RecordID);
                                         if (iCount != null)
                                         {
                                             if (iCount >= Common.MinSTDEVRecords)
                                             {
                                                 string strRecordedate;
-                                                if (_dtRecordTypleColumlns.Rows[i]["IgnoreSymbols"].ToString().ToLower() == "true")
+                                                if (_dtColumnsDetail.Rows[i]["IgnoreSymbols"].ToString().ToLower() == "true")
                                                 {
                                                     strRecordedate = Common.IgnoreSymbols(_txtValue[i].Text);
                                                 }
@@ -11479,9 +11622,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                                     strRecordedate = _txtValue[i].Text;
                                                 }
 
-                                                double? dAVG = RecordManager.ets_Table_GetAVG((int)_theTable.TableID, _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString(), (int)RecordID);
+                                                double? dAVG = RecordManager.ets_Table_GetAVG((int)_theTable.TableID, _dtColumnsDetail.Rows[i]["SystemName"].ToString(), (int)RecordID);
 
-                                                double? dSTDEV = RecordManager.ets_Table_GetSTDEV((int)_theTable.TableID, _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString(), (int)RecordID);
+                                                double? dSTDEV = RecordManager.ets_Table_GetSTDEV((int)_theTable.TableID, _dtColumnsDetail.Rows[i]["SystemName"].ToString(), (int)RecordID);
 
                                                 double dRecordedate = double.Parse(strRecordedate);
                                                 if (dAVG != null && dSTDEV != null)
@@ -11490,7 +11633,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                                     if (dRecordedate > (dAVG + dSTDEV) || dRecordedate < (dAVG - dSTDEV))
                                                     {
                                                         //deviation happaned
-                                                        strWarningResults = strWarningResults + " WARNING: " + _dtRecordTypleColumlns.Rows[i]["DisplayName"].ToString() + " – Unlikely data – outside 3 standard deviations.";
+                                                        strWarningResults = strWarningResults + " WARNING: " + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + " – Unlikely data – outside 3 standard deviations.";
                                                     }
 
                                                 }

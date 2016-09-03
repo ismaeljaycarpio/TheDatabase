@@ -2251,6 +2251,105 @@ public class TheDatabase
 	}
 
 
+
+    public static DataTable spBulkExportColumns(int TableID)
+    {
+        using (SqlConnection connection = new SqlConnection(DBGurus.strGlobalConnectionString))
+        {
+            using (SqlCommand command = new SqlCommand("spBulkExportColumns", connection)) //spExportAllTables
+            {
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.CommandTimeout = 0;
+
+              
+               command.Parameters.Add(new SqlParameter("@TableID", TableID));
+
+
+
+                SqlDataAdapter da = new SqlDataAdapter();
+                da.SelectCommand = command;
+                DataTable dt = new DataTable();
+                System.Data.DataSet ds = new System.Data.DataSet();
+                connection.Open();
+                try
+                {
+                    da.Fill(ds);
+                }
+                catch
+                {
+                    //
+                }
+                connection.Close();
+                connection.Dispose();
+
+
+                if (ds == null) return null;
+
+                if (ds.Tables.Count > 0)
+                {
+                    for (int i = 1; i < ds.Tables.Count; i++)
+                    {
+                        if (ds.Tables[i] != null && ds.Tables[i].Rows.Count>0)
+                            ds.Tables[0].Merge(ds.Tables[i]);
+                    }
+
+                    return ds.Tables[0];
+                }
+                return null;
+            }
+        }
+    }
+
+
+    public static DataTable spBulkExportData(string TableID, string RecordList, string ColumnList)
+    {
+        using (SqlConnection connection = new SqlConnection(DBGurus.strGlobalConnectionString))
+        {
+            using (SqlCommand command = new SqlCommand("spBulkExportData", connection)) //spExportAllTables
+            {
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.CommandTimeout = 0;
+
+                if (TableID!="")
+                    command.Parameters.Add(new SqlParameter("@TableID", TableID));
+                if (RecordList != "")
+                    command.Parameters.Add(new SqlParameter("@RecordList", RecordList));
+                if (ColumnList != "")
+                    command.Parameters.Add(new SqlParameter("@ColumnList", ColumnList));
+                
+
+                SqlDataAdapter da = new SqlDataAdapter();
+                da.SelectCommand = command;
+                DataTable dt = new DataTable();
+                System.Data.DataSet ds = new System.Data.DataSet();
+                connection.Open();
+                try
+                {
+                    da.Fill(ds);
+                }
+                catch
+                {
+                    //
+                }
+                connection.Close();
+                connection.Dispose();
+
+
+                if (ds == null) return null;
+
+                if (ds.Tables.Count > 0)
+                {
+                    return ds.Tables[0];
+                }
+                {
+                    return null;
+                }
+            }
+        }
+    }
+
     public static string GetCode(Control _control, string strValidationGroup)
     {
         // building helper

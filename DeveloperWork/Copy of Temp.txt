@@ -1,4 +1,21 @@
-﻿
+﻿declare @table_name nvarchar(256)
+		declare @col_name nvarchar(256)
+		declare @Command  nvarchar(1000)
+
+		set @table_name = N'Column'
+		set @col_name = N'IsMandatory'
+
+		select @Command = 'ALTER TABLE ' + @table_name + ' drop constraint ' + d.name
+		 from sys.tables t   
+		  join    sys.default_constraints d       
+		   on d.parent_object_id = t.object_id  
+		  join    sys.columns c      
+		   on c.object_id = t.object_id      
+			and c.column_id = d.parent_column_id
+		 where t.name = @table_name
+		  and c.name = @col_name
+
+		print @Command
 
 USE [ETS2]
 GO
@@ -87,8 +104,11 @@ FROM         SampleTypeGroup AS STG INNER JOIN
                       WorkSite AS WS ON SS.WorkSiteID = WS.WorkSiteID LEFT OUTER JOIN
                       SampleSiteSampleType AS SSST ON SS.SampleSiteID = SSST.SampleSiteID ON ST.SampleTypeID = SSST.SampleTypeID
 ' + @sWhere + ') as SampleSiteInfo'
-SET @sSelectCount=REPLACE(@sSelect, 'SELECT * FROM', 'SELECT COUNT(*) AS TotalRows FROM')
-SET @sSelect = @sSelect + ' WHERE RowNum >= ' + CONVERT(nvarchar(10), @nStartRow)
+
+SET @sSelectCount=REPLACE(@sSelect, 'SELECT * FROM', 'SELECT COUNT(*) AS TotalRows FROM')
+
+SET @sSelect = @sSelect + ' WHERE RowNum >= ' + CONVERT(nvarchar(10), @nStartRow)
+
 
  
 EXEC (@sSelect)
@@ -113,7 +133,8 @@ FROM         SampleTypeGroup AS STG INNER JOIN
                       WorkSite AS WS ON SS.WorkSiteID = WS.WorkSiteID LEFT OUTER JOIN
                       SampleSiteSampleType AS SSST ON SS.SampleSiteID = SSST.SampleSiteID ON ST.SampleTypeID = SSST.SampleTypeID
 ' + @sWhere + ') as SampleSiteInfo'
-+ ' WHERE RowNum >= ' + CONVERT(nvarchar(10), @nStartRow)
++ ' WHERE RowNum >= ' + CONVERT(nvarchar(10), @nStartRow)
+
 
 
 

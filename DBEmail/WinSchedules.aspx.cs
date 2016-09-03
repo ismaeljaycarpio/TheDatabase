@@ -44,24 +44,24 @@ public partial class DBEmail_WinSchedules : System.Web.UI.Page
             Page.Server.ScriptTimeout = 1600;
 
 
-            //Dynamasters Blast data
-            if (Request.Url.Authority == "emd.thedatabase.net" ||Request.QueryString["blast"]!=null)
-            {
-                try
-                {
-                    RegisterAsyncTask(new PageAsyncTask(EcotecImportBlastEvents_A));
-                    if(Request.QueryString["blast"]!=null)
-                    {
-                        return;//only run this method
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ErrorLog theErrorLog = new ErrorLog(null, " DBEmail -EcotecImportBlastEvents_A ", ex.Message, ex.StackTrace, DateTime.Now, Request.Path);
-                    SystemData.ErrorLog_Insert(theErrorLog);
-                }
+            //Dynamasters Blast data - Latedata.aspx
+            //if (Request.Url.Authority == "emd.thedatabase.net" ||Request.QueryString["blast"]!=null)
+            //{
+            //    try
+            //    {
+            //        RegisterAsyncTask(new PageAsyncTask(EcotecImportBlastEvents_A));
+            //        if(Request.QueryString["blast"]!=null)
+            //        {
+            //            return;//only run this method
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        ErrorLog theErrorLog = new ErrorLog(null, " DBEmail -EcotecImportBlastEvents_A ", ex.Message, ex.StackTrace, DateTime.Now, Request.Path);
+            //        SystemData.ErrorLog_Insert(theErrorLog);
+            //    }
 
-            }
+            //}
 
 
 
@@ -69,15 +69,17 @@ public partial class DBEmail_WinSchedules : System.Web.UI.Page
             {
                 if (Request.QueryString["AutoImportRecords"] != null)
                 {
-                    RegisterAsyncTask(new PageAsyncTask(AutoImportRecords_A));
+
+                    if (Application["ALSLive"]==null)
+                        RegisterAsyncTask(new PageAsyncTask(AutoImportRecords_A));
+
+
                     return;//only run this method
                 }
                 else
                 {
-                    if (Request.Url.Authority != "emd.thedatabase.net")
-                    {
-                        RegisterAsyncTask(new PageAsyncTask(AutoImportRecords_A));
-                    }                    
+                    if (Application["ALSLive"] == null)
+                        RegisterAsyncTask(new PageAsyncTask(AutoImportRecords_A));                
                 }
                
 

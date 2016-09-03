@@ -341,13 +341,7 @@ public partial class User_Detail : SecurePage
                     //PopulateTableDropDown();
                     PopulateTheRecord();
 
-                    //if (Request.QueryString["fromadd"] != null)
-                    //{
-
-                    //    lblMsg.Text = "Successfully Saved.";
-                    //    lblMsg.ForeColor = System.Drawing.Color.Green;
-                    //    TabContainer1.ActiveTab = TabContainer1.Tabs[1];
-                    //}
+                 
                 }
                 break;
 

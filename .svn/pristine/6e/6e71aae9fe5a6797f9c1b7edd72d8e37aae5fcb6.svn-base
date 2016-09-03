@@ -1,0 +1,2752 @@
+﻿USE [thedatabase_dev_27-Jan-2016]
+GO
+/****** Object:  StoredProcedure [dbo].[ets_Record_List]    Script Date: 02/26/2016 22:39:26 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+ALTER PROCEDURE [dbo].[ets_Record_List]
+(
+	@nTableID int,
+	@nEnteredBy int = null,
+	@bIsActive bit = null,
+	@bHasWarningResults bit = null,
+	@dDateFrom datetime = NULL,
+	@dDateTo datetime = NULL,
+	@sOrder nvarchar(200)=null , 
+	@nStartRow int = 1, 
+	@nMaxRows int = 2147483647,
+	@sType varchar(25) = null,
+	@sNumericSearch varchar(MAX) = null,
+	@sTextSearch varchar(MAX) = null,
+	@dDateAddedFrom datetime = NULL,
+	@dDateAddedTo datetime = NULL,
+	@sParentColumnSortSQL varchar(MAX) = null,
+	@sHeaderSQL varchar(MAX) = null,
+	@sViewName varchar(50) = null,
+	@nViewID INT =NULL
+)
+
+/*
+REVISION HISTORY
+----------------
+1 Dec 2015 JB Added view filter 
+
+
+TEST CASES
+----------
+SELECT * FROM [TABLE] WHERE TABLENAME LIKE 'NAME%'
+SELECT * FROM [RECORD] WHERE TABLEID = 1847
+	exec [ets_Record_List] @nTableID=2756,@bIsActive=1,@sType='view',@nViewID=869
+		exec [ets_Record_List_BU_19-Oct-2015] @nTableID=2663,@bIsActive=1,@sType='view',@nViewID=292
+
+   exec [ets_Record_List_FullData] @nTableID=1847,@sTextSearch='Record.V001 like ''%AB%'''
+   exec [ets_Record_List_FullData] @nTableID=1847,@sTextSearch='Record.V001 like ''%AB%'''
+   
+   exec [ets_Record_List_FullData] @nTableID=1389, @sTextSearch=
+*/
+AS
+BEGIN
+	--print 'Debug Start'
+	SET DATEFORMAT dmy;
+	SET NOCOUNT ON;
+	DECLARE @tDisplayColumns TABLE
+	(
+		ID int identity(1,1),
+		ColumnID int,
+		SystemName varchar(50),
+		DisplayText varchar(50),
+		FieldsToShow varchar(MAX),
+		ParentTableID int,
+		ParentJoinColumnName varchar(254), -- RecordID
+		ChildJoinColumnName varchar(254), -- V001 / V499
+		ShowViewLink bit,
+		ColumnType varchar(20),
+		ColourCells bit
+	)
+
+	DECLARE @nColumnIDRecordID INT
+
+	SELECT @nColumnIDRecordID=ColumnID FROM [Column] 
+		WHERE TableID = @nTableID 
+		AND SystemName='RecordID'
+
+	--INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+	--VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+
+
+	IF @sType is not null 
+	BEGIN
+		IF @sType LIKE 'export%' -- From 30/10/2015 we will have export and exportbulk
+		BEGIN
+			IF @sHeaderSQL IS NULL
+			BEGIN
+				INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName, FieldsToShow, ParentTableID, ParentJoinColumnName,ChildJoinColumnName,ColumnType)
+						SELECT C.ColumnID, C.NameOnExport, C.SystemName,
+							dbo.fnReplaceDisplayColumns(C.DisplayColumn, C.[TableTableID]) as [FieldsToShow],
+							C.[TableTableID] AS  [ParentTableID], 
+							PC.SystemName as [ParentJoinColumnName], 
+							C.SystemName as [ChildJoinColumnName],
+							C.ColumnType 
+							FROM [Column] C 
+							LEFT OUTER JOIN [Column] PC ON PC.[ColumnID] = C.[LinkedParentColumnID]
+							WHERE C.TableID = @nTableID 
+							AND C.NameOnExport IS NOT NULL AND LEN(C.NameOnExport) > 0
+							ORDER BY C.DisplayOrder
+			END -- @sHeaderSQL IS NULL
+
+			IF @sHeaderSQL IS NOT NULL
+			BEGIN
+				DECLARE @exportXML XML
+				SET @exportXML=@sHeaderSQL
+				DECLARE @tExportTable TABLE
+				(
+					xmlColumn XML
+				)
+				 
+				INSERT INTO @tExportTable SELECT @exportXML
+
+				INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName, FieldsToShow,
+			 ParentTableID, ParentJoinColumnName,ChildJoinColumnName, ShowViewLink, ColumnType)
+				SELECT
+					   N.C.value('ColumnID[1]', 'int') ColumnID,
+					   N.C.value('DisplayText[1]', 'varchar(50)') DisplayText,
+					   N.C.value('SystemName[1]', 'varchar(50)') SystemName,
+					    N.C.value('FieldsToShow[1]', 'varchar(max)') FieldsToShow,
+					     N.C.value('ParentTableID[1]', 'int') ParentTableID,
+					      N.C.value('ParentJoinColumnName[1]', 'varchar(254)') ParentJoinColumnName,
+					       N.C.value('ChildJoinColumnName[1]', 'varchar(254)') ChildJoinColumnName,
+					        N.C.value('ShowViewLink[1]', 'bit') ShowViewLink,
+					         N.C.value('ColumnType[1]', 'varchar(20)') ColumnType
+				FROM @tExportTable
+				CROSS APPLY xmlColumn.nodes('//Records') N(C)
+
+			END -- @sHeaderSQL IS NOT NULL
+			UPDATE @tDisplayColumns SET FieldsToShow=NULL,ParentTableID=NULL,ParentJoinColumnName=NULL,ChildJoinColumnName=NULL,
+			ShowViewLink=NULL,ColumnType=NULL WHERE ParentTableID=0
+			
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+			
+			--testing
+			--select * from @tDisplayColumns
+			--print '@tDisplayColumns'
+			--return
+			
+		END -- @sType='export'
+
+		IF @sType='view' 
+		BEGIN
+			--print 'Debug View'
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName, FieldsToShow,
+			 ParentTableID, ParentJoinColumnName,ChildJoinColumnName, ShowViewLink, ColumnType,ColourCells)
+					SELECT VI.ColumnID, Heading, C.SystemName,
+						dbo.fnReplaceDisplayColumns(C.DisplayColumn, C.[TableTableID]) as [FieldsToShow],
+						C.[TableTableID] AS  [ParentTableID], 
+						PC.SystemName as [ParentJoinColumnName], 
+						C.SystemName as [ChildJoinColumnName],
+						C.ShowViewLink,
+						C.ColumnType,C.ColourCells
+						FROM [ViewItem] VI 
+						INNER JOIN  [Column] C ON VI.ColumnID=C.ColumnID
+						LEFT OUTER JOIN   [Column] PC ON     PC.[ColumnID] = C.[LinkedParentColumnID]
+						WHERE ViewID = @nViewID			
+						ORDER BY ColumnIndex
+				
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+		END -- @sType='view'
+				
+		IF @sType='graph' 
+		BEGIN
+			--print 'Debug Graph'
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				SELECT ColumnID, GraphLabel, SystemName
+					FROM [Column] 
+					WHERE TableID = @nTableID 
+					AND GraphLabel IS NOT NULL AND LEN(GraphLabel) > 0
+					ORDER BY DisplayOrder
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+		END -- @sType='graph' 
+
+		IF @sType='mobile' 
+		BEGIN
+			--print 'Debug Mobile'
+
+			--INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+			--	SELECT ColumnID, MobileName, SystemName
+			--		FROM [Column] 
+			--		WHERE TableID = @nTableID 
+			--		AND MobileName IS NOT NULL AND LEN(MobileName) > 0
+			--	ORDER BY DisplayOrder
+
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName, FieldsToShow, ParentTableID, ParentJoinColumnName,ChildJoinColumnName, ShowViewLink, ColumnType)
+					SELECT C.ColumnID, C.MobileName, C.SystemName,
+						dbo.fnReplaceDisplayColumns(C.DisplayColumn, C.[TableTableID]) as [FieldsToShow],
+						C.[TableTableID] AS  [ParentTableID], 
+						PC.SystemName as [ParentJoinColumnName], 
+						C.SystemName as [ChildJoinColumnName],
+						C.ShowViewLink,
+						C.ColumnType
+						FROM [Column] C 
+						LEFT OUTER JOIN [Column] PC ON PC.[ColumnID] = C.[LinkedParentColumnID]
+						WHERE C.TableID = @nTableID 
+						AND C.MobileName IS NOT NULL AND LEN(C.MobileName) > 0
+						ORDER BY C.DisplayOrder
+
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+		END -- @sType='mobile' 
+
+		IF @sType='nonstandard' 
+		BEGIN
+			--print 'Debug Nonst'
+
+			--INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+			--	SELECT ColumnID, DisplayName, SystemName
+			--		FROM [Column] 
+			--		WHERE TableID = @nTableID 
+			--		AND DisplayName IS NOT NULL AND LEN(DisplayName) > 0
+			--		AND IsStandard=0
+			--	ORDER BY DisplayOrder
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName, FieldsToShow, ParentTableID, ParentJoinColumnName,ChildJoinColumnName, ShowViewLink, ColumnType)
+					SELECT C.ColumnID, C.DisplayName, C.SystemName,
+						dbo.fnReplaceDisplayColumns(C.DisplayColumn, C.[TableTableID]) as [FieldsToShow],
+						C.[TableTableID] AS  [ParentTableID], 
+						PC.SystemName as [ParentJoinColumnName], 
+						C.SystemName as [ChildJoinColumnName],
+						C.ShowViewLink,
+						C.ColumnType
+						FROM [Column] C 
+						LEFT OUTER JOIN [Column] PC ON PC.[ColumnID] = C.[LinkedParentColumnID]
+						WHERE C.TableID = @nTableID 
+						AND C.IsStandard=0
+						ORDER BY C.DisplayOrder
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+				
+		END -- @sType='nonstandard' 
+		
+		IF @sType='allcolumns' 
+		BEGIN
+			--print 'Debug Nonst'
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName, FieldsToShow, ParentTableID, ParentJoinColumnName,ChildJoinColumnName, ShowViewLink, ColumnType)
+					SELECT C.ColumnID, C.DisplayName, C.SystemName,
+						dbo.fnReplaceDisplayColumns(C.DisplayColumn, C.[TableTableID]) as [FieldsToShow],
+						C.[TableTableID] AS  [ParentTableID], 
+						PC.SystemName as [ParentJoinColumnName], 
+						C.SystemName as [ChildJoinColumnName],
+						C.ShowViewLink,
+						C.ColumnType
+						FROM [Column] C 
+						LEFT OUTER JOIN [Column] PC ON PC.[ColumnID] = C.[LinkedParentColumnID]
+						WHERE C.TableID = @nTableID 
+						ORDER BY C.DisplayOrder
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+				
+		END --  @sType='allcolumns'
+		
+
+		IF @sType='backup' 
+		BEGIN
+			--print 'Debug Backup'
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				SELECT ColumnID, DisplayName, SystemName
+					FROM [Column] 
+					WHERE TableID = @nTableID 
+					AND DisplayName IS NOT NULL AND LEN(DisplayName) > 0
+				ORDER BY DisplayOrder
+		END -- @sType='backup'
+		
+	END -- @sType is not null 
+	ELSE
+	BEGIN -- @sType is null 
+		IF @sViewName IS NULL
+		BEGIN
+			--print 'Debug ViewName'
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				SELECT ColumnID, DisplayTextSummary, SystemName
+					FROM [Column] 
+					WHERE TableID = @nTableID 
+					AND DisplayTextSummary IS NOT NULL AND LEN(DisplayTextSummary) > 0
+					ORDER BY DisplayOrder
+		END
+		ELSE -- @sViewName IS not NULL
+		BEGIN
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				SELECT ColumnID, DisplayTextSummary, SystemName
+					FROM [Column] 
+					WHERE TableID = @nTableID 
+					AND DisplayTextSummary IS NOT NULL AND LEN(DisplayTextSummary) > 0
+					AND ViewName=@sViewName
+					ORDER BY DisplayOrder
+		END
+		INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+			VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+	END -- end of @sType is  null 
+
+	-- Debug
+	--SELECT * FROM @tDisplayColumns
+
+	----------------------------------------------
+	-- Part II - the build
+	----------------------------------------------
+	DECLARE @SELECT varchar(MAX)
+	DECLARE @FROM varchar(MAX)
+	DECLARE @WHERE varchar(MAX)
+	DECLARE @SQLMain varchar(MAX)
+	
+	DECLARE @counter int
+	SET @counter = 1
+		
+  -- Get the sOrder if it is null
+   WHILE EXISTS(SELECT * FROM @tDisplayColumns WHERE ID >= @counter)
+	BEGIN
+		
+		if @sOrder is null
+		 SELECT @sOrder= ' [' + DisplayText  + ']' FROM @tDisplayColumns WHERE ID = @counter
+		 SET @counter = @counter + 1
+	END 
+	
+	SELECT @SELECT = ''
+	SELECT @FROM = ' FROM [Record] '
+
+
+	IF @bIsActive IS NOT NULL AND @bIsActive =0
+		SELECT @SELECT = @SELECT + ' Record.DateUpdated as Deleted, ' 
+		
+	
+	
+     IF @bHasWarningResults IS NOT NULL AND @bHasWarningResults =1
+      SELECT @SELECT = @SELECT + ' Record.WarningResults as Warning, ' 
+
+
+	IF @bIsActive IS NOT NULL AND @bIsActive =0
+		SELECT @SELECT = @SELECT + ' Record.DeleteReason as Reason, ' 
+
+	DECLARE @ParentAlias varchar(100), @ShowViewLink bit
+    SET @counter = 1
+	WHILE EXISTS(SELECT * FROM @tDisplayColumns WHERE ID = @counter)
+	BEGIN
+		-- Check to see if this column has a parent (which we will get data off)
+		IF EXISTS(SELECT 1 FROM @tDisplayColumns WHERE ID = @counter AND ParentTableID IS NOT NULL AND ColumnType='dropdown' AND ParentTableID<>-1)
+		BEGIN
+			SELECT @ParentAlias = 'P' + CAST(@counter as varchar)
+			-- SELECT  @ShowViewLink=ShowViewLink FROM @tDisplayColumns WHERE ID = @conter
+			SELECT 
+					-- build up the parent field anems
+					@SELECT = @SELECT + REPLACE(FieldsToShow, '[', @ParentAlias + '.[') + ' AS [' + DisplayText + '], '
+
+					-- when view link then we need to return the record ID too:  --CAST(ColumnID as varchar)
+					+ CASE WHEN (ShowViewLink = 1 OR @sType='allcolumns') THEN '[Record].' + ChildJoinColumnName + ' AS [**' + DisplayText + '_ID**],' ELSE '' END,
+
+					-- Build the join condition and a isnumeric check (for bad data) when joining to RecordID
+					@FROM = @FROM + ' LEFT OUTER JOIN [Record] ' + @ParentAlias + ' ON ' 
+						+ CASE WHEN ParentJoinColumnName = 'RecordID' 
+							THEN  @ParentAlias + '.' + ParentJoinColumnName + ' = CASE WHEN ISNUMERIC([Record].' + ChildJoinColumnName +')=1 THEN [Record].' + ChildJoinColumnName + ' ELSE -1 END '
+							ELSE @ParentAlias + '.TableID = ' + cast(ParentTableID as varchar) 
+							+ ' AND ' + @ParentAlias + '.' + ParentJoinColumnName + ' = [Record].' + ChildJoinColumnName 
+							END						
+					+ ' AND ' + @ParentAlias + '.[IsActive] = 1' 
+				
+				FROM @tDisplayColumns WHERE ID = @counter AND ParentTableID IS NOT NULL
+
+				
+				
+			--IF @ShowViewLink=1
+			--BEGIN
+			--	-- When we have ShowViewLink we need to also return the original field
+			--	SELECT @SELECT = @SELECT + REPLACE(FieldsToShow, ']', '] + ''~'' + [Record].[' + SystemName + ']')
+			--		FROM @tDisplayColumns WHERE ID = @counter
+			--END
+			
+		END
+		
+		ELSE IF EXISTS(SELECT 1 FROM @tDisplayColumns WHERE ID = @counter AND ParentTableID IS NOT NULL AND ColumnType='dropdown' AND ParentTableID=-1)
+		BEGIN
+			SELECT @SELECT = @SELECT + ' [dbo].[fnGetSystemUserDisplayText] ('''+FieldsToShow+''',Record.' + SystemName + ') 
+										AS [' + DisplayText + '], ' 
+										+ CASE WHEN (@sType='allcolumns') THEN ' [Record].' + SystemName + ' AS [**' + DisplayText + '_ID**], ' ELSE '' END
+				FROM @tDisplayColumns 
+				WHERE ID = @counter
+				
+				
+		END
+		
+		ELSE IF EXISTS(SELECT 1 FROM @tDisplayColumns WHERE ID = @counter AND ParentTableID IS NOT NULL AND ColumnType='listbox' AND ParentTableID<>-1)
+		BEGIN
+			SELECT @SELECT = @SELECT + ' STUFF ( ( SELECT '','' + A FROM (SELECT '+FieldsToShow+' as A FROM Record X WHERE X.TableID='
+			+CAST(ParentTableID AS VARCHAR)+' AND CHARINDEX('',''+CAST(X.RecordID AS VARCHAR)+'','','',''+ Record.' + SystemName 
+			+ ' + '','')>0 ) as MainInfo FOR XML PATH('''') ),1,1,'''') 
+				 AS [' + DisplayText + '], ' 
+				FROM @tDisplayColumns 
+				WHERE ID = @counter
+				
+				
+		END
+		--- ELSE
+		ELSE
+			SELECT @SELECT = @SELECT + 'Record.' + SystemName + ' AS [' + DisplayText + '], ' 
+				FROM @tDisplayColumns 
+				WHERE ID = @counter
+				
+				
+	
+	  	SELECT @SELECT = @SELECT 
+	  	+ CASE WHEN (ColourCells = 1) THEN ' dbo.fnGetColumnColour([Record].RecordID,'+CAST(ColumnID AS VARCHAR)+','''+ColumnType+''') AS [**' + DisplayText + '_Colour**],' ELSE '' END
+				FROM @tDisplayColumns 
+				WHERE ID = @counter
+	    
+		--PRINT @SELECT
+		SET @counter = @counter + 1
+		if @sOrder is null
+		 SELECT @sOrder= ' [' + DisplayText  + ']' FROM @tDisplayColumns WHERE ID = @counter
+	END 
+	SELECT @SELECT = LEFT(@SELECT, LEN(@SELECT)-1) 
+	
+	
+
+
+    IF @sParentColumnSortSQL IS NOT NULL
+		SELECT @SELECT = @SELECT + ' ' + @sParentColumnSortSQL 
+	
+
+
+	IF PATINDEX('%Record.TableID%', @SELECT) > 0
+	BEGIN
+		SET @SELECT = REPLACE(@SELECT, 'Record.TableID', '[Table].TableName')
+		SET @FROM = REPLACE(@FROM, 'FROM [Record]', 'FROM [Record] JOIN [Table] ON Record.TableID = [Table].TableID')
+	END	
+
+	IF PATINDEX('%Record.EnteredBy%', @SELECT) > 0
+	BEGIN
+		SET @SELECT = REPLACE(@SELECT, 'Record.EnteredBy', '[User].FirstName')
+		SET @FROM = REPLACE(@FROM, 'FROM [Record]', 'FROM [Record] JOIN [User] ON Record.EnteredBy = [User].UserID')
+	END	
+
+	-- ADD IN THE WHERE CRITERIA
+	SELECT @WHERE = ' WHERE (Record.TableID = ' + CAST(@nTableID as varchar) + ') ' 
+		
+	
+	
+	IF @bIsActive IS NOT NULL 
+		SELECT @WHERE = @WHERE + ' AND (Record.IsActive = ' + CAST(@bIsActive AS varchar) + ') '
+
+	IF @dDateFrom IS NOT NULL 
+		SELECT @WHERE = @WHERE + ' AND (Record.DateTimeRecorded >= ''' + CONVERT(varchar(30), @dDateFrom, 120) + ''') '
+
+	IF @dDateTo IS NOT NULL 
+		SELECT @WHERE = @WHERE + ' AND (Record.DateTimeRecorded <=  ''' + CONVERT(varchar(30), @dDateTo, 120) + ''') '
+
+	IF @dDateAddedFrom IS NOT NULL 
+		SELECT @WHERE = @WHERE + ' AND (Record.DateAdded >= ''' + CONVERT(varchar(30), @dDateAddedFrom, 120) + ''') '
+
+	IF @dDateAddedTo IS NOT NULL 
+		SELECT @WHERE = @WHERE + ' AND (Record.DateAdded <=  ''' + CONVERT(varchar(30), @dDateAddedTo, 120) + ''') '
+
+	IF @nEnteredBy IS NOT NULL 
+		SELECT @WHERE = @WHERE + ' AND (Record.EnteredBy = ' + CAST(@nEnteredBy AS varchar) + ') '
+
+	 IF @bHasWarningResults IS NOT null
+     BEGIN
+		 IF @bHasWarningResults =0 
+		 SELECT @WHERE = @WHERE + ' AND (Record.WarningResults IS NULL) ' 
+	     
+		 IF @bHasWarningResults =1 
+		 SELECT @WHERE = @WHERE + ' AND (Record.WarningResults IS NOT NULL) ' 
+     END
+	
+	IF @sNumericSearch IS NOT null 
+		SELECT @WHERE = @WHERE + ' AND ( ' + @sNumericSearch + ') AND ISNUMERIC(' + ') = 1'
+	
+	
+	
+	
+	
+	IF @sTextSearch IS NOT null
+		SELECT @WHERE = @WHERE + ' AND ( ' + @sTextSearch + ')'
+		
+	-- Added 1 Dec 2015 JB
+	--IF @sType='view' AND @nViewID IS NOT NULL
+	--BEGIN
+	--	DECLARE @sFilter varchar(MAX)
+	--	SELECT 	@sFilter = [Filter] FROM [View] WHERE ViewID = @nViewID
+	--	IF @sFilter IS NOT NULL
+	--		SELECT @WHERE = @WHERE + ' ' + @sFilter
+	--END
+		
+	IF @sType='view' AND @nViewID IS NOT NULL
+	BEGIN
+		DECLARE @sFixedFilter varchar(MAX)
+		SELECT 	@sFixedFilter = [FixedFilter] FROM [View] WHERE ViewID = @nViewID
+		IF @sFixedFilter IS NOT NULL
+			SELECT @WHERE = @WHERE + ' ' + @sFixedFilter
+	END	
+	
+		
+	IF @sType LIKE 'exportbulk'
+	BEGIN
+		-- For ExportBulk we are going to run the SQK inro a temp table 
+		-- and then convert that temp table into a comma delimated string
+		SELECT @SQLMain = 'SELECT ' + @SELECT + ' INTO #ExportBulk ' + @FROM + ' ' + @WHERE  
+		--PRINT @SQLMain
+		
+		SELECT @SQLMain = @SQLMain + '
+		SET CONCAT_NULL_YIELDS_NULL OFF ;
+		
+		DECLARE @SQL		VARCHAR(MAX);
+		DECLARE @S			VARCHAR(MAX);
+		DECLARE	@Count		INT;
+
+		SET		@Count = 0
+
+		SELECT	@S = @S + QUOTENAME([COLUMN_NAME],''"'') + '','' 
+				,@Count = @Count + 1  
+		FROM	tempdb.INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = OBJECT_NAME(OBJECT_ID(''tempdb..#ExportBulk''), db_id (''tempdb''));
+						
+		SET		@S = REPLACE(@S, '''''''', '''''''''''')
+		
+		SET		@S = LEFT(@S, LEN(@S)-1); 
+
+		--PRINT	@S;
+
+		SELECT	@SQL = ''SELECT 0 as [IsData], cast(0 as int) as ''''DBGSystemRecordID'''', '''''' + CAST( @Count AS VARCHAR(MAX) ) + '''''' as [ColumnCount], ' + CAST( @nTableID AS VARCHAR(MAX) ) + ' as [TableID], '''''' + @S + '''''' as [DataDump]
+		UNION	SELECT 1, DBGSystemRecordID, 0, ' + CAST( @nTableID AS VARCHAR(MAX) ) + ', ''
+		SELECT	@SQL = @SQL + '' 
+				QUOTENAME(['' + [COLUMN_NAME] + ''], ''''"'''') + '''','''' + ''
+		FROM	tempdb.INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = OBJECT_NAME(OBJECT_ID(''tempdb..#ExportBulk''), db_id (''tempdb''));
+		SELECT	@SQL = LEFT(@SQL,LEN(@SQL)-8) ;
+		SELECT	@SQL = @SQL + '' FROM #ExportBulk;''
+		
+		--PRINT	@SQL;
+		
+		EXEC	(@SQL);'
+
+		--PRINT @SQLMain
+
+		EXEC (@SQLMain)
+	END
+	ELSE
+	BEGIN
+		-- Pull it all together
+		DECLARE @SQLCount varchar(MAX)
+
+		SET @SELECT = 'SELECT * FROM (SELECT RecordInfo.*,ROW_NUMBER() OVER(ORDER BY ' + @sOrder + ' ) as RowNum FROM (SELECT ' + @SELECT
+
+		SELECT @SQLMain =  
+			+ @SELECT + ' ' + @FROM + ' ' + @WHERE  + ') as RecordInfo) as RecordFinalInfo WHERE RowNum >= ' + CONVERT(nvarchar(10), @nStartRow)
+    
+	    SELECT @SQLCount= REPLACE(@SELECT, 'SELECT * FROM', 'SELECT COUNT(*) AS TotalRows FROM') + ' ' + @FROM + ' ' + @WHERE + ') as RecordInfo) as RecordFinalInfo'
+    
+	    SET ROWCOUNT @nMaxRows
+	    
+		PRINT left(@SQLMain,8000)
+		PRINT substring(@SQLMain,8001,8000)
+		EXEC (@SQLMain)
+	
+		SET ROWCOUNT 0 
+		PRINT left(@SQLCount,8000)
+		PRINT substring(@SQLCount,8001,8000)
+		EXEC (@SQLCount)
+	END
+
+END
+
+
+
+
+
+
+USE [thedatabase_dev_27-Jan-2016]
+GO
+/****** Object:  UserDefinedFunction [dbo].[fnGetSystemUserDisplayText]    Script Date: 02/26/2016 23:05:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER FUNCTION [dbo].[fnGetRecordValueBySys]
+(
+	@nRecordID INT  
+	,@sSystemName VARCHAR(50)
+)  -- SELECT [dbo].[fnGetRecordValueBySys](1103027,'V005')
+RETURNS varchar(max)
+AS
+BEGIN
+	
+DECLARE @sReturn VARCHAR(max);	
+	
+SELECT @sReturn=CASE @sSystemName
+	WHEN 'DateTimeRecorded' THEN CONVERT(VARCHAR, DateTimeRecorded)
+	WHEN 'DateTimeRecorded' THEN CONVERT(VARCHAR, DateTimeRecorded)
+	WHEN 'EnteredBy' THEN CONVERT(VARCHAR, EnteredBy)
+	WHEN 'IsActive' THEN CONVERT(VARCHAR, IsActive)
+	WHEN 'RecordID' THEN CONVERT(VARCHAR, RecordID)
+	WHEN 'TableID' THEN CONVERT(VARCHAR, TableID)
+	
+            WHEN 'V001' 
+                 THEN V001
+
+
+            WHEN 'V002' 
+                 THEN V002
+
+
+            WHEN 'V003' 
+                 THEN V003
+
+
+            WHEN 'V004' 
+                 THEN V004
+
+
+            WHEN 'V005' 
+                 THEN V005
+
+
+            WHEN 'V006' 
+                 THEN V006
+
+
+            WHEN 'V007' 
+                 THEN V007
+
+
+            WHEN 'V008' 
+                 THEN V008
+
+
+            WHEN 'V009' 
+                 THEN V009
+
+
+            WHEN 'V010' 
+                 THEN V010
+
+            WHEN 'V011' 
+                 THEN V011
+
+
+            WHEN 'V012' 
+                 THEN V012
+
+
+            WHEN 'V013' 
+                 THEN V013
+
+
+            WHEN 'V014' 
+                 THEN V014
+
+
+            WHEN 'V015' 
+                 THEN V015
+
+
+            WHEN 'V016' 
+                 THEN V016
+
+
+            WHEN 'V017' 
+                 THEN V017
+
+
+            WHEN 'V018' 
+                 THEN V018
+
+
+            WHEN 'V019' 
+                 THEN V019
+
+
+            WHEN 'V020' 
+                 THEN V020
+
+            WHEN 'V021' 
+                 THEN V021
+
+
+            WHEN 'V022' 
+                 THEN V022
+
+
+            WHEN 'V023' 
+                 THEN V023
+
+
+            WHEN 'V024' 
+                 THEN V024
+
+
+            WHEN 'V025' 
+                 THEN V025
+
+
+            WHEN 'V026' 
+                 THEN V026
+
+
+            WHEN 'V027' 
+                 THEN V027
+
+
+            WHEN 'V028' 
+                 THEN V028
+
+
+            WHEN 'V029' 
+                 THEN V029
+
+
+            WHEN 'V030' 
+                 THEN V030
+
+            WHEN 'V031' 
+                 THEN V031
+
+
+            WHEN 'V032' 
+                 THEN V032
+
+
+            WHEN 'V033' 
+                 THEN V033
+
+
+            WHEN 'V034' 
+                 THEN V034
+
+
+            WHEN 'V035' 
+                 THEN V035
+
+
+            WHEN 'V036' 
+                 THEN V036
+
+
+            WHEN 'V037' 
+                 THEN V037
+
+
+            WHEN 'V038' 
+                 THEN V038
+
+
+            WHEN 'V039' 
+                 THEN V039
+
+
+            WHEN 'V040' 
+                 THEN V040
+
+            WHEN 'V041' 
+                 THEN V041
+
+
+            WHEN 'V042' 
+                 THEN V042
+
+
+            WHEN 'V043' 
+                 THEN V043
+
+
+            WHEN 'V044' 
+                 THEN V044
+
+
+            WHEN 'V045' 
+                 THEN V045
+
+
+            WHEN 'V046' 
+                 THEN V046
+
+
+            WHEN 'V047' 
+                 THEN V047
+
+
+            WHEN 'V048' 
+                 THEN V048
+
+
+            WHEN 'V049' 
+                 THEN V049
+
+
+            WHEN 'V050' 
+                 THEN V050
+
+
+
+
+            WHEN 'V051' 
+                 THEN V051
+
+
+            WHEN 'V052' 
+                 THEN V052
+
+
+            WHEN 'V053' 
+                 THEN V053
+
+
+            WHEN 'V054' 
+                 THEN V054
+
+
+            WHEN 'V055' 
+                 THEN V055
+
+
+            WHEN 'V056' 
+                 THEN V056
+
+
+            WHEN 'V057' 
+                 THEN V057
+
+
+            WHEN 'V058' 
+                 THEN V058
+
+
+            WHEN 'V059' 
+                 THEN V059
+
+
+            WHEN 'V060' 
+                 THEN V060
+
+
+
+
+            WHEN 'V061' 
+                 THEN V061
+
+
+            WHEN 'V062' 
+                 THEN V062
+
+
+            WHEN 'V063' 
+                 THEN V063
+
+
+            WHEN 'V064' 
+                 THEN V064
+
+
+            WHEN 'V065' 
+                 THEN V065
+
+
+            WHEN 'V066' 
+                 THEN V066
+
+
+            WHEN 'V067' 
+                 THEN V067
+
+
+            WHEN 'V068' 
+                 THEN V068
+
+
+            WHEN 'V069' 
+                 THEN V069
+
+
+            WHEN 'V070' 
+                 THEN V070
+
+
+
+
+            WHEN 'V071' 
+                 THEN V071
+
+
+            WHEN 'V072' 
+                 THEN V072
+
+
+            WHEN 'V073' 
+                 THEN V073
+
+
+            WHEN 'V074' 
+                 THEN V074
+
+
+            WHEN 'V075' 
+                 THEN V075
+
+
+            WHEN 'V076' 
+                 THEN V076
+
+
+            WHEN 'V077' 
+                 THEN V077
+
+
+            WHEN 'V078' 
+                 THEN V078
+
+
+            WHEN 'V079' 
+                 THEN V079
+
+
+            WHEN 'V080' 
+                 THEN V080
+
+
+
+
+            WHEN 'V081' 
+                 THEN V081
+
+
+            WHEN 'V082' 
+                 THEN V082
+
+
+            WHEN 'V083' 
+                 THEN V083
+
+
+            WHEN 'V084' 
+                 THEN V084
+
+
+            WHEN 'V085' 
+                 THEN V085
+
+
+            WHEN 'V086' 
+                 THEN V086
+
+
+            WHEN 'V087' 
+                 THEN V087
+
+
+            WHEN 'V088' 
+                 THEN V088
+
+
+            WHEN 'V089' 
+                 THEN V089
+
+
+            WHEN 'V090' 
+                 THEN V090
+
+
+
+
+            WHEN 'V091' 
+                 THEN V091
+
+
+            WHEN 'V092' 
+                 THEN V092
+
+
+            WHEN 'V093' 
+                 THEN V093
+
+
+            WHEN 'V094' 
+                 THEN V094
+
+
+            WHEN 'V095' 
+                 THEN V095
+
+
+            WHEN 'V096' 
+                 THEN V096
+
+
+            WHEN 'V097' 
+                 THEN V097
+
+
+            WHEN 'V098' 
+                 THEN V098
+
+
+            WHEN 'V099' 
+                 THEN V099
+
+
+            WHEN 'V100' 
+                 THEN V100
+
+
+            WHEN 'V101' 
+                 THEN V101
+
+
+            WHEN 'V102' 
+                 THEN V102
+
+
+            WHEN 'V103' 
+                 THEN V103
+
+
+            WHEN 'V104' 
+                 THEN V104
+
+
+            WHEN 'V105' 
+                 THEN V105
+
+
+            WHEN 'V106' 
+                 THEN V106
+
+
+            WHEN 'V107' 
+                 THEN V107
+
+
+            WHEN 'V108' 
+                 THEN V108
+
+
+            WHEN 'V109' 
+                 THEN V109
+
+
+            WHEN 'V110' 
+                 THEN V110
+
+            WHEN 'V111' 
+                 THEN V111
+
+
+            WHEN 'V112' 
+                 THEN V112
+
+
+            WHEN 'V113' 
+                 THEN V113
+
+
+            WHEN 'V114' 
+                 THEN V114
+
+
+            WHEN 'V115' 
+                 THEN V115
+
+
+            WHEN 'V116' 
+                 THEN V116
+
+
+            WHEN 'V117' 
+                 THEN V117
+
+
+            WHEN 'V118' 
+                 THEN V118
+
+
+            WHEN 'V119' 
+                 THEN V119
+
+
+            WHEN 'V120' 
+                 THEN V120
+
+            WHEN 'V121' 
+                 THEN V121
+
+
+            WHEN 'V122' 
+                 THEN V122
+
+
+            WHEN 'V123' 
+                 THEN V123
+
+
+            WHEN 'V124' 
+                 THEN V124
+
+
+            WHEN 'V125' 
+                 THEN V125
+
+
+            WHEN 'V126' 
+                 THEN V126
+
+
+            WHEN 'V127' 
+                 THEN V127
+
+
+            WHEN 'V128' 
+                 THEN V128
+
+
+            WHEN 'V129' 
+                 THEN V129
+
+
+            WHEN 'V130' 
+                 THEN V130
+
+            WHEN 'V131' 
+                 THEN V131
+
+
+            WHEN 'V132' 
+                 THEN V132
+
+
+            WHEN 'V133' 
+                 THEN V133
+
+
+            WHEN 'V134' 
+                 THEN V134
+
+
+            WHEN 'V135' 
+                 THEN V135
+
+
+            WHEN 'V136' 
+                 THEN V136
+
+
+            WHEN 'V137' 
+                 THEN V137
+
+
+            WHEN 'V138' 
+                 THEN V138
+
+
+            WHEN 'V139' 
+                 THEN V139
+
+
+            WHEN 'V140' 
+                 THEN V140
+
+            WHEN 'V141' 
+                 THEN V141
+
+
+            WHEN 'V142' 
+                 THEN V142
+
+
+            WHEN 'V143' 
+                 THEN V143
+
+
+            WHEN 'V144' 
+                 THEN V144
+
+
+            WHEN 'V145' 
+                 THEN V145
+
+
+            WHEN 'V146' 
+                 THEN V146
+
+
+            WHEN 'V147' 
+                 THEN V147
+
+
+            WHEN 'V148' 
+                 THEN V148
+
+
+            WHEN 'V149' 
+                 THEN V149
+
+
+            WHEN 'V150' 
+                 THEN V150
+
+
+
+
+            WHEN 'V151' 
+                 THEN V151
+
+
+            WHEN 'V152' 
+                 THEN V152
+
+
+            WHEN 'V153' 
+                 THEN V153
+
+
+            WHEN 'V154' 
+                 THEN V154
+
+
+            WHEN 'V155' 
+                 THEN V155
+
+
+            WHEN 'V156' 
+                 THEN V156
+
+
+            WHEN 'V157' 
+                 THEN V157
+
+
+            WHEN 'V158' 
+                 THEN V158
+
+
+            WHEN 'V159' 
+                 THEN V159
+
+
+            WHEN 'V160' 
+                 THEN V160
+
+
+
+
+            WHEN 'V161' 
+                 THEN V161
+
+
+            WHEN 'V162' 
+                 THEN V162
+
+
+            WHEN 'V163' 
+                 THEN V163
+
+
+            WHEN 'V164' 
+                 THEN V164
+
+
+            WHEN 'V165' 
+                 THEN V165
+
+
+            WHEN 'V166' 
+                 THEN V166
+
+
+            WHEN 'V167' 
+                 THEN V167
+
+
+            WHEN 'V168' 
+                 THEN V168
+
+
+            WHEN 'V169' 
+                 THEN V169
+
+
+            WHEN 'V170' 
+                 THEN V170
+
+
+
+
+            WHEN 'V171' 
+                 THEN V171
+
+
+            WHEN 'V172' 
+                 THEN V172
+
+
+            WHEN 'V173' 
+                 THEN V173
+
+
+            WHEN 'V174' 
+                 THEN V174
+
+
+            WHEN 'V175' 
+                 THEN V175
+
+
+            WHEN 'V176' 
+                 THEN V176
+
+
+            WHEN 'V177' 
+                 THEN V177
+
+
+            WHEN 'V178' 
+                 THEN V178
+
+
+            WHEN 'V179' 
+                 THEN V179
+
+
+            WHEN 'V180' 
+                 THEN V180
+
+
+
+
+            WHEN 'V181' 
+                 THEN V181
+
+
+            WHEN 'V182' 
+                 THEN V182
+
+
+            WHEN 'V183' 
+                 THEN V183
+
+
+            WHEN 'V184' 
+                 THEN V184
+
+
+            WHEN 'V185' 
+                 THEN V185
+
+
+            WHEN 'V186' 
+                 THEN V186
+
+
+            WHEN 'V187' 
+                 THEN V187
+
+
+            WHEN 'V188' 
+                 THEN V188
+
+
+            WHEN 'V189' 
+                 THEN V189
+
+
+            WHEN 'V190' 
+                 THEN V190
+
+
+
+
+            WHEN 'V191' 
+                 THEN V191
+
+
+            WHEN 'V192' 
+                 THEN V192
+
+
+            WHEN 'V193' 
+                 THEN V193
+
+
+            WHEN 'V194' 
+                 THEN V194
+
+
+            WHEN 'V195' 
+                 THEN V195
+
+
+            WHEN 'V196' 
+                 THEN V196
+
+
+            WHEN 'V197' 
+                 THEN V197
+
+
+            WHEN 'V198' 
+                 THEN V198
+
+
+            WHEN 'V199' 
+                 THEN V199
+
+
+            WHEN 'V200' 
+                 THEN V200
+
+
+            WHEN 'V201' 
+                 THEN V201
+
+
+            WHEN 'V202' 
+                 THEN V202
+
+
+            WHEN 'V203' 
+                 THEN V203
+
+
+            WHEN 'V204' 
+                 THEN V204
+
+
+            WHEN 'V205' 
+                 THEN V205
+
+
+            WHEN 'V206' 
+                 THEN V206
+
+
+            WHEN 'V207' 
+                 THEN V207
+
+
+            WHEN 'V208' 
+                 THEN V208
+
+
+            WHEN 'V209' 
+                 THEN V209
+
+
+            WHEN 'V210' 
+                 THEN V210
+
+            WHEN 'V211' 
+                 THEN V211
+
+
+            WHEN 'V212' 
+                 THEN V212
+
+
+            WHEN 'V213' 
+                 THEN V213
+
+
+            WHEN 'V214' 
+                 THEN V214
+
+
+            WHEN 'V215' 
+                 THEN V215
+
+
+            WHEN 'V216' 
+                 THEN V216
+
+
+            WHEN 'V217' 
+                 THEN V217
+
+
+            WHEN 'V218' 
+                 THEN V218
+
+
+            WHEN 'V219' 
+                 THEN V219
+
+
+            WHEN 'V220' 
+                 THEN V220
+
+            WHEN 'V221' 
+                 THEN V221
+
+
+            WHEN 'V222' 
+                 THEN V222
+
+
+            WHEN 'V223' 
+                 THEN V223
+
+
+            WHEN 'V224' 
+                 THEN V224
+
+
+            WHEN 'V225' 
+                 THEN V225
+
+
+            WHEN 'V226' 
+                 THEN V226
+
+
+            WHEN 'V227' 
+                 THEN V227
+
+
+            WHEN 'V228' 
+                 THEN V228
+
+
+            WHEN 'V229' 
+                 THEN V229
+
+
+            WHEN 'V230' 
+                 THEN V230
+
+            WHEN 'V231' 
+                 THEN V231
+
+
+            WHEN 'V232' 
+                 THEN V232
+
+
+            WHEN 'V233' 
+                 THEN V233
+
+
+            WHEN 'V234' 
+                 THEN V234
+
+
+            WHEN 'V235' 
+                 THEN V235
+
+
+            WHEN 'V236' 
+                 THEN V236
+
+
+            WHEN 'V237' 
+                 THEN V237
+
+
+            WHEN 'V238' 
+                 THEN V238
+
+
+            WHEN 'V239' 
+                 THEN V239
+
+
+            WHEN 'V240' 
+                 THEN V240
+
+            WHEN 'V241' 
+                 THEN V241
+
+
+            WHEN 'V242' 
+                 THEN V242
+
+
+            WHEN 'V243' 
+                 THEN V243
+
+
+            WHEN 'V244' 
+                 THEN V244
+
+
+            WHEN 'V245' 
+                 THEN V245
+
+
+            WHEN 'V246' 
+                 THEN V246
+
+
+            WHEN 'V247' 
+                 THEN V247
+
+
+            WHEN 'V248' 
+                 THEN V248
+
+
+            WHEN 'V249' 
+                 THEN V249
+
+
+            WHEN 'V250' 
+                 THEN V250
+
+
+
+
+            WHEN 'V251' 
+                 THEN V251
+
+
+            WHEN 'V252' 
+                 THEN V252
+
+
+            WHEN 'V253' 
+                 THEN V253
+
+
+            WHEN 'V254' 
+                 THEN V254
+
+
+            WHEN 'V255' 
+                 THEN V255
+
+
+            WHEN 'V256' 
+                 THEN V256
+
+
+            WHEN 'V257' 
+                 THEN V257
+
+
+            WHEN 'V258' 
+                 THEN V258
+
+
+            WHEN 'V259' 
+                 THEN V259
+
+
+            WHEN 'V260' 
+                 THEN V260
+
+
+
+
+            WHEN 'V261' 
+                 THEN V261
+
+
+            WHEN 'V262' 
+                 THEN V262
+
+
+            WHEN 'V263' 
+                 THEN V263
+
+
+            WHEN 'V264' 
+                 THEN V264
+
+
+            WHEN 'V265' 
+                 THEN V265
+
+
+            WHEN 'V266' 
+                 THEN V266
+
+
+            WHEN 'V267' 
+                 THEN V267
+
+
+            WHEN 'V268' 
+                 THEN V268
+
+
+            WHEN 'V269' 
+                 THEN V269
+
+
+            WHEN 'V270' 
+                 THEN V270
+
+
+
+
+            WHEN 'V271' 
+                 THEN V271
+
+
+            WHEN 'V272' 
+                 THEN V272
+
+
+            WHEN 'V273' 
+                 THEN V273
+
+
+            WHEN 'V274' 
+                 THEN V274
+
+
+            WHEN 'V275' 
+                 THEN V275
+
+
+            WHEN 'V276' 
+                 THEN V276
+
+
+            WHEN 'V277' 
+                 THEN V277
+
+
+            WHEN 'V278' 
+                 THEN V278
+
+
+            WHEN 'V279' 
+                 THEN V279
+
+
+            WHEN 'V280' 
+                 THEN V280
+
+
+
+
+            WHEN 'V281' 
+                 THEN V281
+
+
+            WHEN 'V282' 
+                 THEN V282
+
+
+            WHEN 'V283' 
+                 THEN V283
+
+
+            WHEN 'V284' 
+                 THEN V284
+
+
+            WHEN 'V285' 
+                 THEN V285
+
+
+            WHEN 'V286' 
+                 THEN V286
+
+
+            WHEN 'V287' 
+                 THEN V287
+
+
+            WHEN 'V288' 
+                 THEN V288
+
+
+            WHEN 'V289' 
+                 THEN V289
+
+
+            WHEN 'V290' 
+                 THEN V290
+
+
+
+
+            WHEN 'V291' 
+                 THEN V291
+
+
+            WHEN 'V292' 
+                 THEN V292
+
+
+            WHEN 'V293' 
+                 THEN V293
+
+
+            WHEN 'V294' 
+                 THEN V294
+
+
+            WHEN 'V295' 
+                 THEN V295
+
+
+            WHEN 'V296' 
+                 THEN V296
+
+
+            WHEN 'V297' 
+                 THEN V297
+
+
+            WHEN 'V298' 
+                 THEN V298
+
+
+            WHEN 'V299' 
+                 THEN V299
+
+
+            WHEN 'V300' 
+                 THEN V300
+
+
+            WHEN 'V301' 
+                 THEN V301
+
+
+            WHEN 'V302' 
+                 THEN V302
+
+
+            WHEN 'V303' 
+                 THEN V303
+
+
+            WHEN 'V304' 
+                 THEN V304
+
+
+            WHEN 'V305' 
+                 THEN V305
+
+
+            WHEN 'V306' 
+                 THEN V306
+
+
+            WHEN 'V307' 
+                 THEN V307
+
+
+            WHEN 'V308' 
+                 THEN V308
+
+
+            WHEN 'V309' 
+                 THEN V309
+
+
+            WHEN 'V310' 
+                 THEN V310
+
+            WHEN 'V311' 
+                 THEN V311
+
+
+            WHEN 'V312' 
+                 THEN V312
+
+
+            WHEN 'V313' 
+                 THEN V313
+
+
+            WHEN 'V314' 
+                 THEN V314
+
+
+            WHEN 'V315' 
+                 THEN V315
+
+
+            WHEN 'V316' 
+                 THEN V316
+
+
+            WHEN 'V317' 
+                 THEN V317
+
+
+            WHEN 'V318' 
+                 THEN V318
+
+
+            WHEN 'V319' 
+                 THEN V319
+
+
+            WHEN 'V320' 
+                 THEN V320
+
+            WHEN 'V321' 
+                 THEN V321
+
+
+            WHEN 'V322' 
+                 THEN V322
+
+
+            WHEN 'V323' 
+                 THEN V323
+
+
+            WHEN 'V324' 
+                 THEN V324
+
+
+            WHEN 'V325' 
+                 THEN V325
+
+
+            WHEN 'V326' 
+                 THEN V326
+
+
+            WHEN 'V327' 
+                 THEN V327
+
+
+            WHEN 'V328' 
+                 THEN V328
+
+
+            WHEN 'V329' 
+                 THEN V329
+
+
+            WHEN 'V330' 
+                 THEN V330
+
+            WHEN 'V331' 
+                 THEN V331
+
+
+            WHEN 'V332' 
+                 THEN V332
+
+
+            WHEN 'V333' 
+                 THEN V333
+
+
+            WHEN 'V334' 
+                 THEN V334
+
+
+            WHEN 'V335' 
+                 THEN V335
+
+
+            WHEN 'V336' 
+                 THEN V336
+
+
+            WHEN 'V337' 
+                 THEN V337
+
+
+            WHEN 'V338' 
+                 THEN V338
+
+
+            WHEN 'V339' 
+                 THEN V339
+
+
+            WHEN 'V340' 
+                 THEN V340
+
+            WHEN 'V341' 
+                 THEN V341
+
+
+            WHEN 'V342' 
+                 THEN V342
+
+
+            WHEN 'V343' 
+                 THEN V343
+
+
+            WHEN 'V344' 
+                 THEN V344
+
+
+            WHEN 'V345' 
+                 THEN V345
+
+
+            WHEN 'V346' 
+                 THEN V346
+
+
+            WHEN 'V347' 
+                 THEN V347
+
+
+            WHEN 'V348' 
+                 THEN V348
+
+
+            WHEN 'V349' 
+                 THEN V349
+
+
+            WHEN 'V350' 
+                 THEN V350
+
+
+
+
+            WHEN 'V351' 
+                 THEN V351
+
+
+            WHEN 'V352' 
+                 THEN V352
+
+
+            WHEN 'V353' 
+                 THEN V353
+
+
+            WHEN 'V354' 
+                 THEN V354
+
+
+            WHEN 'V355' 
+                 THEN V355
+
+
+            WHEN 'V356' 
+                 THEN V356
+
+
+            WHEN 'V357' 
+                 THEN V357
+
+
+            WHEN 'V358' 
+                 THEN V358
+
+
+            WHEN 'V359' 
+                 THEN V359
+
+
+            WHEN 'V360' 
+                 THEN V360
+
+
+
+
+            WHEN 'V361' 
+                 THEN V361
+
+
+            WHEN 'V362' 
+                 THEN V362
+
+
+            WHEN 'V363' 
+                 THEN V363
+
+
+            WHEN 'V364' 
+                 THEN V364
+
+
+            WHEN 'V365' 
+                 THEN V365
+
+
+            WHEN 'V366' 
+                 THEN V366
+
+
+            WHEN 'V367' 
+                 THEN V367
+
+
+            WHEN 'V368' 
+                 THEN V368
+
+
+            WHEN 'V369' 
+                 THEN V369
+
+
+            WHEN 'V370' 
+                 THEN V370
+
+
+
+
+            WHEN 'V371' 
+                 THEN V371
+
+
+            WHEN 'V372' 
+                 THEN V372
+
+
+            WHEN 'V373' 
+                 THEN V373
+
+
+            WHEN 'V374' 
+                 THEN V374
+
+
+            WHEN 'V375' 
+                 THEN V375
+
+
+            WHEN 'V376' 
+                 THEN V376
+
+
+            WHEN 'V377' 
+                 THEN V377
+
+
+            WHEN 'V378' 
+                 THEN V378
+
+
+            WHEN 'V379' 
+                 THEN V379
+
+
+            WHEN 'V380' 
+                 THEN V380
+
+
+
+
+            WHEN 'V381' 
+                 THEN V381
+
+
+            WHEN 'V382' 
+                 THEN V382
+
+
+            WHEN 'V383' 
+                 THEN V383
+
+
+            WHEN 'V384' 
+                 THEN V384
+
+
+            WHEN 'V385' 
+                 THEN V385
+
+
+            WHEN 'V386' 
+                 THEN V386
+
+
+            WHEN 'V387' 
+                 THEN V387
+
+
+            WHEN 'V388' 
+                 THEN V388
+
+
+            WHEN 'V389' 
+                 THEN V389
+
+
+            WHEN 'V390' 
+                 THEN V390
+
+
+
+
+            WHEN 'V391' 
+                 THEN V391
+
+
+            WHEN 'V392' 
+                 THEN V392
+
+
+            WHEN 'V393' 
+                 THEN V393
+
+
+            WHEN 'V394' 
+                 THEN V394
+
+
+            WHEN 'V395' 
+                 THEN V395
+
+
+            WHEN 'V396' 
+                 THEN V396
+
+
+            WHEN 'V397' 
+                 THEN V397
+
+
+            WHEN 'V398' 
+                 THEN V398
+
+
+            WHEN 'V399' 
+                 THEN V399
+
+
+            WHEN 'V400' 
+                 THEN V400
+
+            WHEN 'V401' 
+                 THEN V401
+
+
+            WHEN 'V402' 
+                 THEN V402
+
+
+            WHEN 'V403' 
+                 THEN V403
+
+
+            WHEN 'V404' 
+                 THEN V404
+
+
+            WHEN 'V405' 
+                 THEN V405
+
+
+            WHEN 'V406' 
+                 THEN V406
+
+
+            WHEN 'V407' 
+                 THEN V407
+
+
+            WHEN 'V408' 
+                 THEN V408
+
+
+            WHEN 'V409' 
+                 THEN V409
+
+
+            WHEN 'V410' 
+                 THEN V410
+
+            WHEN 'V411' 
+                 THEN V411
+
+
+            WHEN 'V412' 
+                 THEN V412
+
+
+            WHEN 'V413' 
+                 THEN V413
+
+
+            WHEN 'V414' 
+                 THEN V414
+
+
+            WHEN 'V415' 
+                 THEN V415
+
+
+            WHEN 'V416' 
+                 THEN V416
+
+
+            WHEN 'V417' 
+                 THEN V417
+
+
+            WHEN 'V418' 
+                 THEN V418
+
+
+            WHEN 'V419' 
+                 THEN V419
+
+
+            WHEN 'V420' 
+                 THEN V420
+
+            WHEN 'V421' 
+                 THEN V421
+
+
+            WHEN 'V422' 
+                 THEN V422
+
+
+            WHEN 'V423' 
+                 THEN V423
+
+
+            WHEN 'V424' 
+                 THEN V424
+
+
+            WHEN 'V425' 
+                 THEN V425
+
+
+            WHEN 'V426' 
+                 THEN V426
+
+
+            WHEN 'V427' 
+                 THEN V427
+
+
+            WHEN 'V428' 
+                 THEN V428
+
+
+            WHEN 'V429' 
+                 THEN V429
+
+
+            WHEN 'V430' 
+                 THEN V430
+
+            WHEN 'V431' 
+                 THEN V431
+
+
+            WHEN 'V432' 
+                 THEN V432
+
+
+            WHEN 'V433' 
+                 THEN V433
+
+
+            WHEN 'V434' 
+                 THEN V434
+
+
+            WHEN 'V435' 
+                 THEN V435
+
+
+            WHEN 'V436' 
+                 THEN V436
+
+
+            WHEN 'V437' 
+                 THEN V437
+
+
+            WHEN 'V438' 
+                 THEN V438
+
+
+            WHEN 'V439' 
+                 THEN V439
+
+
+            WHEN 'V440' 
+                 THEN V440
+
+            WHEN 'V441' 
+                 THEN V441
+
+
+            WHEN 'V442' 
+                 THEN V442
+
+
+            WHEN 'V443' 
+                 THEN V443
+
+
+            WHEN 'V444' 
+                 THEN V444
+
+
+            WHEN 'V445' 
+                 THEN V445
+
+
+            WHEN 'V446' 
+                 THEN V446
+
+
+            WHEN 'V447' 
+                 THEN V447
+
+
+            WHEN 'V448' 
+                 THEN V448
+
+
+            WHEN 'V449' 
+                 THEN V449
+
+
+            WHEN 'V450' 
+                 THEN V450
+
+
+
+
+            WHEN 'V451' 
+                 THEN V451
+
+
+            WHEN 'V452' 
+                 THEN V452
+
+
+            WHEN 'V453' 
+                 THEN V453
+
+
+            WHEN 'V454' 
+                 THEN V454
+
+
+            WHEN 'V455' 
+                 THEN V455
+
+
+            WHEN 'V456' 
+                 THEN V456
+
+
+            WHEN 'V457' 
+                 THEN V457
+
+
+            WHEN 'V458' 
+                 THEN V458
+
+
+            WHEN 'V459' 
+                 THEN V459
+
+
+            WHEN 'V460' 
+                 THEN V460
+
+
+
+
+            WHEN 'V461' 
+                 THEN V461
+
+
+            WHEN 'V462' 
+                 THEN V462
+
+
+            WHEN 'V463' 
+                 THEN V463
+
+
+            WHEN 'V464' 
+                 THEN V464
+
+
+            WHEN 'V465' 
+                 THEN V465
+
+
+            WHEN 'V466' 
+                 THEN V466
+
+
+            WHEN 'V467' 
+                 THEN V467
+
+
+            WHEN 'V468' 
+                 THEN V468
+
+
+            WHEN 'V469' 
+                 THEN V469
+
+
+            WHEN 'V470' 
+                 THEN V470
+
+
+
+
+            WHEN 'V471' 
+                 THEN V471
+
+
+            WHEN 'V472' 
+                 THEN V472
+
+
+            WHEN 'V473' 
+                 THEN V473
+
+
+            WHEN 'V474' 
+                 THEN V474
+
+
+            WHEN 'V475' 
+                 THEN V475
+
+
+            WHEN 'V476' 
+                 THEN V476
+
+
+            WHEN 'V477' 
+                 THEN V477
+
+
+            WHEN 'V478' 
+                 THEN V478
+
+
+            WHEN 'V479' 
+                 THEN V479
+
+
+            WHEN 'V480' 
+                 THEN V480
+
+
+
+
+            WHEN 'V481' 
+                 THEN V481
+
+
+            WHEN 'V482' 
+                 THEN V482
+
+
+            WHEN 'V483' 
+                 THEN V483
+
+
+            WHEN 'V484' 
+                 THEN V484
+
+
+            WHEN 'V485' 
+                 THEN V485
+
+
+            WHEN 'V486' 
+                 THEN V486
+
+
+            WHEN 'V487' 
+                 THEN V487
+
+
+            WHEN 'V488' 
+                 THEN V488
+
+
+            WHEN 'V489' 
+                 THEN V489
+
+
+            WHEN 'V490' 
+                 THEN V490
+
+
+
+
+            WHEN 'V491' 
+                 THEN V491
+
+
+            WHEN 'V492' 
+                 THEN V492
+
+
+            WHEN 'V493' 
+                 THEN V493
+
+
+            WHEN 'V494' 
+                 THEN V494
+
+
+            WHEN 'V495' 
+                 THEN V495
+
+
+            WHEN 'V496' 
+                 THEN V496
+
+
+            WHEN 'V497' 
+                 THEN V497
+            WHEN 'V498' 
+                 THEN V498
+            WHEN 'V499' 
+                 THEN V499
+            WHEN 'V500' 
+                 THEN V500
+ END
+  FROM [Record] WHERE RecordID=@nRecordID
+	
+	
+	RETURN @sReturn;   
+	
+			
+	
+END
+
+
+USE [thedatabase_dev_27-Jan-2016]
+GO
+/****** Object:  UserDefinedFunction [dbo].[fnGetColumnColour]    Script Date: 02/27/2016 00:54:48 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER FUNCTION [dbo].[fnGetColumnColour]
+(
+	@nRecordID INT  
+	,@nColumnID INT
+	,@ColumnType varchar(20)
+)  -- SELECT [dbo].[fnGetColumnColour](1103027,52043)
+RETURNS varchar(10)
+AS
+BEGIN
+	
+	DECLARE @sReturn VARCHAR(10);	
+	DECLARE @sSystemName VARCHAR(50);
+	DECLARE @sEachConrollingRecordValue VARCHAR(MAX);
+	DECLARE @Sql NVARCHAR(4000)
+	
+	DECLARE T_Cursor CURSOR FOR
+	SELECT ControllingColumnID,Operator,Value,Colour FROM ColumnColour
+	WHERE ColumnID=@nColumnID ORDER BY ColumnColourID;
+	
+	DECLARE @nControllingColumnID INT;
+	DECLARE @sOperator VARCHAR(25);
+	DECLARE @sValue NVARCHAR(250);
+	DECLARE @sColour VARCHAR(10);
+	
+	
+	OPEN T_Cursor;
+	FETCH NEXT FROM T_Cursor INTO @nControllingColumnID,@sOperator,@sValue,@sColour;
+	WHILE @@FETCH_STATUS = 0
+	   BEGIN
+		  SET @sEachConrollingRecordValue=NULL;
+		  SET @sSystemName=NULL;
+		  SET @Sql=NULL;
+		  SELECT @sSystemName=SystemName FROM [Column] WHERE ColumnID=@nControllingColumnID
+		  
+		 
+		  SELECT @sEachConrollingRecordValue=[dbo].[fnGetRecordValueBySys](@nRecordID,@sSystemName)
+		  
+		  
+		  IF [dbo].[fnCompareValuesForColour](@sEachConrollingRecordValue,@sValue,@sOperator,@ColumnType)=1
+			BEGIN
+				SET @sReturn=@sColour
+				BREAK;
+			END
+		  
+		  
+		  FETCH NEXT FROM T_Cursor INTO @nControllingColumnID,@sOperator,@sValue,@sColour;
+	   END;
+	CLOSE T_Cursor;
+	DEALLOCATE T_Cursor;
+
+
+	
+	
+	RETURN @sReturn;   
+	
+			
+	
+END
+
+
+
+USE [thedatabase_dev_27-Jan-2016]
+GO
+/****** Object:  UserDefinedFunction [dbo].[fnGetColumnColour]    Script Date: 02/27/2016 00:57:27 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER FUNCTION [dbo].[fnCompareValuesForColour]
+(
+	
+	@sEachConrollingRecordValue  varchar(max)
+	,@sValue varchar(max)   
+	,@sOperator VARCHAR(25)
+	,@ColumnType varchar(20)
+)  -- SELECT [dbo].[fnCompareValuesForColour]('31','31','equals','')
+RETURNS bit
+AS
+BEGIN
+	-- @ColumnType will be used for more in depth
+	
+	DECLARE @bReturn BIT=0
+	
+	IF @sEachConrollingRecordValue IS NULL OR @sValue IS NULL 
+		RETURN 0
+	
+	IF @sOperator='equals' 
+		IF @sEachConrollingRecordValue=@sValue RETURN 1
+	
+	IF @sOperator='notequal' 
+		IF @sEachConrollingRecordValue!=@sValue RETURN 1	
+		
+	IF @sOperator='greaterthan' 
+		IF @sEachConrollingRecordValue>@sValue RETURN 1	
+		
+	IF @sOperator='greaterthanequal' 
+		IF @sEachConrollingRecordValue>=@sValue RETURN 1	
+		
+	IF @sOperator='lessthan' 
+		IF @sEachConrollingRecordValue<@sValue RETURN 1	
+		
+	IF @sOperator='lessthanequal' 
+		IF @sEachConrollingRecordValue<=@sValue RETURN 1	
+		
+	IF @sOperator='contains' 
+		IF CHARINDEX(@sEachConrollingRecordValue,@sValue)>0 RETURN 1	
+		
+	IF @sOperator='notcontains' 
+		IF CHARINDEX(@sEachConrollingRecordValue,@sValue)=0 RETURN 1			
+			
+	RETURN 0
+END
+

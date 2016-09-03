@@ -570,12 +570,26 @@ public class Common
     }
     public static string GetUpdatedFullURLRemoveQueryString(string strFullURL, string theRemoveQueryString)
     {
-        var nameValues = HttpUtility.ParseQueryString(strFullURL);
-        nameValues.Remove(theRemoveQueryString);
-        string strReturnURL = nameValues.ToString();
-        strReturnURL = HttpContext.Current.Server.UrlDecode(strReturnURL);
+        try
+        {
+            if(strFullURL.IndexOf('?')>-1)
+            {
+                string strBase = strFullURL.Substring(0, strFullURL.IndexOf('?') + 1);
+                var nameValues = HttpUtility.ParseQueryString(strFullURL.Substring(strFullURL.IndexOf('?') + 1));
+                nameValues.Remove(theRemoveQueryString);
+                string strReturnURL = nameValues.ToString();
+                strReturnURL = HttpContext.Current.Server.UrlDecode(strReturnURL);
 
-        return strReturnURL;
+                return strBase + strReturnURL;
+            }
+          
+        }
+        catch
+        {
+            //
+        }
+
+        return strFullURL;
     }
 
     public static bool IsThisDouble(string strValue)

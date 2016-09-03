@@ -245,13 +245,15 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
     protected void Page_Init(object sender, EventArgs e)
     {
 
+
+
         if (Session["User"] == null || Session["FilesLocation"] == null)
         {
             Response.Redirect("~/Login.aspx", false);
 
             return;
         }
-
+       
 
 
         _strDynamictabPart = lnkSearch.ClientID.Substring(0, lnkSearch.ClientID.Length - 9);
@@ -309,6 +311,11 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             return;
 
 
+        //if (!IsPostBack)
+        //{
+           
+        //}
+
         _bEqualOrGreaterOperator = Common.SO_SearchAllifToIsNull(_theTable.AccountID, _theTable.TableID);
 
         if (_bEqualOrGreaterOperator == true)// && strLowerDate.Trim() != "" && strUpperDate.Trim() == "")
@@ -316,7 +323,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             _strEqualOrGreaterOperator = " >= ";
         }
 
-
+       
 
         if ((bool)_theUserRole.IsAdvancedSecurity)
         {
@@ -3181,7 +3188,7 @@ function checkAllHR(objRef,GridView) {
 
                                     var chk = document.getElementById('ctl00_HomeContentPlaceHolder_rlOne_chkShowAdvancedOptions');
                                     var x = document.getElementById('" + tblAdvancedOption.ClientID + @"');
-                                    var trChkOnlyWarning = document.getElementById('trChkShowOnlyWarning');
+                                    var trChkOnlyWarning = document.getElementById('"+trChkShowOnlyWarning.ClientID+@"');
 
                                     if(chk==null)
                                     {
@@ -3343,7 +3350,7 @@ function checkAllHR(objRef,GridView) {
 
                                     var chk = document.getElementById('" + chkShowAdvancedOptions.ClientID + @"');
                                     var x = document.getElementById('" + tblAdvancedOption.ClientID + @"');
-                                    var trChkOnlyWarning = document.getElementById('trChkShowOnlyWarning');
+                                    var trChkOnlyWarning = document.getElementById('"+trChkShowOnlyWarning.ClientID+@"');
                                     
                                     var tdFilterDynamic = document.getElementById('" + tdFilterDynamic.ClientID + @"');
                                     var tdFilterYAxis = document.getElementById('" + tdFilterYAxis.ClientID + @"');
@@ -5443,7 +5450,7 @@ function checkAllHR(objRef,GridView) {
             }
             else
             {
-                return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?tabindex=" + DetailTabIndex.ToString() + "&onlyback=yes&parentRecordid=" + Request.QueryString["Recordid"].ToString() + "&mode=" + Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
+                return Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&tabindex=" + DetailTabIndex.ToString() + "&onlyback=yes&parentRecordid=" + Request.QueryString["Recordid"].ToString() + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
             }
         }
 
@@ -8611,24 +8618,15 @@ function checkAllHR(objRef,GridView) {
     protected void SetOtherValidationGroup()
     {
         //delete related
-        //txtDeleteReason.ValidationGroup = "DE" + _strDynamictabPart;
-        //rfvDeleteReason.ValidationGroup = "DE" + _strDynamictabPart;
-        //lnkDeleteAllOK.ValidationGroup = "DE" + _strDynamictabPart;
+     
         TheDatabase.SetValidationGroup(pnlDeleteAll.Controls, "DE" + _strDynamictabPart);
         //edit many related
-        TheDatabase.SetValidationGroup(pnlEditMany.Controls, "DE" + _strDynamictabPart);
-        //ddlYAxisBulk.ValidationGroup = "EM" + _strDynamictabPart;
-        ////rfvddlYAxisBulk.ValidationGroup = "EM" + _strDynamictabPart;
-        //txtBulkTime.ValidationGroup = "EM" + _strDynamictabPart;
-        //txtDateBulk.ValidationGroup = "EM" + _strDynamictabPart;
-        //txtNumberBulk.ValidationGroup = "EM" + _strDynamictabPart;
-       
+        TheDatabase.SetValidationGroup(pnlEditMany.Controls, "EM" + _strDynamictabPart);
+        
 
-        //rvDateBulk.ValidationGroup = "EM" + _strDynamictabPart;
-        //revNumberBulk.ValidationGroup = "EM" + _strDynamictabPart;
-        //lnkEditManyOK.ValidationGroup = "EM" + _strDynamictabPart;
-        //lnkEditManyCancel.ValidationGroup = "EM" + _strDynamictabPart;
-        //lnkEditManyCancel2.ValidationGroup = "EM" + _strDynamictabPart;
+        //delete related
+        //rfvDeleteReason.ValidationGroup = "DR";
+        //lnkDeleteAllOK.ValidationGroup = "DR";
     }
     protected void Pager_AllExport(object sender, EventArgs e)
     {
@@ -9091,7 +9089,10 @@ function checkAllHR(objRef,GridView) {
         else
         {
             //record found
-            string strCopyAddURL = GetAddURL() + "&CopyRecordID=" + Cryptography.Encrypt(sCheck);
+            string strCopyAddURL = GetAddURL();// +"&CopyRecordID=" + Cryptography.Encrypt(sCheck);
+
+            Session["CopyRecordID"] = Cryptography.Encrypt(sCheck);
+
             if (_bOpenInParent == false)
             {
                 Response.Redirect(strCopyAddURL, false);
@@ -9249,12 +9250,13 @@ function checkAllHR(objRef,GridView) {
         }
         else
         {
-            if (Session["stack"] != null)
+            if (Session["stackURL"] != null)
             {
-                Stack<string> stack = (Stack<string>)Session["stack"];
+                Stack<string> stack = (Stack<string>)Session["stackURL"];
                 if (stack.Count > 0)
                 {
                     stack.Pop();
+                    Session["stackURL"] = stack;
                 }
             }
             strSendEmailURl = "/Pages/Record/SendEmail.aspx?TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&recordids=" + Cryptography.Encrypt(iSearchCriteriaID.ToString()) + strSC + "&fixedurl=" + Cryptography.Encrypt(Request.RawUrl) + "&tabindex=" + DetailTabIndex.ToString();
@@ -10672,17 +10674,38 @@ function checkAllHR(objRef,GridView) {
             ddlExportFiletype.SelectedValue = "c";
             ddlExportFiletype.Enabled = false;
             ddlTemplate.Enabled = false;
-            chklstFields.Enabled = false;
-            hlExportTemplate.Enabled = false;
-            hlExportTemplateNew.Enabled = false;
+            chklstFields.Enabled = true;
+            hlExportTemplate.Visible = false;
+            hlExportTemplateNew.Visible = false;
+
+            chklstFields.Enabled = true;
+            chklstFields.Items.Clear();
+            DataTable dtColumns = TheDatabase.spBulkExportColumns((int)_theTable.TableID);
+
+            if(dtColumns!=null)
+            {
+                 foreach (DataRow dr in dtColumns.Rows)
+                 {
+                     string strColumnText =dr["TableName"].ToString()+ " " + dr["ColumnDisplayName"].ToString();
+
+                     ListItem liTemp = new ListItem(strColumnText, dr["ColumnID"].ToString());
+                     liTemp.Selected = true;
+                     //liTemp.Attributes.Add("DataValue", dr["SystemName"].ToString());
+                     chklstFields.Items.Add(liTemp);
+                 }
+            }
         }
         else
         {
+            if (hlExportTemplate.Visible==false)
+                ddlTemplate_SelectedIndexChanged(null, null);
+
+
             ddlExportFiletype.Enabled = true;
             ddlTemplate.Enabled = true;
             chklstFields.Enabled = true;
-            hlExportTemplate.Enabled = true;
-            hlExportTemplateNew.Enabled = true;
+            hlExportTemplate.Visible = true;
+            hlExportTemplateNew.Visible = true;
         }
         mpeExportRecords.Show();
     }
@@ -10795,33 +10818,7 @@ function checkAllHR(objRef,GridView) {
 
 
 
-            //TextSearch = TextSearch + hfTextSearch.Value;
-            //if ((bool)_theUserRole.IsAdvancedSecurity)
-            //{
-            //    if (_strRecordRightID == Common.UserRoleType.OwnData)
-            //    {
-            //        TextSearch = TextSearch + " AND (Record.OwnerUserID=" + _ObjUser.UserID.ToString() + " OR Record.EnteredBy=" + _ObjUser.UserID.ToString() + ")";
-            //    }
-            //}
-            //else
-            //{
-            //    if (Session["roletype"].ToString() == Common.UserRoleType.OwnData)
-            //    {
-            //        TextSearch = TextSearch + " AND (Record.OwnerUserID=" + _ObjUser.UserID.ToString() + " OR Record.EnteredBy=" + _ObjUser.UserID.ToString() + ")";
-            //    }
-            //}
-            //PopulateDateAddedSearch();
-
-            //if (chkShowAdvancedOptions.Checked && ddlUploadedBatch.SelectedValue != "")
-            //{
-            //    TextSearch = TextSearch + "  AND Record.TempRecordID IN  (SELECT TempRecord.RecordID FROM TempRecord WHERE TempRecord.BatchID=" + ddlUploadedBatch.SelectedValue + ")";
-            //}
-
-            //if (chkShowAdvancedOptions.Checked && ddlUploadedBatch.SelectedValue != "")
-            //{
-            //    TextSearch = TextSearch + "  AND Record.BatchID=" + ddlUploadedBatch.SelectedValue + " ";
-            //}
-
+         
             string strHeaderXML = "";
             if (rdbRecords.SelectedValue == "a" && strExportType != "email")
             {
@@ -10832,7 +10829,7 @@ function checkAllHR(objRef,GridView) {
             }
 
 
-            if (rdbRecords.SelectedValue == "t" && strExportType != "email")
+            if ((rdbRecords.SelectedValue == "t" || rdbRecords.SelectedValue == "d") && strExportType != "email")
             {
                 TextSearch = "";
                 _strNumericSearch = "";
@@ -10851,15 +10848,31 @@ function checkAllHR(objRef,GridView) {
 
                 }
 
-                if (string.IsNullOrEmpty(sCheck))
+                if (string.IsNullOrEmpty(sCheck) && rdbRecords.SelectedValue == "t")
                 {
                     Session["tdbmsgpb"] = "Please select a record.";
                     //ScriptManager.RegisterClientScriptBlock(gvTheGrid, typeof(Page), "message_alert", "alert('Please select a record.');", true);
                     return;
                 }
 
-                sCheck = sCheck + "-1";
-                TextSearch = " AND Record.RecordID IN(" + sCheck + ")";
+               
+                if (rdbRecords.SelectedValue == "t")
+                {
+                    sCheck = sCheck + "-1";
+                    TextSearch = TextSearch + " AND Record.RecordID IN(" + sCheck + ")";
+                }
+                   
+                 if (rdbRecords.SelectedValue == "d")
+                 {
+                     if(sCheck!="")
+                     {
+                         sCheck = sCheck.Substring(0, sCheck.Length - 1);
+                         TextSearch = TextSearch + " AND Record.RecordID IN(" + sCheck + ")";
+                     }
+                        
+
+                 }
+
 
             }
 
@@ -10871,76 +10884,11 @@ function checkAllHR(objRef,GridView) {
             //    return;
             //}
 
-            if (strExportType == "csv")
-            {
-                HttpContext.Current.Response.Clear();
-                HttpContext.Current.Response.Buffer = true;
-                HttpContext.Current.Response.AddHeader("content-disposition",
-                "attachment;filename=\"" + lblTitle.Text.Replace("Records - ", "") + " " + DateTime.Today.ToString("yyyyMMdd") + ".csv\"");
-                HttpContext.Current.Response.Charset = "";
-                HttpContext.Current.Response.ContentType = "text/csv";
-
-
-                if (rdbRecords.SelectedValue == "d")
-                {
-
-                    try
-                    {
-                        DataTable dtDump = TheDatabaseS.spExportAllTables(TableID);
-                        //DBG.Common.ExportUtil.ExportToExcel(dtDump, "\"" + lblTitle.Text.Replace("Records - ", "") + " " + DateTime.Today.ToString("yyyyMMdd") + ".xls" + "\"");
-                        int iColCountD = dtDump.Columns.Count;
-                        //for (int i = 0; i < iColCountD; i++)
-                        //{
-                        //    sw.Write(dtDump.Columns[i]);
-
-                        //}
-
-                        //sw.Write(sw.NewLine);
-
-
-
-                        foreach (DataRow dr in dtDump.Rows)
-                        {
-                            for (int i = 0; i < iColCountD; i++)
-                            {
-                                if (!Convert.IsDBNull(dr[i]))
-                                {
-                                    //sw.Write("\"" + dr[i].ToString().Replace("\"", "'") + "\"");
-                                    sw.Write(dr[i].ToString());
-                                }
-                            }
-
-                            sw.Write(sw.NewLine);
-
-                        }
-
-                        sw.Close();
-
-                        HttpContext.Current.Response.Output.Write(sw.ToString());
-                        HttpContext.Current.Response.Flush();
-                        HttpContext.Current.Response.End();
-
-                        HttpContext.Current.Response.Flush(); // Sends all currently buffered output to the client.
-                        HttpContext.Current.Response.SuppressContent = true;  // Gets or sets a value indicating whether to send HTTP content to the client.
-                        HttpContext.Current.ApplicationInstance.CompleteRequest(); // Causes ASP.NET to bypass all events and filtering in the HTTP pipeline chain of execution and directly execute the EndRequest event.
-                        return;
-                    }
-                    catch (Exception ex)
-                    {
-                        ErrorLog theErrorLog = new ErrorLog(null, "Dump Export", ex.Message, ex.StackTrace, DateTime.Now, Request.Path);
-                        SystemData.ErrorLog_Insert(theErrorLog);
-                        return;
-                    }
-
-                }
-
-
-
-            }
+           
 
             bool bFoundHeader = false;
 
-            if (strExportType != "email")
+            if (strExportType != "email" && rdbRecords.SelectedValue != "d")
             {
 
                 foreach (ListItem item in chklstFields.Items)
@@ -11001,7 +10949,7 @@ function checkAllHR(objRef,GridView) {
                                 }
                             }
 
-                            if (theColumn.ColumnType == "datetime")
+                            if ((theColumn.ColumnType == "datetime") && (theColumn.SystemName.ToString().ToLower() != "datetimerecorded"))
                             {
                                 //oliver <begin> Ticket 1461
 
@@ -11049,7 +10997,6 @@ function checkAllHR(objRef,GridView) {
                                 strHeaderXML = strHeaderXML + "<ChildJoinColumnName>" + strChildJoinColumnName + "</ChildJoinColumnName>";
                                 strHeaderXML = strHeaderXML + "<ShowViewLink>" + strShowViewLink + "</ShowViewLink>";
                                 strHeaderXML = strHeaderXML + "<ColumnType>" + theColumn.ColumnType + "</ColumnType>";
-                                strHeaderXML = strHeaderXML + "<ColumnTypeSplit>" + theColumn.ColumnType + "</ColumnTypeSplit>";
                                 strHeaderXML = strHeaderXML + "</Records>";
                             }
 
@@ -11144,15 +11091,10 @@ function checkAllHR(objRef,GridView) {
 
             }
 
-            //if (_theView != null && _theView.FixedFilter != "")
-            //{
-            //    TextSearch = TextSearch + " " + _theView.FixedFilter;
-            //}
-
-
             DataTable dt = new DataTable();
 
-
+            if (strExportType == "csv" && rdbRecords.SelectedValue == "d")
+                strHeaderXML = "";
 
             //Is it a bulk export?
             string strReturnSQL = "";
@@ -11165,6 +11107,78 @@ function checkAllHR(objRef,GridView) {
                          sOrder, strOrderDirection, 0, 10, ref iTN, ref _iTotalDynamicColumns, "SQLOnly", _strNumericSearch, TextSearch + TextSearchParent,
                          _dtDateFrom, _dtDateTo, "", strHeaderXML, "", null, ref strReturnSQL, ref sReturnHeaderSQL);
 
+
+
+
+
+            if (strExportType == "csv" && rdbRecords.SelectedValue == "d")
+            {
+                HttpContext.Current.Response.Clear();
+                HttpContext.Current.Response.Buffer = true;
+                HttpContext.Current.Response.AddHeader("content-disposition",
+                "attachment;filename=\"" + lblTitle.Text.Replace("Records - ", "") + " " + DateTime.Today.ToString("yyyyMMdd") + ".csv\"");
+                HttpContext.Current.Response.Charset = "";
+                HttpContext.Current.Response.ContentType = "text/csv";
+                string strSelectedColumnIDs = "";
+                foreach (ListItem item in chklstFields.Items)
+                {
+                    if (item.Selected)
+                    {
+                         if (item.Selected)
+                         {
+                             strSelectedColumnIDs = strSelectedColumnIDs + item.Value + ",";
+                         }
+                    }
+                }
+                if (strSelectedColumnIDs != "")
+                    strSelectedColumnIDs = strSelectedColumnIDs.Substring(0, strSelectedColumnIDs.Length - 1);
+                
+                    try
+                    {
+                        //DataTable dtDump = TheDatabaseS.spExportAllTables(TableID);
+
+                        DataTable dtDump=TheDatabase.spBulkExportData(_theTable.TableID.ToString(),strReturnSQL,strSelectedColumnIDs);
+
+                        int iColCountD = dtDump.Columns.Count;
+                      
+                        foreach (DataRow dr in dtDump.Rows)
+                        {
+                            for (int i = 0; i < iColCountD; i++)
+                            {
+                                if (!Convert.IsDBNull(dr[i]))
+                                {
+                                    //sw.Write("\"" + dr[i].ToString().Replace("\"", "'") + "\"");
+                                    sw.Write(dr[i].ToString());
+                                }
+                            }
+
+                            sw.Write(sw.NewLine);
+
+                        }
+
+                        sw.Close();
+
+                        HttpContext.Current.Response.Output.Write(sw.ToString());
+                        HttpContext.Current.Response.Flush();
+                        HttpContext.Current.Response.End();
+
+                        HttpContext.Current.Response.Flush(); // Sends all currently buffered output to the client.
+                        HttpContext.Current.Response.SuppressContent = true;  // Gets or sets a value indicating whether to send HTTP content to the client.
+                        HttpContext.Current.ApplicationInstance.CompleteRequest(); // Causes ASP.NET to bypass all events and filtering in the HTTP pipeline chain of execution and directly execute the EndRequest event.
+                        return;
+                    }
+                    catch (Exception ex)
+                    {
+                        ErrorLog theErrorLog = new ErrorLog(null, "Dump Export", ex.Message, ex.StackTrace, DateTime.Now, Request.Path);
+                        SystemData.ErrorLog_Insert(theErrorLog);
+                        return;
+                    }
+
+                
+            }
+            
+                        
+            
             if (iTN > Common.MaxRecordsExport(_theTable.AccountID, _theTable.TableID))
             {
                 if (strReturnSQL != "" && sReturnHeaderSQL != "")
@@ -11595,7 +11609,7 @@ function checkAllHR(objRef,GridView) {
                         }
 
                         //oliver <begin> Ticket 1461
-                        if (_dtRecordColums.Rows[i]["ColumnType"].ToString() == "datetime")
+                        if (_dtRecordColums.Rows[i]["SystemName"].ToString().ToLower() != "datetimerecorded")
                         {
                             if (dr[j].ToString() != "")
                             {
@@ -11686,13 +11700,31 @@ function checkAllHR(objRef,GridView) {
 
                 if (strExportType == "csv")
                 {
-                    HttpContext.Current.Response.Output.Write(sw.ToString());
-                    HttpContext.Current.Response.Flush();
-                    HttpContext.Current.Response.End();
-                    HttpContext.Current.Response.Flush(); // Sends all currently buffered output to the client.
-                    HttpContext.Current.Response.SuppressContent = true;  // Gets or sets a value indicating whether to send HTTP content to the client.
-                    HttpContext.Current.ApplicationInstance.CompleteRequest(); // Causes ASP.NET to bypass all events and filtering in the HTTP pipeline chain of execution and directly execute the EndRequest event.
 
+                    try
+                    {
+
+                        HttpContext.Current.Response.Clear();
+                        HttpContext.Current.Response.Buffer = true;
+                        HttpContext.Current.Response.AddHeader("content-disposition",
+                        "attachment;filename=\"" + lblTitle.Text.Replace("Records - ", "") + " " + DateTime.Today.ToString("yyyyMMdd") + ".csv\"");
+                        HttpContext.Current.Response.Charset = "";
+                        HttpContext.Current.Response.ContentType = "text/csv";
+
+                        HttpContext.Current.Response.Output.Write(sw.ToString());
+                        HttpContext.Current.Response.Flush();
+                        HttpContext.Current.Response.End();
+                        HttpContext.Current.Response.Flush(); // Sends all currently buffered output to the client.
+                        HttpContext.Current.Response.SuppressContent = true;  // Gets or sets a value indicating whether to send HTTP content to the client.
+                        HttpContext.Current.ApplicationInstance.CompleteRequest(); // Causes ASP.NET to bypass all events and filtering in the HTTP pipeline chain of execution and directly execute the EndRequest event.
+                        return;
+                    }
+                    catch
+                    {
+                        //
+                        return;
+                    }
+                   
                 }
                 if (strExportType == "email")
                 {

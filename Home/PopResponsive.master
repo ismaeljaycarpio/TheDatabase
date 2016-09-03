@@ -1,0 +1,54 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="PopResponsive.master.cs" Inherits="Home_Popup" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" style="background-image:none; background-color:#ffffff;">
+<head runat="server">
+    <title>TheDatabase</title>
+        <meta name="Description" content="TheDatabase.net is an online database development platform to make getting your database on the web quick and easy with no upfront costs." />
+    <meta name="Keywords" content="Database, online, web, data, development, platform" />
+     <meta name="google" content="notranslate">
+    <meta http-equiv="Content-Language" content="en">
+
+            <link href="~/App_Themes/Default/StyleSheet.css?2" rel="stylesheet" type="text/css" />
+     <asp:Literal ID="ltMasterStyles" runat="server"></asp:Literal>
+     <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    </asp:ContentPlaceHolder>
+    <%--<link href="~/css/style.css" rel="stylesheet" type="text/css" />--%>
+</head>
+<body style="background-image:none; background-color:#ffffff;">
+    <script type="text/javascript" src="<%=ResolveUrl("~/JS/Common.js")%>"></script>
+
+    <script type="text/javascript" src="<%=ResolveUrl("~/script/jquery.js")%>"></script>
+      <script type="text/javascript" src="<%=ResolveUrl("~/JS/modernizr.custom.80028.js")%>"></script>
+    <form id="form1" runat="server">
+    <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true">
+    </asp:ScriptManager>
+
+ <asp:UpdatePanel ID="upNotificationMessage" runat="server" UpdateMode="Always">
+            <ContentTemplate>
+                <div id="divNotificationMessage" style="position: fixed; top: 0px;">
+                    <asp:Label runat="server" ID="lblNotificationMessage"></asp:Label>
+                </div>
+            </ContentTemplate>
+        </asp:UpdatePanel>
+
+
+    <div>
+        <table>
+            <tr style="text-align: left;">
+                <td style="text-align: left;">
+                    <div id="Content" style="text-align: left; padding-left: 25px; padding-right: 10px;
+                        min-height: 200px;" runat="server" clientidmode="Static">
+                        <asp:ContentPlaceHolder ID="HomeContentPlaceHolder" runat="server">
+
+
+
+                        </asp:ContentPlaceHolder>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    </form>
+</body>
+</html>

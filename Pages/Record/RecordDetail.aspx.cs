@@ -20,6 +20,7 @@ using System.Xml;
 
 public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 {
+    Stack<string> _stackURL = new Stack<string>();
     bool _bShowExceedances = false;
     string _strWarningResults = "";
     string _strExceedanceResults = "";
@@ -189,6 +190,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             theSpeedLog.FunctionLineNumber = 33;
             SecurityManager.AddSpeedLog(theSpeedLog);
         }
+
+       
     }
 
 
@@ -207,19 +210,31 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
     protected override void OnPreInit(EventArgs e)
     {
-        if (Request.QueryString["CopyRecordID"] != null)
-            _bCopyRecord = true;
+        
 
 
         _strFilesLocation = Session["FilesLocation"].ToString();
         _strFilesPhisicalPath = Session["FilesPhisicalPath"].ToString();
         _qsTableID = Cryptography.Decrypt(Request.QueryString["TableID"]);
 
+        if (Request.QueryString["mode"] != null)
+        {
+            _qsMode = Cryptography.Decrypt(Request.QueryString["mode"]);
+            _qsMode = _qsMode.ToLower();
+        }
+
         int iTableID = int.Parse(_qsTableID);
 
         _theTable = RecordManager.ets_Table_Details(iTableID);
 
+        if (Session["CopyRecordID"] != null)
+            _bCopyRecord = true;
 
+        if(_qsMode!="add")
+        {
+            Session["CopyRecordID"] = null;
+            _bCopyRecord = false;
+        }
         string strShowExceedances = SystemData.SystemOption_ValueByKey_Account("Show Exceedances", _theTable.AccountID, _theTable.TableID);
 
         if (strShowExceedances != "" && strShowExceedances.ToLower() == "yes")
@@ -427,11 +442,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         bool bHasRight = false;
         int iTableID = int.Parse(_qsTableID);
 
-        if (Request.QueryString["mode"] != null)
-        {
-            _qsMode = Cryptography.Decrypt(Request.QueryString["mode"]);
-            _qsMode = _qsMode.ToLower();
-        }
+      
 
         _dtColumnsDetail = RecordManager.ets_Table_Columns_Detail(iTableID);
         _dtColumnsNotDetail = RecordManager.ets_Table_Columns_NotDetail(iTableID);
@@ -618,9 +629,9 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             {
                 _qsRecordID = Cryptography.Decrypt(Request.QueryString["RecordID"]);
             }
-            if (Request.QueryString["CopyRecordID"] != null)
+            if (Session["CopyRecordID"] != null)
             {
-                _qsRecordID = Cryptography.Decrypt(Request.QueryString["CopyRecordID"]);
+                _qsRecordID = Cryptography.Decrypt(Session["CopyRecordID"].ToString());
             }
             if (int.TryParse(_qsRecordID, out _iRecordID) == false)
             {
@@ -2273,7 +2284,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                         _hlValue[i] = new HyperLink();
                                         _hlValue[i].ID = "hl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                         _hlValue[i].Text = "Add";
-
+                                        
                                         string xml = null;
                                         xml = @"<root>" +
                                                " <mode>" + HttpUtility.HtmlEncode(Request.QueryString["mode"].ToString()) + "</mode>" +
@@ -2291,9 +2302,9 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                         SearchCriteria theSearchCriteria = new SearchCriteria(null, xml);
                                         int iSearchCriteriaID = SystemData.SearchCriteria_Insert(theSearchCriteria);
 
-                                        _hlValue[i].NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" +
+                                        _hlValue[i].NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" +
                                             Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(_dtColumnsDetail.Rows[i]["TableTableID"].ToString())
-                                            + "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&quickadd=" + Cryptography.Encrypt(iSearchCriteriaID.ToString());
+                                            + "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&quickadd=" + Cryptography.Encrypt(iSearchCriteriaID.ToString()) ;
 
                                         //cell[(i * 2) + 1].Controls.Add(new LiteralControl("&nbsp;"));
                                         //cell[(i * 2) + 1].Controls.Add(_hlValue[i]);
@@ -2472,9 +2483,9 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                         SearchCriteria theSearchCriteria = new SearchCriteria(null, xml);
                                         int iSearchCriteriaID = SystemData.SearchCriteria_Insert(theSearchCriteria);
 
-                                        _hlValue[i].NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" +
+                                        _hlValue[i].NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" +
                                             Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(_dtColumnsDetail.Rows[i]["TableTableID"].ToString())
-                                            + "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&quickadd=" + Cryptography.Encrypt(iSearchCriteriaID.ToString());
+                                            + "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&quickadd=" + Cryptography.Encrypt(iSearchCriteriaID.ToString()) ;
 
                                         //cell[(i * 2) + 1].Controls.Add(new LiteralControl("&nbsp;"));
                                         //cell[(i * 2) + 1].Controls.Add(_hlValue[i]);
@@ -2492,7 +2503,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                         _hlValue2[i].ID = "hl2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                         _hlValue2[i].Text = "View";
 
-                                        _hlValue2[i].NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" +
+                                        _hlValue2[i].NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" +
                                             Cryptography.Encrypt(_qsMode.ToString()) + "&TableID=" + Cryptography.Encrypt(_dtColumnsDetail.Rows[i]["TableTableID"].ToString())
                                             + "&SearchCriteriaID=" + Cryptography.Encrypt("-1");
 
@@ -3574,10 +3585,17 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         _ibValue[i].Style.Add("width", "12px");
                         _ibValue[i].CausesValidation = true;
                         _ibValue[i].ToolTip = "Refresh to get the calculated value.";
+                        _ibValue[i].CausesValidation = false;
                         _ibValue[i].Click += new ImageClickEventHandler(IB_CalRef_Click);
 
                         cell[(i * 2) + 1].Controls.Add(_txtValue[i]);
                         cell[(i * 2) + 1].Controls.Add(_ibValue[i]);
+
+                        _imgWarning[i] = new Image();
+                        _imgWarning[i].ImageUrl = "~/Images/warning.png";
+                        _imgWarning[i].Visible = false;
+                        cell[(i * 2) + 1].Controls.Add(new LiteralControl("&nbsp;"));
+                        cell[(i * 2) + 1].Controls.Add(_imgWarning[i]);
                     }
 
                     if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "text"
@@ -5006,7 +5024,6 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             {
                                 string strParentRecordID = _dtRecordedetail.Rows[0][i].ToString();
                                 //Column theLinkedColumn = RecordManager.ets_Column_Details(int.Parse(_dtColumnsDetail.Rows[i]["LinkedParentColumnID"].ToString()));
-
                                 //string strLinkedColumnValue = _dtRecordedetail.Rows[0][i].ToString();
 
                                 if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "table")
@@ -5658,6 +5675,15 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
 
+                       
+                    }
+
+
+
+
+                    if(_dtColumnsDetail.Rows[i]["ColumnType"].ToString()=="number"
+                        || _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "calculation")
+                    {
                         //check warning and validation
                         if (TheDatabase.HasWarning_msg(strWarning, _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), ""))
                         {
@@ -5683,7 +5709,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         string strToopTip = "";
                         if (strWarning != "")
                         {
-                            if (TheDatabase.HasWarning_msg(strWarning,_dtColumnsDetail.Rows[i]["DisplayName"].ToString(),"l"))
+                            if (TheDatabase.HasWarning_msg(strWarning, _dtColumnsDetail.Rows[i]["DisplayName"].ToString(), "l"))
                             {
                                 _imgWarning[i].Visible = true;
                                 strToopTip = strEachFormulaW_Msg;// "Value outside accepted range(" + strEachFormulaW + ").";
@@ -5717,6 +5743,9 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             }
                         }
                     }
+
+
+
 
                     if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "radiobutton")
                     {
@@ -6538,6 +6567,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 _cvValue[i].Type = ValidationDataType.Double;
                                 break;
 
+                            case "calculation":
+                                _cvValue[i].Type = ValidationDataType.Double;
+                                break;
+
                             default:
                                 _cvValue[i].Type = ValidationDataType.String;
                                 break;
@@ -6802,7 +6835,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                             }";
                         }
-                        else if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "number")
+                        else if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "number" || _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "calculation")
                         {
                             strJSCustomValidation = @" function compareTime" + i.ToString() + @"(sender, args) {
                                 try
@@ -7123,15 +7156,13 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                             strAllLogic = strAllLogic + strEachPreJoinOperator + " (bShow" + m.ToString() + @"==false) ";
                                         }
 
-
-
+                                        
                                         strAllDriverTrigger = strAllDriverTrigger + @"
                                                      $('" + strDriverGroupID + @"').change(function (e) {
                                                               ShowHideFunction" + i.ToString() + @"();
                                                         });
                                                         $('" + strDriverGroupID + @"').trigger('change');  
                                                 ";
-
 
 
                                     }
@@ -7142,10 +7173,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                                         bUseCommonCode = true;
 
-
                                     }
-
-
                                 }
                                 else if (_cblValue[m] != null)
                                 {
@@ -7435,11 +7463,6 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "strShowHideFunction" + i.ToString(), strShowHideFunction, true);
                 }
             }
-
-
-
-
-
         }
 
         if (Session["RunSpeedLog"] != null)
@@ -9424,10 +9447,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
 
-                            string strRawURL = Request.RawUrl;
-
-                            strRawURL = strRawURL.Replace("&stackzero=y", "");
-                            strRawURL = strRawURL + "&stackzero=y";
+                            string strRawURL = GetStackRawURL();
+                            strRawURL = Common.GetUpdatedFullURLRemoveQueryString(strRawURL, "stackhault");
+                            strRawURL = Common.GetUpdatedFullURLWithQueryString(strRawURL, "stackhault", "y");
+                            
                             string strPreRawURL = strRawURL.Replace("&Recordid=" + Cryptography.Encrypt(_qsRecordID.ToString()), "&Recordid=" + Cryptography.Encrypt(iPreRecordID.ToString()));
                             string strNextRawURL = strRawURL.Replace("&Recordid=" + Cryptography.Encrypt(_qsRecordID.ToString()), "&Recordid=" + Cryptography.Encrypt(iNextRecordID.ToString()));
 
@@ -9469,18 +9492,18 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsOnlyOne", "ShowHideMainDivs(" + pnlDetailTab.ClientID + ");", true);
             }
 
-            if (Request.QueryString["quickdone"] != null && Request.QueryString["controlvalue"] != null)
+            if (!IsPostBack && Session["quickdone"] != null && Session["controlvalue"] != null)
             {
                 try
                 {
-                    SearchCriteria theSearchCriteria = SystemData.SearchCriteria_Detail(int.Parse(Cryptography.Decrypt(Request.QueryString["quickdone"].ToString())));
+                    SearchCriteria theSearchCriteria = SystemData.SearchCriteria_Detail(int.Parse(Cryptography.Decrypt(Session["quickdone"].ToString())));
                     if (theSearchCriteria != null)
                     {
                         System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
 
                         xmlDoc.Load(new StringReader(theSearchCriteria.SearchText));
                         string strControl = xmlDoc.FirstChild["control"].InnerText;
-                        string strControlValue = Cryptography.Decrypt(Request.QueryString["controlvalue"].ToString());
+                        string strControlValue = Cryptography.Decrypt(Session["controlvalue"].ToString());
 
                         string strDisplayColumn = xmlDoc.FirstChild["DisplayColumn"].InnerText;
                         string strTableTableID = xmlDoc.FirstChild["TableTableID"].InnerText;
@@ -9493,8 +9516,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         if (strDropDownType == "table")
                         {
                             string str_hfValue = xmlDoc.FirstChild["_hfValue"].InnerText;
-                            TextBox txtP = (TextBox)pnlDetail.FindControl(strControl);
-                            HiddenField _hfValue = (HiddenField)pnlDetail.FindControl(str_hfValue);
+                            TextBox txtP = (TextBox)pnlMain.FindControl(strControl);
+                            HiddenField _hfValue = (HiddenField)pnlMain.FindControl(str_hfValue);
 
 
                             try
@@ -9587,7 +9610,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
 
 
-                            DropDownList ddlP = (DropDownList)pnlDetail.FindControl(strControl);
+                            DropDownList ddlP = (DropDownList)pnlMain.FindControl(strControl);
                             ddlP.SelectedValue = strLinkedColumnValue;
                         }
                     }
@@ -9596,14 +9619,11 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 {
 
                 }
-
+                Session["quickdone"] = null;
+                Session["controlvalue"] = null;
             }
 
-            if (Request.QueryString["FromAdd"] != null)
-            {
-                lblMsg.Text = "Successfully saved!";
-                lblMsg.ForeColor = System.Drawing.Color.Green;
-            }
+           
 
             if (Request.QueryString["mode"] != null)
             {
@@ -9896,7 +9916,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
         string strTitle = _theTable.TableName + _strActionMode;
-
+       
         if (_theTable.ShowTabVertically != null)
         {
             if ((bool)_theTable.ShowTabVertically)
@@ -9929,55 +9949,13 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
         if (!IsPostBack)
         {
-
-            //hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
-
-            //if (Request.QueryString["onlyback"] != null)
-            //{
-            //Temp
-
-            //if (Request.UrlReferrer != null)
-            //{
-            //    hlBack.NavigateUrl = Request.UrlReferrer.AbsoluteUri;
-
-            //}
-            //else
-            //{
-            //    if (Request.QueryString["backurl"] != null)
-            //    {
-            //        hlBack.NavigateUrl = Cryptography.Decrypt(Request.QueryString["backurl"].ToString());
-            //    }
-            //}
-
-
-            //if (Request.QueryString["tabindex"] != null)
-            //{
-            //    if (hlBack.NavigateUrl.IndexOf("&btabindex=") > -1)
-            //    {
-            //        hlBack.NavigateUrl = hlBack.NavigateUrl.Substring(0, hlBack.NavigateUrl.IndexOf("&btabindex="));
-            //    }
-
-            //    hlBack.NavigateUrl = hlBack.NavigateUrl + "&btabindex=" + Request.QueryString["tabindex"].ToString();
-            //}
-
-            //}
+            
 
             StackProcess();
+            //DebugStack();
 
-
-
-
-
-            //is it ok? process Tab
-            if (Request.QueryString["tabindex"] != null)
-            {
-                if (hlBack.NavigateUrl.IndexOf("&btabindex=") > -1)
-                {
-                    hlBack.NavigateUrl = hlBack.NavigateUrl.Substring(0, hlBack.NavigateUrl.IndexOf("&btabindex="));
-                }
-
-                hlBack.NavigateUrl = hlBack.NavigateUrl + "&btabindex=" + Request.QueryString["tabindex"].ToString();
-            }
+           
+          
 
 
 
@@ -9997,26 +9975,28 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             {
                 try
                 {
-                    SearchCriteria theSearchCriteria = SystemData.SearchCriteria_Detail(int.Parse(Cryptography.Decrypt(Request.QueryString["quickadd"].ToString())));
-                    if (theSearchCriteria != null)
-                    {
-                        System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
+                    //if (hlBack.NavigateUrl!="" && hlBack.NavigateUrl.IndexOf("stackhault") == -1)
+                    //    hlBack.NavigateUrl = hlBack.NavigateUrl + "&stackhault=y";
+                    //SearchCriteria theSearchCriteria = SystemData.SearchCriteria_Detail(int.Parse(Cryptography.Decrypt(Request.QueryString["quickadd"].ToString())));
+                    //if (theSearchCriteria != null)
+                    //{
+                    //    System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
 
-                        xmlDoc.Load(new StringReader(theSearchCriteria.SearchText));
+                    //    xmlDoc.Load(new StringReader(theSearchCriteria.SearchText));
 
-                        if (xmlDoc.FirstChild["RecordID"].InnerText == "-1")
-                        {
-                            hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode="
-                                + xmlDoc.FirstChild["mode"].InnerText + "&TableID=" + xmlDoc.FirstChild["TableID"].InnerText
-                                + "&SearchCriteriaID=" + xmlDoc.FirstChild["SearchCriteriaID"].InnerText;
-                        }
-                        else
-                        {
-                            hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode="
-                              + xmlDoc.FirstChild["mode"].InnerText + "&TableID=" + xmlDoc.FirstChild["TableID"].InnerText
-                              + "&SearchCriteriaID=" + xmlDoc.FirstChild["SearchCriteriaID"].InnerText + "&RecordID=" + xmlDoc.FirstChild["RecordID"].InnerText;
-                        }
-                    }
+                    //    if (xmlDoc.FirstChild["RecordID"].InnerText == "-1")
+                    //    {
+                    //        hlBack.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?stackhault=yes&mode="
+                    //            + xmlDoc.FirstChild["mode"].InnerText + "&TableID=" + xmlDoc.FirstChild["TableID"].InnerText
+                    //            + "&SearchCriteriaID=" + xmlDoc.FirstChild["SearchCriteriaID"].InnerText;
+                    //    }
+                    //    else
+                    //    {
+                    //        hlBack.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?stackhault=yes&mode="
+                    //          + xmlDoc.FirstChild["mode"].InnerText + "&TableID=" + xmlDoc.FirstChild["TableID"].InnerText
+                    //          + "&SearchCriteriaID=" + xmlDoc.FirstChild["SearchCriteriaID"].InnerText + "&RecordID=" + xmlDoc.FirstChild["RecordID"].InnerText;
+                    //    }
+                    //}
                 }
                 catch
                 {
@@ -10037,7 +10017,13 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 hlBack.NavigateUrl = Cryptography.Decrypt(Request.QueryString["fixedurl"].ToString());
             }
 
-
+            if(hlBack.NavigateUrl=="")
+            {
+                 if (Request.UrlReferrer != null)
+                 {
+                     hlBack.NavigateUrl = Request.UrlReferrer.AbsoluteUri;
+                 }
+            }
 
         }
 
@@ -10145,36 +10131,22 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
         }
 
-        if (!IsPostBack)
+        if (!IsPostBack && _strActionMode.ToLower()!="add")
         {
-            if (Request.QueryString["btabindex"] != null)
+            if (Session["tabindex"] != null && Request.QueryString["tabindex"]==null)
             {
                 try
                 {
-                    tabDetail.ActiveTabIndex = int.Parse(Request.QueryString["btabindex"].ToString());
+                    tabDetail.ActiveTabIndex = int.Parse(Session["tabindex"].ToString());
                 }
                 catch (Exception ex)
                 {
                     //
                 }
+                Session["tabindex"] = null;
+                Session["viewtabindex"] = null;
             }
-            else
-            {
-                if (Request.QueryString["edittab"] != null)
-                {
-                    try
-                    {
-                        tabDetail.ActiveTabIndex = int.Parse(Request.QueryString["edittab"].ToString());
-
-                    }
-                    catch (Exception ex)
-                    {
-                        //
-                    }
-                }
-
-
-            }
+           
 
             if (Session["viewtabindex"] != null)
             {
@@ -10186,9 +10158,11 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 {
 
                 }
+                Session["viewtabindex"] = null;
+                
             }
 
-            Session["viewtabindex"] = null;
+           
             if (tabDetail.ActiveTabIndex > 0)
             {
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "ActiveTabIndex", "$('#divMainSaveEditAddetc').fadeOut();", true);
@@ -10197,7 +10171,11 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
         }
 
-
+        //is it ok? process Tab
+        if (!IsPostBack && Request.QueryString["tabindex"] != null)
+        {
+            Session["tabindex"] = Request.QueryString["tabindex"].ToString();
+        }
 
         if (IsPostBack)
         {
@@ -10903,122 +10881,77 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         lnkSaveClose_Click(null, null);
         //ScriptManager.RegisterStartupScript(this, this.GetType(), "SaveAndStay", "alert('Record Saved.');", true);
     }
-
-
     private void StackProcess()
-    {
-        //if (Request.QueryString["stackhault"] != null)
-        //{
-        //    return;
-        //}
-
-
+    {      
         try
         {
-
+            if (Session["stackURL"]!=null)
+                _stackURL = (Stack<string>)Session["stackURL"];
             //stack process
-
-
-
-            if (Request.QueryString["stackzero"] != null && Request.QueryString["stackhault"] == null)
+            if (Request.QueryString["stackhault"] != null || _strActionMode.ToLower()=="add")
             {
-                Session["stack"] = null;
-                Session["backcount"] = null;
+                if (_stackURL!=null && _stackURL.Count > 0)
+                {
+                    hlBack.NavigateUrl = _stackURL.Peek();
+                }   
+                return;
+            }
+            if (Request.QueryString["stackzero"] != null)
+            {
+                Session["stackURL"] = null;
             }
 
-
+           
             if (Request.UrlReferrer != null)
             {
                 if (Request.UrlReferrer.AbsoluteUri.IndexOf("DocGen/EachRecordTable.aspx") > -1)
                 {
-                    Session["stack"] = null;
-                    Session["backcount"] = null;
+                    Session["stackURL"] = null;
+                    BuildFreshStack("~/Default.aspx");
+                    return;
                 }
             }
 
-            if (Session["stack"] == null)
+
+            if (Session["stackURL"] == null)
             {
-                BuildFreshStack();
+                BuildFreshStack("");
+                return;
             }
-            else
+                       
+
+            //old Stack
+            if (Session["stackURL"]!=null)           
             {
-
                 //ok we have new deep level
+               _stackURL = (Stack<string>)Session["stackURL"];
 
-                Stack<string> stack = (Stack<string>)Session["stack"];
-
-                if (stack.Count > 0)
+                if (_stackURL.Count > 0)
                 {
-
                     string strRawURL = GetStackRawURL();
-
-                    if (stack.Contains(strRawURL) == false)
+                    if (URLinThisStack(strRawURL) == false)
                     {
-                        if (Request.QueryString["stack"] != null)
-                        {
-                            if (Session["backcount"] != null)
-                            {
-                                stack.Pop();
-                                hlBack.NavigateUrl = stack.Peek();
-                            }
-                            else
-                            {
-                                Session["backcount"] = 1;
-                                stack.Pop();
-                                if (stack.Count > 1)
-                                {
-                                    stack.Pop();
-                                    hlBack.NavigateUrl = stack.Peek();
-                                }
-                                else if (stack.Count == 1)
-                                {
-                                    hlBack.NavigateUrl = stack.Peek();
-                                }
-                            }
-
-                        }
-                        else
-                        {
-                            hlBack.NavigateUrl = stack.Peek();
-
-                            if (Session["backcount"] != null)
-                            {
-                                Session["backcount"] = null;
-
-                                if (Request.UrlReferrer != null && Request.QueryString["stackhault"] == null)
-                                {
-                                    hlBack.NavigateUrl = Request.UrlReferrer.AbsoluteUri;
-
-                                    if (stack.Contains(hlBack.NavigateUrl) == false)
-                                    {
-                                        stack.Push(hlBack.NavigateUrl);
-                                    }
-                                }
-
-                            }
-
-                            string strURL = Common.GetUpdatedFullURLWithQueryString(Request.RawUrl, "stack", "n");
-
-                            if (stack.Contains(strURL) == false)
-                            {
-                                stack.Push(strURL);
-                            }
-                        }
-                        if (Request.QueryString["stackhault"] == null)
-                        {
-                            Session["stack"] = stack;
-                        }
-
+                            hlBack.NavigateUrl = _stackURL.Peek();
+                            _stackURL.Push(strRawURL);                    
                     }
                     else
                     {
-                        stack.Pop();
-                        hlBack.NavigateUrl = stack.Peek();
-                        stack.Push(GetStackRawURL());
-                        Session["stack"] = stack;
+                        if (_stackURL.Peek().IndexOf("RecordDetail.aspx") > -1)
+                            _stackURL.Pop();
+                        if (_stackURL.Count > 0)
+                        {
+                            if (_stackURL.Peek().IndexOf("RecordDetail.aspx") > -1)
+                                _stackURL.Pop();
+                        }
+                           
+                        if (_stackURL.Count > 0)
+                            hlBack.NavigateUrl = _stackURL.Peek();
 
+                        _stackURL.Push(strRawURL);                 
                     }
 
+                    
+                    //Session["stackURL"] = stack;
                 }
             }
 
@@ -11032,24 +10965,84 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
     }
-    protected void BuildFreshStack()
+
+    protected void DebugStack()
     {
-        hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
-        if (Request.QueryString["View"] != null)
+        //
+//#if (!DEBUG)
+       if(Session["stackURL"]!=null)
+       {
+           
+           var enumerator = _stackURL.GetEnumerator();
+           string strStackEach = "";
+           while (enumerator.MoveNext())
+           {
+                strStackEach =strStackEach+ enumerator.Current.ToString() + "<br/>";
+           }
+           lblMsg.Text = strStackEach;
+       }
+       
+
+//#endif
+    }
+   protected bool URLinThisStack(string strRawURL)
+    {
+       
+        bool bReturn = false;
+       if(_stackURL.Contains(strRawURL))
+       {
+           return true;
+       }
+       else
+       {
+           //var enumerator = stack.GetEnumerator();
+           //while (enumerator.MoveNext())
+           //{
+           //    if(bReturn==false)
+           //    {
+           //        string strStackEach = enumerator.Current.ToString();
+           //        if (strRawURL.ToLower() == strStackEach.ToLower())
+           //        {
+           //            bReturn = true;
+           //        }
+           //    }
+              
+           //}
+
+       }
+
+       return bReturn;
+    }
+    protected void BuildFreshStack(string strBaseURL)
+    {
+        if (strBaseURL=="")
         {
-            hlBack.NavigateUrl = hlBack.NavigateUrl + "&View=" + Request.QueryString["View"].ToString();
+            hlBack.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
+            if (Request.QueryString["View"] != null)
+            {
+                hlBack.NavigateUrl = hlBack.NavigateUrl + "&View=" + Request.QueryString["View"].ToString();
+            }
         }
-        Stack<string> stack = new Stack<string>();
-        stack.Push(hlBack.NavigateUrl);
-        stack.Push(GetStackRawURL());
-        Session["stack"] = stack;
+        else
+        {
+            hlBack.NavigateUrl = strBaseURL;
+        }
+
+        _stackURL = new Stack<string>();
+        _stackURL.Push(hlBack.NavigateUrl);//1st List
+        _stackURL.Push(GetStackRawURL());//2nd Detail
+        Session["stackURL"] = _stackURL;
+        
+           
     }
     protected string GetStackRawURL()
     {
         string strRawURL = Request.RawUrl;
-        strRawURL = Common.GetUpdatedFullURLRemoveQueryString(strRawURL, "stack");
-        strRawURL = Common.GetUpdatedFullURLRemoveQueryString(strRawURL, "stackzero");
-        strRawURL = Common.GetUpdatedFullURLWithQueryString(strRawURL, "stack", "n");
+        //strRawURL = Common.GetUpdatedFullURLRemoveQueryString(strRawURL, "stackhault");
+        //strRawURL = Common.GetUpdatedFullURLRemoveQueryString(strRawURL, "stackzero");
+        //strRawURL = Common.GetUpdatedFullURLRemoveQueryString(strRawURL, "onlyback");
+     
+
         return strRawURL;
     }
     protected void lnkSaveAndAdd_Click(object sender, EventArgs e)
@@ -11060,30 +11053,21 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             if (PerformSave())
             {
 
-                //if (Request.QueryString["stackhault"] == null && Session["stack"]!=null)
-                //{
-                //    Stack<string> stack = (Stack<string>)Session["stack"];
-                //    if (stack.Count > 0)
-                //    {
-                //        stack.Pop();
-                //        Session["stack"] = stack;
-                //    }
-                //}
-                string strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.RawUrl;
-                strURL = strURL.Replace("&stack=n", "");
-                strURL = strURL.Replace("&stackzero=y", "");
-                //strURL = strURL.Replace("&stackhault=y", ""); //onlyback=yes
-                strURL = strURL.Replace("&onlyback=yes", "");
-                //strURL = strURL + "&stackhault=y";
 
-
+                string strURL = GetStackRawURL();
                 strURL = strURL.Replace("mode=" + Cryptography.Encrypt("edit").Replace("=", "%3d"), "mode=" + Cryptography.Encrypt("add").Replace("=", "%3d"));
                 strURL = strURL.Replace("mode=" + Cryptography.Encrypt("view").Replace("=", "%3d"), "mode=" + Cryptography.Encrypt("add").Replace("=", "%3d"));
                 strURL = strURL.Replace("&Recordid=" + Cryptography.Encrypt(_qsRecordID).Replace("=", "%3d"), "");
 
-                Stack<string> stack = (Stack<string>)Session["stack"];
-                stack.Pop();
-                Session["stack"] = stack;
+
+          //stack = (Stack<string>)Session["stackURL"];
+                //if (_stackURL.Count > 0)
+                //{
+                //    if (_stackURL.Peek().IndexOf("RecordDetail.aspx") > -1)
+                //        _stackURL.Pop();
+                //    Session["stackURL"] = _stackURL;
+                //}
+               
                 Response.Redirect(strURL, true);
             }
         }
@@ -11121,7 +11105,11 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                         if (Request.QueryString["quickadd"] != null)
                         {
-                            hlBack.NavigateUrl = hlBack.NavigateUrl + "&quickdone=" + Request.QueryString["quickadd"].ToString() + "&controlvalue=" + Cryptography.Encrypt(_iNewRecordID.ToString());
+                            hlBack.NavigateUrl = hlBack.NavigateUrl;
+                            Session["quickdone"] = Request.QueryString["quickadd"].ToString();
+                            Session["controlvalue"] = Cryptography.Encrypt(_iNewRecordID.ToString());
+                            ////Session["controlvalue" + _theTable.TableID.ToString()] = Cryptography.Encrypt(_iNewRecordID.ToString());
+                           // +"&quickdone=" + Request.QueryString["quickadd"].ToString() + "&controlvalue=" + Cryptography.Encrypt(_iNewRecordID.ToString());
                         }
 
 
@@ -11297,23 +11285,24 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
     protected string GetEditURLAfterAdd()
     {
-        Stack<string> stack = (Stack<string>)Session["stack"];
+        //_stackURL = (Stack<string>)Session["stackURL"];
 
 
-        string strEditURL = stack.Peek();
+        string strEditURL = _stackURL.Peek();
 
 
         strEditURL = strEditURL.Replace("mode=" + Cryptography.Encrypt("add"), "mode=" + Cryptography.Encrypt("edit"));
-        if (Request.QueryString["CopyRecordID"] != null)
-        {
-            strEditURL = strEditURL.Replace("&CopyRecordID=" + Request.QueryString["CopyRecordID"].ToString(), "");
-        }
+        //if (Request.QueryString["CopyRecordID"] != null)
+        //{
+        //    strEditURL = strEditURL.Replace("&CopyRecordID=" + Request.QueryString["CopyRecordID"].ToString(), "");
+        //}
+        strEditURL = strEditURL + "&Recordid=" + Cryptography.Encrypt(_iNewRecordID.ToString());
+     
+        Session["CopyRecordID"] = null;
 
-
-        strEditURL = strEditURL + "&Recordid=" + Cryptography.Encrypt(_iNewRecordID.ToString()) + "&edittab=" + tabDetail.ActiveTabIndex.ToString();
-        strEditURL = strEditURL.Replace("&stack=n", "");
-        stack.Pop();
-        Session["stack"] = stack;
+        //if (_stackURL.Count > 0)
+        //    _stackURL.Pop();
+        //Session["stackURL"] = stack;
         return strEditURL;
     }
 
@@ -12430,7 +12419,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                     break;
                                             }
                                         }
-                                        else if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "number")
+                                        else if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "number"
+                                            || _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "calculation")
                                         {
                                             double comValue1 = 0;
                                             double comValue2 = 0;
@@ -14053,7 +14043,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
                                         }
-                                        else if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "number")
+                                        else if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "number"
+                                            || _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "calculation")
                                         {
                                             double comValue1 = 0;
                                             double comValue2 = 0;

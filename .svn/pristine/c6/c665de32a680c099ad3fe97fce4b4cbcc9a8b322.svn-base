@@ -1,0 +1,1623 @@
+﻿
+/****** Object:  StoredProcedure [dbo].[spGetLinkedRecordIDnDisplayText]    Script Date: 28/05/2016 11:42:04 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+ 
+ALTER PROCEDURE [dbo].[spGetLinkedRecordIDnDisplayText]
+(
+	@sDisplayColumn varchar(1000),
+	@nTableTableID int ,
+	@nMaxRow int =null,
+	@WhereEqual VARCHAR(MAX)=NULL,
+	@DisplayPredict VARCHAR(500) NULL
+)
+	/*----------------------------------------------------------------
+	EXEC spGetLinkedRecordIDnDisplayText 'test - S''s=ID[ID_N] SS''s=[Sample Site:Sample Site Name]', 2930,NULL,NULL, 'test - S''''s=ID10'
+	---------------------------------------------------------------*/
+ 
+AS
+
+DECLARE @sFieldsToShow varchar(1000)
+DECLARE @sSQL VARCHAR(MAX)
+DECLARE @FROM VARCHAR(MAX)
+DECLARE @ParentAlias varchar(100)
+
+IF @nMaxRow IS NOT NULL
+SET ROWCOUNT @nMaxRow
+
+SELECT @sFieldsToShow=dbo.fnReplaceDisplayColumns(@sDisplayColumn, @nTableTableID,NULL)
+
+SELECT @FROM = ' FROM [Record] '
+
+IF EXISTS (SELECT TOP 1 ColumnID FROM [Column] WHERE TableID=@nTableTableID AND TableTableID IS NOT NULL AND TableTableID>0 AND ColumnType<>'number')
+		BEGIN
+			DECLARE @t2TableTable Table
+			(
+				ID int identity(1,1),
+				ColumnID int,
+				SystemName varchar(50),
+				TableTableID INT				
+			)
+
+			INSERT INTO @t2TableTable(ColumnID,SystemName,TableTableID) 
+				SELECT ColumnID,SystemName,TableTableID FROM [Column] 
+					WHERE TableID=@nTableTableID AND TableTableID IS NOT NULL AND TableTableID>0 AND ColumnType<>'number'
+				
+			DECLARE @counter2 int
+			SET @counter2 = 1
+			WHILE EXISTS(SELECT * FROM @t2TableTable WHERE ID >= @counter2)
+				BEGIN
+						DECLARE @n2TableTableID INT
+						SELECT @ParentAlias = 'P' + CAST(ColumnID as varchar),@n2TableTableID=TableTableID FROM @t2TableTable WHERE ID = @counter2
+						IF CHARINDEX(@ParentAlias,@sFieldsToShow,1)>0 AND CHARINDEX(@ParentAlias,@FROM,1)=0
+							BEGIN
+								-- parent
+								SELECT
+									@FROM = @FROM + ' LEFT OUTER JOIN [Record] ' + @ParentAlias + ' ON ' 
+											+ @ParentAlias + '.RecordID = CASE WHEN ISNUMERIC([Record].' + SystemName +')=1 THEN [Record].' + SystemName + ' ELSE -1 END '
+											+ ' AND ' + @ParentAlias + '.[IsActive] = 1' 
+									FROM @t2TableTable WHERE ID = @counter2
+							END								
+									
+					SET @counter2 = @counter2 + 1
+				END
+
+		END
+
+IF @DisplayPredict IS NOT NULL
+	SET @DisplayPredict=' AND ' + @sFieldsToShow + ' LIKE ''%'+@DisplayPredict+'%'''
+
+SELECT @sSQL='SELECT Record.RecordID,'+@sFieldsToShow+' as DisplayText '+@FROM 
+				+'  WHERE Record.IsActive=1 AND Record.TableID=' + CAST(@nTableTableID AS VARCHAR) 
+				+ISNULL(@WhereEqual,'') +ISNULL(@DisplayPredict,'')+ ' ORDER BY DisplayText'
+
+PRINT @sSQL
+EXEC (@sSQL)
+
+
+/****** Object:  StoredProcedure [dbo].[ets_Record_List]    Script Date: 28/05/2016 10:58:16 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+ALTER PROCEDURE [dbo].[ets_Record_List]
+(
+	@nTableID int,
+	@nEnteredBy int = null,
+	@bIsActive bit = null,
+	@bHasWarningResults bit = null,
+	@dDateFrom datetime = NULL,
+	@dDateTo datetime = NULL,
+	@sOrder nvarchar(200)=null , 
+	@nStartRow int = 1, 
+	@nMaxRows int = 2147483647,
+	@sType varchar(25) = null,
+	@sNumericSearch varchar(MAX) = null,
+	@sTextSearch varchar(MAX) = null,
+	@dDateAddedFrom datetime = NULL,
+	@dDateAddedTo datetime = NULL,
+	@sParentColumnSortSQL varchar(MAX) = null,
+	@sHeaderSQL varchar(MAX) = null,
+	@sViewName varchar(50) = null,
+	@nViewID INT =NULL
+)
+
+/*
+REVISION HISTORY
+----------------
+1 Dec 2015 JB Added view filter 
+
+
+TEST CASES
+----------
+SELECT * FROM [TABLE] WHERE TABLENAME LIKE 'NAME%'
+SELECT * FROM [RECORD] WHERE TABLEID = 1847
+	exec [ets_Record_List] @nTableID=2756,@bIsActive=1,@sType='view',@nViewID=869
+		exec [ets_Record_List_BU_19-Oct-2015] @nTableID=2663,@bIsActive=1,@sType='view',@nViewID=292
+
+   exec [ets_Record_List_FullData] @nTableID=1847,@sTextSearch='Record.V001 like ''%AB%'''
+   exec [ets_Record_List_FullData] @nTableID=1847,@sTextSearch='Record.V001 like ''%AB%'''
+   
+   exec [ets_Record_List_FullData] @nTableID=1389, @sTextSearch=
+*/
+AS
+BEGIN
+	--print 'Debug Start'
+	SET DATEFORMAT dmy;
+	
+	SET NOCOUNT ON;
+	DECLARE @tDisplayColumns TABLE
+	(
+		ID int identity(1,1),
+		ColumnID int,
+		SystemName varchar(50),
+		DisplayText varchar(50),
+		FieldsToShow varchar(MAX),
+		ParentTableID int,
+		ParentJoinColumnName varchar(254), -- RecordID
+		ChildJoinColumnName varchar(254), -- V001 / V499
+		ShowViewLink varchar(10),
+		ColumnType varchar(20),
+		ColourCells bit
+	)
+
+	DECLARE @nColumnIDRecordID INT
+
+	SELECT @nColumnIDRecordID=ColumnID FROM [Column] 
+		WHERE TableID = @nTableID 
+		AND SystemName='RecordID'
+
+	--INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+	--VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+
+
+	IF @sType is not null 
+	BEGIN
+		IF @sType LIKE 'export%' -- From 30/10/2015 we will have export and exportbulk
+		BEGIN
+			IF @sHeaderSQL IS NULL
+			BEGIN
+				INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName, FieldsToShow, ParentTableID, ParentJoinColumnName,ChildJoinColumnName,ColumnType)
+						SELECT C.ColumnID, C.NameOnExport, C.SystemName,
+							dbo.fnReplaceDisplayColumns(C.DisplayColumn, C.[TableTableID],C.ColumnID) as [FieldsToShow],
+							C.[TableTableID] AS  [ParentTableID], 
+							PC.SystemName as [ParentJoinColumnName], 
+							C.SystemName as [ChildJoinColumnName],
+							C.ColumnType 
+							FROM [Column] C 
+								LEFT OUTER JOIN [Column] PC ON PC.[ColumnID] = C.[LinkedParentColumnID]
+								WHERE C.TableID = @nTableID 
+								AND C.NameOnExport IS NOT NULL AND LEN(C.NameOnExport) > 0
+								ORDER BY C.DisplayOrder
+			END -- @sHeaderSQL IS NULL
+
+			IF @sHeaderSQL IS NOT NULL
+			BEGIN
+				DECLARE @exportXML XML
+				SET @exportXML=@sHeaderSQL
+				DECLARE @tExportTable TABLE
+				(
+					xmlColumn XML
+				)
+				 
+				INSERT INTO @tExportTable SELECT @exportXML
+
+				INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName, FieldsToShow,
+			 ParentTableID, ParentJoinColumnName,ChildJoinColumnName, ShowViewLink, ColumnType)
+				SELECT
+					   N.C.value('ColumnID[1]', 'int') ColumnID,
+					   N.C.value('DisplayText[1]', 'varchar(50)') DisplayText,
+					   N.C.value('SystemName[1]', 'varchar(50)') SystemName,
+					    N.C.value('FieldsToShow[1]', 'varchar(max)') FieldsToShow,
+					     N.C.value('ParentTableID[1]', 'int') ParentTableID,
+					      N.C.value('ParentJoinColumnName[1]', 'varchar(254)') ParentJoinColumnName,
+					       N.C.value('ChildJoinColumnName[1]', 'varchar(254)') ChildJoinColumnName,
+					        N.C.value('ShowViewLink[1]', 'varchar(10)') ShowViewLink,
+					         N.C.value('ColumnType[1]', 'varchar(20)') ColumnType
+				FROM @tExportTable
+				CROSS APPLY xmlColumn.nodes('//Records') N(C)
+
+			END -- @sHeaderSQL IS NOT NULL
+			UPDATE @tDisplayColumns SET FieldsToShow=NULL,ParentTableID=NULL,ParentJoinColumnName=NULL,ChildJoinColumnName=NULL,
+			ShowViewLink=NULL,ColumnType=NULL WHERE ParentTableID=0
+			
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+			
+			--testing
+			--select * from @tDisplayColumns
+			--print '@tDisplayColumns'
+			--return
+			
+		END -- @sType='export'
+
+		IF @sType='view' 
+		BEGIN
+			--print 'Debug View'
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName, FieldsToShow,
+			 ParentTableID, ParentJoinColumnName,ChildJoinColumnName, ShowViewLink, ColumnType,ColourCells)
+					SELECT VI.ColumnID, ISNULL(C.DisplayTextSummary,C.DisplayName), C.SystemName,
+						dbo.fnReplaceDisplayColumns(C.DisplayColumn, C.[TableTableID],C.ColumnID) as [FieldsToShow],
+						C.[TableTableID] AS  [ParentTableID], 
+						PC.SystemName as [ParentJoinColumnName], 
+						C.SystemName as [ChildJoinColumnName],
+						C.ShowViewLink,
+						C.ColumnType,C.ColourCells
+						FROM [ViewItem] VI 
+							INNER JOIN  [Column] C ON VI.ColumnID=C.ColumnID
+							LEFT OUTER JOIN   [Column] PC ON     PC.[ColumnID] = C.[LinkedParentColumnID]
+							WHERE ViewID = @nViewID			
+							ORDER BY ColumnIndex
+				
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+		END -- @sType='view'
+				
+		IF @sType='graph' 
+		BEGIN
+			--print 'Debug Graph'
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				SELECT ColumnID, GraphLabel, SystemName
+					FROM [Column] 
+					WHERE TableID = @nTableID 
+					AND GraphLabel IS NOT NULL AND LEN(GraphLabel) > 0
+					ORDER BY DisplayOrder
+						INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+						VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+		END -- @sType='graph' 
+
+		IF @sType='mobile' 
+		BEGIN
+			--print 'Debug Mobile'
+
+			--INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+			--	SELECT ColumnID, MobileName, SystemName
+			--		FROM [Column] 
+			--		WHERE TableID = @nTableID 
+			--		AND MobileName IS NOT NULL AND LEN(MobileName) > 0
+			--	ORDER BY DisplayOrder
+
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName, FieldsToShow, ParentTableID, ParentJoinColumnName,ChildJoinColumnName, ShowViewLink, ColumnType)
+					SELECT C.ColumnID, C.MobileName, C.SystemName,
+						dbo.fnReplaceDisplayColumns(C.DisplayColumn, C.[TableTableID],C.ColumnID) as [FieldsToShow],
+						C.[TableTableID] AS  [ParentTableID], 
+						PC.SystemName as [ParentJoinColumnName], 
+						C.SystemName as [ChildJoinColumnName],
+						C.ShowViewLink,
+						C.ColumnType
+						FROM [Column] C 
+						LEFT OUTER JOIN [Column] PC ON PC.[ColumnID] = C.[LinkedParentColumnID]
+						WHERE C.TableID = @nTableID 
+						AND C.MobileName IS NOT NULL AND LEN(C.MobileName) > 0
+						ORDER BY C.DisplayOrder
+
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+		END -- @sType='mobile' 
+
+		IF @sType='nonstandard' 
+		BEGIN
+			--print 'Debug Nonst'
+
+			--INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+			--	SELECT ColumnID, DisplayName, SystemName
+			--		FROM [Column] 
+			--		WHERE TableID = @nTableID 
+			--		AND DisplayName IS NOT NULL AND LEN(DisplayName) > 0
+			--		AND IsStandard=0
+			--	ORDER BY DisplayOrder
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName, FieldsToShow, ParentTableID, ParentJoinColumnName,ChildJoinColumnName, ShowViewLink, ColumnType)
+					SELECT C.ColumnID, C.DisplayName, C.SystemName,
+						dbo.fnReplaceDisplayColumns(C.DisplayColumn, C.[TableTableID],C.ColumnID) as [FieldsToShow],
+						C.[TableTableID] AS  [ParentTableID], 
+						PC.SystemName as [ParentJoinColumnName], 
+						C.SystemName as [ChildJoinColumnName],
+						C.ShowViewLink,
+						C.ColumnType
+						FROM [Column] C 
+						LEFT OUTER JOIN [Column] PC ON PC.[ColumnID] = C.[LinkedParentColumnID]
+						WHERE C.TableID = @nTableID 
+						AND C.IsStandard=0
+						ORDER BY C.DisplayOrder
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+				
+		END -- @sType='nonstandard' 
+		
+		IF @sType='allcolumns' 
+		BEGIN
+			--print 'Debug Nonst'
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName, FieldsToShow, ParentTableID, ParentJoinColumnName,ChildJoinColumnName, ShowViewLink, ColumnType)
+					SELECT C.ColumnID, C.DisplayName, C.SystemName,
+						dbo.fnReplaceDisplayColumns(C.DisplayColumn, C.[TableTableID],C.ColumnID) as [FieldsToShow],
+						C.[TableTableID] AS  [ParentTableID], 
+						PC.SystemName as [ParentJoinColumnName], 
+						C.SystemName as [ChildJoinColumnName],
+						C.ShowViewLink,
+						C.ColumnType
+						FROM [Column] C 
+						LEFT OUTER JOIN [Column] PC ON PC.[ColumnID] = C.[LinkedParentColumnID]
+						WHERE C.TableID = @nTableID 
+						ORDER BY C.DisplayOrder
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+				
+		END --  @sType='allcolumns'
+		
+
+		IF @sType='backup' 
+		BEGIN
+			--print 'Debug Backup'
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				SELECT ColumnID, DisplayName, SystemName
+					FROM [Column] 
+					WHERE TableID = @nTableID 
+					AND DisplayName IS NOT NULL AND LEN(DisplayName) > 0
+				ORDER BY DisplayOrder
+		END -- @sType='backup'
+		
+	END -- @sType is not null 
+	ELSE
+	BEGIN -- @sType is null 
+		IF @sViewName IS NULL
+		BEGIN
+			--print 'Debug ViewName'
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				SELECT ColumnID, DisplayTextSummary, SystemName
+					FROM [Column] 
+					WHERE TableID = @nTableID 
+					AND DisplayTextSummary IS NOT NULL AND LEN(DisplayTextSummary) > 0
+					ORDER BY DisplayOrder
+		END
+		ELSE -- @sViewName IS not NULL
+		BEGIN
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				SELECT ColumnID, DisplayTextSummary, SystemName
+					FROM [Column] 
+					WHERE TableID = @nTableID 
+					AND DisplayTextSummary IS NOT NULL AND LEN(DisplayTextSummary) > 0
+					AND ViewName=@sViewName
+					ORDER BY DisplayOrder
+		END
+		INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+			VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+	END -- end of @sType is  null 
+
+	-- Debug
+	--SELECT * FROM @tDisplayColumns
+
+	----------------------------------------------
+	-- Part II - the build
+	----------------------------------------------
+	DECLARE @SELECT varchar(MAX)
+	DECLARE @FROM varchar(MAX)
+	DECLARE @WHERE varchar(MAX)
+	DECLARE @SQLMain varchar(MAX)
+	
+	DECLARE @counter int
+	SET @counter = 1
+		
+  -- Get the sOrder if it is null
+   WHILE EXISTS(SELECT * FROM @tDisplayColumns WHERE ID >= @counter)
+	BEGIN
+		
+		if @sOrder is null
+		 SELECT @sOrder= ' [' + DisplayText  + ']' FROM @tDisplayColumns WHERE ID = @counter
+		 SET @counter = @counter + 1
+	END 
+	
+	SELECT @SELECT = ''
+	SELECT @FROM = ' FROM [Record] '
+
+
+	IF @bIsActive IS NOT NULL AND @bIsActive =0
+		SELECT @SELECT = @SELECT + ' Record.DateUpdated as Deleted, ' 
+		
+	
+	
+     IF @bHasWarningResults IS NOT NULL AND @bHasWarningResults =1
+      SELECT @SELECT = @SELECT + ' Record.WarningResults as Warning, ' 
+
+
+	IF @bIsActive IS NOT NULL AND @bIsActive =0
+		SELECT @SELECT = @SELECT + ' Record.DeleteReason as Reason, ' 
+
+	DECLARE @ParentAlias varchar(100), @ShowViewLink varchar(10)
+    SET @counter = 1
+	WHILE EXISTS(SELECT * FROM @tDisplayColumns WHERE ID = @counter)
+	BEGIN
+		-- Check to see if this column has a parent (which we will get data off)
+		IF EXISTS(SELECT 1 FROM @tDisplayColumns WHERE ID = @counter AND ParentTableID IS NOT NULL AND ColumnType='dropdown' AND ParentTableID<>-1)
+		BEGIN
+			SELECT @ParentAlias = 'P' + CAST(ColumnID as varchar) FROM @tDisplayColumns WHERE ID = @counter 
+			-- SELECT  @ShowViewLink=ShowViewLink FROM @tDisplayColumns WHERE ID = @conter
+			SELECT 
+					-- build up the parent field anems
+					--@SELECT = @SELECT + REPLACE(FieldsToShow, '[', @ParentAlias + '.[') + ' AS [' + DisplayText + '], '
+					@SELECT = @SELECT + FieldsToShow + ' AS [' + DisplayText + '], '
+					-- when view link then we need to return the record ID too:  --CAST(ColumnID as varchar)
+					+ CASE WHEN ((@sType='view' AND (ShowViewLink = 'Both' OR ShowViewLink='Summary')) OR @sType='allcolumns') THEN '[Record].' + ChildJoinColumnName + ' AS [**' + DisplayText + '_ID**],' ELSE '' END,
+
+					-- Build the join condition and a isnumeric check (for bad data) when joining to RecordID
+					@FROM = @FROM + ' LEFT OUTER JOIN [Record] ' + @ParentAlias + ' ON ' 
+						+ CASE WHEN ParentJoinColumnName = 'RecordID' 
+							THEN  @ParentAlias + '.' + ParentJoinColumnName + ' = CASE WHEN ISNUMERIC([Record].' + ChildJoinColumnName +')=1 THEN [Record].' + ChildJoinColumnName + ' ELSE -1 END '
+							ELSE @ParentAlias + '.TableID = ' + cast(ParentTableID as varchar) 
+							+ ' AND ' + @ParentAlias + '.' + ParentJoinColumnName + ' = [Record].' + ChildJoinColumnName 
+							END						
+					+ ' AND ' + @ParentAlias + '.[IsActive] = 1' 
+				
+				FROM @tDisplayColumns WHERE ID = @counter AND ParentTableID IS NOT NULL
+
+				
+				
+			--IF @ShowViewLink=1
+			--BEGIN
+			--	-- When we have ShowViewLink we need to also return the original field
+			--	SELECT @SELECT = @SELECT + REPLACE(FieldsToShow, ']', '] + ''~'' + [Record].[' + SystemName + ']')
+			--		FROM @tDisplayColumns WHERE ID = @counter
+			--END
+			
+		END
+		
+		ELSE IF EXISTS(SELECT 1 FROM @tDisplayColumns WHERE ID = @counter AND ParentTableID IS NOT NULL AND ColumnType='dropdown' AND ParentTableID=-1)
+		BEGIN
+			SELECT @SELECT = @SELECT + ' [dbo].[fnGetSystemUserDisplayText] ('''+FieldsToShow+''',Record.' + SystemName + ') 
+										AS [' + DisplayText + '], ' 
+										+ CASE WHEN (@sType='allcolumns') THEN ' [Record].' + SystemName + ' AS [**' + DisplayText + '_ID**], ' ELSE '' END
+				FROM @tDisplayColumns 
+				WHERE ID = @counter
+				
+				
+		END
+		
+		ELSE IF EXISTS(SELECT 1 FROM @tDisplayColumns WHERE ID = @counter AND ParentTableID IS NOT NULL AND ColumnType='listbox' AND ParentTableID<>-1)
+		BEGIN
+			SELECT @SELECT = @SELECT + ' STUFF ( ( SELECT '','' + A FROM (SELECT '+FieldsToShow+' as A FROM Record X WHERE X.TableID='
+			+CAST(ParentTableID AS VARCHAR)+' AND CHARINDEX('',''+CAST(X.RecordID AS VARCHAR)+'','','',''+ Record.' + SystemName 
+			+ ' + '','')>0 ) as MainInfo FOR XML PATH('''') ),1,1,'''') 
+				 AS [' + DisplayText + '], ' 
+				FROM @tDisplayColumns 
+				WHERE ID = @counter
+				
+				
+		END
+		--- ELSE
+		ELSE
+			SELECT @SELECT = @SELECT + 'Record.' + SystemName + ' AS [' + DisplayText + '], ' 
+				FROM @tDisplayColumns 
+				WHERE ID = @counter
+				
+				
+	
+	  	SELECT @SELECT = @SELECT 
+	  	+ CASE WHEN (ColourCells = 1) THEN ' dbo.fnGetColumnColour([Record].RecordID,'+CAST(ColumnID AS VARCHAR)+','''+ColumnType+''') AS [**' + DisplayText + '_Colour**],' ELSE '' END
+				FROM @tDisplayColumns 
+				WHERE ID = @counter
+	    
+		--PRINT @SELECT
+		SET @counter = @counter + 1
+		if @sOrder is null
+		 SELECT @sOrder= ' [' + DisplayText  + ']' FROM @tDisplayColumns WHERE ID = @counter
+	END 
+	SELECT @SELECT = LEFT(@SELECT, LEN(@SELECT)-1) 
+	
+	
+
+
+    IF @sParentColumnSortSQL IS NOT NULL
+		SELECT @SELECT = @SELECT + ' ' + @sParentColumnSortSQL 
+	
+	--Make sure that FROM has all only required joins
+	
+	IF EXISTS (SELECT TOP 1 ColumnID FROM [Column] WHERE TableID=@nTableID AND TableTableID IS NOT NULL AND TableTableID>0 AND ColumnType<>'number')
+		BEGIN
+			DECLARE @t2TableTable Table
+			(
+				ID int identity(1,1),
+				ColumnID int,
+				SystemName varchar(50),
+				TableTableID INT				
+			)
+
+			INSERT INTO @t2TableTable(ColumnID,SystemName,TableTableID) 
+				SELECT ColumnID,SystemName,TableTableID FROM [Column] 
+					WHERE TableID=@nTableID AND TableTableID IS NOT NULL AND TableTableID>0 AND ColumnType<>'number'
+				
+			DECLARE @counter2 int
+			SET @counter2 = 1
+			WHILE EXISTS(SELECT * FROM @t2TableTable WHERE ID >= @counter2)
+				BEGIN
+						DECLARE @n2TableTableID INT
+						SELECT @ParentAlias = 'P' + CAST(ColumnID as varchar),@n2TableTableID=TableTableID FROM @t2TableTable WHERE ID = @counter2
+						IF CHARINDEX(@ParentAlias,@SELECT,1)>0 AND CHARINDEX(@ParentAlias,@FROM,1)=0
+							BEGIN
+								-- parent
+								SELECT
+									@FROM = @FROM + ' LEFT OUTER JOIN [Record] ' + @ParentAlias + ' ON ' 
+											+ @ParentAlias + '.RecordID = CASE WHEN ISNUMERIC([Record].' + SystemName +')=1 THEN [Record].' + SystemName + ' ELSE -1 END '
+											+ ' AND ' + @ParentAlias + '.[IsActive] = 1' 
+									FROM @t2TableTable WHERE ID = @counter2
+							END	
+							
+							
+						DECLARE @t3TableTable Table
+							(
+								ID int identity(1,1),
+								ColumnID int,
+								SystemName varchar(50),
+								TableTableID INT				
+							)
+						
+						INSERT INTO @t3TableTable(ColumnID,SystemName,TableTableID) 
+							SELECT ColumnID,SystemName,TableTableID FROM [Column] 
+							WHERE TableID=@n2TableTableID AND TableTableID IS NOT NULL AND TableTableID>0 AND ColumnType<>'number'
+						DECLARE @counter3 int
+						SET @counter3 = 1
+						WHILE EXISTS(SELECT * FROM @t3TableTable WHERE ID >= @counter3)
+							BEGIN
+								DECLARE @s3ParentAlias VARCHAR(25)
+								SELECT @s3ParentAlias = 'P' + CAST(ColumnID as varchar) FROM @t3TableTable WHERE ID = @counter3
+								IF CHARINDEX(@s3ParentAlias,@SELECT,1)>0 AND CHARINDEX(@s3ParentAlias,@FROM,1)=0
+									BEGIN
+										-- parent's parent
+										SELECT
+										@FROM = @FROM + ' LEFT OUTER JOIN [Record] ' + @s3ParentAlias + ' ON ' 
+											+ @s3ParentAlias + '.RecordID = CASE WHEN ISNUMERIC('+@ParentAlias+'.' + SystemName +')=1 THEN '+@ParentAlias+'.' + SystemName + ' ELSE -1 END '
+											+ ' AND ' + @s3ParentAlias + '.[IsActive] = 1' 
+											FROM @t3TableTable WHERE ID = @counter3
+									END
+								SET @counter3 = @counter3 + 1
+							END				
+					SET @counter2 = @counter2 + 1
+				END
+
+		END
+
+	IF PATINDEX('%Record.TableID%', @SELECT) > 0
+	BEGIN
+		SET @SELECT = REPLACE(@SELECT, 'Record.TableID', '[Table].TableName')
+		SET @FROM = REPLACE(@FROM, 'FROM [Record]', 'FROM [Record] JOIN [Table] ON Record.TableID = [Table].TableID')
+	END	
+
+	IF PATINDEX('%Record.EnteredBy%', @SELECT) > 0
+	BEGIN
+		SET @SELECT = REPLACE(@SELECT, 'Record.EnteredBy', '[User].FirstName')
+		SET @FROM = REPLACE(@FROM, 'FROM [Record]', 'FROM [Record] JOIN [User] ON Record.EnteredBy = [User].UserID')
+	END	
+
+	-- ADD IN THE WHERE CRITERIA
+	SELECT @WHERE = ' WHERE (Record.TableID = ' + CAST(@nTableID as varchar) + ') ' 
+		
+	
+	
+	IF @bIsActive IS NOT NULL 
+		SELECT @WHERE = @WHERE + ' AND (Record.IsActive = ' + CAST(@bIsActive AS varchar) + ') '
+
+	IF @dDateFrom IS NOT NULL 
+		SELECT @WHERE = @WHERE + ' AND (Record.DateTimeRecorded >= ''' + CONVERT(varchar(30), @dDateFrom, 103) + ''') '
+
+	IF @dDateTo IS NOT NULL 
+		SELECT @WHERE = @WHERE + ' AND (Record.DateTimeRecorded <=  ''' + CONVERT(varchar(30), @dDateTo, 103) + ''') '
+
+	IF @dDateAddedFrom IS NOT NULL 
+		SELECT @WHERE = @WHERE + ' AND (Record.DateAdded >= ''' + CONVERT(varchar(30), @dDateAddedFrom, 103) + ''') '
+
+	IF @dDateAddedTo IS NOT NULL 
+		SELECT @WHERE = @WHERE + ' AND (Record.DateAdded <=  ''' + CONVERT(varchar(30), @dDateAddedTo, 103) + ''') '
+
+	IF @nEnteredBy IS NOT NULL 
+		SELECT @WHERE = @WHERE + ' AND (Record.EnteredBy = ' + CAST(@nEnteredBy AS varchar) + ') '
+
+	 IF @bHasWarningResults IS NOT null
+     BEGIN
+		 IF @bHasWarningResults =0 
+			SELECT @WHERE = @WHERE + ' AND (Record.WarningResults IS NULL) ' 
+	     
+		 IF @bHasWarningResults =1 
+			SELECT @WHERE = @WHERE + ' AND (Record.WarningResults IS NOT NULL) ' 
+     END
+	
+	IF @sNumericSearch IS NOT null 
+		SELECT @WHERE = @WHERE + ' AND ( ' + @sNumericSearch + ') AND ISNUMERIC(' + ') = 1'
+	
+	
+	
+	
+	
+	IF @sTextSearch IS NOT null
+		SELECT @WHERE = @WHERE + ' AND ( ' + @sTextSearch + ')'
+		
+	-- Added 1 Dec 2015 JB
+	--IF @sType='view' AND @nViewID IS NOT NULL
+	--BEGIN
+	--	DECLARE @sFilter varchar(MAX)
+	--	SELECT 	@sFilter = [Filter] FROM [View] WHERE ViewID = @nViewID
+	--	IF @sFilter IS NOT NULL
+	--		SELECT @WHERE = @WHERE + ' ' + @sFilter
+	--END
+		
+	IF @sType='view' AND @nViewID IS NOT NULL
+	BEGIN
+		DECLARE @sFixedFilter varchar(MAX)
+		SELECT 	@sFixedFilter = [FixedFilter] FROM [View] WHERE ViewID = @nViewID
+		IF @sFixedFilter IS NOT NULL
+			SELECT @WHERE = @WHERE + ' ' + @sFixedFilter
+	END	
+	
+		
+	IF @sType LIKE 'exportbulk'
+	BEGIN
+		-- For ExportBulk we are going to run the SQK inro a temp table 
+		-- and then convert that temp table into a comma delimated string
+		SELECT @SQLMain = 'SELECT ' + @SELECT + ' INTO #ExportBulk ' + @FROM + ' ' + @WHERE  
+		--PRINT @SQLMain
+		
+		SELECT @SQLMain = @SQLMain + '
+		SET CONCAT_NULL_YIELDS_NULL OFF ;
+		
+		DECLARE @SQL		VARCHAR(MAX);
+		DECLARE @S			VARCHAR(MAX);
+		DECLARE	@Count		INT;
+
+		SET		@Count = 0
+
+		SELECT	@S = @S + QUOTENAME([COLUMN_NAME],''"'') + '','' 
+				,@Count = @Count + 1  
+		FROM	tempdb.INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = OBJECT_NAME(OBJECT_ID(''tempdb..#ExportBulk''), db_id (''tempdb''));
+						
+		SET		@S = REPLACE(@S, '''''''', '''''''''''')
+		
+		SET		@S = LEFT(@S, LEN(@S)-1); 
+
+		--PRINT	@S;
+
+		SELECT	@SQL = ''SELECT 0 as [IsData], cast(0 as int) as ''''DBGSystemRecordID'''', '''''' + CAST( @Count AS VARCHAR(MAX) ) + '''''' as [ColumnCount], ' + CAST( @nTableID AS VARCHAR(MAX) ) + ' as [TableID], '''''' + @S + '''''' as [DataDump]
+		UNION	SELECT 1, DBGSystemRecordID, 0, ' + CAST( @nTableID AS VARCHAR(MAX) ) + ', ''
+		SELECT	@SQL = @SQL + '' 
+				QUOTENAME(['' + [COLUMN_NAME] + ''], ''''"'''') + '''','''' + ''
+		FROM	tempdb.INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = OBJECT_NAME(OBJECT_ID(''tempdb..#ExportBulk''), db_id (''tempdb''));
+		SELECT	@SQL = LEFT(@SQL,LEN(@SQL)-8) ;
+		SELECT	@SQL = @SQL + '' FROM #ExportBulk;''
+		
+		--PRINT	@SQL;
+		
+		EXEC	(@SQL);'
+
+		--PRINT @SQLMain
+
+		EXEC (@SQLMain)
+	END
+	ELSE
+	BEGIN
+		-- Pull it all together
+		DECLARE @SQLCount varchar(MAX)
+		SET DATEFORMAT DMY
+		SET @SELECT = 'SELECT * FROM (SELECT RecordInfo.*,ROW_NUMBER() OVER(ORDER BY ' + @sOrder + ' ) as RowNum FROM (SELECT ' + @SELECT
+
+		SELECT @SQLMain =  
+			+ @SELECT + ' ' + @FROM + ' ' + @WHERE  + ') as RecordInfo) as RecordFinalInfo WHERE RowNum >= ' + CONVERT(nvarchar(10), @nStartRow)
+    
+	    SELECT @SQLCount= REPLACE(@SELECT, 'SELECT * FROM', 'SELECT COUNT(*) AS TotalRows FROM') + ' ' + @FROM + ' ' + @WHERE + ') as RecordInfo) as RecordFinalInfo'
+    
+	    SET ROWCOUNT @nMaxRows
+	    
+		PRINT left(@SQLMain,8000)
+		PRINT substring(@SQLMain,8001,8000)
+		EXEC (@SQLMain)
+	
+		SET ROWCOUNT 0 
+		PRINT left(@SQLCount,8000)
+		PRINT substring(@SQLCount,8001,8000)
+		EXEC (@SQLCount)
+	END
+
+END
+
+
+
+/****** Object:  UserDefinedFunction [dbo].[fnReplaceDisplayColumns]    Script Date: 28/05/2016 11:34:43 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER FUNCTION [dbo].[fnReplaceDisplayColumns]
+(
+	@sDisplay varchar(MAX) --'test - [Sample Date] id [ID_N] [Sample Site:Sample Site Name]'
+	,@nTableID int, -- TableTableID, parent
+	@nColumnID INT=null -- Child ColumnID, need this to set a base. Null when we populate dropdown/listbox etc
+)
+RETURNS varchar(MAX)
+AS
+BEGIN
+	
+IF @nTableID<0 RETURN REPLACE(@sDisplay,'''','''''')
+
+	DECLARE @Field varchar(254), @Column varchar(254), @nStart int, @nEnd int,@nAccountID INT
+	SELECT @nAccountID=AccountID FROM [Table] WHERE TableID=@nTableID
+	SELECT @nStart = 1
+	WHILE @nStart >= 1 and @nStart < LEN(@sDisplay) 
+	BEGIN 
+		SELECT @nStart = CHARINDEX('[', @sDisplay, @nStart)
+		SELECT @nEnd  = CHARINDEX(']', @sDisplay, @nStart)
+		IF @nStart > 0 AND (@nEnd > @nStart)
+		BEGIN
+			SELECT @Field = SUBSTRING(@sDisplay, @nStart+1, @nEnd-@nStart-1)
+			--print '@Field ' + @Field
+			IF CHARINDEX(':', @Field, 1)>0  
+				BEGIN
+					DECLARE @sTableName VARCHAR(255)=SUBSTRING(@Field,1,CHARINDEX(':', @Field, 1)-1)
+					--PRINT '@sTableName=' + @sTableName
+					DECLARE @s3Sys VARCHAR(20)=NULL -- parent's parent
+					DECLARE @p3TableID INT=NULL
+					SELECT TOP 1 @s3Sys=C.SystemName,@p3TableID=T.TableID FROM [Column] C INNER JOIN [Table] T ON C.TableID=T.TableID
+						WHERE T.AccountID=@nAccountID AND T.IsActive=1 AND (T.TableName + ':'+C.DisplayName)=@Field
+
+					 IF @s3Sys IS NOT NULL
+						BEGIN
+							DECLARE @nSys VARCHAR(20) 
+							DECLARE @n2ColumnID INT=NULL
+							SELECT TOP 1 @nSys=C.SystemName,@n2ColumnID=C.ColumnID FROM [Column] C 
+								WHERE C.TableTableID=@p3TableID AND C.TableID=@nTableID AND C.ColumnType<>'number' 
+
+							IF @n2ColumnID IS NOT NULL
+								SET @Column='P' + CAST(@n2ColumnID as VARCHAR) + '.' + @s3Sys
+						END
+						
+				END
+			ELSE IF @nColumnID IS NOT NULL
+				SELECT @Column = 'P' + CAST(@nColumnID as VARCHAR) + '.' + SystemName from [Column] WHERE TableID = @nTableID and DisplayName = @Field
+			ELSE 
+				SELECT @Column = 'Record.' + SystemName from [Column] WHERE TableID = @nTableID and DisplayName = @Field
+
+			
+			--print '@Column: ' + @Column 
+			SELECT @sDisplay = REPLACE(@sDisplay, @Field, @Column)
+			
+			--PRINT @sDisplay
+			--PRINT '@n: ' + CAST(@nStart AS varchar)
+			SELECT @nStart = @nStart+1
+		END
+	END
+	SET @sDisplay=REPLACE(@sDisplay,'''','''''')
+	SELECT @sDisplay = '''' + REPLACE(@sDisplay, '[', '''+') + ''''
+	SELECT @sDisplay = REPLACE(@sDisplay, ']', '+''')
+	IF LEFT(@sDisplay, 3) = '''''+' set @sDisplay = SUBSTRING(@sDisplay,4,len(@sDisplay)-3)
+	IF RIGHT(@sDisplay, 3) = '+''''' set @sDisplay = LEFT(@sDisplay,Len(@sDisplay)-3)
+	RETURN @sDisplay
+
+END
+
+
+
+
+
+
+
+
+
+
+
+
+----------------
+
+/****** Object:  UserDefinedFunction [dbo].[fnReplaceDisplayColumns]    Script Date: 28/05/2016 08:57:24 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER FUNCTION [dbo].[fnReplaceDisplayColumns]
+(
+	@sDisplay varchar(MAX) --'test - [Sample Date] id [ID_N] [Sample Site:Sample Site Name]'
+	,@nTableID int, -- TableTableID
+	@nColumnID INT -- Child ColumnID, 
+)
+RETURNS varchar(MAX)
+AS
+BEGIN
+	
+IF @nTableID<0 RETURN @sDisplay
+
+	DECLARE @Field varchar(254), @Column varchar(254), @nStart int, @nEnd int,@nAccountID INT
+	SELECT @nAccountID=AccountID FROM [Table] WHERE TableID=@nTableID
+	SELECT @nStart = 1
+	WHILE @nStart >= 1 and @nStart < LEN(@sDisplay) 
+	BEGIN 
+		SELECT @nStart = CHARINDEX('[', @sDisplay, @nStart)
+		SELECT @nEnd  = CHARINDEX(']', @sDisplay, @nStart)
+		IF @nStart > 0 AND (@nEnd > @nStart)
+		BEGIN
+			SELECT @Field = SUBSTRING(@sDisplay, @nStart+1, @nEnd-@nStart-1)
+			--print '@Field ' + @Field
+			IF CHARINDEX(':', @Field, 1)>0 AND @nColumnID IS NOT NULL
+				BEGIN
+					DECLARE @sTableName VARCHAR(255)=SUBSTRING(@Field,1,CHARINDEX(':', @Field, 1)-1)
+					--PRINT '@sTableName=' + @sTableName
+					DECLARE @s3Sys VARCHAR(20)=NULL -- parent's parent
+					DECLARE @p3TableID INT=NULL
+					SELECT TOP 1 @s3Sys=C.SystemName,@p3TableID=T.TableID FROM [Column] C INNER JOIN [Table] T ON C.TableID=T.TableID
+						WHERE T.AccountID=@nAccountID AND T.IsActive=1 AND (T.TableName + ':'+C.DisplayName)=@Field
+
+						--SELECT C.ColumnID,T.TableID,T.TableName, C.SystemName FROM [Column] C INNER JOIN [Table] T ON C.TableID=T.TableID
+						--WHERE T.AccountID=24800 AND T.IsActive=1 AND (T.TableName + ':'+C.DisplayName)='Sample Site:Sample Site Name'
+
+					 IF @s3Sys IS NOT NULL
+						BEGIN
+							DECLARE @nSys VARCHAR(20) 
+							DECLARE @n2ColumnID INT=NULL
+							SELECT TOP 1 @nSys=C.SystemName,@n2ColumnID=C.ColumnID FROM [Column] C 
+								WHERE C.TableTableID=@p3TableID AND C.TableID=@nTableID AND C.ColumnType<>'number' 
+
+							IF @n2ColumnID IS NOT NULL
+								SET @Column='P' + CAST(@n2ColumnID as VARCHAR) + '.' + @s3Sys
+						END
+						
+				END
+			ELSE
+				SELECT @Column = 'P' + CAST(@nColumnID as VARCHAR) + '.' + SystemName from [Column] WHERE TableID = @nTableID and DisplayName = @Field
+			--print '@Column: ' + @Column 
+			SELECT @sDisplay = REPLACE(@sDisplay, @Field, @Column)
+			--PRINT @sDisplay
+			--PRINT '@n: ' + CAST(@nStart AS varchar)
+			SELECT @nStart = @nStart+1
+		END
+	END
+	SELECT @sDisplay = '''' + REPLACE(@sDisplay, '[', '''+') + ''''
+	SELECT @sDisplay = REPLACE(@sDisplay, ']', '+''')
+	IF LEFT(@sDisplay, 3) = '''''+' set @sDisplay = SUBSTRING(@sDisplay,4,len(@sDisplay)-3)
+	IF RIGHT(@sDisplay, 3) = '+''''' set @sDisplay = LEFT(@sDisplay,Len(@sDisplay)-3)
+	RETURN @sDisplay
+
+END
+
+
+
+/****** Object:  StoredProcedure [dbo].[ets_Record_List]    Script Date: 28/05/2016 09:31:14 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+ALTER PROCEDURE [dbo].[ets_Record_List]
+(
+	@nTableID int,
+	@nEnteredBy int = null,
+	@bIsActive bit = null,
+	@bHasWarningResults bit = null,
+	@dDateFrom datetime = NULL,
+	@dDateTo datetime = NULL,
+	@sOrder nvarchar(200)=null , 
+	@nStartRow int = 1, 
+	@nMaxRows int = 2147483647,
+	@sType varchar(25) = null,
+	@sNumericSearch varchar(MAX) = null,
+	@sTextSearch varchar(MAX) = null,
+	@dDateAddedFrom datetime = NULL,
+	@dDateAddedTo datetime = NULL,
+	@sParentColumnSortSQL varchar(MAX) = null,
+	@sHeaderSQL varchar(MAX) = null,
+	@sViewName varchar(50) = null,
+	@nViewID INT =NULL
+)
+
+/*
+REVISION HISTORY
+----------------
+1 Dec 2015 JB Added view filter 
+
+
+TEST CASES
+----------
+SELECT * FROM [TABLE] WHERE TABLENAME LIKE 'NAME%'
+SELECT * FROM [RECORD] WHERE TABLEID = 1847
+	exec [ets_Record_List] @nTableID=2756,@bIsActive=1,@sType='view',@nViewID=869
+		exec [ets_Record_List_BU_19-Oct-2015] @nTableID=2663,@bIsActive=1,@sType='view',@nViewID=292
+
+   exec [ets_Record_List_FullData] @nTableID=1847,@sTextSearch='Record.V001 like ''%AB%'''
+   exec [ets_Record_List_FullData] @nTableID=1847,@sTextSearch='Record.V001 like ''%AB%'''
+   
+   exec [ets_Record_List_FullData] @nTableID=1389, @sTextSearch=
+*/
+AS
+BEGIN
+	--print 'Debug Start'
+	SET DATEFORMAT dmy;
+	
+	SET NOCOUNT ON;
+	DECLARE @tDisplayColumns TABLE
+	(
+		ID int identity(1,1),
+		ColumnID int,
+		SystemName varchar(50),
+		DisplayText varchar(50),
+		FieldsToShow varchar(MAX),
+		ParentTableID int,
+		ParentJoinColumnName varchar(254), -- RecordID
+		ChildJoinColumnName varchar(254), -- V001 / V499
+		ShowViewLink varchar(10),
+		ColumnType varchar(20),
+		ColourCells bit
+	)
+
+	DECLARE @nColumnIDRecordID INT
+
+	SELECT @nColumnIDRecordID=ColumnID FROM [Column] 
+		WHERE TableID = @nTableID 
+		AND SystemName='RecordID'
+
+	--INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+	--VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+
+
+	IF @sType is not null 
+	BEGIN
+		IF @sType LIKE 'export%' -- From 30/10/2015 we will have export and exportbulk
+		BEGIN
+			IF @sHeaderSQL IS NULL
+			BEGIN
+				INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName, FieldsToShow, ParentTableID, ParentJoinColumnName,ChildJoinColumnName,ColumnType)
+						SELECT C.ColumnID, C.NameOnExport, C.SystemName,
+							dbo.fnReplaceDisplayColumns(C.DisplayColumn, C.[TableTableID],C.ColumnID) as [FieldsToShow],
+							C.[TableTableID] AS  [ParentTableID], 
+							PC.SystemName as [ParentJoinColumnName], 
+							C.SystemName as [ChildJoinColumnName],
+							C.ColumnType 
+							FROM [Column] C 
+								LEFT OUTER JOIN [Column] PC ON PC.[ColumnID] = C.[LinkedParentColumnID]
+								WHERE C.TableID = @nTableID 
+								AND C.NameOnExport IS NOT NULL AND LEN(C.NameOnExport) > 0
+								ORDER BY C.DisplayOrder
+			END -- @sHeaderSQL IS NULL
+
+			IF @sHeaderSQL IS NOT NULL
+			BEGIN
+				DECLARE @exportXML XML
+				SET @exportXML=@sHeaderSQL
+				DECLARE @tExportTable TABLE
+				(
+					xmlColumn XML
+				)
+				 
+				INSERT INTO @tExportTable SELECT @exportXML
+
+				INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName, FieldsToShow,
+			 ParentTableID, ParentJoinColumnName,ChildJoinColumnName, ShowViewLink, ColumnType)
+				SELECT
+					   N.C.value('ColumnID[1]', 'int') ColumnID,
+					   N.C.value('DisplayText[1]', 'varchar(50)') DisplayText,
+					   N.C.value('SystemName[1]', 'varchar(50)') SystemName,
+					    N.C.value('FieldsToShow[1]', 'varchar(max)') FieldsToShow,
+					     N.C.value('ParentTableID[1]', 'int') ParentTableID,
+					      N.C.value('ParentJoinColumnName[1]', 'varchar(254)') ParentJoinColumnName,
+					       N.C.value('ChildJoinColumnName[1]', 'varchar(254)') ChildJoinColumnName,
+					        N.C.value('ShowViewLink[1]', 'varchar(10)') ShowViewLink,
+					         N.C.value('ColumnType[1]', 'varchar(20)') ColumnType
+				FROM @tExportTable
+				CROSS APPLY xmlColumn.nodes('//Records') N(C)
+
+			END -- @sHeaderSQL IS NOT NULL
+			UPDATE @tDisplayColumns SET FieldsToShow=NULL,ParentTableID=NULL,ParentJoinColumnName=NULL,ChildJoinColumnName=NULL,
+			ShowViewLink=NULL,ColumnType=NULL WHERE ParentTableID=0
+			
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+			
+			--testing
+			--select * from @tDisplayColumns
+			--print '@tDisplayColumns'
+			--return
+			
+		END -- @sType='export'
+
+		IF @sType='view' 
+		BEGIN
+			--print 'Debug View'
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName, FieldsToShow,
+			 ParentTableID, ParentJoinColumnName,ChildJoinColumnName, ShowViewLink, ColumnType,ColourCells)
+					SELECT VI.ColumnID, ISNULL(C.DisplayTextSummary,C.DisplayName), C.SystemName,
+						dbo.fnReplaceDisplayColumns(C.DisplayColumn, C.[TableTableID],C.ColumnID) as [FieldsToShow],
+						C.[TableTableID] AS  [ParentTableID], 
+						PC.SystemName as [ParentJoinColumnName], 
+						C.SystemName as [ChildJoinColumnName],
+						C.ShowViewLink,
+						C.ColumnType,C.ColourCells
+						FROM [ViewItem] VI 
+							INNER JOIN  [Column] C ON VI.ColumnID=C.ColumnID
+							LEFT OUTER JOIN   [Column] PC ON     PC.[ColumnID] = C.[LinkedParentColumnID]
+							WHERE ViewID = @nViewID			
+							ORDER BY ColumnIndex
+				
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+		END -- @sType='view'
+				
+		IF @sType='graph' 
+		BEGIN
+			--print 'Debug Graph'
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				SELECT ColumnID, GraphLabel, SystemName
+					FROM [Column] 
+					WHERE TableID = @nTableID 
+					AND GraphLabel IS NOT NULL AND LEN(GraphLabel) > 0
+					ORDER BY DisplayOrder
+						INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+						VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+		END -- @sType='graph' 
+
+		IF @sType='mobile' 
+		BEGIN
+			--print 'Debug Mobile'
+
+			--INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+			--	SELECT ColumnID, MobileName, SystemName
+			--		FROM [Column] 
+			--		WHERE TableID = @nTableID 
+			--		AND MobileName IS NOT NULL AND LEN(MobileName) > 0
+			--	ORDER BY DisplayOrder
+
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName, FieldsToShow, ParentTableID, ParentJoinColumnName,ChildJoinColumnName, ShowViewLink, ColumnType)
+					SELECT C.ColumnID, C.MobileName, C.SystemName,
+						dbo.fnReplaceDisplayColumns(C.DisplayColumn, C.[TableTableID],C.ColumnID) as [FieldsToShow],
+						C.[TableTableID] AS  [ParentTableID], 
+						PC.SystemName as [ParentJoinColumnName], 
+						C.SystemName as [ChildJoinColumnName],
+						C.ShowViewLink,
+						C.ColumnType
+						FROM [Column] C 
+						LEFT OUTER JOIN [Column] PC ON PC.[ColumnID] = C.[LinkedParentColumnID]
+						WHERE C.TableID = @nTableID 
+						AND C.MobileName IS NOT NULL AND LEN(C.MobileName) > 0
+						ORDER BY C.DisplayOrder
+
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+		END -- @sType='mobile' 
+
+		IF @sType='nonstandard' 
+		BEGIN
+			--print 'Debug Nonst'
+
+			--INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+			--	SELECT ColumnID, DisplayName, SystemName
+			--		FROM [Column] 
+			--		WHERE TableID = @nTableID 
+			--		AND DisplayName IS NOT NULL AND LEN(DisplayName) > 0
+			--		AND IsStandard=0
+			--	ORDER BY DisplayOrder
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName, FieldsToShow, ParentTableID, ParentJoinColumnName,ChildJoinColumnName, ShowViewLink, ColumnType)
+					SELECT C.ColumnID, C.DisplayName, C.SystemName,
+						dbo.fnReplaceDisplayColumns(C.DisplayColumn, C.[TableTableID],C.ColumnID) as [FieldsToShow],
+						C.[TableTableID] AS  [ParentTableID], 
+						PC.SystemName as [ParentJoinColumnName], 
+						C.SystemName as [ChildJoinColumnName],
+						C.ShowViewLink,
+						C.ColumnType
+						FROM [Column] C 
+						LEFT OUTER JOIN [Column] PC ON PC.[ColumnID] = C.[LinkedParentColumnID]
+						WHERE C.TableID = @nTableID 
+						AND C.IsStandard=0
+						ORDER BY C.DisplayOrder
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+				
+		END -- @sType='nonstandard' 
+		
+		IF @sType='allcolumns' 
+		BEGIN
+			--print 'Debug Nonst'
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName, FieldsToShow, ParentTableID, ParentJoinColumnName,ChildJoinColumnName, ShowViewLink, ColumnType)
+					SELECT C.ColumnID, C.DisplayName, C.SystemName,
+						dbo.fnReplaceDisplayColumns(C.DisplayColumn, C.[TableTableID],C.ColumnID) as [FieldsToShow],
+						C.[TableTableID] AS  [ParentTableID], 
+						PC.SystemName as [ParentJoinColumnName], 
+						C.SystemName as [ChildJoinColumnName],
+						C.ShowViewLink,
+						C.ColumnType
+						FROM [Column] C 
+						LEFT OUTER JOIN [Column] PC ON PC.[ColumnID] = C.[LinkedParentColumnID]
+						WHERE C.TableID = @nTableID 
+						ORDER BY C.DisplayOrder
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+				
+		END --  @sType='allcolumns'
+		
+
+		IF @sType='backup' 
+		BEGIN
+			--print 'Debug Backup'
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				SELECT ColumnID, DisplayName, SystemName
+					FROM [Column] 
+					WHERE TableID = @nTableID 
+					AND DisplayName IS NOT NULL AND LEN(DisplayName) > 0
+				ORDER BY DisplayOrder
+		END -- @sType='backup'
+		
+	END -- @sType is not null 
+	ELSE
+	BEGIN -- @sType is null 
+		IF @sViewName IS NULL
+		BEGIN
+			--print 'Debug ViewName'
+
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				SELECT ColumnID, DisplayTextSummary, SystemName
+					FROM [Column] 
+					WHERE TableID = @nTableID 
+					AND DisplayTextSummary IS NOT NULL AND LEN(DisplayTextSummary) > 0
+					ORDER BY DisplayOrder
+		END
+		ELSE -- @sViewName IS not NULL
+		BEGIN
+			INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+				SELECT ColumnID, DisplayTextSummary, SystemName
+					FROM [Column] 
+					WHERE TableID = @nTableID 
+					AND DisplayTextSummary IS NOT NULL AND LEN(DisplayTextSummary) > 0
+					AND ViewName=@sViewName
+					ORDER BY DisplayOrder
+		END
+		INSERT INTO @tDisplayColumns (ColumnID, DisplayText, SystemName)
+			VALUES (@nColumnIDRecordID,'DBGSystemRecordID','RecordID')
+	END -- end of @sType is  null 
+
+	-- Debug
+	--SELECT * FROM @tDisplayColumns
+
+	----------------------------------------------
+	-- Part II - the build
+	----------------------------------------------
+	DECLARE @SELECT varchar(MAX)
+	DECLARE @FROM varchar(MAX)
+	DECLARE @WHERE varchar(MAX)
+	DECLARE @SQLMain varchar(MAX)
+	
+	DECLARE @counter int
+	SET @counter = 1
+		
+  -- Get the sOrder if it is null
+   WHILE EXISTS(SELECT * FROM @tDisplayColumns WHERE ID >= @counter)
+	BEGIN
+		
+		if @sOrder is null
+		 SELECT @sOrder= ' [' + DisplayText  + ']' FROM @tDisplayColumns WHERE ID = @counter
+		 SET @counter = @counter + 1
+	END 
+	
+	SELECT @SELECT = ''
+	SELECT @FROM = ' FROM [Record] '
+
+
+	IF @bIsActive IS NOT NULL AND @bIsActive =0
+		SELECT @SELECT = @SELECT + ' Record.DateUpdated as Deleted, ' 
+		
+	
+	
+     IF @bHasWarningResults IS NOT NULL AND @bHasWarningResults =1
+      SELECT @SELECT = @SELECT + ' Record.WarningResults as Warning, ' 
+
+
+	IF @bIsActive IS NOT NULL AND @bIsActive =0
+		SELECT @SELECT = @SELECT + ' Record.DeleteReason as Reason, ' 
+
+	DECLARE @ParentAlias varchar(100), @ShowViewLink varchar(10)
+    SET @counter = 1
+	WHILE EXISTS(SELECT * FROM @tDisplayColumns WHERE ID = @counter)
+	BEGIN
+		-- Check to see if this column has a parent (which we will get data off)
+		IF EXISTS(SELECT 1 FROM @tDisplayColumns WHERE ID = @counter AND ParentTableID IS NOT NULL AND ColumnType='dropdown' AND ParentTableID<>-1)
+		BEGIN
+			SELECT @ParentAlias = 'P' + CAST(ColumnID as varchar) FROM @tDisplayColumns WHERE ID = @counter AND ParentTableID IS NOT NULL
+			-- SELECT  @ShowViewLink=ShowViewLink FROM @tDisplayColumns WHERE ID = @conter
+			SELECT 
+					-- build up the parent field anems
+					@SELECT = @SELECT + REPLACE(FieldsToShow, '[', @ParentAlias + '.[') + ' AS [' + DisplayText + '], '
+
+					-- when view link then we need to return the record ID too:  --CAST(ColumnID as varchar)
+					+ CASE WHEN ((@sType='view' AND (ShowViewLink = 'Both' OR ShowViewLink='Summary')) OR @sType='allcolumns') THEN '[Record].' + ChildJoinColumnName + ' AS [**' + DisplayText + '_ID**],' ELSE '' END,
+
+					-- Build the join condition and a isnumeric check (for bad data) when joining to RecordID
+					@FROM = @FROM + ' LEFT OUTER JOIN [Record] ' + @ParentAlias + ' ON ' 
+						+ CASE WHEN ParentJoinColumnName = 'RecordID' 
+							THEN  @ParentAlias + '.' + ParentJoinColumnName + ' = CASE WHEN ISNUMERIC([Record].' + ChildJoinColumnName +')=1 THEN [Record].' + ChildJoinColumnName + ' ELSE -1 END '
+							ELSE @ParentAlias + '.TableID = ' + cast(ParentTableID as varchar) 
+							+ ' AND ' + @ParentAlias + '.' + ParentJoinColumnName + ' = [Record].' + ChildJoinColumnName 
+							END						
+					+ ' AND ' + @ParentAlias + '.[IsActive] = 1' 
+				
+				FROM @tDisplayColumns WHERE ID = @counter AND ParentTableID IS NOT NULL
+
+				
+				
+			--IF @ShowViewLink=1
+			--BEGIN
+			--	-- When we have ShowViewLink we need to also return the original field
+			--	SELECT @SELECT = @SELECT + REPLACE(FieldsToShow, ']', '] + ''~'' + [Record].[' + SystemName + ']')
+			--		FROM @tDisplayColumns WHERE ID = @counter
+			--END
+			
+		END
+		
+		ELSE IF EXISTS(SELECT 1 FROM @tDisplayColumns WHERE ID = @counter AND ParentTableID IS NOT NULL AND ColumnType='dropdown' AND ParentTableID=-1)
+		BEGIN
+			SELECT @SELECT = @SELECT + ' [dbo].[fnGetSystemUserDisplayText] ('''+FieldsToShow+''',Record.' + SystemName + ') 
+										AS [' + DisplayText + '], ' 
+										+ CASE WHEN (@sType='allcolumns') THEN ' [Record].' + SystemName + ' AS [**' + DisplayText + '_ID**], ' ELSE '' END
+				FROM @tDisplayColumns 
+				WHERE ID = @counter
+				
+				
+		END
+		
+		ELSE IF EXISTS(SELECT 1 FROM @tDisplayColumns WHERE ID = @counter AND ParentTableID IS NOT NULL AND ColumnType='listbox' AND ParentTableID<>-1)
+		BEGIN
+			SELECT @SELECT = @SELECT + ' STUFF ( ( SELECT '','' + A FROM (SELECT '+FieldsToShow+' as A FROM Record X WHERE X.TableID='
+			+CAST(ParentTableID AS VARCHAR)+' AND CHARINDEX('',''+CAST(X.RecordID AS VARCHAR)+'','','',''+ Record.' + SystemName 
+			+ ' + '','')>0 ) as MainInfo FOR XML PATH('''') ),1,1,'''') 
+				 AS [' + DisplayText + '], ' 
+				FROM @tDisplayColumns 
+				WHERE ID = @counter
+				
+				
+		END
+		--- ELSE
+		ELSE
+			SELECT @SELECT = @SELECT + 'Record.' + SystemName + ' AS [' + DisplayText + '], ' 
+				FROM @tDisplayColumns 
+				WHERE ID = @counter
+				
+				
+	
+	  	SELECT @SELECT = @SELECT 
+	  	+ CASE WHEN (ColourCells = 1) THEN ' dbo.fnGetColumnColour([Record].RecordID,'+CAST(ColumnID AS VARCHAR)+','''+ColumnType+''') AS [**' + DisplayText + '_Colour**],' ELSE '' END
+				FROM @tDisplayColumns 
+				WHERE ID = @counter
+	    
+		--PRINT @SELECT
+		SET @counter = @counter + 1
+		if @sOrder is null
+		 SELECT @sOrder= ' [' + DisplayText  + ']' FROM @tDisplayColumns WHERE ID = @counter
+	END 
+	SELECT @SELECT = LEFT(@SELECT, LEN(@SELECT)-1) 
+	
+	
+
+
+    IF @sParentColumnSortSQL IS NOT NULL
+		SELECT @SELECT = @SELECT + ' ' + @sParentColumnSortSQL 
+	
+	--Make sure that FROM has all only required joins
+	
+	IF EXISTS (SELECT TOP 1 ColumnID FROM [Column] WHERE TableID=@nTableID AND TableTableID IS NOT NULL AND TableTableID<>-1 AND ColumnType<>'number')
+		BEGIN
+			DECLARE @t2TableTable Table
+			(
+				ID int identity(1,1),
+				ColumnID int,
+				SystemName varchar(50),
+				TableTableID INT				
+			)
+
+			INSERT INTO @t2TableTable(ColumnID,SystemName,TableTableID) 
+				SELECT ColumnID,SystemName,TableTableID FROM [Column] 
+					WHERE TableID=@nTableID AND TableTableID IS NOT NULL AND TableTableID>-1 AND ColumnType<>'number'
+				
+			DECLARE @counter2 int
+			SET @counter2 = 1
+			WHILE EXISTS(SELECT * FROM @t2TableTable WHERE ID >= @counter2)
+				BEGIN
+						DECLARE @n2TableTableID INT
+						SELECT @ParentAlias = 'P' + CAST(ColumnID as varchar),@n2TableTableID=TableTableID FROM @t2TableTable WHERE ID = @counter2
+						IF CHARINDEX(@ParentAlias,@SELECT,1)>0 AND CHARINDEX(@ParentAlias,@FROM,1)=0
+							BEGIN
+								-- parent
+								SELECT
+									@FROM = @FROM + ' LEFT OUTER JOIN [Record] ' + @ParentAlias + ' ON ' 
+											+ @ParentAlias + '.RecordID = CASE WHEN ISNUMERIC([Record].' + SystemName +')=1 THEN [Record].' + SystemName + ' ELSE -1 END '
+											+ ' AND ' + @ParentAlias + '.[IsActive] = 1' 
+									FROM @t2TableTable WHERE ID = @counter2
+							END	
+							
+							
+						DECLARE @t3TableTable Table
+							(
+								ID int identity(1,1),
+								ColumnID int,
+								SystemName varchar(50),
+								TableTableID INT				
+							)
+						
+						INSERT INTO @t3TableTable(ColumnID,SystemName,TableTableID) 
+							SELECT ColumnID,SystemName,TableTableID FROM [Column] 
+							WHERE TableID=@n2TableTableID AND TableTableID IS NOT NULL AND TableTableID>0 AND ColumnType<>'number'
+						DECLARE @counter3 int
+						SET @counter3 = 1
+						WHILE EXISTS(SELECT * FROM @t3TableTable WHERE ID >= @counter3)
+							BEGIN
+								DECLARE @s3ParentAlias VARCHAR(25)
+								SELECT @s3ParentAlias = 'P' + CAST(ColumnID as varchar) FROM @t3TableTable WHERE ID = @counter3
+								IF CHARINDEX(@s3ParentAlias,@SELECT,1)>0 AND CHARINDEX(@s3ParentAlias,@FROM,1)=0
+									BEGIN
+										-- parent's parent
+										SELECT
+										@FROM = @FROM + ' LEFT OUTER JOIN [Record] ' + @s3ParentAlias + ' ON ' 
+											+ @s3ParentAlias + '.RecordID = CASE WHEN ISNUMERIC('+@ParentAlias+'.' + SystemName +')=1 THEN '+@ParentAlias+'.' + SystemName + ' ELSE -1 END '
+											+ ' AND ' + @s3ParentAlias + '.[IsActive] = 1' 
+											FROM @t3TableTable WHERE ID = @counter3
+									END
+								SET @counter3 = @counter3 + 1
+							END				
+					SET @counter2 = @counter2 + 1
+				END
+
+		END
+
+	IF PATINDEX('%Record.TableID%', @SELECT) > 0
+	BEGIN
+		SET @SELECT = REPLACE(@SELECT, 'Record.TableID', '[Table].TableName')
+		SET @FROM = REPLACE(@FROM, 'FROM [Record]', 'FROM [Record] JOIN [Table] ON Record.TableID = [Table].TableID')
+	END	
+
+	IF PATINDEX('%Record.EnteredBy%', @SELECT) > 0
+	BEGIN
+		SET @SELECT = REPLACE(@SELECT, 'Record.EnteredBy', '[User].FirstName')
+		SET @FROM = REPLACE(@FROM, 'FROM [Record]', 'FROM [Record] JOIN [User] ON Record.EnteredBy = [User].UserID')
+	END	
+
+	-- ADD IN THE WHERE CRITERIA
+	SELECT @WHERE = ' WHERE (Record.TableID = ' + CAST(@nTableID as varchar) + ') ' 
+		
+	
+	
+	IF @bIsActive IS NOT NULL 
+		SELECT @WHERE = @WHERE + ' AND (Record.IsActive = ' + CAST(@bIsActive AS varchar) + ') '
+
+	IF @dDateFrom IS NOT NULL 
+		SELECT @WHERE = @WHERE + ' AND (Record.DateTimeRecorded >= ''' + CONVERT(varchar(30), @dDateFrom, 103) + ''') '
+
+	IF @dDateTo IS NOT NULL 
+		SELECT @WHERE = @WHERE + ' AND (Record.DateTimeRecorded <=  ''' + CONVERT(varchar(30), @dDateTo, 103) + ''') '
+
+	IF @dDateAddedFrom IS NOT NULL 
+		SELECT @WHERE = @WHERE + ' AND (Record.DateAdded >= ''' + CONVERT(varchar(30), @dDateAddedFrom, 103) + ''') '
+
+	IF @dDateAddedTo IS NOT NULL 
+		SELECT @WHERE = @WHERE + ' AND (Record.DateAdded <=  ''' + CONVERT(varchar(30), @dDateAddedTo, 103) + ''') '
+
+	IF @nEnteredBy IS NOT NULL 
+		SELECT @WHERE = @WHERE + ' AND (Record.EnteredBy = ' + CAST(@nEnteredBy AS varchar) + ') '
+
+	 IF @bHasWarningResults IS NOT null
+     BEGIN
+		 IF @bHasWarningResults =0 
+			SELECT @WHERE = @WHERE + ' AND (Record.WarningResults IS NULL) ' 
+	     
+		 IF @bHasWarningResults =1 
+			SELECT @WHERE = @WHERE + ' AND (Record.WarningResults IS NOT NULL) ' 
+     END
+	
+	IF @sNumericSearch IS NOT null 
+		SELECT @WHERE = @WHERE + ' AND ( ' + @sNumericSearch + ') AND ISNUMERIC(' + ') = 1'
+	
+	
+	
+	
+	
+	IF @sTextSearch IS NOT null
+		SELECT @WHERE = @WHERE + ' AND ( ' + @sTextSearch + ')'
+		
+	-- Added 1 Dec 2015 JB
+	--IF @sType='view' AND @nViewID IS NOT NULL
+	--BEGIN
+	--	DECLARE @sFilter varchar(MAX)
+	--	SELECT 	@sFilter = [Filter] FROM [View] WHERE ViewID = @nViewID
+	--	IF @sFilter IS NOT NULL
+	--		SELECT @WHERE = @WHERE + ' ' + @sFilter
+	--END
+		
+	IF @sType='view' AND @nViewID IS NOT NULL
+	BEGIN
+		DECLARE @sFixedFilter varchar(MAX)
+		SELECT 	@sFixedFilter = [FixedFilter] FROM [View] WHERE ViewID = @nViewID
+		IF @sFixedFilter IS NOT NULL
+			SELECT @WHERE = @WHERE + ' ' + @sFixedFilter
+	END	
+	
+		
+	IF @sType LIKE 'exportbulk'
+	BEGIN
+		-- For ExportBulk we are going to run the SQK inro a temp table 
+		-- and then convert that temp table into a comma delimated string
+		SELECT @SQLMain = 'SELECT ' + @SELECT + ' INTO #ExportBulk ' + @FROM + ' ' + @WHERE  
+		--PRINT @SQLMain
+		
+		SELECT @SQLMain = @SQLMain + '
+		SET CONCAT_NULL_YIELDS_NULL OFF ;
+		
+		DECLARE @SQL		VARCHAR(MAX);
+		DECLARE @S			VARCHAR(MAX);
+		DECLARE	@Count		INT;
+
+		SET		@Count = 0
+
+		SELECT	@S = @S + QUOTENAME([COLUMN_NAME],''"'') + '','' 
+				,@Count = @Count + 1  
+		FROM	tempdb.INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = OBJECT_NAME(OBJECT_ID(''tempdb..#ExportBulk''), db_id (''tempdb''));
+						
+		SET		@S = REPLACE(@S, '''''''', '''''''''''')
+		
+		SET		@S = LEFT(@S, LEN(@S)-1); 
+
+		--PRINT	@S;
+
+		SELECT	@SQL = ''SELECT 0 as [IsData], cast(0 as int) as ''''DBGSystemRecordID'''', '''''' + CAST( @Count AS VARCHAR(MAX) ) + '''''' as [ColumnCount], ' + CAST( @nTableID AS VARCHAR(MAX) ) + ' as [TableID], '''''' + @S + '''''' as [DataDump]
+		UNION	SELECT 1, DBGSystemRecordID, 0, ' + CAST( @nTableID AS VARCHAR(MAX) ) + ', ''
+		SELECT	@SQL = @SQL + '' 
+				QUOTENAME(['' + [COLUMN_NAME] + ''], ''''"'''') + '''','''' + ''
+		FROM	tempdb.INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = OBJECT_NAME(OBJECT_ID(''tempdb..#ExportBulk''), db_id (''tempdb''));
+		SELECT	@SQL = LEFT(@SQL,LEN(@SQL)-8) ;
+		SELECT	@SQL = @SQL + '' FROM #ExportBulk;''
+		
+		--PRINT	@SQL;
+		
+		EXEC	(@SQL);'
+
+		--PRINT @SQLMain
+
+		EXEC (@SQLMain)
+	END
+	ELSE
+	BEGIN
+		-- Pull it all together
+		DECLARE @SQLCount varchar(MAX)
+		SET DATEFORMAT DMY
+		SET @SELECT = 'SELECT * FROM (SELECT RecordInfo.*,ROW_NUMBER() OVER(ORDER BY ' + @sOrder + ' ) as RowNum FROM (SELECT ' + @SELECT
+
+		SELECT @SQLMain =  
+			+ @SELECT + ' ' + @FROM + ' ' + @WHERE  + ') as RecordInfo) as RecordFinalInfo WHERE RowNum >= ' + CONVERT(nvarchar(10), @nStartRow)
+    
+	    SELECT @SQLCount= REPLACE(@SELECT, 'SELECT * FROM', 'SELECT COUNT(*) AS TotalRows FROM') + ' ' + @FROM + ' ' + @WHERE + ') as RecordInfo) as RecordFinalInfo'
+    
+	    SET ROWCOUNT @nMaxRows
+	    
+		PRINT left(@SQLMain,8000)
+		PRINT substring(@SQLMain,8001,8000)
+		EXEC (@SQLMain)
+	
+		SET ROWCOUNT 0 
+		PRINT left(@SQLCount,8000)
+		PRINT substring(@SQLCount,8001,8000)
+		EXEC (@SQLCount)
+	END
+
+END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   <tr>
+                <td align="right" valign="top">
+                     <strong runat="server" id="stgField"> Field: </strong>
+                </td>
+                <td valign="top">
+                     <asp:DropDownList runat="server" ID="ddlHideColumn" CssClass="NormalTextBox"  ClientIDMode="Static"
+                            DataValueField="ColumnID" DataTextField="DisplayName" AutoPostBack="true" 
+                            OnSelectedIndexChanged="ddlHideColumn_SelectedIndexChanged"></asp:DropDownList>
+                    
+                </td>
+                <td valign="top">
+                    <asp:DropDownList runat="server" ID="ddlOperator" CssClass="NormalTextBox"  ClientIDMode="Static">
+                        <asp:ListItem Value="equals" Text="Equals" Selected="True"></asp:ListItem>
+                      <%--  <asp:ListItem Value="notequals" Text="Not Equals"></asp:ListItem>
+                         <asp:ListItem Value="isblank" Text="Is Blank"></asp:ListItem>
+                          <asp:ListItem Value="isnotblank" Text="Is Not Blank"></asp:ListItem>
+                           <asp:ListItem Value="greater" Text="Greater Than"></asp:ListItem>
+                            <asp:ListItem Value="less" Text="Less Than"></asp:ListItem>
+                             <asp:ListItem Value="date" Text="Date Comparisons"></asp:ListItem>--%>
+                             <asp:ListItem Value="contains" Text="Contains"></asp:ListItem>
+                             <%--<asp:ListItem Value="notcontains" Text="Does Not Contain"></asp:ListItem>--%>
+                             
+                    </asp:DropDownList>
+                </td>
+                <td align="left" valign="top">
+                    <asp:TextBox runat="server" ID="txtHideColumnValue" CssClass="NormalTextBox" Width="200px"></asp:TextBox>
+                    <asp:ListBox runat="server" ID="lstHideColumnValue" Visible="false" SelectionMode="Multiple"
+                        Style="min-width: 200px; min-height: 100px;"></asp:ListBox>
+                    <asp:DropDownList runat="server" ID="ddlHideColumnValue" Visible="false" CssClass="NormalTextBox">
+                    </asp:DropDownList>
+                    <asp:CheckBox runat="server" ID="chkHideColumnValue" Visible="false" TextAlign="Right" />
+                    <asp:RadioButtonList runat="server" ID="radioHideColumnValue" Visible="false"
+                     CssClass="NormalTextBox" RepeatDirection="Horizontal"></asp:RadioButtonList>
+                    <asp:HiddenField runat="server" ID="hfHideColumnValueControl" Value="text" />
+                    <asp:HiddenField runat="server" ID="hfHideColumnValue" Value="" ClientIDMode="Static" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <asp:DropDownList runat="server" ID="ddlJoinOperator" CssClass="NormalTextBox" ClientIDMode="Static" >
+                        <asp:ListItem Text="" Value="" Selected="True"></asp:ListItem>
+                        <asp:ListItem Text="AND" Value="and"></asp:ListItem>
+                        <asp:ListItem Text="OR" Value="or"></asp:ListItem>
+
+                    </asp:DropDownList>
+                </td>
+                <td colspan="3">
+                </td>
+            </tr>
+              <tr>
+                <td align="right" valign="top">
+                     <strong runat="server" id="stgField2"> Field: </strong>
+                </td>
+                <td valign="top">
+                     <asp:DropDownList runat="server" ID="ddlHideColumn2" CssClass="NormalTextBox"  ClientIDMode="Static"
+                            DataValueField="ColumnID" DataTextField="DisplayName" AutoPostBack="true" 
+                            OnSelectedIndexChanged="ddlHideColumn2_SelectedIndexChanged"></asp:DropDownList>
+                    
+                </td>
+                <td valign="top">
+                    <asp:DropDownList runat="server" ID="ddlOperator2" CssClass="NormalTextBox"  ClientIDMode="Static">
+                        <asp:ListItem Value="equals" Text="Equals" Selected="True"></asp:ListItem>
+                        <asp:ListItem Value="contains" Text="Contains"></asp:ListItem>
+                    </asp:DropDownList>
+                </td>
+                <td align="left" valign="top">
+                    <asp:TextBox runat="server" ID="txtHideColumnValue2" CssClass="NormalTextBox" Width="200px"></asp:TextBox>
+                    <asp:ListBox runat="server" ID="lstHideColumnValue2" Visible="false" SelectionMode="Multiple"
+                        Style="min-width: 200px; min-height: 100px;"></asp:ListBox>
+                    <asp:DropDownList runat="server" ID="ddlHideColumnValue2" Visible="false" CssClass="NormalTextBox">
+                    </asp:DropDownList>
+                    <asp:CheckBox runat="server" ID="chkHideColumnValue2" Visible="false" TextAlign="Right" />
+                    <asp:RadioButtonList runat="server" ID="radioHideColumnValue2" Visible="false"
+                     CssClass="NormalTextBox" RepeatDirection="Horizontal"></asp:RadioButtonList>
+                    <asp:HiddenField runat="server" ID="hfHideColumnValueControl2" Value="text" />
+                    <asp:HiddenField runat="server" ID="hfHideColumnValue2" Value="" ClientIDMode="Static" />
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                </td>
+                <td colspan="3">
+                    <asp:RequiredFieldValidator ID="rfvColumnList" runat="server" ControlToValidate="ddlHideColumn"
+                        ErrorMessage="Please select a Field!"></asp:RequiredFieldValidator>
+                         <%--<asp:RequiredFieldValidator ID="rfvColumnValue" runat="server" ControlToValidate="txtColumnValue"
+                        ErrorMessage="Please enter value for the Field!"></asp:RequiredFieldValidator>--%>
+
+                </td>
+            </tr>
+
+
+
+<sessionState allowCustomSqlDatabase="true" cookieless="UseCookies" mode="SQLServer" 
+					  sqlConnectionString="Data Source=DBG002;Database=thedatabase_session;Trusted_Connection=yes;User Id=thedatabase;Password=Mohsin2515" 
+					  stateConnectionString="tcpip=127.0.0.1:42424" timeout="10000" />
+					  
+
+
+   <%-- <asp:ListItem Value="5" Text="Read Only" Selected="True"></asp:ListItem>
+                                                <asp:ListItem Value="7" Text="Add Record Data Only"></asp:ListItem>
+                                                <asp:ListItem Value="4" Text="Add and Edit Record Data"></asp:ListItem>--%>
+                                                <%--<asp:ListItem Value="3" Text="Edit Record and Site Data"></asp:ListItem>--%>
+<%--                                                <asp:ListItem Value="2" Text="Administrator"></asp:ListItem>
+                                                <asp:ListItem Value="8" Text="Own Data Only"></asp:ListItem>
+                                                <asp:ListItem Value="9" Text="Edit Own Data, View Others"></asp:ListItem>--%>
+                                                <%--<asp:ListItem  Value="6" Text="None"></asp:ListItem>--%>					  
