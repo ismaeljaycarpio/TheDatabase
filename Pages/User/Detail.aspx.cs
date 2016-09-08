@@ -286,6 +286,10 @@ public partial class User_Detail : SecurePage
             hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/List.aspx";
         }
 
+        if (Request.QueryString["fixedurl"] != null)
+        {
+            hlBack.NavigateUrl = Cryptography.Decrypt(Request.QueryString["fixedurl"].ToString());
+        }
 
         switch (_strActionMode.ToLower())
         {

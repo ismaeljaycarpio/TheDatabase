@@ -7,7 +7,7 @@
 <%@ Register Src="~/Pages/UserControl/RecordList.ascx" TagName="RecordList" TagPrefix="asp" %>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="HeadContent" runat="server">
-        <asp:Literal ID="ltTextStyles" runat="server"></asp:Literal>
+    <asp:Literal ID="ltTextStyles" runat="server"></asp:Literal>
     <style type="text/css">
        
 
@@ -16,10 +16,11 @@
 </asp:Content>
 <asp:Content ID="Content1" ContentPlaceHolderID="HomeContentPlaceHolder" runat="Server">
 
-    
+
     <%-- OnClick="btnReloadMe_Click"--%>
     <asp:Button ID="btnReloadMe" runat="server" ClientIDMode="Static" OnClientClick="ReloadMe();return false;"
         Style="display: none;" />
+
 
     <table>
         <tr>
@@ -33,5 +34,5 @@
             </td>
         </tr>
     </table>
-   
+
 </asp:Content>

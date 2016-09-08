@@ -191,7 +191,58 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             SecurityManager.AddSpeedLog(theSpeedLog);
         }
 
-       
+        //oliver <begin> Ticket 1521
+        if (_qsMode != "add" && !IsPostBack)
+        {
+            switch (_theTable.ChangeHistoryType)
+            {
+                case "closed":                   
+          
+                case "":
+
+                    upChangeHistory.Visible = true;
+                    break;
+
+                case "open":
+
+                    if (!IsPostBack)
+                    {
+                        lnkShowHistory_Click(null, null);
+                    }
+                    break;
+
+                case "admin":
+                   
+                    if (SecurityManager.Role_Details((int)_theUserRole.RoleID).RoleType != null
+                        && ((SecurityManager.Role_Details((int)_theUserRole.RoleID).RoleType == "1")
+                        || (SecurityManager.Role_Details((int)_theUserRole.RoleID).RoleType == "2")))
+                    {
+                        upChangeHistory.Visible = true;
+                        lnkShowHistory.Visible = true;
+                      
+                    }
+                    break;
+
+                case "none":                    
+                    upChangeHistory.Visible = false;
+                      lnkShowHistory.Visible = false;
+                    lnkHideHistory.Visible = false;
+                    break;
+
+            }
+           
+        }
+        else
+        {
+            if (_qsMode == "add" && !IsPostBack)
+            {
+                lnkShowHistory.Visible = false;
+                lnkHideHistory.Visible = false;
+            }
+          
+        }
+      
+        //oliver <end> Ticket 1521       
     }
 
 
@@ -907,12 +958,27 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             if (_dtColumnsDetail.Rows[i]["Importance"].ToString().ToLower() == "m")
             {
                 _lbl[i].Text = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "*";
-                _lbl[i].ForeColor = System.Drawing.Color.Red;
+                if (_qsMode != "add" && _dtRecordedetail != null && _dtRecordedetail.Rows[0][i].ToString() != "")
+                {
+                    //
+                }
+                else
+                {
+                    _lbl[i].ForeColor = System.Drawing.Color.Red;
+                }
+                
             }
             else if (_dtColumnsDetail.Rows[i]["Importance"].ToString().ToLower() == "r")
             {
                 _lbl[i].Text = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() ;
-                _lbl[i].ForeColor = System.Drawing.Color.Red;
+                if (_qsMode != "add" && _dtRecordedetail != null && _dtRecordedetail.Rows[0][i].ToString() != "")
+                {
+                    //
+                }
+                else
+                {
+                    _lbl[i].ForeColor = System.Drawing.Color.Red;
+                }
             }
             else
             {
@@ -4697,7 +4763,12 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 string strEachFormulaV_Msg = "";
                 string strEachFormulaW_Msg = "";
                 string strEachFormulaE_Msg = "";
-                
+
+                //if (_dtRecordedetail.Rows[0][i].ToString() != "" && i < _lbl.Length && _lbl[i] != null)
+                //{
+                //    _lbl[i].Style.Add("color", "#565656");
+                //    //_lbl[i].ForeColor =System.Drawing.Color.;
+                //}
 
 
                 if (i == _iEnteredByIndex)
@@ -8899,7 +8970,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             //
         }
 
-
+        ResetTabs();
     }
 
     protected void IB_CalRef_Click(object sender, ImageClickEventArgs e)
@@ -10019,10 +10090,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
             if(hlBack.NavigateUrl=="")
             {
-                 if (Request.UrlReferrer != null)
-                 {
-                     hlBack.NavigateUrl = Request.UrlReferrer.AbsoluteUri;
-                 }
+                hlBack.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
+
             }
 
         }
@@ -11319,6 +11388,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
             BindTheChangedLogGrid(0, gvChangedLog.PageSize);
         }
+        ResetTabs();
     }
 
     protected void lnkHideHistory_Click(object sender, EventArgs e)
@@ -11326,7 +11396,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         lnkShowHistory.Visible = true;
         lnkHideHistory.Visible = false;
         trTab.Visible = false;
-
+        ResetTabs();
     }
 
     protected void lnkNavigateNext_Click(object sender, EventArgs e)

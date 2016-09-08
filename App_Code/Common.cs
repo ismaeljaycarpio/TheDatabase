@@ -48,7 +48,55 @@ public class Common
 
     //public bool bUseSourceBacthForALS = true;
 
+    public static DataTable GetUsersByDashboard(string strUserIDs, int iAccountID)
+    {
+        if (strUserIDs == "")
+            strUserIDs = "-1";
+        
+            DataTable dtUserDash = Common.DataTableFromText(@"SELECT U.* ,R.[Role]
+                FROM dbo.Account A
+                JOIN [UserRole]  UR ON UR.AccountID = A.AccountID 
+                JOIN [User] U ON U.UserID = UR.UserID 
+                JOIN [Role] R ON UR.RoleID=R.RoleID
+                WHERE A.AccountID=" + iAccountID.ToString() +
+                          @" AND  U.UserID IN (" + strUserIDs + @") ORDER BY R.[Role],U.FirstName,U.LastName");
+            return dtUserDash;
+       
+    }
+    public static string GetUserIDsForDashboard(int iDocumentID,int iAccountID)
+    {
+        string strUserIDs = "";
+        try
+        {
+           
+            DataTable dtUsers = Common.DataTableFromText(@"SELECT U.UserID,UR.RoleID
+                                FROM dbo.Account A
+                                JOIN [UserRole]  UR ON UR.AccountID = A.AccountID 
+                                JOIN [User] U ON U.UserID = UR.UserID 
+                                WHERE U.IsActive=1 AND  A.AccountID=" + iAccountID.ToString());
 
+
+            foreach (DataRow dr in dtUsers.Rows)
+            {
+                int? DashID = DocumentManager.dbg_Dashboard_BestFitting("", int.Parse(dr["UserID"].ToString()), int.Parse(dr["RoleID"].ToString()));
+
+                if (DashID != null && (int)DashID == iDocumentID)
+                {
+                    strUserIDs = strUserIDs + dr["UserID"].ToString() + ",";
+                }
+            }
+
+
+            
+        }
+        catch
+        {
+            //
+        }
+        if (strUserIDs != "")
+            strUserIDs = strUserIDs.Substring(0, strUserIDs.Length - 1);
+        return strUserIDs;
+    }
     public static DateTime? GetDateTimeFromString(string strDateTime,string strFormat)
     {
         if (strFormat == "" || strFormat == "GB")

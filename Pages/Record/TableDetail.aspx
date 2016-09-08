@@ -937,7 +937,7 @@
                                                                             ClientIDMode="Static"></asp:RequiredFieldValidator>
                                                                     </td>
                                                                 </tr>--%>
-                                                                <tr id="Tr1" runat="server" >
+<%--                                                                <tr id="Tr1" runat="server" >
                                                                     <td align="right">
                                                                         <strong>Pin</strong>
                                                                     </td>
@@ -991,7 +991,7 @@
                                                                             </tr>
                                                                         </table>
                                                                     </td>
-                                                                </tr>
+                                                                </tr>--%>
                                                                 <tr style="height: 15px;">
                                                                     <td colspan="2">
                                                                     </td>
@@ -1014,7 +1014,7 @@
                                                                         
                                                                     </td>
                                                                     <td>
-                                                                        <%--//oliver <begin> Instructed by Jon to add the word 'Search' during our skype conversation (8/29/2016)--%>
+                                                                       <%--//oliver <begin> Ticket 1521--%>
                                                                              <asp:CheckBox runat="server" ID="chkShowAdvancedOptions" Checked="true" TextAlign="Right"
                                                                                         Font-Bold="true" Text="Show Advanced Search Options" />
                                                                         <%--//oliver <end>--%>
@@ -1054,6 +1054,21 @@
                                                                         </asp:DropDownList>
                                                                     </td>
                                                                 </tr>
+                                                                <%--//oliver <begin> Ticket 1521--%>
+                                                                <tr runat="server" id="trShowChangeHistory" visible="true">
+                                                                    <td align="right">
+                                                                        <strong>Show Change History</strong>
+                                                                    </td>
+                                                                    <td>
+                                                                        <asp:DropDownList runat="server" ID="ddlShowChangeHistory" CssClass="NormalTextBox">
+                                                                            <asp:ListItem Value="closed" Text="Closed" Selected="True"></asp:ListItem>
+                                                                            <asp:ListItem Value="open" Text="Open"></asp:ListItem>
+                                                                            <asp:ListItem Value="none" Text="None"></asp:ListItem>
+                                                                            <asp:ListItem Value="admin" Text="Admin"></asp:ListItem>
+                                                                        </asp:DropDownList>
+                                                                    </td>
+                                                                </tr>
+                                                                <%--//oliver <end>--%>
                                                                 <tr runat="server" id="trReasonChange" visible="false">
                                                                     <td align="right">
                                                                         <strong>Reason for change</strong>
@@ -1478,6 +1493,64 @@
                                                                         <asp:TextBox runat="server" ID="txtFilterBottomColour" MaxLength="6" CssClass="NormalTextBox"></asp:TextBox>
                                                                     </td>
                                                                 </tr>
+
+                                                                <%--//oliver <begin> Ticket 1521--%>
+                                                                <tr id="Tr1" runat="server" >
+                                                                    <td align="right">
+                                                                        <strong>Pin</strong>
+                                                                    </td>
+                                                                    <td align="left">
+                                                                        <table cellpadding="0" cellspacing="0">
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <asp:DropDownList runat="server" ID="ddlPinImages" AutoPostBack="false" ClientIDMode="Static"
+                                                                                        CssClass="NormalTextBox">
+                                                                                        <asp:ListItem Selected="True" Text="--Please Select--" Value="Pages/Record/PINImages/DefaultPin.png"></asp:ListItem>
+                                                                                        <asp:ListItem Text="Pin Blue" Value="Pages/Record/PINImages/PinBlue.png"></asp:ListItem>
+                                                                                        <asp:ListItem Text="Pin Black" Value="Pages/Record/PINImages/PinBlack.png"></asp:ListItem>
+                                                                                        <asp:ListItem Text="Pin Gray" Value="Pages/Record/PINImages/PinGray.png"></asp:ListItem>
+                                                                                        <asp:ListItem Text="Pin Green" Value="Pages/Record/PINImages/PinGreen.png"></asp:ListItem>
+                                                                                        <asp:ListItem Text="Pin Light Blue" Value="Pages/Record/PINImages/PinLBlue.png"></asp:ListItem>
+                                                                                        <asp:ListItem Text="Pin Orange" Value="Pages/Record/PINImages/PinOrange.png"></asp:ListItem>
+                                                                                        <asp:ListItem Text="Pin Purple" Value="Pages/Record/PINImages/PinPurple.png"></asp:ListItem>
+                                                                                        <asp:ListItem Text="Pin Red" Value="Pages/Record/PINImages/PinRed.png"></asp:ListItem>
+                                                                                        <asp:ListItem Text="Pin Yellow" Value="Pages/Record/PINImages/PinYellow.png"></asp:ListItem>
+                                                                                        <asp:ListItem Text="Round Blue" Value="Pages/Record/PINImages/RoundBlue.png"></asp:ListItem>
+                                                                                        <asp:ListItem Text="Round Gray" Value="Pages/Record/PINImages/RoundGray.png"></asp:ListItem>
+                                                                                        <asp:ListItem Text="Round Green" Value="Pages/Record/PINImages/RoundGreen.png"></asp:ListItem>
+                                                                                        <asp:ListItem Text="Round Light Blue" Value="Pages/Record/PINImages/RoundLightBlue.png"></asp:ListItem>
+                                                                                        <asp:ListItem Text="Round Orange" Value="Pages/Record/PINImages/RoundOrange.png"></asp:ListItem>
+                                                                                        <asp:ListItem Text="Round Purple" Value="Pages/Record/PINImages/RoundPurple.png"></asp:ListItem>
+                                                                                        <asp:ListItem Text="Round Red" Value="Pages/Record/PINImages/RoundRed.png"></asp:ListItem>
+                                                                                        <asp:ListItem Text="Round White" Value="Pages/Record/PINImages/RoundWhite.png"></asp:ListItem>
+                                                                                        <asp:ListItem Text="Round Yellow" Value="Pages/Record/PINImages/RoundYellow.png"></asp:ListItem>
+                                                                                    </asp:DropDownList>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <asp:Panel runat="server" ID="pnlPINImages" Width="50px" ScrollBars="None">
+                                                                                        &nbsp;
+                                                                                        <asp:Image runat="server" ID="imgPIN" ImageUrl="~/Pages/Record/PINImages/DefaultPin.png"
+                                                                                            ClientIDMode="Static" />
+                                                                                    </asp:Panel>
+                                                                                </td>
+                                                                                <td style="width:10px;">
+
+                                                                                </td>
+                                                                                <td align="right">
+                                                                                    <strong>Display Order</strong>
+                                                                                </td>
+                                                                                <td style="padding-left:2px;">
+                                                                                     <asp:TextBox runat="server" ID="txtPinDisplayOrder" TextMode="SingleLine" CssClass="NormalTextBox"
+                                                                                        Width="50px"></asp:TextBox>
+                                                                                    <asp:RegularExpressionValidator ID="RegularExpressionValidator1" ControlToValidate="txtPinDisplayOrder"
+                                                                                        runat="server" ErrorMessage="Numeric!" Display="Dynamic" ValidationExpression="(^-?\d{1,18}\.$)|(^-?\d{1,18}$)|(^-?\d{0,18}\.\d{1,4}$)">
+                                                                                    </asp:RegularExpressionValidator>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                                <%--//oliver <end>--%>
                                                             </table>
                                                         </div>
                                                         <div id="divGraphs">

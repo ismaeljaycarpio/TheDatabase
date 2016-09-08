@@ -44,6 +44,8 @@ public partial class Pages_Home_DashBoard : SecurePage
                 if (!Common.HaveAccess(Session["roletype"].ToString(), "1,2"))
                 { Response.Redirect("~/Default.aspx", false); }
 
+
+                PopulateUser();
                 if (Request.QueryString["SearchCriteria"] != null)
                 {
                     PopulateSearchCriteria(int.Parse(Cryptography.Decrypt(Request.QueryString["SearchCriteria"].ToString())));
@@ -109,7 +111,7 @@ public partial class Pages_Home_DashBoard : SecurePage
 
                 xmlDoc.Load(new StringReader(theSearchCriteria.SearchText));
 
-                txtDocumentText.Text = xmlDoc.FirstChild[txtDocumentText.ID].InnerText;
+                ddlEnteredBy.Text = xmlDoc.FirstChild[ddlEnteredBy.ID].InnerText;
 
                 _iStartIndex = int.Parse(xmlDoc.FirstChild["iStartIndex"].InnerText);
                 _iMaxRows = int.Parse(xmlDoc.FirstChild["iMaxRows"].InnerText);
@@ -124,8 +126,23 @@ public partial class Pages_Home_DashBoard : SecurePage
 
 
     }
+    protected void PopulateUser()
+    {
+       
+        ddlEnteredBy.Items.Clear();
+        ddlEnteredBy.DataSource = Common.DataTableFromText("SELECT (FirstName + ' ' + LastName) as FullName, [User].UserID FROM [User] INNER JOIN UserRole ON [User].UserID=UserRole.UserID " +
+           " WHERE UserRole.AccountID=" + Session["AccountID"].ToString()  +
+            " ORDER BY FirstName");
 
+        ddlEnteredBy.DataBind();
+        ListItem liAll = new ListItem("All", "");
+        ddlEnteredBy.Items.Insert(0, liAll);
 
+    }
+    protected void ddlEnteredBy_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        lnkSearch_Click(null, null);
+    }
 
     protected void BindTheGrid(int iStartIndex, int iMaxRows)
     {
@@ -140,7 +157,7 @@ public partial class Pages_Home_DashBoard : SecurePage
         {
             string xml = null;
             xml = @"<root>" +
-                   " <" + txtDocumentText.ID + ">" + HttpUtility.HtmlEncode(txtDocumentText.Text) + "</" + txtDocumentText.ID + ">" +
+                   " <" + ddlEnteredBy.ID + ">" + HttpUtility.HtmlEncode(ddlEnteredBy.Text) + "</" + ddlEnteredBy.ID + ">" +
                    " <GridViewSortColumn>" + HttpUtility.HtmlEncode(gvTheGrid.GridViewSortColumn) + "</GridViewSortColumn>" +
                    " <GridViewSortDirection>" + HttpUtility.HtmlEncode(gvTheGrid.GridViewSortDirection == SortDirection.Ascending ? "ASC" : "DESC") + "</GridViewSortDirection>" +
                    " <iStartIndex>" + HttpUtility.HtmlEncode(iStartIndex.ToString()) + "</iStartIndex>" +
@@ -165,9 +182,22 @@ public partial class Pages_Home_DashBoard : SecurePage
         {
             int iTN = 0;
 
+            string sDocumentIDs = "";
+
+            if(ddlEnteredBy.SelectedItem!=null && ddlEnteredBy.SelectedValue!="")
+            {
+                string strRoleID = Common.GetValueFromSQL("SELECT RoleID FROM UserRole WHERE AccountID=" + Session["AccountID"].ToString() + " AND UserID=" + ddlEnteredBy.SelectedValue);
+
+                if(strRoleID!="")
+                {
+                    int? DashID = DocumentManager.dbg_Dashboard_BestFitting("", int.Parse(ddlEnteredBy.SelectedValue), int.Parse(strRoleID));
+                    if (DashID != null)
+                        sDocumentIDs = DashID.ToString();
+                }
+            }
 
             gvTheGrid.DataSource = DocumentManager.ets_Dashboard_Select(int.Parse(Session["AccountID"].ToString()),
-                txtDocumentText.Text.Trim().Replace("'", "''"),
+               "",sDocumentIDs,
                 gvTheGrid.GridViewSortColumn, gvTheGrid.GridViewSortDirection == SortDirection.Ascending ? "ASC" : "DESC",
                 iStartIndex, iMaxRows, ref iTN);
 
@@ -229,6 +259,20 @@ public partial class Pages_Home_DashBoard : SecurePage
         {
             e.Row.Attributes.Add("onmouseover", "MouseEvents(this, event)");
             e.Row.Attributes.Add("onmouseout", "MouseEvents(this, event)");
+            int iDocumentID = int.Parse(DataBinder.Eval(e.Row.DataItem, "DocumentID").ToString());
+            Label lblNumberOfUsers = (Label)e.Row.FindControl("lblNumberOfUsers");
+
+            string strUserIDs = Common.GetUserIDsForDashboard(iDocumentID, int.Parse(Session["AccountID"].ToString()));
+            DataTable dtUserDash = Common.GetUsersByDashboard(strUserIDs, int.Parse(Session["AccountID"].ToString()));
+             if (dtUserDash != null && dtUserDash.Rows.Count>0)
+            {
+                lblNumberOfUsers.Text = dtUserDash.Rows.Count.ToString();
+               
+            }
+            else
+            {
+                lblNumberOfUsers.Text = "";
+            }
         }
     }
     //protected void btnSearch_Click(object sender, ImageClickEventArgs e)
@@ -300,7 +344,7 @@ public partial class Pages_Home_DashBoard : SecurePage
 
     protected void Pager_OnApplyFilter(object sender, EventArgs e)
     {
-        txtDocumentText.Text = "";
+        ddlEnteredBy.SelectedIndex = 0;
         gvTheGrid.GridViewSortColumn = "DocumentText";
         gvTheGrid.GridViewSortDirection = SortDirection.Ascending;
         lnkSearch_Click(null, null);
@@ -463,7 +507,7 @@ public partial class Pages_Home_DashBoard : SecurePage
 
     protected bool IsFiltered()
     {
-        if (txtDocumentText.Text != "")
+        if (ddlEnteredBy.Text != "")
         {
             return true;
         }

@@ -27,7 +27,9 @@ public partial class Pages_Home_DashBoardDetail : SecurePage
                 e.Row.Attributes.Add("onmouseout", "MouseEvents(this, event)");
 
                 HyperLink hlFirstName = (HyperLink)e.Row.FindControl("hlFirstName");
+                //Label lblFirstName = (Label)e.Row.FindControl("lblFirstName");
                 Label lblLastName = (Label)e.Row.FindControl("lblLastName");
+              
                 string strThisUser = DataBinder.Eval(e.Row.DataItem, "UserID").ToString();
                 if (_theDoc != null && _theDoc.UserID != null)
                 {
@@ -41,20 +43,23 @@ public partial class Pages_Home_DashBoardDetail : SecurePage
                         lblLastName.ToolTip = "Owner of this dashboard";
                     }
                 }
-               
-                string xml = null;
-                xml = @"<root>" +
-                       " <UserID>" + HttpUtility.HtmlEncode(strThisUser) + "</UserID>" +
-                       " <AccountID>" + HttpUtility.HtmlEncode(Session["AccountID"].ToString()) + "</AccountID>" +
-                       " <URL>" + HttpUtility.HtmlEncode("~/Default.aspx") + "</URL>" +
-                       " <UserHostAddress>" + HttpUtility.HtmlEncode(Cryptography.Encrypt(Request.UserHostAddress)) + "</UserHostAddress>" +
-                       " <UserAgent>" + HttpUtility.HtmlEncode(Cryptography.Encrypt(Request.UserAgent)) + "</UserAgent>" +
-                      "</root>";
+                hlFirstName.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath
+     + "/Pages/User/Detail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteria=" +
+     Cryptography.Encrypt("-1") + "&userid=" + Cryptography.Encrypt(strThisUser) + "&fixedurl=" + Cryptography.Encrypt(Request.RawUrl);
 
-                SearchCriteria theSearchCriteria = new SearchCriteria(null, xml);
-                int iSC_ID = SystemData.SearchCriteria_Insert(theSearchCriteria);
+                //string xml = null;
+                //xml = @"<root>" +
+                //       " <UserID>" + HttpUtility.HtmlEncode(strThisUser) + "</UserID>" +
+                //       " <AccountID>" + HttpUtility.HtmlEncode(Session["AccountID"].ToString()) + "</AccountID>" +
+                //       " <URL>" + HttpUtility.HtmlEncode("~/Default.aspx") + "</URL>" +
+                //       " <UserHostAddress>" + HttpUtility.HtmlEncode(Cryptography.Encrypt(Request.UserHostAddress)) + "</UserHostAddress>" +
+                //       " <UserAgent>" + HttpUtility.HtmlEncode(Cryptography.Encrypt(Request.UserAgent)) + "</UserAgent>" +
+                //      "</root>";
 
-                hlFirstName.NavigateUrl = "~/Pages/Home/Private.aspx?SC_ID=" + Cryptography.Encrypt(iSC_ID.ToString());
+                //SearchCriteria theSearchCriteria = new SearchCriteria(null, xml);
+                //int iSC_ID = SystemData.SearchCriteria_Insert(theSearchCriteria);
+
+                //hlFirstName.NavigateUrl = "~/Pages/Home/Private.aspx?SC_ID=" + Cryptography.Encrypt(iSC_ID.ToString());
             }
             catch
             {
@@ -132,6 +137,8 @@ public partial class Pages_Home_DashBoardDetail : SecurePage
             case "add":
                 trLink.Visible = false;
                 trUsers.Visible = false;
+                trDashboard.Visible = false;
+                lblLisOfUsers.Visible = false;
                 lblTitle.Text = "Add Dashboard";
                 break;
 
@@ -174,48 +181,49 @@ public partial class Pages_Home_DashBoardDetail : SecurePage
 
         try
         {
-            string strUserIDs = "";
-            DataTable dtUsers = Common.DataTableFromText(@"SELECT U.UserID,UR.RoleID
-                                FROM dbo.Account A
-                                JOIN [UserRole]  UR ON UR.AccountID = A.AccountID 
-                                JOIN [User] U ON U.UserID = UR.UserID 
-                                WHERE U.IsActive=1 AND  A.AccountID=" + Session["AccountID"].ToString());
-
-
-            foreach (DataRow dr in dtUsers.Rows)
-            {
-                int? DashID = DocumentManager.dbg_Dashboard_BestFitting("", int.Parse(dr["UserID"].ToString()), int.Parse(dr["RoleID"].ToString()));
-
-                if (DashID != null && (int)DashID == iDocumentID)
-                {
-                    strUserIDs = strUserIDs + dr["UserID"].ToString() + ",";
-                }
-            }
-
-
-            strUserIDs=strUserIDs+"-1";
-
-
-            DataTable dtUserDash = Common.DataTableFromText(@"SELECT U.* ,R.[Role]
-                FROM dbo.Account A
-                JOIN [UserRole]  UR ON UR.AccountID = A.AccountID 
-                JOIN [User] U ON U.UserID = UR.UserID 
-                JOIN [Role] R ON UR.RoleID=R.RoleID
-                WHERE A.AccountID=" + Session["AccountID"].ToString() + 
-                @" AND  U.UserID IN (" + strUserIDs + @") ORDER BY R.[Role],U.FirstName,U.LastName");
-
+            Document theDoc = DocumentManager.ets_Document_Detail(iDocumentID);
+            string strUserIDs = Common.GetUserIDsForDashboard(iDocumentID, int.Parse(Session["AccountID"].ToString()));
+            DataTable dtUserDash = Common.GetUsersByDashboard(strUserIDs, int.Parse(Session["AccountID"].ToString()));
             if (dtUserDash != null && dtUserDash.Rows.Count>0)
             {
                 lblLisOfUsers.Text = "Users (" + dtUserDash.Rows.Count.ToString() + ")";
+              
             }
             else
             {
                 lblLisOfUsers.Text = "Users";
+                if(theDoc!=null && theDoc.UserID!=null)
+                {
+                    User ownerUser = SecurityManager.User_Details((int)theDoc.UserID);
+                    if(ownerUser!=null)
+                    {
+                        string strRoleID = Common.GetValueFromSQL("SELECT RoleID FROM UserRole WHERE AccountID=" + Session["AccountID"].ToString() + " AND UserID=" + ownerUser.UserID.ToString());
+
+                        if (strRoleID != "")
+                        {
+                            int? DashID = DocumentManager.dbg_Dashboard_BestFitting("", int.Parse(ownerUser.UserID.ToString()), int.Parse(strRoleID));
+                            if (DashID != null)
+                            {
+                                string strURl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Home/DashBoardDetail.aspx?mode=" + Request.QueryString["mode"].ToString() + "&SearchCriteria="
+                     + Request.QueryString["SearchCriteria"].ToString() + "&DocumentID=" + Cryptography.Encrypt(DashID.ToString());
+                                lblLisOfUsers.Font.Bold = false;
+                                lblLisOfUsers.Text = "<strong>Owner:</strong> " + ownerUser.FirstName + " " + ownerUser.LastName + "</br>"
+                           + "To view " + ownerUser.FirstName + " " + ownerUser.LastName + " latest dashboard <a href='" + strURl + "'>Click here</a>"
+                           + "</br>" + "</br>" + "<strong>Users(0)</strong>";
+                            }
+                              
+                        }
+
+
+                       
+
+                    }
+                }
             }
-                
 
             grdUser.DataSource = dtUserDash;
             grdUser.DataBind();
+           
 
 
         }
@@ -235,10 +243,23 @@ public partial class Pages_Home_DashBoardDetail : SecurePage
             //int iTemp = 0;
             //List<Document> listDocument = SystemData.Document_Select(_iDocumentID, "", "", "", null, null, "DocumentID", "ASC", null, null, ref iTemp);
 
+            PopulateDashBoard();
             Document theDocument = DocumentManager.ets_Document_Detail((int)_iDocumentID);
 
+            if (ddlDashboard.Items.FindByValue(theDocument.DocumentID.ToString()) != null)
+                ddlDashboard.SelectedValue = theDocument.DocumentID.ToString();
+            
             string strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Default.aspx?DashboardID=" + Cryptography.Encrypt(_iDocumentID.ToString());
             lblLink.Text = "<a href='" + strURL + "' target='_blank'>" + strURL + "</a>";
+
+
+            if (theDocument.UserID!=null)
+            {
+                if(_objUser.UserID==theDocument.UserID)
+                {
+                    trLink.Visible = true;
+                }
+            }
 
             PopulateUserGrid((int)_iDocumentID);
 
@@ -264,8 +285,33 @@ public partial class Pages_Home_DashBoardDetail : SecurePage
         }
 
     }
-    
+    protected void PopulateDashBoard()
+    {
+        ddlDashboard.Items.Clear();
+        int iTN = 0;
+        DataTable dtTemp = DocumentManager.ets_Dashboard_Select(int.Parse(Session["AccountID"].ToString()),
+               "", "",
+                "", "ASC",
+                null, null, ref iTN);
+        ddlDashboard.DataSource = dtTemp;
+        ddlDashboard.DataBind();
+    }
 
+    protected void ddlDashboard_SelectedIndexChanged(object sender, EventArgs e)
+    {
+       try
+       {
+           if(ddlDashboard.SelectedItem!=null && ddlDashboard.SelectedValue!="")
+           {
+               Response.Redirect(Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Home/DashBoardDetail.aspx?mode=" + Request.QueryString["mode"].ToString() + "&SearchCriteria="
+                     + Request.QueryString["SearchCriteria"].ToString() + "&DocumentID="+ Cryptography.Encrypt(ddlDashboard.SelectedValue), true);
+           }
+       }
+        catch
+       {
+            //
+       }
+    }
     protected void EnableTheRecordControls(bool p_bEnable)
     {        
         txtDashboardName.Enabled = p_bEnable;

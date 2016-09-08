@@ -755,12 +755,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
             if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
             {
                 _lbl[i].Text = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "*";
+                if(Mode=="add")
                 _lbl[i].ForeColor = System.Drawing.Color.Red;
             }
             else if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "r")
             {
                 _lbl[i].Text = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() ;
-                _lbl[i].ForeColor = System.Drawing.Color.Red;
+                if (Mode == "add")
+                    _lbl[i].ForeColor = System.Drawing.Color.Red;
             }
             else
             {
@@ -7655,7 +7657,19 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
             string strEachFormulaW_Msg = "";
             string strEachFormulaE_Msg = "";
 
+            if (i < _dtColumnsDetail.Columns.Count && i < _lbl.Length && (_dtColumnsDetail.Rows[i]["Importance"].ToString().ToLower() == "m" || _dtColumnsDetail.Rows[i]["Importance"].ToString().ToLower() == "r"))
+            {
+                if (_dtRecordedetail.Rows[0][i].ToString() != "")
+                {
+                    _lbl[i].Style.Add("color", "#565656");
+                }
+                else
+                {
+                    _lbl[i].Style.Add("color", "Red");
+                }
+            }
 
+          
 
 
 

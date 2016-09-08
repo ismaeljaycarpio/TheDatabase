@@ -479,7 +479,7 @@ public class DocumentManager
 
 
 
-    public static DataTable ets_Dashboard_Select(  int? nAccountID, string sDocumentText,    string sOrder,
+    public static DataTable ets_Dashboard_Select(  int? nAccountID, string sDocumentText, string sDocumentIDs,   string sOrder,
 string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum)
     {
         using (SqlConnection connection = new SqlConnection(DBGurus.strGlobalConnectionString))
@@ -496,7 +496,9 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum)
                 if (sDocumentText != "")
                     command.Parameters.Add(new SqlParameter("@sDocumentText", sDocumentText));
 
-               
+                if (sDocumentIDs != "")
+                    command.Parameters.Add(new SqlParameter("@sDocumentIDs", sDocumentIDs));
+
 
                 if (sOrder == "")
                     sOrder = "DocumentText";

@@ -145,11 +145,19 @@
                                 <br />
                                 <table style="border-collapse: collapse" cellpadding="4">
                                     <tr>
-                                        <td align="right">
+                                        <%--<td align="right">
                                             <strong>Search</strong>
                                         </td>
                                         <td>
                                             <asp:TextBox runat="server" ID="txtDocumentText" CssClass="NormalTextBox" Width="250px"></asp:TextBox>
+                                        </td>--%>
+                                        <td align="right">
+                                            <strong>User</strong>
+                                        </td>
+                                        <td>
+                                             <asp:DropDownList ID="ddlEnteredBy" runat="server" AutoPostBack="true" DataTextField="FullName" Style="max-width: 200px;"
+                                                    DataValueField="UserID" CssClass="NormalTextBox" OnSelectedIndexChanged="ddlEnteredBy_SelectedIndexChanged">
+                                                </asp:DropDownList>
                                         </td>
                                         <td>
                                         </td>
@@ -189,14 +197,15 @@
 
 
                                 <asp:TemplateField>
-                                    <ItemStyle Width="16px" HorizontalAlign="Center" />
+                                    <ItemStyle Width="16px" HorizontalAlign="Center"  />
                                     <ItemTemplate>
                                         <asp:HyperLink ID="hlEdit" runat="server" ToolTip="Edit Properties" NavigateUrl='<%# GetEditURL() + Cryptography.Encrypt(Eval("DocumentID").ToString()) %>'
                                             ImageUrl="~/App_Themes/Default/Images/iconEdit.png" />
                                     </ItemTemplate>
                                 </asp:TemplateField>
-                                <asp:TemplateField >
+                                <asp:TemplateField Visible="false" >
                                     <ItemStyle Width="16px" HorizontalAlign="Center" />
+                                    
                                     <ItemTemplate>
                                         <asp:HyperLink ID="hlProperty" runat="server"  Target="_blank" ToolTip="Edit Dashboard"
                                         NavigateUrl='<%# EditPropertyURL() + Cryptography.Encrypt(Eval("DocumentID").ToString())  %>'>   
@@ -205,24 +214,28 @@
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField SortExpression="DocumentText" HeaderText="Dashboard Name">
-                                <%--<ItemStyle  HorizontalAlign="Left" />--%>
+                                <ItemStyle  HorizontalAlign="Left" />
+                                    <HeaderStyle HorizontalAlign="Left" />
                                     <ItemTemplate>
                                         <asp:Label ID="lblDocumentText" runat="server" Text='<%# Eval("DocumentText") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
-                                <asp:TemplateField  HeaderText="User">
+                                <asp:TemplateField  HeaderText="Owner">
                                 <ItemStyle  HorizontalAlign="Left" />
+                                     <HeaderStyle HorizontalAlign="Left" />
                                     <ItemTemplate>
                                         <asp:Label ID="lblFullName" runat="server" Text='<%# Eval("FullName") %>'></asp:Label>
                                     </ItemTemplate>
                                 </asp:TemplateField>
-
-                                <asp:TemplateField SortExpression="DocumentText" HeaderText="Link">
-                                  <%--<ItemStyle  HorizontalAlign="Left" />--%>
+                                 <asp:TemplateField  HeaderText="Total users">
+                                <ItemStyle  HorizontalAlign="Center" />
                                     <ItemTemplate>
-                                       
-
-                                        <asp:HyperLink runat="server" Target="_blank" NavigateUrl='<%# ViewPropertyURL() + Cryptography.Encrypt(Eval("DocumentID").ToString()) %>'><%# ViewPropertyURL() + Cryptography.Encrypt(Eval("DocumentID").ToString())%></asp:HyperLink>
+                                        <asp:Label ID="lblNumberOfUsers" runat="server" ></asp:Label>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField  Visible="false" HeaderText="Link">
+                                    <ItemTemplate>                                       
+                                       <asp:HyperLink runat="server" Target="_blank" NavigateUrl='<%# ViewPropertyURL() + Cryptography.Encrypt(Eval("DocumentID").ToString()) %>'><%# ViewPropertyURL() + Cryptography.Encrypt(Eval("DocumentID").ToString())%></asp:HyperLink>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                

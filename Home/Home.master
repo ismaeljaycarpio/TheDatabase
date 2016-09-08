@@ -484,7 +484,7 @@
                                         </ul>
                                     </div>
                                     <div class="copyright-text" id="divCopyright" runat="server">
-                                        © 2012-2016. All rights reserved. <a href="http://www.dbgurus.com.au/thedatabase.html">www.TheDatabase.net</a>
+                                        © 2012-2016. All rights reserved. <a target="_blank" href="http://www.dbgurus.com.au/thedatabase.html">www.TheDatabase.net</a>
                                     </div>
                                 </div>
                             </td>

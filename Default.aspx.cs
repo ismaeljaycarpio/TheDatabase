@@ -523,7 +523,7 @@ namespace DocGen.Document
                 {
                     //CreateOrCloneDashboards();
                     string strDocText = _objUser.FirstName + " " + _objUser.LastName + " Dashboard";
-                    int id = DocumentManager.CloneDocument(int.Parse(hfDocumentID.Value), "", "", "", "");
+                    int id = DocumentManager.CloneDocument(int.Parse(hfDocumentID.Value), "", "", strDocText, "");
                     Common.ExecuteText("UPDATE Document SET ForDashBoard=1 WHERE DocumentID=" + id.ToString());
 
                     hfDocumentID.Value = id.ToString();

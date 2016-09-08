@@ -116,12 +116,22 @@
                         <asp:Panel ID="Panel2" runat="server" DefaultButton="lnkSave">
                             <div runat="server" id="divDetail" onkeypress="abc();">
                                 <table cellpadding="3">
+                                    <tr runat="server" id="trDashboard">
+                                        <td>
+
+                                        </td>
+                                        <td>
+                                             <asp:DropDownList ID="ddlDashboard" CausesValidation="false" Font-Bold="true" runat="server" AutoPostBack="true" DataTextField="DocumentText" Style="max-width: 400px;"
+                                                    DataValueField="DocumentID" CssClass="NormalTextBox" OnSelectedIndexChanged="ddlDashboard_SelectedIndexChanged">
+                                                </asp:DropDownList>
+                                        </td>
+                                    </tr>
                                     <tr>
                                         <td align="right">
                                             <strong>Dashboard Name:</strong>
                                         </td>
                                         <td>
-                                            <asp:TextBox ID="txtDashboardName" runat="server" Width="150px" CssClass="NormalTextBox"></asp:TextBox>
+                                            <asp:TextBox ID="txtDashboardName" runat="server" Width="400px" CssClass="NormalTextBox"></asp:TextBox>
                                             <asp:RequiredFieldValidator ID="rfvDashboardName" runat="server" ControlToValidate="txtDashboardName"
                                                 ErrorMessage="*"></asp:RequiredFieldValidator>
                                             <asp:RegularExpressionValidator ForeColor="Red" Display="Dynamic" ID="revDashboardName" runat="server"
@@ -130,7 +140,7 @@
                                         </asp:RegularExpressionValidator>
                                         </td>
                                     </tr>
-                                    <tr runat="server" id="trLink">
+                                    <tr runat="server" id="trLink" visible="false">
                                         <td align="right">
                                             <strong>Link:</strong>
                                         </td>
@@ -152,8 +162,8 @@
                                                 <Columns>
                                                     <asp:TemplateField HeaderText="First Name">
                                                         <ItemTemplate>
-                                                           
-                                                            <asp:HyperLink runat="server" ID="hlFirstName" Text='<%# Eval("FirstName")%>' ToolTip="Right click and open link in private window"></asp:HyperLink>
+                                                            <%--<asp:Label runat="server" ID="lblFirstName" Text='<%# Eval("FirstName")%>'></asp:Label>--%>
+                                                            <asp:HyperLink runat="server" ID="hlFirstName" Text='<%# Eval("FirstName")%>' ></asp:HyperLink>
                                                         </ItemTemplate>
                                                     </asp:TemplateField>
                                                     <asp:TemplateField HeaderText="Last Name" >
@@ -162,8 +172,8 @@
                                                         </ItemTemplate>
                                                     </asp:TemplateField>
                                                     <asp:BoundField DataField="Role"   HeaderText="Role" />
-                                                    <asp:BoundField DataField="PhoneNumber"   HeaderText="Phone Number" />
-                                                    <asp:BoundField DataField="Email"   HeaderText="Email" />
+                                                   <%-- <asp:BoundField DataField="PhoneNumber"   HeaderText="Phone Number" />
+                                                    <asp:BoundField DataField="Email"   HeaderText="Email" />--%>
                                                 </Columns>
                                                 <HeaderStyle CssClass="gridview_header" />
                                                  <RowStyle CssClass="gridview_row" />

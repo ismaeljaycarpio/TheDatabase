@@ -682,6 +682,42 @@ public partial class Pages_Record_TableDetail : SecurePage
             SystemData.ErrorLog_Insert(theErrorLog);
             lblMsg.Text = ex.Message;
         }
+
+        //oliver <begin> Ticket 1521
+        switch (_theTable.ChangeHistoryType)
+        {
+            case "closed":
+            case "":
+
+                UpdatePanel3.Visible = true;
+                break;
+
+            case "open":
+
+                if (!IsPostBack)
+                {
+                    lnkShowHistory_Click(null, null);
+                }
+                break;
+
+            case "admin":
+
+                if (_CurrentRole.RoleType != null && ((_CurrentRole.RoleType == "1") || (_CurrentRole.RoleType == "2")))
+                {
+                    UpdatePanel3.Visible = true;
+                }
+                break;
+
+            case "none":
+
+                if (_qsMode != "add")
+                {
+                    UpdatePanel3.Visible = false;
+                }
+                break;
+
+        }
+        //oliver <end> Ticket 1521
     }
 
     protected void gvChangedLog_PreRender(object sender, EventArgs e)
@@ -1388,11 +1424,18 @@ public partial class Pages_Record_TableDetail : SecurePage
             }
             txtTable.Text = theTable.TableName;
 
-            if (theTable.ReasonChangeType != "")
+            if (theTable.ReasonChangeType != "" && ddlReasonChange.Items.FindByValue(theTable.ReasonChangeType) != null)
                 ddlReasonChange.SelectedValue = theTable.ReasonChangeType;
 
-            if (theTable.ChangeHistoryType != "")
-                ddlChangeHistory.SelectedValue = theTable.ChangeHistoryType;
+            //if (theTable.ChangeHistoryType != "")
+            //    ddlChangeHistory.SelectedValue = theTable.ChangeHistoryType;
+
+            if (theTable.ChangeHistoryType != "" && ddlShowChangeHistory.Items.FindByValue(theTable.ChangeHistoryType)!=null)
+            {
+                //oliver <begin> Ticket 1521
+                ddlShowChangeHistory.SelectedValue = theTable.ChangeHistoryType;
+                //oliver <end>
+            }
 
             if (theTable.AddWithoutLogin != null)
             {
@@ -5086,15 +5129,18 @@ public partial class Pages_Record_TableDetail : SecurePage
                         }
 
 
-                        if (editTable.ChangeHistoryType == "" && ddlChangeHistory.SelectedValue == "always")
-                        {
-                            editTable.ChangeHistoryType = "";
-                        }
-                        else
-                        {
-                            editTable.ChangeHistoryType = ddlChangeHistory.SelectedValue;
-                        }
+                        //if (editTable.ChangeHistoryType == "" && ddlChangeHistory.SelectedValue == "always")
+                        //{
+                        //    editTable.ChangeHistoryType = "";
+                        //}
+                        //else
+                        //{
+                        //    editTable.ChangeHistoryType = ddlChangeHistory.SelectedValue;
+                        //}
 
+                        //oliver <begin> Ticket 1521
+                        editTable.ChangeHistoryType = ddlShowChangeHistory.SelectedValue;
+                        //oliver <end>
 
                         editTable.HeaderColor = txtHeaderColor.Text.Trim();
                         editTable.TabColour = txtTabColour.Text.Trim();

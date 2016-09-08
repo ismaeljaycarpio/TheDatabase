@@ -2445,7 +2445,7 @@ public class TheDatabase
             bEachColumnExceedance = false;
             bEachColumnInValid = false;
             string strValue = RecordManager.GetRecordValue(ref theRecord, _dtColumnsAll.Rows[i]["SystemName"].ToString());
-            if (strValue != "")
+            if (!string.IsNullOrEmpty(strValue))
             {
                 bool bValidationCanIgnore = false;
                 if (_dtColumnsAll.Rows[i]["ValidationCanIgnore"] != DBNull.Value && (bool)_dtColumnsAll.Rows[i]["ValidationCanIgnore"])
