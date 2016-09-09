@@ -863,7 +863,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                 gvTheGrid.DataSource = UploadManager.ets_TempRecord_Position_List(int.Parse(_qsTableID),
                     int.Parse(_qsBatchID), false,false, null,
                      null, null,
-                 sOrder, strOrderDirection, iStartIndex, iStartIndex, ref iTN, ref _iTotalDynamicColumns);
+                 sOrder, strOrderDirection, iStartIndex, iMaxRows, ref iTN, ref _iTotalDynamicColumns);
             }
             else
             {
@@ -871,7 +871,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                 gvTheGrid.DataSource = UploadManager.ets_TempRecord_List(int.Parse(_qsTableID),
                     int.Parse(_qsBatchID), false,false, null,
                    null, null,
-                 sOrder, strOrderDirection, iStartIndex, iStartIndex, ref iTN, ref _iTotalDynamicColumns, "", _iImportTemplateID, "");
+                 sOrder, strOrderDirection, iStartIndex, iMaxRows, ref iTN, ref _iTotalDynamicColumns, "", _iImportTemplateID, "");
             }
 
             DataTable dtTemp = (DataTable)gvTheGrid.DataSource;
@@ -987,7 +987,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                 gvWarning.DataSource = UploadManager.ets_TempRecord_Position_List(int.Parse(_qsTableID),
                    int.Parse(_qsBatchID), false, true, null,
                     null, null,
-                sOrder, strOrderDirection, iStartIndex, iStartIndex, ref iTN, ref _iTotalDynamicColumns);
+                sOrder, strOrderDirection, iStartIndex, iMaxRows, ref iTN, ref _iTotalDynamicColumns);
             }
             else
             {
@@ -995,7 +995,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                 gvWarning.DataSource = UploadManager.ets_TempRecord_List(int.Parse(_qsTableID),
                     int.Parse(_qsBatchID), false, true, null,
                      null, null,
-                 sOrder, strOrderDirection, iStartIndex, iStartIndex, ref iTN, ref _iTotalDynamicColumns, "", _iImportTemplateID, "");
+                 sOrder, strOrderDirection, iStartIndex, iMaxRows, ref iTN, ref _iTotalDynamicColumns, "", _iImportTemplateID, "");
 
             }
             DataTable dtTemp = (DataTable)gvWarning.DataSource;
@@ -1120,7 +1120,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                 gvInValid.DataSource = UploadManager.ets_TempRecord_Position_List(int.Parse(_qsTableID),
                    int.Parse(_qsBatchID), true,null, null,
                     null, null,
-                sOrder, strOrderDirection, iStartIndex, iStartIndex, ref iTN, ref _iTotalDynamicColumns);
+                sOrder, strOrderDirection, iStartIndex, iMaxRows, ref iTN, ref _iTotalDynamicColumns);
             }
             else
             {
@@ -1128,7 +1128,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                 gvInValid.DataSource = UploadManager.ets_TempRecord_List(int.Parse(_qsTableID),
                     int.Parse(_qsBatchID), true,null, null,
                      null, null,
-                 sOrder, strOrderDirection, iStartIndex, iStartIndex, ref iTN, ref _iTotalDynamicColumns, strRF, _iImportTemplateID, "");
+                 sOrder, strOrderDirection, iStartIndex, iMaxRows, ref iTN, ref _iTotalDynamicColumns, strRF, _iImportTemplateID, "");
 
             }
             DataTable dtTemp = (DataTable)gvInValid.DataSource;
