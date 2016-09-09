@@ -8,7 +8,6 @@
            <tr>
                 <td colspan="2">
                        <asp:Label runat="server" ID="lblWelcomeTips"></asp:Label>                       
-                    
                 </td>
             </tr>
             <tr runat="server" id="trContinue" visible="false">

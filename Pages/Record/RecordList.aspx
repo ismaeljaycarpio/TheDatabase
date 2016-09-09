@@ -15,13 +15,9 @@
 
 </asp:Content>
 <asp:Content ID="Content1" ContentPlaceHolderID="HomeContentPlaceHolder" runat="Server">
-
-
     <%-- OnClick="btnReloadMe_Click"--%>
     <asp:Button ID="btnReloadMe" runat="server" ClientIDMode="Static" OnClientClick="ReloadMe();return false;"
         Style="display: none;" />
-
-
     <table>
         <tr>
             <td>
@@ -34,5 +30,4 @@
             </td>
         </tr>
     </table>
-
 </asp:Content>

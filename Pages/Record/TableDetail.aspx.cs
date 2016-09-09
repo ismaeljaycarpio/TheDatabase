@@ -2504,7 +2504,7 @@ public partial class Pages_Record_TableDetail : SecurePage
                 chkNameOnExport.Checked = false;
                 chkNameOnExport.Enabled = false;
 
-                ddlImportance.Enabled = false;
+                //ddlImportance.Enabled = false;
 
             }
 
@@ -2597,10 +2597,12 @@ public partial class Pages_Record_TableDetail : SecurePage
             else if (DataBinder.Eval(e.Row.DataItem, "ColumnType").ToString() == "checkbox")
             {
                 lblIsNumeric.Text = "Checkbox";
+                ddlImportance.Enabled = false;
             }
             else if (DataBinder.Eval(e.Row.DataItem, "ColumnType").ToString() == "content")
             {
                 lblIsNumeric.Text = "Content Editor";
+                ddlImportance.Enabled = false;
             }
             else if (DataBinder.Eval(e.Row.DataItem, "ColumnType").ToString() == "location")
             {
@@ -2609,18 +2611,23 @@ public partial class Pages_Record_TableDetail : SecurePage
             else if (DataBinder.Eval(e.Row.DataItem, "ColumnType").ToString() == "staticcontent")
             {
                 lblIsNumeric.Text = "Content";
+                
+                ddlImportance.Enabled = false;
             }
             else if (DataBinder.Eval(e.Row.DataItem, "ColumnType").ToString() == "trafficlight")
             {
                 lblIsNumeric.Text = "Traffic Light";
+                ddlImportance.Enabled = false;
             }
             else if (DataBinder.Eval(e.Row.DataItem, "ColumnType").ToString() == "slider")
             {
                 lblIsNumeric.Text = "Slider";
+                ddlImportance.Enabled = false;
             }
             else if (DataBinder.Eval(e.Row.DataItem, "ColumnType").ToString() == "calculation")
             {
                 lblIsNumeric.Text = "Calculation";
+                ddlImportance.Enabled = false;
             }
 
 

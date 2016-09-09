@@ -105,6 +105,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
     Image[] _imgValues;
     RegularExpressionValidator[] _revValue;
     RequiredFieldValidator[] _rfvValue;
+    RequiredFieldValidator[] _rfvValue2;
     CompareValidator[] _cvValue;
     CustomValidator[] _cusvValue;
 
@@ -642,6 +643,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         _imgValues = new Image[_dtColumnsDetail.Rows.Count];
         _revValue = new RegularExpressionValidator[_dtColumnsDetail.Rows.Count];
         _rfvValue = new RequiredFieldValidator[_dtColumnsDetail.Rows.Count];
+        _rfvValue2 = new RequiredFieldValidator[_dtColumnsDetail.Rows.Count];
         _cvValue = new CompareValidator[_dtColumnsDetail.Rows.Count];
         _cusvValue = new CustomValidator[_dtColumnsDetail.Rows.Count];
 
@@ -3046,6 +3048,27 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                     _lnkValue[i].ClientIDMode = ClientIDMode.Static;
 
                                     cell[(i * 2) + 1].Controls.Add(_lnkValue[i]);
+                                    if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
+                                    {
+                                        if (_dtColumnsDetail.Rows[i]["IsRound"] != DBNull.Value && _dtColumnsDetail.Rows[i]["IsRound"].ToString().ToLower() == "true")
+                                        {
+                                            //mandatory in lat or long
+                                        }
+                                        else
+                                        {
+                                            _rfvValue[i] = new RequiredFieldValidator();
+                                            _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                            _rfvValue[i].Display = ValidatorDisplay.None;//
+                                            _rfvValue[i].ControlToValidate = _txtValue2[i].ClientID;
+                                            _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
+
+
+                                            cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
+                                        }
+                                    }
+
+                                    
+                           
 
                                     strShowAddress = @"$(function () {
                                                 $('#searchbox" + i.ToString() + @"').autocomplete({
@@ -3123,7 +3146,29 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 _txtTime[i].ClientIDMode = ClientIDMode.Static;
 
                                 cell[(i * 2) + 1].Controls.Add(_txtTime[i]);
+                                if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
+                                {
+                                    if(_rfvValue[i]==null)
+                                    {
+                                        _rfvValue[i] = new RequiredFieldValidator();
+                                        _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                        _rfvValue[i].Display = ValidatorDisplay.None;//
+                                        _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
+                                        _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "-Latitude is Mandatory.";
 
+
+                                        cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
+
+                                        _rfvValue2[i] = new RequiredFieldValidator();
+                                        _rfvValue2[i].ID = "rfv2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                        _rfvValue2[i].Display = ValidatorDisplay.None;//
+                                        _rfvValue2[i].ControlToValidate = _txtTime[i].ClientID;
+                                        _rfvValue2[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "-Longitude is Mandatory.";
+
+
+                                        cell[(i * 2) + 1].Controls.Add(_rfvValue2[i]);
+                                    }
+                                }
                                 if (bShowMap)
                                 {
                                     strShowLatLong = @"  var txtLatitude = document.getElementById('" + _txtValue[i].ClientID.ToString() + @"');
@@ -3443,17 +3488,42 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         cell[(i * 2) + 1].Controls.Add(_cblValue[i]);
 
 
-                        //if (bool.Parse(_dtColumnsDetail.Rows[i]["IsMandatory"].ToString()))
-                        //{
+                        if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
+                        {
 
-                        //    _rfvValue[i] = new RequiredFieldValidator();
-                        //    _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-                        //    _rfvValue[i].Display = ValidatorDisplay.None;
-                        //    _rfvValue[i].ControlToValidate = _cblValue[i].ClientID;
-                        //    _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
-                        //    cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
+                            _cusvValue[i] = new CustomValidator();
+                            _cusvValue[i].ID = "cusv" + _dtColumnsDetail.Rows[i]["SystemName"];
+                            _cusvValue[i].Display = ValidatorDisplay.None;//
+                            _cusvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
-                        //}
+                            string strJSCustomValidation = @" function ValidateCheckBoxList" + i.ToString() + @"(sender, args) {
+                                try
+                                {
+                                    var checkBoxList  = document.getElementById('ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + _cblValue[i].ID + @"');
+                                    var checkboxes  = checkBoxList.getElementsByTagName('input');
+                                     var isValid = false;
+                                    for (var i = 0; i < checkboxes.length; i++) {
+                                        if (checkboxes[i].checked) {
+                                            isValid = true;
+                                            break;
+                                        }
+                                    }
+                                    args.IsValid = isValid;
+                                   
+                                }
+                                catch(err)
+                                {
+                                //
+                                }
+                            }";
+                            //_cusvValue[i].ControlToValidate = _cblValue[i].ID;
+                            _cusvValue[i].ClientValidationFunction = "ValidateCheckBoxList" + i.ToString();
+                            cell[(i * 2) + 1].Controls.Add(_cusvValue[i]);
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "jsValidateCheckBoxList" + i.ToString(), strJSCustomValidation, true);
+
+
+
+                        }
                     }
 
 

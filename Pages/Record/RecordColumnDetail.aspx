@@ -432,7 +432,7 @@
 
 
                 chkDetailPageClick();
-                if (ColumnTypeIn(strTypeV, 'staticcontent,button,calculation') == false) {
+                if (ColumnTypeIn(strTypeV, 'staticcontent,button,calculation,checkbox,trafficlight') == false) {
                     $("#trMandatory").fadeIn();
                 }
                 else {
@@ -3382,8 +3382,7 @@
                                                                  <strong>Importance</strong>
                                                             </td>
                                                             <td align="left">
-                                                                   <asp:DropDownList runat="server" ID="ddlImportance" ToolTip="Required means it is important but you can still save the data without it. 
-                                                                       Mandatory will prevent the data being saved unless entered." CssClass="NormalTextBox">
+                                                                   <asp:DropDownList runat="server" ID="ddlImportance"  ToolTip="Required means it is important but you can still save the data without it. Mandatory will prevent the data being saved unless entered." CssClass="NormalTextBox">
                                                                     <asp:ListItem Value="" Text="Optional" Selected="True"></asp:ListItem>
                                                                     <asp:ListItem Value="r" Text="Required"></asp:ListItem>
                                                                        <asp:ListItem Value="m" Text="Mandatory"></asp:ListItem>
