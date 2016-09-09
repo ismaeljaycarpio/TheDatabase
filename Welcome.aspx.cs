@@ -31,7 +31,7 @@ public partial class DemoTips : System.Web.UI.Page
                 if (theContent != null)
                 {
 
-                    lblWelcomeTips.Text = theContent.ContentP;
+                    lblWelcomeTips.Text = theContent.ContentP;//TESTING SVN 2
                 }
             }
 

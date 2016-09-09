@@ -4562,8 +4562,23 @@ public class LookupType
 [Serializable]
 public class IDnText
 {
+    //private byte[] _bytes;
     public string ID { get; set; }
     public string Text { get; set; }
+    public IDnText()
+    {
+
+    }
+    public IDnText(string p_ID, string p_Text)
+    {
+        ID = p_ID;
+        Text = p_Text;
+    }
+    // change explicit to implicit depending on what you need
+    //public static explicit operator byte[](IDnText m)
+    //{
+    //    return m._bytes;
+    //}
 
 }
 

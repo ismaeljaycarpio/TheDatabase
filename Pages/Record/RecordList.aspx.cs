@@ -61,12 +61,21 @@ public partial class Record_Record_List : SecurePage
         {
             _theTable = RecordManager.ets_Table_Details(int.Parse(Cryptography.Decrypt(Request.QueryString["TableID"].ToString())));
             //reset stack
-            if (_theTable != null)
-            {
-                Session["stackURL"] = null;
-            }
+            //if (_theTable != null)
+            //{
+            //    Session["stackURL"] = null;
+            //}
         }
-
+        if(!IsPostBack)
+        {
+            Session["stackURL"] = null;
+            Session["stackTabIndex"] = null;
+            Session["CopyRecordID"] = null;
+            Session["quickdone"] = null;
+            Session["controlvalue"] = null;
+            //Session["tabindex"] = null;
+            Session["edittab"] = null;
+        }
 
         //if (this.MasterPageFile.ToLower().IndexOf("rrp") > -1)
         //{          
@@ -97,12 +106,12 @@ public partial class Record_Record_List : SecurePage
             {
                 lblSummaryPageContent.Text = _theTable.SummaryPageContent;
             }
-            Session["stackURL"] = null;
-            Session["CopyRecordID"] = null;
-            Session["quickdone"] = null;
-            Session["controlvalue"] = null;
-            Session["tabindex"] = null;
-            Session["edittab"] = null;
+            //Session["stackURL"] = null;
+            //Session["CopyRecordID"] = null;
+            //Session["quickdone"] = null;
+            //Session["controlvalue"] = null;
+            //Session["tabindex"] = null;
+            //Session["edittab"] = null;
         }
        
     }

@@ -21,6 +21,7 @@ using System.Xml;
 public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 {
     Stack<string> _stackURL = new Stack<string>();
+    Stack<IDnText> _stackTabIndex = new Stack<IDnText>();
     bool _bShowExceedances = false;
     string _strWarningResults = "";
     string _strExceedanceResults = "";
@@ -10269,20 +10270,23 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             divEdit.Visible = false;
 
         }
-
-        if (!IsPostBack && _strActionMode.ToLower()!="add")
+        bool bstackTabIndexUsed = false;
+        if (!IsPostBack && _strActionMode.ToLower()!="add" && _stackURL!=null && _stackURL.Count>0)
         {
-            if (Session["tabindex"] != null && Request.QueryString["tabindex"]==null)
+            if (_stackTabIndex != null && _stackTabIndex.Count > 0 && ((IDnText)_stackTabIndex.Peek()).Text == Request.Url.AbsoluteUri.Replace("//Pages", "/Pages"))   //if (Session["tabindex"] != null && Request.QueryString["tabindex"]==null)
             {
                 try
                 {
-                    tabDetail.ActiveTabIndex = int.Parse(Session["tabindex"].ToString());
+                    tabDetail.ActiveTabIndex = int.Parse(((IDnText)_stackTabIndex.Peek()).ID); //int.Parse(Session["tabindex"].ToString());
+                    bstackTabIndexUsed = true;
                 }
                 catch (Exception ex)
                 {
                     //
                 }
-                Session["tabindex"] = null;
+                //Session["tabindex"] = null;
+                _stackTabIndex.Pop();
+                Session["stackTabIndex"] = _stackTabIndex;
                 Session["viewtabindex"] = null;
             }
            
@@ -10311,9 +10315,17 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         }
 
         //is it ok? process Tab
-        if (!IsPostBack && Request.QueryString["tabindex"] != null)
+        if (!IsPostBack && Request.QueryString["tabindex"] != null && bstackTabIndexUsed==false)
         {
-            Session["tabindex"] = Request.QueryString["tabindex"].ToString();
+            //Session["tabindex"] = Request.QueryString["tabindex"].ToString();
+            IDnText aIDnText = new IDnText(Request.QueryString["tabindex"].ToString(), hlBack.NavigateUrl.Replace("//Pages","/Pages"));
+
+            if (_stackTabIndex.Contains(aIDnText)==false)
+            {
+                _stackTabIndex.Push(aIDnText);
+                Session["stackTabIndex"] = _stackTabIndex;
+            }
+                
         }
 
         if (IsPostBack)
@@ -11024,6 +11036,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
     {      
         try
         {
+
+            if (Session["stackTabIndex"] != null)
+                _stackTabIndex = (Stack<IDnText>)Session["stackTabIndex"];
+            
             if (Session["stackURL"]!=null)
                 _stackURL = (Stack<string>)Session["stackURL"];
             //stack process
@@ -11038,6 +11054,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             if (Request.QueryString["stackzero"] != null)
             {
                 Session["stackURL"] = null;
+                Session["stackTabIndex"] = null;
             }
 
            
@@ -11046,6 +11063,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 if (Request.UrlReferrer.AbsoluteUri.IndexOf("DocGen/EachRecordTable.aspx") > -1)
                 {
                     Session["stackURL"] = null;
+                    Session["stackTabIndex"] = null;
                     BuildFreshStack("~/Default.aspx");
                     return;
                 }
@@ -11077,10 +11095,22 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     {
                         if (_stackURL.Peek().IndexOf("RecordDetail.aspx") > -1)
                             _stackURL.Pop();
+                                                
                         if (_stackURL.Count > 0)
                         {
                             if (_stackURL.Peek().IndexOf("RecordDetail.aspx") > -1)
-                                _stackURL.Pop();
+                            {
+                                bool bRemove2ndOne = true;
+
+                                if (Request.UrlReferrer != null && Request.UrlReferrer.AbsoluteUri.IndexOf("mode="+Cryptography.Encrypt("add"))>-1)
+                                {
+                                    bRemove2ndOne = false;
+                                }
+
+                                if (bRemove2ndOne)
+                                 _stackURL.Pop();
+                            }
+                                
                         }
                            
                         if (_stackURL.Count > 0)
@@ -11168,7 +11198,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         }
 
         _stackURL = new Stack<string>();
-        _stackURL.Push(hlBack.NavigateUrl);//1st List
+        _stackURL.Push(hlBack.NavigateUrl.Replace("//Pages","/Pages"));//1st List
         _stackURL.Push(GetStackRawURL());//2nd Detail
         Session["stackURL"] = _stackURL;
         
@@ -11176,7 +11206,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
     }
     protected string GetStackRawURL()
     {
-        string strRawURL = Request.RawUrl;
+        string strRawURL = Request.Url.AbsoluteUri.Replace("//Pages","/Pages");
         //strRawURL = Common.GetUpdatedFullURLRemoveQueryString(strRawURL, "stackhault");
         //strRawURL = Common.GetUpdatedFullURLRemoveQueryString(strRawURL, "stackzero");
         //strRawURL = Common.GetUpdatedFullURLRemoveQueryString(strRawURL, "onlyback");

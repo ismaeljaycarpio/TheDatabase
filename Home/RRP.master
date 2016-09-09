@@ -59,8 +59,6 @@
         </asp:ScriptManager>
 
         <asp:HiddenField runat="server" ID="hfIsAccountHolder" />
-
-
         <asp:UpdatePanel ID="upNotificationMessage" runat="server" UpdateMode="Always">
             <ContentTemplate>
                 <div id="divNotificationMessage" style="position: fixed; top: 0px;">
