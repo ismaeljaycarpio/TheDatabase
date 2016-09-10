@@ -18132,7 +18132,7 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
             {
 
                 command.CommandType = CommandType.StoredProcedure;
-                command.CommandTimeout = 900;
+                command.CommandTimeout = 3600;
 
                 
                 command.Parameters.Add(new SqlParameter("@nBatchID", nBatchID));

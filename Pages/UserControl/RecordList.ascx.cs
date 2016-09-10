@@ -45,6 +45,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
     //DropDownList[] _ddlValue;
     //bool _bDBGSortColumnHide = false;\
+    System.Xml.XmlDocument _xmlView_FC_Doc;
     string _strEqualOrGreaterOperator = " = ";
     bool _bBindWithSC = true;
     bool _bShowGraphIcon = true;
@@ -191,7 +192,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                 strExtra = "&View=" + Request.QueryString["View"].ToString();
             }
 
-            return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + strExtra + "&Recordid=";
+            return Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + strExtra + "&Recordid=";
         }
         else
         {
@@ -201,7 +202,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             }
             else
             {
-                return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&parentRecordid=" + Request.QueryString["Recordid"].ToString() + "&Recordid=";
+                return Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&parentRecordid=" + Request.QueryString["Recordid"].ToString() + "&Recordid=";
             }
 
         }
@@ -222,108 +223,38 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             strExtra = "&View=" + Request.QueryString["View"].ToString();
         }
 
-        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + strExtra + "&Recordid=";
+        return Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + strExtra + "&Recordid=";
 
     }
 
     public string GetAccountViewURL()
     {
 
-        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&accountid=";
+        return Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/AccountDetail.aspx?mode=" + Cryptography.Encrypt("view") + "&accountid=";
 
     }
-    // get last minute controls
-    //protected override void OnPreRender(EventArgs e)
-    //{
-    //    base.OnPreRender(e);
 
-    //    // start scanning from page subcontrols
-    //    ControlCollection _collection = this.Controls;
-    //    lblMsg.Visible = true;
-    //    lblMsg.Text =TheDatabase.GetCode(_collection,_strDynamictabPart).Replace("\r\n", "<br/>");
-    //}
-    protected void Page_Init(object sender, EventArgs e)
+
+
+   
+
+    protected void GetRoleRight()
     {
-
-
-
-        if (Session["User"] == null || Session["FilesLocation"] == null)
-        {
-            Response.Redirect("~/Login.aspx", false);
-
-            return;
-        }
-       
-
-
-        _strDynamictabPart = lnkSearch.ClientID.Substring(0, lnkSearch.ClientID.Length - 9);
-
-        if (Request.QueryString["View"] != null && Request.RawUrl.IndexOf("RecordList.aspx") > -1)
-        {
-            _strViewID = Request.QueryString["View"].ToString();
-        }
-
-        _strFilesLocation = Session["FilesLocation"].ToString();
-
         _ObjUser = (User)Session["User"];
         _theUserRole = (UserRole)Session["UserRole"];
 
         _theRole = SecurityManager.Role_Details((int)_theUserRole.RoleID);
 
-
-
-
-        if (PageType == "p")
+        if (Request.QueryString["Dashboard"] != null)
         {
-            if (Request.QueryString["TableID"] != null)
-                TableID = int.Parse(Cryptography.Decrypt(Request.QueryString["TableID"].ToString()));
-        }
-        else
-        {
-            if (Request.QueryString["RecordID"] != null)
-                _iParentRecordID = int.Parse(Cryptography.Decrypt(Request.QueryString["RecordID"].ToString()));
+            _theTable.HideAdvancedOption = true;
+            chkShowAdvancedOptions.Checked = false;
+            chkShowAdvancedOptions.Visible = false;
+            tdFilterYAxis.Visible = false;
+            lblAdvancedCaption.Visible = false;
         }
 
 
-
-        _qsTableID = TableID.ToString();
-
-
-
-        if (TableID != null)
-        {
-            _theTable = RecordManager.ets_Table_Details((int)TableID);
-            if (_theTable != null)
-            {
-                _dtColumnsAll = RecordManager.ets_Table_Columns_All((int)_theTable.TableID);
-                if (Request.QueryString["Dashboard"] != null)
-                {
-                    _theTable.HideAdvancedOption = true;
-                    chkShowAdvancedOptions.Checked = false;
-                    chkShowAdvancedOptions.Visible = false;
-                    tdFilterYAxis.Visible = false;
-                    lblAdvancedCaption.Visible = false;
-                }
-            }
-        }
-
-        if (_theTable == null)
-            return;
-
-
-        //if (!IsPostBack)
-        //{
-           
-        //}
-
-        _bEqualOrGreaterOperator = Common.SO_SearchAllifToIsNull(_theTable.AccountID, _theTable.TableID);
-
-        if (_bEqualOrGreaterOperator == true)// && strLowerDate.Trim() != "" && strUpperDate.Trim() == "")
-        {
-            _strEqualOrGreaterOperator = " >= ";
-        }
-
-       
 
         if ((bool)_theUserRole.IsAdvancedSecurity)
         {
@@ -346,9 +277,40 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
         {
             _strRecordRightID = Session["roletype"].ToString();
         }
+    }
 
-        //check the View
+    protected void FindTheTable()
+    {
 
+        if (PageType == "p")
+        {
+            if (Request.QueryString["TableID"] != null)
+                TableID = int.Parse(Cryptography.Decrypt(Request.QueryString["TableID"].ToString()));
+        }
+        else
+        {
+            if (Request.QueryString["RecordID"] != null)
+                _iParentRecordID = int.Parse(Cryptography.Decrypt(Request.QueryString["RecordID"].ToString()));
+        }
+
+
+        _qsTableID = TableID.ToString();
+
+        if (TableID != null)
+        {
+            _theTable = RecordManager.ets_Table_Details((int)TableID);
+            if (_theTable != null)
+            {
+                _dtColumnsAll = RecordManager.ets_Table_Columns_All((int)_theTable.TableID);
+            }
+        }
+    }
+    protected void FindTheView()
+    {
+        if (Request.QueryString["View"] != null && Request.RawUrl.IndexOf("RecordList.aspx") > -1)
+        {
+            _strViewID = Request.QueryString["View"].ToString();
+        }
         _strViewPageType = "";
 
         if (_theTable != null)
@@ -470,17 +432,10 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             }
         }
 
+    }
 
-        //put speed test here       
-        if (Session["RunSpeedLog"] != null && _theTable != null)
-        {
-            SpeedLog theSpeedLog = new SpeedLog();
-            theSpeedLog.FunctionName = _theTable.TableName + "Page_Init - START ";
-            theSpeedLog.FunctionLineNumber = 171;
-            SecurityManager.AddSpeedLog(theSpeedLog);
-
-
-        }
+    protected void JSCode()
+    {
 
         string strMouseoverBC = "76BAF2";
         string strCheckedBC = "96FFFF";
@@ -495,354 +450,768 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
         }
 
+
+       
+
+
         string strMainListJS = "";
 
 
 
         ltScriptHere.Text = @"
-<script type='text/javascript'>
+                            <script type='text/javascript'>
 
 
 
-    function MouseEvents(objRef, evt) {
-        var checkbox = objRef.getElementsByTagName('input')[0];
+                                function MouseEvents(objRef, evt) {
+                                    var checkbox = objRef.getElementsByTagName('input')[0];
 
 
 
-        if (evt.type == 'mouseover') {
-            objRef.style.backgroundColor = '#" + strMouseoverBC + @"';
-            objRef.style.cursor = 'pointer';
-        }
-        else {          
+                                    if (evt.type == 'mouseover') {
+                                        objRef.style.backgroundColor = '#" + strMouseoverBC + @"';
+                                        objRef.style.cursor = 'pointer';
+                                    }
+                                    else {          
 
-            if (checkbox != null && checkbox.checked) {
-                objRef.style.backgroundColor = '#" + strCheckedBC + @"';
-            }
-            else if (evt.type == 'mouseout') {
-                if (objRef.rowIndex % 2 == 0) {
-                    //Alternating Row Color
-                    objRef.style.backgroundColor = '#" + strAlterBC1 + @"';
-                }
-                else {
-                    objRef.style.backgroundColor = '#" + strAlterBC2 + @"';
-                }
-            }
-        }
+                                        if (checkbox != null && checkbox.checked) {
+                                            objRef.style.backgroundColor = '#" + strCheckedBC + @"';
+                                        }
+                                        else if (evt.type == 'mouseout') {
+                                            if (objRef.rowIndex % 2 == 0) {
+                                                //Alternating Row Color
+                                                objRef.style.backgroundColor = '#" + strAlterBC1 + @"';
+                                            }
+                                            else {
+                                                objRef.style.backgroundColor = '#" + strAlterBC2 + @"';
+                                            }
+                                        }
+                                    }
+                                }
+                               function toggleAndOr(t, hf) {
+                                        if (t.text == 'and') {
+                                            t.text = 'or';
+                                        } else {
+                                            t.text = 'and';
+                                        }
+                                        document.getElementById(hf).value = t.text;
+                                    }
+
+                                    function abc() {
+                                        var b = document.getElementById('" + lnkSearch.ClientID + @"');
+                                        if (b && typeof (b.click) == 'undefined') {
+                                            b.click = function () {
+                                                var result = true;
+                                                if (b.onclick) result = b.onclick();
+                                                if (typeof (result) == 'undefined' || result) {
+                                                    eval(b.getAttribute('href'));
+                                                }
+                                            }
+                                        }
+
+                                    }
+
+                                    function AddClick() {
+
+                                        $('#ctl00_HomeContentPlaceHolder_rlOne_btnAdd').trigger('click');
+                                    }
+
+                                    function CreateFile() {
+
+                                            document.getElementById('btnEmail').click();
+
+                                        }
+
+
+                                function Check_Click(objRef) {
+                                    //Get the Row based on checkbox
+                                    var row = objRef.parentNode.parentNode;
+                                    if (objRef.checked) {
+                                        //If checked change color to Aqua
+                                        row.style.backgroundColor = '#" + strCheckedBC + @"';
+                                    }
+                                    else {
+                                        //If not checked change back to original color
+                                        if (row.rowIndex % 2 == 0) {
+                                            //Alternating Row Color
+                                            row.style.backgroundColor = '#" + strAlterBC1 + @"';
+
+                                        }
+                                        else {
+                                            row.style.backgroundColor = '#" + strAlterBC2 + @"';
+                                        }
+                                    }
+
+                                    //Get the reference of GridView
+                                    var GridView = row.parentNode;
+         
+                                    //Get all input elements in Gridview
+                                    var inputList = GridView.getElementsByTagName('input');
+                                     var tblHR = document.getElementById('ctl00_HomeContentPlaceHolder_rlOne_gvTheGridHR');
+                                     var headerCheckBox;
+                                    for (var i = 0; i < inputList.length; i++) {
+                                        //The First element is the Header Checkbox
+                                        if(headerCheckBox==null && inputList[i].type == 'checkbox')
+                                         headerCheckBox = inputList[i];
+
+                                        //Based on all or none checkboxes
+                                        //are checked check/uncheck Header Checkbox
+                                        var checked = true;
+                                        if(tblHR==null)
+                                        {
+                                            if (inputList[i].type == 'checkbox' && inputList[i] != headerCheckBox) {
+                                                        if (!inputList[i].checked) {
+                                                            checked = false;
+                                                            break;
+                                                        }
+                                                    }
+                                        }
+                                        else
+                                        {
+                                            if (inputList[i].type == 'checkbox') {
+                                                        if (!inputList[i].checked) {
+                                                            checked = false;
+                                                            break;
+                                                        }
+                                                    }
+                                        }
+
+           
+                                    }
+                                     if(tblHR==null)
+                                        {
+                                            if(headerCheckBox!=null)
+                                                {
+                                                     headerCheckBox.checked = checked;
+                                                }
+            
+                                        }
+        
+                                    if (objRef.checked==false)
+                                        {
+                                            if(tblHR==null && headerCheckBox!=null)
+                                            {
+                                                headerCheckBox.checked=false;
+                   
+                                            } 
+                                            else
+                                            {
+                                                 //var tbl = document.getElementById('ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid');
+                                                  if(tblHR!=null)
+                                                        {
+                                                            var chkAll =  document.getElementById('ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid_ctl02_chkAll');
+                                                            if(chkAll!=null)
+                                                            {
+                                                                chkAll.checked=false;
+                                                                //alert(chkAll.id);
+                                                            }
+                                                        }         
+                                            }                  
+                                        }
+
+                                }
+
+                                function checkAll(objRef) {
+                                    var GridView = objRef.parentNode.parentNode.parentNode;
+                                    var inputList = GridView.getElementsByTagName('input');
+                            //alert(inputList.length);
+                                    for (var i = 0; i < inputList.length; i++) {
+                                        //Get the Cell To find out ColumnIndex
+                                        var row = inputList[i].parentNode.parentNode;
+                                        if (inputList[i].type == 'checkbox' && objRef != inputList[i]) {
+                                            if (objRef.checked) {
+                                                //If the header checkbox is checked
+                                                //check all checkboxes
+                                                //and highlight all rows
+                                                row.style.backgroundColor = '#" + strCheckedBC + @"';
+                                                inputList[i].checked = true;
+                                            }
+                                            else {
+                                                //If the header checkbox is checked
+                                                //uncheck all checkboxes
+                                                //and change rowcolor back to original 
+                                                if (row.rowIndex % 2 == 0) {
+                                                    //Alternating Row Color
+                                                    row.style.backgroundColor = '#" + strAlterBC1 + @"';
+
+                                                }
+                                                else {
+                                                    row.style.backgroundColor = '#" + strAlterBC2 + @"';
+                                                }
+                                                inputList[i].checked = false;
+                                            }
+                                        }
+                                    }
+                                }
+
+                            function checkAllHR(objRef,GridView) {
+                                    var inputList = GridView.getElementsByTagName('input');
+                            //alert(inputList.length);
+                                    for (var i = 0; i < inputList.length; i++) {
+                                        //Get the Cell To find out ColumnIndex
+                                        var row = inputList[i].parentNode.parentNode;
+                                        if (inputList[i].type == 'checkbox' && objRef != inputList[i]) {
+                                            if (objRef.checked) {
+                                                //If the header checkbox is checked
+                                                //check all checkboxes
+                                                //and highlight all rows
+                                                row.style.backgroundColor = '#" + strCheckedBC + @"';
+                                                inputList[i].checked = true;
+                                            }
+                                            else {
+                                                //If the header checkbox is checked
+                                                //uncheck all checkboxes
+                                                //and change rowcolor back to original 
+                                                if (row.rowIndex % 2 == 0) {
+                                                    //Alternating Row Color
+                                                    row.style.backgroundColor = '#" + strAlterBC1 + @"';
+
+                                                }
+                                                else {
+                                                    row.style.backgroundColor = '#" + strAlterBC2 + @"';
+                                                }
+                                                inputList[i].checked = false;
+                                            }
+                                        }
+                                    }
+                                }
+
+                              function SelectAllCheckboxes(spanChk) {
+
+                                        // alert($(spanChk).attr('id'));
+                                        checkAll(spanChk);
+                                        var GridView = spanChk.parentNode.parentNode.parentNode;
+
+                                        //alert($(GridView).attr('id'));
+                                        // alert(GridView.id);
+
+                                        var inputList = GridView.getElementsByTagName('input');
+                                        for (var i = 0; i < inputList.length; i++) {
+                                            var row = inputList[i].parentNode.parentNode;
+                                            if (inputList[i].type == 'checkbox' && spanChk != inputList[i]) {
+                                                if (spanChk.checked) {
+                                                    inputList[i].checked = true;
+                                                }
+                                                else {
+                                                    inputList[i].checked = false;
+                                                }
+                                            }
+
+                                        }
+                                    }
+
+
+                              function SelectAllCheckboxesHR(spanChk, GridView) {
+
+                                        checkAllHR(spanChk, GridView);
+                                        var inputList = GridView.getElementsByTagName('input');
+                                        for (var i = 0; i < inputList.length; i++) {
+                                            var row = inputList[i].parentNode.parentNode;
+                                            if (inputList[i].type == 'checkbox' && spanChk != inputList[i]) {
+                                                if (spanChk.checked) {
+                                                    inputList[i].checked = true;
+                                                }
+                                                else {
+                                                    inputList[i].checked = false;
+                                                }
+                                            }
+
+                                        }
+                                    }
+
+                                   " + strMainListJS + @"
+
+
+
+                            </script>
+                            ";
+
     }
-   function toggleAndOr(t, hf) {
-            if (t.text == 'and') {
-                t.text = 'or';
-            } else {
-                t.text = 'and';
-            }
-            document.getElementById(hf).value = t.text;
-        }
 
-        function abc() {
-            var b = document.getElementById('"+ lnkSearch.ClientID+ @"');
-            if (b && typeof (b.click) == 'undefined') {
-                b.click = function () {
-                    var result = true;
-                    if (b.onclick) result = b.onclick();
-                    if (typeof (result) == 'undefined' || result) {
-                        eval(b.getAttribute('href'));
+    protected void PopulateDynamicControls()
+    {
+       
+
+        if (_dtDynamicSearchColumns.Rows.Count == 0)
+            pnlSearch.Visible = false;
+
+      
+
+        foreach (DataRow dr in _dtDynamicSearchColumns.Rows)
+        {
+            int iOneColumnConCount = 0;
+
+            if (dr["ColumnType"].ToString() == "number" || dr["ColumnType"].ToString() == "calculation")
+            {
+                
+                string strValue = "";
+                string strOperator = "=";
+                string strWaterViewmark = " ";
+                if (_xmlView_FC_Doc != null)
+                {
+                    TextBox txtLowerLimit = (TextBox)tblSearchControls.FindControl("txtLowerLimit_" + dr["SystemName"].ToString());
+                    strValue = GetValueFromViewFilter(_xmlView_FC_Doc, dr["ColumnID"].ToString());
+                    strOperator = GetOperatorFromViewFilter(_xmlView_FC_Doc, dr["ColumnID"].ToString());
+                    string strLowerValue = "";
+                    string strUpperValue = "";
+                    if (strValue != null && strValue.IndexOf("____") > -1)
+                    {
+                        strLowerValue = strValue.Substring(0, strValue.IndexOf("____"));
+                        strUpperValue = strValue.Substring(strValue.IndexOf("____") + 4);
+                    }
+                    strWaterViewmark = GetMultipleCondition(_xmlView_FC_Doc, dr["ColumnID"].ToString(), ref iOneColumnConCount, "");
+                    if (iOneColumnConCount < 2 && ThisIsOR(strWaterViewmark) == false)
+                    {
+                        if ((strOperator == "=" && _strEqualOrGreaterOperator == "=") || strOperator == "between")
+                        {
+                            TextBox txtUpperLimit = (TextBox)tblSearchControls.FindControl("txtUpperLimit_" + dr["SystemName"].ToString());
+                            txtLowerLimit.Text = strLowerValue;
+                            txtUpperLimit.Text = strUpperValue;
+
+                            //ViewState[txtLowerLimit.ID + dr["ColumnID"].ToString()] = strLowerValue;
+                            //ViewState[txtUpperLimit.ID + dr["ColumnID"].ToString()] = strUpperValue;
+
+                        }
+                    }
+                    TextBoxWatermarkExtender twmNumberLowerLimit = (TextBoxWatermarkExtender)tblSearchControls.FindControl("twmNumberLowerLimit_" + dr["SystemName"].ToString());
+                    twmNumberLowerLimit.WatermarkText = strWaterViewmark == "" ? " " : strWaterViewmark;
+                    txtLowerLimit.ToolTip = strWaterViewmark;
+                }
+            }
+
+            else if (dr["ColumnType"].ToString() == "text")
+            {
+
+               
+                string strValue = "";
+                string strOperator = "=";
+                string strWaterViewmark = " ";
+
+                if (_xmlView_FC_Doc != null)
+                {
+                    TextBox txtSearch = (TextBox)tblSearchControls.FindControl("txtSearch_" + dr["SystemName"].ToString());
+                    strValue = GetValueFromViewFilter(_xmlView_FC_Doc, dr["ColumnID"].ToString());
+                    strOperator = GetOperatorFromViewFilter(_xmlView_FC_Doc, dr["ColumnID"].ToString());
+
+                    strWaterViewmark = GetMultipleCondition(_xmlView_FC_Doc, dr["ColumnID"].ToString(), ref iOneColumnConCount, "");
+
+                    if (iOneColumnConCount < 2 && strValue != null && strOperator == "=" && ThisIsOR(strWaterViewmark) == false)
+                    {
+                        txtSearch.Text = strValue;
+                        //ViewState[txtSearch.ID + dr["ColumnID"].ToString()] = strValue;
+                    }
+                    TextBoxWatermarkExtender twmTextSearch = (TextBoxWatermarkExtender)tblSearchControls.FindControl("twmTextSearch_" + dr["SystemName"].ToString());
+                    twmTextSearch.WatermarkText = strWaterViewmark == "" ? " " : strWaterViewmark;
+                    txtSearch.ToolTip = strWaterViewmark;
+                }               
+            }
+            else if (dr["ColumnType"].ToString() == "date")
+            {
+                
+                string strValue = "";
+                string strOperator = "=";
+                string strWaterViewmark = " ";
+
+                if (_xmlView_FC_Doc != null)
+                {
+                    TextBox txtLowerDate = (TextBox)tblSearchControls.FindControl("txtLowerDate_" + dr["SystemName"].ToString());
+                    strValue = GetValueFromViewFilter(_xmlView_FC_Doc, dr["ColumnID"].ToString());
+
+                    strOperator = GetOperatorFromViewFilter(_xmlView_FC_Doc, dr["ColumnID"].ToString());
+                    string strLowerValue = "";
+                    string strUpperValue = "";
+                    if (strValue != null && strValue.IndexOf("____") > -1)
+                    {
+                        strLowerValue = strValue.Substring(0, strValue.IndexOf("____"));
+                        strUpperValue = strValue.Substring(strValue.IndexOf("____") + 4);
+                    }
+
+                    strWaterViewmark = GetMultipleCondition(_xmlView_FC_Doc, dr["ColumnID"].ToString(), ref iOneColumnConCount, "");
+
+                    if (iOneColumnConCount < 2 && ThisIsOR(strWaterViewmark) == false)
+                    {
+                        if ((strOperator == "=" && _strEqualOrGreaterOperator == "=") || strOperator == "between")
+                        {
+                            TextBox txtUpperDate = (TextBox)tblSearchControls.FindControl("txtUpperDate_" + dr["SystemName"].ToString());
+                            txtLowerDate.Text = strLowerValue;
+                            txtUpperDate.Text = strUpperValue;
+
+                            //ViewState[txtLowerDate.ID + dr["ColumnID"].ToString()] = strLowerValue;
+                            //ViewState[txtUpperDate.ID + dr["ColumnID"].ToString()] = strUpperValue;
+                        }
+                    }
+
+                    if (strWaterViewmark.Trim() != "")
+                    {
+                        TextBoxWatermarkExtender twmLowerDate = (TextBoxWatermarkExtender)tblSearchControls.FindControl("twmLowerDate_" + dr["SystemName"].ToString());
+                        twmLowerDate.WatermarkText = strWaterViewmark;
+                        txtLowerDate.ToolTip = strWaterViewmark;
                     }
                 }
             }
-
-        }
-
-        function AddClick() {
-
-            $('#ctl00_HomeContentPlaceHolder_rlOne_btnAdd').trigger('click');
-        }
-
-        function CreateFile() {
-
-                document.getElementById('btnEmail').click();
-
-            }
-
-
-    function Check_Click(objRef) {
-        //Get the Row based on checkbox
-        var row = objRef.parentNode.parentNode;
-        if (objRef.checked) {
-            //If checked change color to Aqua
-            row.style.backgroundColor = '#" + strCheckedBC + @"';
-        }
-        else {
-            //If not checked change back to original color
-            if (row.rowIndex % 2 == 0) {
-                //Alternating Row Color
-                row.style.backgroundColor = '#" + strAlterBC1 + @"';
-
-            }
-            else {
-                row.style.backgroundColor = '#" + strAlterBC2 + @"';
-            }
-        }
-
-        //Get the reference of GridView
-        var GridView = row.parentNode;
-         
-        //Get all input elements in Gridview
-        var inputList = GridView.getElementsByTagName('input');
-         var tblHR = document.getElementById('ctl00_HomeContentPlaceHolder_rlOne_gvTheGridHR');
-         var headerCheckBox;
-        for (var i = 0; i < inputList.length; i++) {
-            //The First element is the Header Checkbox
-            if(headerCheckBox==null && inputList[i].type == 'checkbox')
-             headerCheckBox = inputList[i];
-
-            //Based on all or none checkboxes
-            //are checked check/uncheck Header Checkbox
-            var checked = true;
-            if(tblHR==null)
+            else if (dr["ColumnType"].ToString() == "datetime")
             {
-                if (inputList[i].type == 'checkbox' && inputList[i] != headerCheckBox) {
-                            if (!inputList[i].checked) {
-                                checked = false;
-                                break;
+                              
+                string strValue = "";
+
+                string strOperator = "=";
+                string strWaterViewmark = " ";
+
+                if (_xmlView_FC_Doc != null)
+                {
+
+                    TextBox txtLowerDate = (TextBox)tblSearchControls.FindControl("txtLowerDate_" + dr["SystemName"].ToString());
+                    TextBox txtUpperDate = (TextBox)tblSearchControls.FindControl("txtUpperDate_" + dr["SystemName"].ToString());
+                    TextBoxWatermarkExtender twmLowerDate = (TextBoxWatermarkExtender)tblSearchControls.FindControl("twmLowerDate_" + dr["SystemName"].ToString());
+
+                    TextBox txtLowerTime = (TextBox)tblSearchControls.FindControl("txtLowerTime_" + dr["SystemName"].ToString());
+                    TextBox txtUpperTime = (TextBox)tblSearchControls.FindControl("txtUpperTime_" + dr["SystemName"].ToString());
+
+                    strValue = GetValueFromViewFilter(_xmlView_FC_Doc, dr["ColumnID"].ToString());
+                    strOperator = GetOperatorFromViewFilter(_xmlView_FC_Doc, dr["ColumnID"].ToString());
+                    string strLowerDatetime = "";
+                    string strUpperDateTime = "";
+
+                    if (strValue != null && strValue.IndexOf("____") > -1)
+                    {
+                        strLowerDatetime = strValue.Substring(0, strValue.IndexOf("____"));
+                        strUpperDateTime = strValue.Substring(strValue.IndexOf("____") + 4);
+
+                    }
+
+                    strWaterViewmark = GetMultipleCondition(_xmlView_FC_Doc, dr["ColumnID"].ToString(), ref iOneColumnConCount, "");
+                    if (iOneColumnConCount < 2 && ThisIsOR(strWaterViewmark) == false)
+                    {
+                        if ((strOperator == "=" && _strEqualOrGreaterOperator == "=") || strOperator == "between")
+                        {
+                            if (strLowerDatetime.IndexOf(" ") > -1)
+                            {
+                                txtLowerDate.Text = strLowerDatetime.Substring(0, strLowerDatetime.IndexOf(" "));
+                                txtLowerTime.Text = strLowerDatetime.Substring(strLowerDatetime.IndexOf(" ") + 1);
+
+                                //ViewState[txtLowerDate.ID + dr["ColumnID"].ToString()] = txtLowerDate.Text;
+                                //ViewState[txtLowerTime.ID + dr["ColumnID"].ToString()] = txtLowerTime.Text;
+                            }
+
+                            if (strUpperDateTime.IndexOf(" ") > -1)
+                            {
+                                txtUpperDate.Text = strUpperDateTime.Substring(0, strUpperDateTime.IndexOf(" "));
+                                txtUpperTime.Text = strUpperDateTime.Substring(strUpperDateTime.IndexOf(" ") + 1);
+
+                                //ViewState[txtUpperDate.ID + dr["ColumnID"].ToString()] = txtUpperDate.Text;
+                                //ViewState[txtUpperTime.ID + dr["ColumnID"].ToString()] = txtUpperTime.Text;
                             }
                         }
+                    }
+
+                    if (strWaterViewmark.Trim() != "")
+                    {
+                        twmLowerDate.WatermarkText = strWaterViewmark;
+                        txtLowerDate.ToolTip = strWaterViewmark;
+                    }
+                }
+            }
+            else if (dr["ColumnType"].ToString() == "time")
+            {
+                                
+                string strValue = "";
+                string strOperator = "=";
+                string strWaterViewmark = " ";
+
+                if (_xmlView_FC_Doc != null)
+                {
+                    TextBox txtLowerTime = (TextBox)tblSearchControls.FindControl("txtLowerTime_" + dr["SystemName"].ToString());
+                    TextBox txtUpperTime = (TextBox)tblSearchControls.FindControl("txtUpperTime_" + dr["SystemName"].ToString());
+
+                    strValue = GetValueFromViewFilter(_xmlView_FC_Doc, dr["ColumnID"].ToString());
+                    strOperator = GetOperatorFromViewFilter(_xmlView_FC_Doc, dr["ColumnID"].ToString());
+                    string strLowertime = "";
+                    string strUpperTime = "";
+
+                    if (strValue != null && strValue.IndexOf("____") > -1)
+                    {
+                        strLowertime = strValue.Substring(0, strValue.IndexOf("____"));
+                        strUpperTime = strValue.Substring(strValue.IndexOf("____") + 4);
+
+                    }
+
+                    strWaterViewmark = GetMultipleCondition(_xmlView_FC_Doc, dr["ColumnID"].ToString(), ref iOneColumnConCount, "");
+                    if (iOneColumnConCount < 2 && ThisIsOR(strWaterViewmark) == false)
+                    {
+                        if ((strOperator == "=" && _strEqualOrGreaterOperator == "=") || strOperator == "between")
+                        {
+                            txtLowerTime.Text = strLowertime;
+                            txtUpperTime.Text = strUpperTime;
+
+                            //ViewState[txtLowerTime.ID + dr["ColumnID"].ToString()] = txtLowerTime.Text;
+                            //ViewState[txtUpperTime.ID + dr["ColumnID"].ToString()] = txtUpperTime.Text;
+                        }
+                    }
+                    TextBoxWatermarkExtender twmLowerTime = (TextBoxWatermarkExtender)tblSearchControls.FindControl("twmTime_" + dr["SystemName"].ToString());
+                   
+                    twmLowerTime.WatermarkText = strWaterViewmark.Trim() == "" ? "hh:mm" : strWaterViewmark;
+                    txtLowerTime.ToolTip = strWaterViewmark;                    
+                }
+
+
+            }
+            else if (dr["ColumnType"].ToString() == "dropdown" && (dr["DropDownType"].ToString() == "values"
+                || dr["DropDownType"].ToString() == "value_text"))
+            {
+                DropDownList ddlSearch =(DropDownList) tblSearchControls.FindControl("ddlSearch_" + dr["SystemName"].ToString());
+                string strVT = "";
+                if (dr["DropDownType"].ToString() == "values")
+                {
+                    Common.PutDDLValues(dr["DropdownValues"].ToString(), ref ddlSearch);
+                }
+                else
+                {
+                    strVT = dr["DropdownValues"].ToString();
+                    Common.PutDDLValue_Text(dr["DropdownValues"].ToString(), ref ddlSearch);
+                }
+
+                string strValue = "";
+                string strOperator = "=";
+                string strWaterViewmark = " ";
+
+                if (_xmlView_FC_Doc != null)
+                {
+                    strValue = GetValueFromViewFilter(_xmlView_FC_Doc, dr["ColumnID"].ToString());
+                    strOperator = GetOperatorFromViewFilter(_xmlView_FC_Doc, dr["ColumnID"].ToString());
+
+                    strWaterViewmark = GetMultipleCondition(_xmlView_FC_Doc, dr["ColumnID"].ToString(), ref iOneColumnConCount, strVT);
+
+                    if (strWaterViewmark != "")
+                    {
+                        if (ddlSearch.Items.Count > 0)
+                        {
+                            ddlSearch.Items.RemoveAt(0);
+
+                            ListItem liViewCondition = new ListItem(strWaterViewmark, "");
+                            ddlSearch.Items.Insert(0, liViewCondition);
+
+                            ListItem liSelect = new ListItem("--Please Select--", "vf_vf_vf");
+                            ddlSearch.Items.Insert(1, liSelect);
+
+                            ddlSearch.ToolTip = strWaterViewmark;
+                        }
+                    }
+
+
+                    if (iOneColumnConCount < 2 && strValue != null && strOperator == "=" && ThisIsOR(strWaterViewmark) == false)
+                    {
+                        if (ddlSearch.Items.FindByValue(strValue) != null)
+                        {
+                            ddlSearch.SelectedValue = strValue;
+                            ViewState[ddlSearch.ID + dr["ColumnID"].ToString()] = strValue;
+                        }
+                    }
+                }
+               
+            }
+            else if (dr["ColumnType"].ToString() == "dropdown" && (dr["DropDownType"].ToString() == "table" || dr["DropDownType"].ToString() == "tabledd") &&
+            dr["TableTableID"] != DBNull.Value && dr["DisplayColumn"].ToString() != "")
+            {
+                DropDownList ddlParentSearch = (DropDownList)tblSearchControls.FindControl("ddlParentSearch_" + dr["SystemName"].ToString());
+
+
+                RecordManager.PopulateTableDropDown(int.Parse(dr["ColumnID"].ToString()), ref ddlParentSearch);
+
+                string strVT = "ColumnID";
+
+                string strValue = "";
+                string strOperator = "=";
+                string strWaterViewmark = " ";
+                if (_xmlView_FC_Doc != null)
+                {
+
+                    strValue = GetValueFromViewFilter(_xmlView_FC_Doc, dr["ColumnID"].ToString());
+                    strOperator = GetOperatorFromViewFilter(_xmlView_FC_Doc, dr["ColumnID"].ToString());
+
+                    strWaterViewmark = GetMultipleCondition(_xmlView_FC_Doc, dr["ColumnID"].ToString(), ref iOneColumnConCount, strVT);
+
+                    if (strWaterViewmark != "")
+                    {
+                        if (ddlParentSearch.Items.Count > 0)
+                        {
+                            ddlParentSearch.Items.RemoveAt(0);
+
+                            ListItem liViewCondition = new ListItem(strWaterViewmark, "");
+                            ddlParentSearch.Items.Insert(0, liViewCondition);
+
+                            ListItem liSelect = new ListItem("--Please Select--", "vf_vf_vf");
+                            ddlParentSearch.Items.Insert(1, liSelect);
+
+
+                            ddlParentSearch.ToolTip = strWaterViewmark;
+                        }
+                    }
+
+
+
+                    if (strValue == "-user-" && dr["LinkedParentColumnID"] != DBNull.Value)
+                    {
+                        string strColumnuserID = Common.GetValueFromSQL(@"SELECT TOP 1 ColumnID FROM [Column] WHERE TableID=" + dr["TableTableID"].ToString() + @" AND 
+                                ColumnType='dropdown' AND DisplayColumn IS NOT NULL
+                                            AND TableTableID=-1");
+
+                        if (strColumnuserID != "")
+                        {
+                            string strLoginText = "";
+                            SecurityManager.ProcessLoginUserDefault(dr["TableTableID"].ToString(), "",
+                            dr["LinkedParentColumnID"].ToString(), _ObjUser.UserID.ToString(), ref strValue, ref strLoginText);
+
+                        }
+                    }
+
+                    if (iOneColumnConCount < 2 && strValue != null && strOperator == "=" && ThisIsOR(strWaterViewmark) == false)
+                    {
+                        if (!IsPostBack)
+                        {
+                            if (ddlParentSearch.Items.FindByValue(strValue) != null)
+                            {
+                                ddlParentSearch.SelectedValue = strValue;
+                                //ViewState[ddlParentSearch.ID + dr["ColumnID"].ToString()] = strValue;
+                            }
+
+                        }
+
+                    }
+
+
+
+                }
+            }
+            else if (dr["ColumnType"].ToString() == "radiobutton" || dr["ColumnType"].ToString() == "checkbox" ||
+                dr["ColumnType"].ToString() == "listbox")
+            {
+
+                DropDownList ddlSearch = (DropDownList)tblSearchControls.FindControl("ddlSearch_" + dr["SystemName"].ToString());
+                string strVT = "";
+
+                if (dr["ColumnType"].ToString() == "radiobutton")
+                {
+                    if (dr["DropDownType"].ToString() == "values")
+                    {
+                        TheDatabase.PutDDLValues(dr["DropdownValues"].ToString(), ref ddlSearch);
+                    }
+                    else if (dr["DropDownType"].ToString() == "value_text")
+                    {
+                        strVT = dr["DropdownValues"].ToString();
+                        TheDatabase.PutDDLValue_Text(dr["DropdownValues"].ToString(), ref ddlSearch);
+                    }
+                    else
+                    {
+                        //strVT
+                        Common.PutRadioImageInto_DDL(dr["DropdownValues"].ToString(), ref ddlSearch);
+                    }
+
+                }
+                else if (dr["ColumnType"].ToString() == "listbox")
+                {
+                    if (dr["DropDownType"].ToString() == "values")
+                    {
+                        TheDatabase.PutDDLValues(dr["DropdownValues"].ToString(), ref ddlSearch);
+                    }
+                    else if (dr["DropDownType"].ToString() == "value_text")
+                    {
+                        strVT = dr["DropdownValues"].ToString();
+                        TheDatabase.PutDDLValue_Text(dr["DropdownValues"].ToString(), ref ddlSearch);
+                    }
+                    else
+                    {
+                        if (dr["DropDownType"].ToString() == "table" && dr["TableTableID"] != DBNull.Value
+                          && dr["DisplayColumn"].ToString() != "") //&& dr["LinkedParentColumnID"] != DBNull.Value
+                        {
+                            strVT = "ColumnID";
+                            RecordManager.PopulateTableDropDown(int.Parse(dr["ColumnID"].ToString()), ref ddlSearch);
+                        }
+                    }
+                }
+                else
+                {
+                    TheDatabase.PutCheckboxIntoDDL(dr["DropdownValues"].ToString(), ref ddlSearch);
+                }
+
+
+                string strValue = "";
+                string strOperator = "=";
+                string strWaterViewmark = " ";
+
+                if (_xmlView_FC_Doc != null)
+                {
+                    strValue = GetValueFromViewFilter(_xmlView_FC_Doc, dr["ColumnID"].ToString());
+                    strOperator = GetOperatorFromViewFilter(_xmlView_FC_Doc, dr["ColumnID"].ToString());
+
+                    strWaterViewmark = GetMultipleCondition(_xmlView_FC_Doc, dr["ColumnID"].ToString(), ref iOneColumnConCount, strVT);
+                    if (strWaterViewmark != "")
+                    {
+                        if (ddlSearch.Items.Count > 0)
+                        {
+                            ddlSearch.Items.RemoveAt(0);
+
+                            ListItem liViewCondition = new ListItem(strWaterViewmark, "");
+                            ddlSearch.Items.Insert(0, liViewCondition);
+                            ListItem liSelect = new ListItem("--Please Select--", "vf_vf_vf");
+                            ddlSearch.Items.Insert(1, liSelect);
+
+                            ddlSearch.ToolTip = strWaterViewmark;
+                        }
+                    }
+
+
+                    if (iOneColumnConCount < 2 && strValue != null && strOperator == "=" && ThisIsOR(strWaterViewmark) == false)
+                    {
+                        if (!IsPostBack)
+                        {
+                            if (ddlSearch.Items.FindByValue(strValue) != null)
+                            {
+                                ddlSearch.SelectedValue = strValue;
+                                //ViewState[ddlSearch.ID + dr["ColumnID"].ToString()] = strValue;
+                            }
+                        }
+
+                    }
+                }
+
             }
             else
             {
-                if (inputList[i].type == 'checkbox') {
-                            if (!inputList[i].checked) {
-                                checked = false;
-                                break;
-                            }
-                        }
-            }
 
-           
-        }
-         if(tblHR==null)
-            {
-                if(headerCheckBox!=null)
+                TextBox txtSearch = (TextBox)tblSearchControls.FindControl("txtSearch_" + dr["SystemName"].ToString());
+                TextBoxWatermarkExtender twmTextSearch = (TextBoxWatermarkExtender)tblSearchControls.FindControl("twmTextSearch_" + dr["SystemName"].ToString());
+                string strValue = "";
+                string strOperator = "=";
+                string strWaterViewmark = " ";
+
+                if (_xmlView_FC_Doc != null)
+                {
+                    strValue = GetValueFromViewFilter(_xmlView_FC_Doc, dr["ColumnID"].ToString());
+                    strOperator = GetOperatorFromViewFilter(_xmlView_FC_Doc, dr["ColumnID"].ToString());
+
+                    strWaterViewmark = GetMultipleCondition(_xmlView_FC_Doc, dr["ColumnID"].ToString(), ref iOneColumnConCount, "");
+
+                    if (iOneColumnConCount < 2 && strValue != null && strOperator == "=" && ThisIsOR(strWaterViewmark) == false)
                     {
-                         headerCheckBox.checked = checked;
+                        txtSearch.Text = strValue;
+                        //ViewState[txtSearch.ID + dr["ColumnID"].ToString()] = strValue;
                     }
-            
+
+                    twmTextSearch.WatermarkText = strWaterViewmark == "" ? " " : strWaterViewmark;
+                    txtSearch.ToolTip = strWaterViewmark;
+                    //txtSearch.Text = GetValueFromViewFilter(xmlDoc, dr["ColumnID"].ToString());
+                }                               
             }
-        
-        if (objRef.checked==false)
-            {
-                if(tblHR==null && headerCheckBox!=null)
-                {
-                    headerCheckBox.checked=false;
-                   
-                } 
-                else
-                {
-                     //var tbl = document.getElementById('ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid');
-                      if(tblHR!=null)
-                            {
-                                var chkAll =  document.getElementById('ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid_ctl02_chkAll');
-                                if(chkAll!=null)
-                                {
-                                    chkAll.checked=false;
-                                    //alert(chkAll.id);
-                                }
-                            }         
-                }                  
-            }
+
+
+        }         
+       
 
     }
 
-    function checkAll(objRef) {
-        var GridView = objRef.parentNode.parentNode.parentNode;
-        var inputList = GridView.getElementsByTagName('input');
-//alert(inputList.length);
-        for (var i = 0; i < inputList.length; i++) {
-            //Get the Cell To find out ColumnIndex
-            var row = inputList[i].parentNode.parentNode;
-            if (inputList[i].type == 'checkbox' && objRef != inputList[i]) {
-                if (objRef.checked) {
-                    //If the header checkbox is checked
-                    //check all checkboxes
-                    //and highlight all rows
-                    row.style.backgroundColor = '#" + strCheckedBC + @"';
-                    inputList[i].checked = true;
-                }
-                else {
-                    //If the header checkbox is checked
-                    //uncheck all checkboxes
-                    //and change rowcolor back to original 
-                    if (row.rowIndex % 2 == 0) {
-                        //Alternating Row Color
-                        row.style.backgroundColor = '#" + strAlterBC1 + @"';
 
-                    }
-                    else {
-                        row.style.backgroundColor = '#" + strAlterBC2 + @"';
-                    }
-                    inputList[i].checked = false;
-                }
-            }
-        }
-    }
-
-function checkAllHR(objRef,GridView) {
-        var inputList = GridView.getElementsByTagName('input');
-//alert(inputList.length);
-        for (var i = 0; i < inputList.length; i++) {
-            //Get the Cell To find out ColumnIndex
-            var row = inputList[i].parentNode.parentNode;
-            if (inputList[i].type == 'checkbox' && objRef != inputList[i]) {
-                if (objRef.checked) {
-                    //If the header checkbox is checked
-                    //check all checkboxes
-                    //and highlight all rows
-                    row.style.backgroundColor = '#" + strCheckedBC + @"';
-                    inputList[i].checked = true;
-                }
-                else {
-                    //If the header checkbox is checked
-                    //uncheck all checkboxes
-                    //and change rowcolor back to original 
-                    if (row.rowIndex % 2 == 0) {
-                        //Alternating Row Color
-                        row.style.backgroundColor = '#" + strAlterBC1 + @"';
-
-                    }
-                    else {
-                        row.style.backgroundColor = '#" + strAlterBC2 + @"';
-                    }
-                    inputList[i].checked = false;
-                }
-            }
-        }
-    }
-
-  function SelectAllCheckboxes(spanChk) {
-
-            // alert($(spanChk).attr('id'));
-            checkAll(spanChk);
-            var GridView = spanChk.parentNode.parentNode.parentNode;
-
-            //alert($(GridView).attr('id'));
-            // alert(GridView.id);
-
-            var inputList = GridView.getElementsByTagName('input');
-            for (var i = 0; i < inputList.length; i++) {
-                var row = inputList[i].parentNode.parentNode;
-                if (inputList[i].type == 'checkbox' && spanChk != inputList[i]) {
-                    if (spanChk.checked) {
-                        inputList[i].checked = true;
-                    }
-                    else {
-                        inputList[i].checked = false;
-                    }
-                }
-
-            }
-        }
-
-
-  function SelectAllCheckboxesHR(spanChk, GridView) {
-
-            checkAllHR(spanChk, GridView);
-            var inputList = GridView.getElementsByTagName('input');
-            for (var i = 0; i < inputList.length; i++) {
-                var row = inputList[i].parentNode.parentNode;
-                if (inputList[i].type == 'checkbox' && spanChk != inputList[i]) {
-                    if (spanChk.checked) {
-                        inputList[i].checked = true;
-                    }
-                    else {
-                        inputList[i].checked = false;
-                    }
-                }
-
-            }
-        }
-
-       " + strMainListJS + @"
-
-
-
-</script>
-";
-
-
-        if (Request.RawUrl.IndexOf("Pages/Mobile") > -1)
-        {
-            _strRecordFolder = "Mobile";
-        }
-
-
-        if (_theTable == null)
-        {
-            goto EndSub;
-        }
-
-        if (_theTable.FilterTopColour != "")
-        {
-            trFiletrTop.Style.Add("background-color", "#" + _theTable.FilterTopColour);
-        }
-        if (_theTable.FilterBottomColour != "")
-        {
-            trFilterBottom.Style.Add("background-color", "#" + _theTable.FilterBottomColour);
-        }
-
-        if (this.Page.MasterPageFile != null && this.Page.MasterPageFile.ToLower().IndexOf("rrp") > -1)
-        {
-            _bCustomDDL = true;
-            if (PageType == "p")
-            {
-                if (_theTable.FilterTopColour == "")
-                {
-                    trFiletrTop.Style.Add("background-color", "#238DA3");
-                }
-                if (_theTable.FilterBottomColour == "")
-                {
-                    trFilterBottom.Style.Add("background-color", "#40A5B7");
-                }
-
-                ddlEnteredBy.Width = 220;
-                divEnteredBy.Width = 200;
-
-                ddlEnteredBy.CssClass = "ddlrrp";
-                divEnteredBy.CssClass = "ddlDIV";
-                stgFilter.Style.Add("color", "#ffffff");
-                tblAdvancedOptionChk.Style.Add("color", "#ffffff");
-                imgShowGraph.ImageUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Pager/Images/rrp/Graph.png";
-                imgUpload.ImageUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Pager/Images/rrp/upload.png";
-                ibEmail.ImageUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Pager/Images/rrp/email.png";
-                imgConfig.ImageUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Pager/Images/rrp/config.png";
-
-                if (_theTable.HeaderColor != "")
-                {
-                    ltTextStyles.Text = "<style>.pagerstyle{ background: #" + _theTable.HeaderColor + ";}.pagergradient{ background: #" + _theTable.HeaderColor + ";}.TopTitle{color:#FFFFFF;}</style>";
-                }
-                else
-                {
-                    ltTextStyles.Text = "<style>.pagerstyle{ background: #0089a5;}.pagergradient{ background: #0089a5;}.TopTitle{color:#FFFFFF;}</style>";
-                }
-
-
-                divSearch.Attributes["class"] = "searchcornerRRP";
-                divRecordListTop.Style.Add("padding-left", "170px");
-                if (_theTable.HeaderColor != "")
-                {
-                    divRecordListTop.Style.Add("background-color", "#" + _theTable.HeaderColor);
-
-                }
-                else
-                {
-                    divRecordListTop.Style.Add("background-color", "#0089a5");
-                }
-            }
-            gvTheGrid.AlternatingRowStyle.BackColor = System.Drawing.ColorTranslator.FromHtml("#" + strAlterBC2);
-        }
-        else
-        {
-            gvTheGrid.HeaderStyle.ForeColor = System.Drawing.Color.Black;
-        }
-
+    protected void CreateDynamicControls()
+    {
         string strOnlyAdmin = "";
         if (!Common.HaveAccess(_strRecordRightID, "1,2"))
         {
@@ -861,10 +1230,10 @@ function checkAllHR(objRef,GridView) {
             if ((bool)_theView.ShowSearchFields == false)
             {
                 strOnlyAdmin = strOnlyAdmin + " AND C.ColumnID=-1 ";
-                if (Request.QueryString["Dashboard"] != null)
-                {
-                    pnlSearch.Visible = false;
-                }
+                //if (Request.QueryString["Dashboard"] != null)
+                //{
+                //    pnlSearch.Visible = false;
+                //}
             }
 
 
@@ -878,45 +1247,20 @@ function checkAllHR(objRef,GridView) {
 
         }
 
-        if (_dtDynamicSearchColumns.Rows.Count == 0)
-            pnlSearch.Visible = false;
+        
 
         _dtSearchGroup = Common.DataTableFromText("SELECT SearchGroupID,GroupName FROM SearchGroup WHERE SummarySearch=1  AND TableID=" + TableID.ToString() + " ORDER BY DisplayOrder");
 
-        //if (_dtDynamicSearchColumns.Rows.Count == 0 && _dtSearchGroup.Rows.Count == 0)
-        //{
-        //    _dtDynamicSearchColumns = Common.DataTableFromText(@"SELECT TOP 5 * FROM [Column] WHERE IsStandard=0 and TableID=" + TableID.ToString() + " ORDER BY DisplayOrder");
-        //}
-
-        //if (_theTable != null)
-        //{
-        //    if (_theTable.FilterType == "box")
-        //    {
-        //        if (_dtDynamicSearchColumns.Rows.Count > 0)
-        //        {
-        //            _bDynamicSearch = true;
-        //        }
-
-        //    }
-
-        //}
-
-        //if (_dtDynamicSearchColumns.Rows.Count > 0 && _bDynamicSearch)
-        //{
 
 
-        //lets put dynamic search controls now
 
 
-        if (_theView == null)
-            return;
-
-        System.Xml.XmlDocument xmlView_FC_Doc = new System.Xml.XmlDocument();
+        _xmlView_FC_Doc = new System.Xml.XmlDocument();
 
         if (_theView.Filter != "" && _theView.FilterControlsInfo != "")
         {
 
-            xmlView_FC_Doc.Load(new StringReader(_theView.FilterControlsInfo));
+            _xmlView_FC_Doc.Load(new StringReader(_theView.FilterControlsInfo));
 
         }
 
@@ -954,19 +1298,11 @@ function checkAllHR(objRef,GridView) {
                 txtUpperLimit.Attributes.Add("onblur", "this.value=this.value.trim()");
 
 
-                AjaxControlToolkit.TextBoxWatermarkExtender twmNumberLowerLimit = new AjaxControlToolkit.TextBoxWatermarkExtender();
+                TextBoxWatermarkExtender twmNumberLowerLimit = new TextBoxWatermarkExtender();
                 twmNumberLowerLimit.ID = "twmNumberLowerLimit_" + dr["SystemName"].ToString();
                 twmNumberLowerLimit.TargetControlID = txtLowerLimit.ID;
                 twmNumberLowerLimit.WatermarkText = " ";
                 twmNumberLowerLimit.WatermarkCssClass = "MaskText";
-
-
-                //AjaxControlToolkit.TextBoxWatermarkExtender twmNumberUpperLimit = new AjaxControlToolkit.TextBoxWatermarkExtender();
-                //twmNumberUpperLimit.ID = "twmNumberUpperLimit_" + dr["SystemName"].ToString();
-                //twmNumberUpperLimit.TargetControlID = txtUpperLimit.ID;
-                //twmNumberUpperLimit.WatermarkText = "To Upper Limit";
-                //twmNumberUpperLimit.WatermarkCssClass = "MaskText";
-
 
                 RegularExpressionValidator revNumberLowerLimit = new RegularExpressionValidator();
                 revNumberLowerLimit.ID = "revNumberLowerLimit_" + dr["SystemName"].ToString();
@@ -974,7 +1310,6 @@ function checkAllHR(objRef,GridView) {
                 revNumberLowerLimit.ErrorMessage = "*";
                 revNumberLowerLimit.ToolTip = "Number only!";
                 revNumberLowerLimit.ValidationExpression = @"(^-?\d{1,20}\.$)|(^-?\d{1,20}$)|(^-?\d{0,20}\.\d{1,10}$)";
-                //revNumberLowerLimit.ValidationGroup = "MKE";
 
                 RegularExpressionValidator revNumberUpperLimit = new RegularExpressionValidator();
                 revNumberUpperLimit.ID = "revNumberUpperLimit_" + dr["SystemName"].ToString();
@@ -982,43 +1317,6 @@ function checkAllHR(objRef,GridView) {
                 revNumberUpperLimit.ErrorMessage = "*";
                 revNumberUpperLimit.ToolTip = "Number only!";
                 revNumberUpperLimit.ValidationExpression = @"(^-?\d{1,20}\.$)|(^-?\d{1,20}$)|(^-?\d{0,20}\.\d{1,10}$)";
-                //revNumberUpperLimit.ValidationGroup = "MKE";
-
-
-                string strValue = "";
-                string strOperator = "=";
-                string strWaterViewmark = " ";
-                if (xmlView_FC_Doc != null)
-                {
-                    strValue = GetValueFromViewFilter(xmlView_FC_Doc, dr["ColumnID"].ToString());
-                    strOperator = GetOperatorFromViewFilter(xmlView_FC_Doc, dr["ColumnID"].ToString());
-                    string strLowerValue = "";
-                    string strUpperValue = "";
-                    if (strValue != null && strValue.IndexOf("____") > -1)
-                    {
-                        strLowerValue = strValue.Substring(0, strValue.IndexOf("____"));
-                        strUpperValue = strValue.Substring(strValue.IndexOf("____") + 4);
-                    }
-                    strWaterViewmark = GetMultipleCondition(xmlView_FC_Doc, dr["ColumnID"].ToString(), ref iOneColumnConCount, "");
-                    if (iOneColumnConCount < 2 && ThisIsOR(strWaterViewmark) == false)
-                    {
-                        if ((strOperator == "=" && _strEqualOrGreaterOperator == "=") || strOperator == "between")
-                        {
-                            txtLowerLimit.Text = strLowerValue;
-                            txtUpperLimit.Text = strUpperValue;
-
-                            //ViewState[txtLowerLimit.ID + dr["ColumnID"].ToString()] = strLowerValue;
-                            //ViewState[txtUpperLimit.ID + dr["ColumnID"].ToString()] = strUpperValue;
-
-                        }
-                    }
-
-                    twmNumberLowerLimit.WatermarkText = strWaterViewmark == "" ? " " : strWaterViewmark;
-                    txtLowerLimit.ToolTip = strWaterViewmark;
-                }
-
-
-
 
                 HtmlTableCell cellBox = new HtmlTableCell();
                 cellBox.Controls.Add(new LiteralControl("" + dr["Heading"].ToString() == "" ? dr["DisplayName"].ToString() + "<br/>" : dr["Heading"].ToString() + "<br/>"));
@@ -1144,33 +1442,12 @@ function checkAllHR(objRef,GridView) {
                 txtSearch.Width = 105;
                 txtSearch.Attributes.Add("onblur", "this.value=this.value.trim()");
 
-                AjaxControlToolkit.TextBoxWatermarkExtender twmTextSearch = new AjaxControlToolkit.TextBoxWatermarkExtender();
+                TextBoxWatermarkExtender twmTextSearch = new TextBoxWatermarkExtender();
                 twmTextSearch.ID = "twmTextSearch_" + dr["SystemName"].ToString();
                 twmTextSearch.TargetControlID = txtSearch.ID;
                 twmTextSearch.WatermarkText = " ";
                 twmTextSearch.WatermarkCssClass = "MaskText";
-
-                string strValue = "";
-                string strOperator = "=";
-                string strWaterViewmark = " ";
-
-                if (xmlView_FC_Doc != null)
-                {
-                    strValue = GetValueFromViewFilter(xmlView_FC_Doc, dr["ColumnID"].ToString());
-                    strOperator = GetOperatorFromViewFilter(xmlView_FC_Doc, dr["ColumnID"].ToString());
-
-                    strWaterViewmark = GetMultipleCondition(xmlView_FC_Doc, dr["ColumnID"].ToString(), ref iOneColumnConCount, "");
-
-                    if (iOneColumnConCount < 2 && strValue != null && strOperator == "=" && ThisIsOR(strWaterViewmark) == false)
-                    {
-                        txtSearch.Text = strValue;
-                        //ViewState[txtSearch.ID + dr["ColumnID"].ToString()] = strValue;
-                    }
-
-                    twmTextSearch.WatermarkText = strWaterViewmark == "" ? " " : strWaterViewmark;
-                    txtSearch.ToolTip = strWaterViewmark;
-                }
-
+                                
                 HtmlTableCell cellBox = new HtmlTableCell();
                 cellBox.Controls.Add(new LiteralControl("" + dr["Heading"].ToString() == "" ? dr["DisplayName"].ToString() + "<br/>" : dr["Heading"].ToString() + "<br/>"));
                 cellBox.Controls.Add(txtSearch);
@@ -1214,7 +1491,7 @@ function checkAllHR(objRef,GridView) {
                 imgLowerDate.CausesValidation = false;
 
 
-                AjaxControlToolkit.CalendarExtender ceLowerDate = new AjaxControlToolkit.CalendarExtender();
+                CalendarExtender ceLowerDate = new CalendarExtender();
                 ceLowerDate.ID = "ceLowerDate_" + dr["SystemName"].ToString();
                 ceLowerDate.TargetControlID = txtLowerDate.ID;
                 ceLowerDate.Format = "dd/MM/yyyy";
@@ -1223,54 +1500,14 @@ function checkAllHR(objRef,GridView) {
 
 
 
-                AjaxControlToolkit.TextBoxWatermarkExtender twmLowerDate = new AjaxControlToolkit.TextBoxWatermarkExtender();
+                TextBoxWatermarkExtender twmLowerDate = new TextBoxWatermarkExtender();
                 twmLowerDate.ID = "twmLowerDate_" + dr["SystemName"].ToString();
                 twmLowerDate.TargetControlID = txtLowerDate.ID;
                 twmLowerDate.WatermarkText = "dd/mm/yyyy";
                 twmLowerDate.WatermarkCssClass = "MaskText";
 
 
-                string strValue = "";
-
-                string strOperator = "=";
-                string strWaterViewmark = " ";
-
-                if (xmlView_FC_Doc != null)
-                {
-                    strValue = GetValueFromViewFilter(xmlView_FC_Doc, dr["ColumnID"].ToString());
-
-                    strOperator = GetOperatorFromViewFilter(xmlView_FC_Doc, dr["ColumnID"].ToString());
-                    string strLowerValue = "";
-                    string strUpperValue = "";
-                    if (strValue != null && strValue.IndexOf("____") > -1)
-                    {
-                        strLowerValue = strValue.Substring(0, strValue.IndexOf("____"));
-                        strUpperValue = strValue.Substring(strValue.IndexOf("____") + 4);
-                    }
-
-                    strWaterViewmark = GetMultipleCondition(xmlView_FC_Doc, dr["ColumnID"].ToString(), ref iOneColumnConCount, "");
-
-                    if (iOneColumnConCount < 2 && ThisIsOR(strWaterViewmark) == false)
-                    {
-                        if ((strOperator == "=" && _strEqualOrGreaterOperator == "=") || strOperator == "between")
-                        {
-                            txtLowerDate.Text = strLowerValue;
-                            txtUpperDate.Text = strUpperValue;
-
-                            //ViewState[txtLowerDate.ID + dr["ColumnID"].ToString()] = strLowerValue;
-                            //ViewState[txtUpperDate.ID + dr["ColumnID"].ToString()] = strUpperValue;
-                        }
-                    }
-
-                    if (strWaterViewmark.Trim() != "")
-                    {
-                        twmLowerDate.WatermarkText = strWaterViewmark;
-                        txtLowerDate.ToolTip = strWaterViewmark;
-                    }
-
-
-
-                }
+                
 
 
 
@@ -1282,7 +1519,7 @@ function checkAllHR(objRef,GridView) {
                 imgUpperDate.CausesValidation = false;
 
 
-                AjaxControlToolkit.CalendarExtender ceUpperDate = new AjaxControlToolkit.CalendarExtender();
+                CalendarExtender ceUpperDate = new CalendarExtender();
                 ceUpperDate.ID = "ceUpperDate_" + dr["SystemName"].ToString();
                 ceUpperDate.TargetControlID = txtUpperDate.ID;
                 ceUpperDate.Format = "dd/MM/yyyy";
@@ -1291,7 +1528,7 @@ function checkAllHR(objRef,GridView) {
 
 
 
-                //AjaxControlToolkit.TextBoxWatermarkExtender twmUpperDate = new AjaxControlToolkit.TextBoxWatermarkExtender();
+                //TextBoxWatermarkExtender twmUpperDate = new TextBoxWatermarkExtender();
                 //twmUpperDate.ID = "twmUpperDate_" + dr["SystemName"].ToString();
                 //twmUpperDate.TargetControlID = txtUpperDate.ID;
                 //twmUpperDate.WatermarkText = "To dd/mm/yyyy";
@@ -1453,7 +1690,7 @@ function checkAllHR(objRef,GridView) {
                 imgLowerDate.CausesValidation = false;
 
 
-                AjaxControlToolkit.CalendarExtender ceLowerDate = new AjaxControlToolkit.CalendarExtender();
+                CalendarExtender ceLowerDate = new CalendarExtender();
                 ceLowerDate.ID = "ceLowerDate_" + dr["SystemName"].ToString();
                 ceLowerDate.TargetControlID = txtLowerDate.ID;
                 ceLowerDate.Format = "dd/MM/yyyy";
@@ -1462,80 +1699,12 @@ function checkAllHR(objRef,GridView) {
 
 
 
-                AjaxControlToolkit.TextBoxWatermarkExtender twmLowerDate = new AjaxControlToolkit.TextBoxWatermarkExtender();
+                TextBoxWatermarkExtender twmLowerDate = new TextBoxWatermarkExtender();
                 twmLowerDate.ID = "twmLowerDate_" + dr["SystemName"].ToString();
                 twmLowerDate.TargetControlID = txtLowerDate.ID;
                 twmLowerDate.WatermarkText = "dd/mm/yyyy";
                 twmLowerDate.WatermarkCssClass = "MaskText";
-
-
-
-                string strValue = "";
-
-                string strOperator = "=";
-                string strWaterViewmark = " ";
-
-                if (xmlView_FC_Doc != null)
-                {
-                    strValue = GetValueFromViewFilter(xmlView_FC_Doc, dr["ColumnID"].ToString());
-                    strOperator = GetOperatorFromViewFilter(xmlView_FC_Doc, dr["ColumnID"].ToString());
-                    string strLowerDatetime = "";
-                    string strUpperDateTime = "";
-
-                    if (strValue != null && strValue.IndexOf("____") > -1)
-                    {
-                        strLowerDatetime = strValue.Substring(0, strValue.IndexOf("____"));
-                        strUpperDateTime = strValue.Substring(strValue.IndexOf("____") + 4);
-
-                    }
-
-                    strWaterViewmark = GetMultipleCondition(xmlView_FC_Doc, dr["ColumnID"].ToString(), ref iOneColumnConCount, "");
-                    if (iOneColumnConCount < 2 && ThisIsOR(strWaterViewmark) == false)
-                    {
-                        if ((strOperator == "=" && _strEqualOrGreaterOperator == "=") || strOperator == "between")
-                        {
-                            if (strLowerDatetime.IndexOf(" ") > -1)
-                            {
-                                txtLowerDate.Text = strLowerDatetime.Substring(0, strLowerDatetime.IndexOf(" "));
-                                txtLowerTime.Text = strLowerDatetime.Substring(strLowerDatetime.IndexOf(" ") + 1);
-
-                                //ViewState[txtLowerDate.ID + dr["ColumnID"].ToString()] = txtLowerDate.Text;
-                                //ViewState[txtLowerTime.ID + dr["ColumnID"].ToString()] = txtLowerTime.Text;
-                            }
-
-                            if (strUpperDateTime.IndexOf(" ") > -1)
-                            {
-                                txtUpperDate.Text = strUpperDateTime.Substring(0, strUpperDateTime.IndexOf(" "));
-                                txtUpperTime.Text = strUpperDateTime.Substring(strUpperDateTime.IndexOf(" ") + 1);
-
-                                //ViewState[txtUpperDate.ID + dr["ColumnID"].ToString()] = txtUpperDate.Text;
-                                //ViewState[txtUpperTime.ID + dr["ColumnID"].ToString()] = txtUpperTime.Text;
-                            }
-                        }
-                    }
-
-                    if (strWaterViewmark.Trim() != "")
-                    {
-                        twmLowerDate.WatermarkText = strWaterViewmark;
-                        txtLowerDate.ToolTip = strWaterViewmark;
-                    }
-
-
-                }
-
-
-
-                //RangeValidator rvLowerDate = new RangeValidator();
-                //rvLowerDate.ID = "rvLowerDate_" + dr["SystemName"].ToString();
-                //rvLowerDate.ControlToValidate = txtLowerDate.ID;
-                //rvLowerDate.ErrorMessage = (dr["Heading"].ToString() == "" ? dr["DisplayName"].ToString() : dr["Heading"].ToString()) + "- Date is invalid.";
-                //rvLowerDate.Type = ValidationDataType.Date;
-                //rvLowerDate.Font.Bold = true;
-                //rvLowerDate.MinimumValue = "1/1/1753";
-                //rvLowerDate.MaximumValue = "1/1/3000";
-                //rvLowerDate.Display = ValidatorDisplay.None;
-
-
+                
                 ImageButton imgUpperDate = new ImageButton();
                 imgUpperDate.ID = "imgUpperDate_" + dr["SystemName"].ToString();
                 imgUpperDate.ImageUrl = "~/Images/Calendar.png";
@@ -1543,40 +1712,22 @@ function checkAllHR(objRef,GridView) {
                 imgUpperDate.CausesValidation = false;
 
 
-                AjaxControlToolkit.CalendarExtender ceUpperDate = new AjaxControlToolkit.CalendarExtender();
+                CalendarExtender ceUpperDate = new CalendarExtender();
                 ceUpperDate.ID = "ceUpperDate_" + dr["SystemName"].ToString();
                 ceUpperDate.TargetControlID = txtUpperDate.ID;
                 ceUpperDate.Format = "dd/MM/yyyy";
                 ceUpperDate.PopupButtonID = imgUpperDate.ID;
                 ceUpperDate.FirstDayOfWeek = FirstDayOfWeek.Monday;
 
-
-
-                //AjaxControlToolkit.TextBoxWatermarkExtender twmUpperDate = new AjaxControlToolkit.TextBoxWatermarkExtender();
-                //twmUpperDate.ID = "twmUpperDate_" + dr["SystemName"].ToString();
-                //twmUpperDate.TargetControlID = txtUpperDate.ID;
-                //twmUpperDate.WatermarkText = "To dd/mm/yyyy";
-                //twmUpperDate.WatermarkCssClass = "MaskText";
-
-                //RangeValidator rvUpperDate = new RangeValidator();
-                //rvUpperDate.ID = "rvUpperDate_" + dr["SystemName"].ToString();
-                //rvUpperDate.ControlToValidate = txtUpperDate.ID;
-                //rvUpperDate.ErrorMessage = (dr["Heading"].ToString() == "" ? dr["DisplayName"].ToString() : dr["Heading"].ToString()) + "- Date is invalid.";
-                //rvUpperDate.Type = ValidationDataType.Date;
-                //rvUpperDate.Font.Bold = true;
-                //rvUpperDate.MinimumValue = "1/1/1753";
-                //rvUpperDate.MaximumValue = "1/1/3000";
-                //rvUpperDate.Display = ValidatorDisplay.None;
-
-
-                AjaxControlToolkit.MaskedEditExtender meeLowerTime = new AjaxControlToolkit.MaskedEditExtender();
+                
+                MaskedEditExtender meeLowerTime = new MaskedEditExtender();
                 meeLowerTime.ID = "meeLowerTime" + dr["SystemName"].ToString();
                 meeLowerTime.TargetControlID = txtLowerTime.ClientID; //"ctl00_HomeContentPlaceHolder_txtTime";
                 meeLowerTime.AutoCompleteValue = "00:00"; //"00:00:00"
                 meeLowerTime.Mask = "99:99"; //99:99:99
                 meeLowerTime.MaskType = MaskedEditType.Time;
 
-                AjaxControlToolkit.MaskedEditExtender meeUpperTime = new AjaxControlToolkit.MaskedEditExtender();
+                MaskedEditExtender meeUpperTime = new MaskedEditExtender();
                 meeUpperTime.ID = "meeUpperTime" + dr["SystemName"].ToString();
                 meeUpperTime.TargetControlID = txtUpperTime.ClientID; //"ctl00_HomeContentPlaceHolder_txtTime";
                 meeUpperTime.AutoCompleteValue = "00:00"; //"00:00:00"
@@ -1790,14 +1941,14 @@ function checkAllHR(objRef,GridView) {
                 txtUpperTime.AutoCompleteType = AutoCompleteType.Disabled;
                 txtUpperTime.Attributes.Add("placeholder", "To hh:mm");
 
-                AjaxControlToolkit.MaskedEditExtender meeLowerTime = new AjaxControlToolkit.MaskedEditExtender();
+                MaskedEditExtender meeLowerTime = new MaskedEditExtender();
                 meeLowerTime.ID = "meeLowerTime" + dr["SystemName"].ToString();
                 meeLowerTime.TargetControlID = txtLowerTime.ClientID; //"ctl00_HomeContentPlaceHolder_txtTime";
                 meeLowerTime.AutoCompleteValue = "00:00"; //"00:00:00"
                 meeLowerTime.Mask = "99:99"; //99:99:99
                 meeLowerTime.MaskType = MaskedEditType.Time;
 
-                AjaxControlToolkit.MaskedEditExtender meeUpperTime = new AjaxControlToolkit.MaskedEditExtender();
+                MaskedEditExtender meeUpperTime = new MaskedEditExtender();
                 meeUpperTime.ID = "meeUpperTime" + dr["SystemName"].ToString();
                 meeUpperTime.TargetControlID = txtUpperTime.ClientID; //"ctl00_HomeContentPlaceHolder_txtTime";
                 meeUpperTime.AutoCompleteValue = "00:00"; //"00:00:00"
@@ -1806,55 +1957,11 @@ function checkAllHR(objRef,GridView) {
 
 
 
-                AjaxControlToolkit.TextBoxWatermarkExtender twmLowerTime = new AjaxControlToolkit.TextBoxWatermarkExtender();
+                TextBoxWatermarkExtender twmLowerTime = new TextBoxWatermarkExtender();
                 twmLowerTime.ID = "twmTime_" + dr["SystemName"].ToString();
                 twmLowerTime.TargetControlID = txtLowerTime.ID;
                 twmLowerTime.WatermarkText = "hh:mm";
                 twmLowerTime.WatermarkCssClass = "MaskText";
-
-                string strValue = "";
-
-                string strOperator = "=";
-                string strWaterViewmark = " ";
-
-                if (xmlView_FC_Doc != null)
-                {
-                    strValue = GetValueFromViewFilter(xmlView_FC_Doc, dr["ColumnID"].ToString());
-                    strOperator = GetOperatorFromViewFilter(xmlView_FC_Doc, dr["ColumnID"].ToString());
-                    string strLowertime = "";
-                    string strUpperTime = "";
-
-                    if (strValue != null && strValue.IndexOf("____") > -1)
-                    {
-                        strLowertime = strValue.Substring(0, strValue.IndexOf("____"));
-                        strUpperTime = strValue.Substring(strValue.IndexOf("____") + 4);
-
-                    }
-
-                    strWaterViewmark = GetMultipleCondition(xmlView_FC_Doc, dr["ColumnID"].ToString(), ref iOneColumnConCount, "");
-                    if (iOneColumnConCount < 2 && ThisIsOR(strWaterViewmark) == false)
-                    {
-                        if ((strOperator == "=" && _strEqualOrGreaterOperator == "=") || strOperator == "between")
-                        {
-                            txtLowerTime.Text = strLowertime;
-                            txtUpperTime.Text = strUpperTime;
-
-                            //ViewState[txtLowerTime.ID + dr["ColumnID"].ToString()] = txtLowerTime.Text;
-                            //ViewState[txtUpperTime.ID + dr["ColumnID"].ToString()] = txtUpperTime.Text;
-                        }
-                    }
-
-                    twmLowerTime.WatermarkText = strWaterViewmark.Trim() == "" ? "hh:mm" : strWaterViewmark;
-                    txtLowerTime.ToolTip = strWaterViewmark;
-
-
-                }
-
-
-
-
-
-
 
                 HtmlTableCell cellBox = new HtmlTableCell();
                 cellBox.Controls.Add(new LiteralControl("" + dr["Heading"].ToString() == "" ? dr["DisplayName"].ToString() + "<br/>" : dr["Heading"].ToString() + "<br/>"));
@@ -1956,58 +2063,8 @@ function checkAllHR(objRef,GridView) {
 
                 ddlSearch.AutoPostBack = true;
                 ddlSearch.SelectedIndexChanged += new EventHandler(ddl_search);
-
-                string strVT = "";
-                if (dr["DropDownType"].ToString() == "values")
-                {
-                    Common.PutDDLValues(dr["DropdownValues"].ToString(), ref ddlSearch);
-                }
-                else
-                {
-                    strVT = dr["DropdownValues"].ToString();
-                    Common.PutDDLValue_Text(dr["DropdownValues"].ToString(), ref ddlSearch);
-                }
-
-                string strValue = "";
-                string strOperator = "=";
-                string strWaterViewmark = " ";
-
-                if (xmlView_FC_Doc != null)
-                {
-                    strValue = GetValueFromViewFilter(xmlView_FC_Doc, dr["ColumnID"].ToString());
-                    strOperator = GetOperatorFromViewFilter(xmlView_FC_Doc, dr["ColumnID"].ToString());
-
-                    strWaterViewmark = GetMultipleCondition(xmlView_FC_Doc, dr["ColumnID"].ToString(), ref iOneColumnConCount, strVT);
-
-                    if (strWaterViewmark != "")
-                    {
-                        if (ddlSearch.Items.Count > 0)
-                        {
-                            ddlSearch.Items.RemoveAt(0);
-
-                            ListItem liViewCondition = new ListItem(strWaterViewmark, "");
-                            ddlSearch.Items.Insert(0, liViewCondition);
-
-                            ListItem liSelect = new ListItem("--Please Select--", "vf_vf_vf");
-                            ddlSearch.Items.Insert(1, liSelect);
-
-                            ddlSearch.ToolTip = strWaterViewmark;
-                        }
-                    }
-
-
-                    if (iOneColumnConCount < 2 && strValue != null && strOperator == "=" && ThisIsOR(strWaterViewmark) == false)
-                    {
-                        if (ddlSearch.Items.FindByValue(strValue) != null)
-                        {
-                            ddlSearch.SelectedValue = strValue;
-                            ViewState[ddlSearch.ID + dr["ColumnID"].ToString()] = strValue;
-                        }
-                    }
-                }
-
+                               
                 HtmlTableCell cellBox = new HtmlTableCell();
-                //cellBox.Controls.Add(new LiteralControl("" + dr["Heading"].ToString() + "" + "<br/>"));
                 cellBox.Controls.Add(new LiteralControl("" + dr["Heading"].ToString() == "" ? dr["DisplayName"].ToString() + "<br/>" : dr["Heading"].ToString() + "<br/>"));
                 cellBox.Controls.Add(ddlSearch);
 
@@ -2024,15 +2081,7 @@ function checkAllHR(objRef,GridView) {
                 }
 
                 s = s + 1;
-                //TextBox txtParentSearch = new TextBox();
-                //txtParentSearch.ID = "txtParentSearch_" + dr["SystemName"].ToString();
-                //txtParentSearch.CssClass = "NormalTextBox";
-                //txtParentSearch.Width = 105;
-                //HtmlTableCell cellBox = new HtmlTableCell();
-                //cellBox.Controls.Add(new LiteralControl("" + dr["Heading"].ToString() + "" + "<br/>"));
-                //cellBox.Controls.Add(txtParentSearch);
-                //theRow.Cells.Add(cellBox);
-
+             
                 DropDownList ddlParentSearch = new DropDownList();
                 ddlParentSearch.ID = "ddlParentSearch_" + dr["SystemName"].ToString();
                 ddlParentSearch.CssClass = "NormalTextBox";
@@ -2040,82 +2089,10 @@ function checkAllHR(objRef,GridView) {
 
                 ddlParentSearch.AutoPostBack = true;
                 ddlParentSearch.SelectedIndexChanged += new EventHandler(ddl_search);
-
-
-                RecordManager.PopulateTableDropDown(int.Parse(dr["ColumnID"].ToString()), ref ddlParentSearch);
-
-                string strVT = "ColumnID";
-
-                string strValue = "";
-                string strOperator = "=";
-                string strWaterViewmark = " ";
-
-
-                if (xmlView_FC_Doc != null)
-                {
-
-                    strValue = GetValueFromViewFilter(xmlView_FC_Doc, dr["ColumnID"].ToString());
-                    strOperator = GetOperatorFromViewFilter(xmlView_FC_Doc, dr["ColumnID"].ToString());
-
-                    strWaterViewmark = GetMultipleCondition(xmlView_FC_Doc, dr["ColumnID"].ToString(), ref iOneColumnConCount, strVT);
-
-                    if (strWaterViewmark != "")
-                    {
-                        if (ddlParentSearch.Items.Count > 0)
-                        {
-                            ddlParentSearch.Items.RemoveAt(0);
-
-                            ListItem liViewCondition = new ListItem(strWaterViewmark, "");
-                            ddlParentSearch.Items.Insert(0, liViewCondition);
-
-                            ListItem liSelect = new ListItem("--Please Select--", "vf_vf_vf");
-                            ddlParentSearch.Items.Insert(1, liSelect);
-
-
-                            ddlParentSearch.ToolTip = strWaterViewmark;
-                        }
-                    }
-
-
-
-                    if (strValue == "-user-" && dr["LinkedParentColumnID"] != DBNull.Value)
-                    {
-                        string strColumnuserID = Common.GetValueFromSQL(@"SELECT TOP 1 ColumnID FROM [Column] WHERE TableID=" + dr["TableTableID"].ToString() + @" AND 
-                                ColumnType='dropdown' AND DisplayColumn IS NOT NULL
-                                            AND TableTableID=-1");
-
-                        if (strColumnuserID != "")
-                        {
-                            string strLoginText = "";
-                            SecurityManager.ProcessLoginUserDefault(dr["TableTableID"].ToString(), "",
-                            dr["LinkedParentColumnID"].ToString(), _ObjUser.UserID.ToString(), ref strValue, ref strLoginText);
-
-                        }
-                    }
-
-                    if (iOneColumnConCount < 2 && strValue != null && strOperator == "=" && ThisIsOR(strWaterViewmark) == false)
-                    {
-                        if (!IsPostBack)
-                        {
-                            if (ddlParentSearch.Items.FindByValue(strValue) != null)
-                            {
-                                ddlParentSearch.SelectedValue = strValue;
-                                //ViewState[ddlParentSearch.ID + dr["ColumnID"].ToString()] = strValue;
-                            }
-
-                        }
-
-                    }
-
-
-
-                }
-
+                
                 HtmlTableCell cellBox = new HtmlTableCell();
-                //cellBox.Controls.Add(new LiteralControl("" + dr["Heading"].ToString() + "" + "<br/>"));
                 cellBox.Controls.Add(new LiteralControl("" + dr["Heading"].ToString() == "" ? dr["DisplayName"].ToString() + "<br/>" : dr["Heading"].ToString() + "<br/>"));
                 cellBox.Controls.Add(ddlParentSearch);
-
                 theRow.Cells.Add(cellBox);
 
             }
@@ -2137,96 +2114,8 @@ function checkAllHR(objRef,GridView) {
 
                 ddlSearch.AutoPostBack = true;
                 ddlSearch.SelectedIndexChanged += new EventHandler(ddl_search);
-
-                string strVT = "";
-
-                if (dr["ColumnType"].ToString() == "radiobutton")
-                {
-                    if (dr["DropDownType"].ToString() == "values")
-                    {
-                        TheDatabase.PutDDLValues(dr["DropdownValues"].ToString(), ref ddlSearch);
-                    }
-                    else if (dr["DropDownType"].ToString() == "value_text")
-                    {
-                        strVT = dr["DropdownValues"].ToString();
-                        TheDatabase.PutDDLValue_Text(dr["DropdownValues"].ToString(), ref ddlSearch);
-                    }
-                    else
-                    {
-                        //strVT
-                        Common.PutRadioImageInto_DDL(dr["DropdownValues"].ToString(), ref ddlSearch);
-                    }
-
-                }
-                else if (dr["ColumnType"].ToString() == "listbox")
-                {
-                    if (dr["DropDownType"].ToString() == "values")
-                    {
-                        TheDatabase.PutDDLValues(dr["DropdownValues"].ToString(), ref ddlSearch);
-                    }
-                    else if (dr["DropDownType"].ToString() == "value_text")
-                    {
-                        strVT = dr["DropdownValues"].ToString();
-                        TheDatabase.PutDDLValue_Text(dr["DropdownValues"].ToString(), ref ddlSearch);
-                    }
-                    else
-                    {
-                        if (dr["DropDownType"].ToString() == "table" && dr["TableTableID"] != DBNull.Value
-                          && dr["DisplayColumn"].ToString() != "") //&& dr["LinkedParentColumnID"] != DBNull.Value
-                        {
-                            strVT = "ColumnID";
-                            RecordManager.PopulateTableDropDown(int.Parse(dr["ColumnID"].ToString()), ref ddlSearch);
-                        }
-                    }
-                }
-                else
-                {
-                    TheDatabase.PutCheckboxIntoDDL(dr["DropdownValues"].ToString(), ref ddlSearch);
-                }
-
-
-                string strValue = "";
-                string strOperator = "=";
-                string strWaterViewmark = " ";
-
-                if (xmlView_FC_Doc != null)
-                {
-                    strValue = GetValueFromViewFilter(xmlView_FC_Doc, dr["ColumnID"].ToString());
-                    strOperator = GetOperatorFromViewFilter(xmlView_FC_Doc, dr["ColumnID"].ToString());
-
-                    strWaterViewmark = GetMultipleCondition(xmlView_FC_Doc, dr["ColumnID"].ToString(), ref iOneColumnConCount, strVT);
-                    if (strWaterViewmark != "")
-                    {
-                        if (ddlSearch.Items.Count > 0)
-                        {
-                            ddlSearch.Items.RemoveAt(0);
-
-                            ListItem liViewCondition = new ListItem(strWaterViewmark, "");
-                            ddlSearch.Items.Insert(0, liViewCondition);
-                            ListItem liSelect = new ListItem("--Please Select--", "vf_vf_vf");
-                            ddlSearch.Items.Insert(1, liSelect);
-
-                            ddlSearch.ToolTip = strWaterViewmark;
-                        }
-                    }
-
-
-                    if (iOneColumnConCount < 2 && strValue != null && strOperator == "=" && ThisIsOR(strWaterViewmark) == false)
-                    {
-                        if (!IsPostBack)
-                        {
-                            if (ddlSearch.Items.FindByValue(strValue) != null)
-                            {
-                                ddlSearch.SelectedValue = strValue;
-                                //ViewState[ddlSearch.ID + dr["ColumnID"].ToString()] = strValue;
-                            }
-                        }
-
-                    }
-                }
-
+              
                 HtmlTableCell cellBox = new HtmlTableCell();
-                //cellBox.Controls.Add(new LiteralControl("" + dr["Heading"].ToString() + "" + "<br/>"));
                 cellBox.Controls.Add(new LiteralControl("" + dr["Heading"].ToString() == "" ? dr["DisplayName"].ToString() + "<br/>" : dr["Heading"].ToString() + "<br/>"));
                 cellBox.Controls.Add(ddlSearch);
 
@@ -2248,34 +2137,11 @@ function checkAllHR(objRef,GridView) {
                 txtSearch.Width = 105;
                 txtSearch.Attributes.Add("onblur", "this.value=this.value.trim()");
 
-                AjaxControlToolkit.TextBoxWatermarkExtender twmTextSearch = new AjaxControlToolkit.TextBoxWatermarkExtender();
+                TextBoxWatermarkExtender twmTextSearch = new TextBoxWatermarkExtender();
                 twmTextSearch.ID = "twmTextSearch_" + dr["SystemName"].ToString();
                 twmTextSearch.TargetControlID = txtSearch.ID;
                 twmTextSearch.WatermarkText = " ";
-                twmTextSearch.WatermarkCssClass = "MaskText";
-
-                string strValue = "";
-                string strOperator = "=";
-                string strWaterViewmark = " ";
-
-                if (xmlView_FC_Doc != null)
-                {
-                    strValue = GetValueFromViewFilter(xmlView_FC_Doc, dr["ColumnID"].ToString());
-                    strOperator = GetOperatorFromViewFilter(xmlView_FC_Doc, dr["ColumnID"].ToString());
-
-                    strWaterViewmark = GetMultipleCondition(xmlView_FC_Doc, dr["ColumnID"].ToString(), ref iOneColumnConCount, "");
-
-                    if (iOneColumnConCount < 2 && strValue != null && strOperator == "=" && ThisIsOR(strWaterViewmark) == false)
-                    {
-                        txtSearch.Text = strValue;
-                        //ViewState[txtSearch.ID + dr["ColumnID"].ToString()] = strValue;
-                    }
-
-                    twmTextSearch.WatermarkText = strWaterViewmark == "" ? " " : strWaterViewmark;
-                    txtSearch.ToolTip = strWaterViewmark;
-
-                    //txtSearch.Text = GetValueFromViewFilter(xmlDoc, dr["ColumnID"].ToString());
-                }
+                twmTextSearch.WatermarkCssClass = "MaskText";                              
 
                 HtmlTableCell cellBox = new HtmlTableCell();
                 cellBox.Controls.Add(new LiteralControl("" + dr["Heading"].ToString() == "" ? dr["DisplayName"].ToString() + "<br/>" : dr["Heading"].ToString() + "<br/>"));
@@ -2337,18 +2203,148 @@ function checkAllHR(objRef,GridView) {
             ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strJSDynamicShowHide" + _strDynamictabPart, strJSDynamicShowHide, true);
         }
 
+    }
 
+    protected void SetCosmetic()
+    {
+        //need to use class instead of fixed color
+        string strAlterBC2 = "DCF2F0";
 
-        //}
-
-        //put speed test here       
-        if (Session["RunSpeedLog"] != null && _theTable != null)
+        if (this.Page.MasterPageFile != null && this.Page.MasterPageFile.ToLower().IndexOf("rrp") > -1)
         {
-            SpeedLog theSpeedLog = new SpeedLog();
-            theSpeedLog.FunctionName = _theTable.TableName + "Page_Init - END ";
-            theSpeedLog.FunctionLineNumber = 620;
-            SecurityManager.AddSpeedLog(theSpeedLog);
+          
+            strAlterBC2 = "ECECED";
+
         }
+        if (_theTable.FilterTopColour != "")
+        {
+            trFiletrTop.Style.Add("background-color", "#" + _theTable.FilterTopColour);
+        }
+        if (_theTable.FilterBottomColour != "")
+        {
+            trFilterBottom.Style.Add("background-color", "#" + _theTable.FilterBottomColour);
+        }
+
+        if (this.Page.MasterPageFile != null && this.Page.MasterPageFile.ToLower().IndexOf("rrp") > -1)
+        {
+            _bCustomDDL = true;
+            if (PageType == "p")
+            {
+                if (_theTable.FilterTopColour == "")
+                {
+                    trFiletrTop.Style.Add("background-color", "#238DA3");
+                }
+                if (_theTable.FilterBottomColour == "")
+                {
+                    trFilterBottom.Style.Add("background-color", "#40A5B7");
+                }
+
+                ddlEnteredBy.Width = 220;
+                divEnteredBy.Width = 200;
+
+                ddlEnteredBy.CssClass = "ddlrrp";
+                divEnteredBy.CssClass = "ddlDIV";
+                stgFilter.Style.Add("color", "#ffffff");
+                tblAdvancedOptionChk.Style.Add("color", "#ffffff");
+                imgShowGraph.ImageUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Pager/Images/rrp/Graph.png";
+                imgUpload.ImageUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Pager/Images/rrp/upload.png";
+                ibEmail.ImageUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Pager/Images/rrp/email.png";
+                imgConfig.ImageUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Pager/Images/rrp/config.png";
+
+                if (_theTable.HeaderColor != "")
+                {
+                    ltTextStyles.Text = "<style>.pagerstyle{ background: #" + _theTable.HeaderColor + ";}.pagergradient{ background: #" + _theTable.HeaderColor + ";}.TopTitle{color:#FFFFFF;}</style>";
+                }
+                else
+                {
+                    ltTextStyles.Text = "<style>.pagerstyle{ background: #0089a5;}.pagergradient{ background: #0089a5;}.TopTitle{color:#FFFFFF;}</style>";
+                }
+
+
+                divSearch.Attributes["class"] = "searchcornerRRP";
+                divRecordListTop.Style.Add("padding-left", "170px");
+                if (_theTable.HeaderColor != "")
+                {
+                    divRecordListTop.Style.Add("background-color", "#" + _theTable.HeaderColor);
+
+                }
+                else
+                {
+                    divRecordListTop.Style.Add("background-color", "#0089a5");
+                }
+            }
+            gvTheGrid.AlternatingRowStyle.BackColor = System.Drawing.ColorTranslator.FromHtml("#" + strAlterBC2);
+        }
+        else
+        {
+            gvTheGrid.HeaderStyle.ForeColor = System.Drawing.Color.Black;
+        }
+    }
+
+    protected void DoOtherInit()
+    {
+
+    }
+
+    // get last minute controls
+    //protected override void OnPreRender(EventArgs e)
+    //{
+    //    base.OnPreRender(e);
+
+    //    // start scanning from page subcontrols
+    //    ControlCollection _collection = this.Controls;
+    //    lblMsg.Visible = true;
+    //    lblMsg.Text =TheDatabase.GetCode(_collection,_strDynamictabPart).Replace("\r\n", "<br/>");
+    //}
+    protected void Page_Init(object sender, EventArgs e)
+    {
+        
+        if (Session["User"] == null || Session["FilesLocation"] == null)
+        {
+            try
+            {
+                Response.Redirect("~/Login.aspx", true);
+            }
+           catch
+            {
+               //
+            }            
+        }
+
+
+        _strDynamictabPart = lnkSearch.ClientID.Substring(0, lnkSearch.ClientID.Length - 9);    
+
+        _strFilesLocation = Session["FilesLocation"].ToString();
+
+        FindTheTable();
+
+        if (_theTable == null)
+            return;
+
+        GetRoleRight();
+
+        _bEqualOrGreaterOperator = Common.SO_SearchAllifToIsNull(_theTable.AccountID, _theTable.TableID);
+
+        if (_bEqualOrGreaterOperator == true)// && strLowerDate.Trim() != "" && strUpperDate.Trim() == "")
+        {
+            _strEqualOrGreaterOperator = " >= ";
+        }
+
+        FindTheView();
+        if (_theView == null)
+            return;
+       
+        if (_theTable == null)
+        {
+            goto EndSub;//why?
+        }
+
+        SetCosmetic();
+
+        JSCode();
+
+        CreateDynamicControls();
+
 
     EndSub:
         int Fxx;
@@ -2635,12 +2631,15 @@ function checkAllHR(objRef,GridView) {
 
     protected void Page_Load(object sender, EventArgs e)
     {
-
-
-        if (Session["User"] == null || Session["FilesLocation"] == null)
+        if(!IsPostBack)
         {
-            return;
+            PopulateDynamicControls();
         }
+
+        if (_theTable == null)
+            return;
+
+
 
 
         if (Request.RawUrl.IndexOf("EachRecordTable.aspx") > -1)
@@ -2654,9 +2653,7 @@ function checkAllHR(objRef,GridView) {
 
         try
         {
-            if (_theTable == null)
-                return;
-
+            
             string strMaxCharactersInCell = SystemData.SystemOption_ValueByKey_Account("MaxCharactersInCell", _theTable.AccountID, _theTable.TableID);
             if (strMaxCharactersInCell != "")
                 _iMaxCharactersInCell = int.Parse(strMaxCharactersInCell);
@@ -2709,15 +2706,7 @@ function checkAllHR(objRef,GridView) {
             divShowGraph.Visible = false;
         }
 
-        //put speed test here       
-        if (Session["RunSpeedLog"] != null && _theTable != null)
-        {
-            SpeedLog theSpeedLog = new SpeedLog();
-            theSpeedLog.FunctionName = _theTable.TableName + "Page_Load - Start ";
-            theSpeedLog.FunctionLineNumber = 795;
-            SecurityManager.AddSpeedLog(theSpeedLog);
-        }
-
+      
         //Title = "Records";
         if (Request.RawUrl.IndexOf("Default.aspx") > -1)
         {
@@ -2766,16 +2755,7 @@ function checkAllHR(objRef,GridView) {
 
         try
         {
-            if (_theTable == null)
-            {
-                goto EndSub;
-            }
-            else
-            {
-
-
-            }
-
+           
             _theAccount = SecurityManager.Account_Details(int.Parse(Session["AccountID"].ToString()));
 
             //this.Page.Master.
@@ -2847,21 +2827,13 @@ function checkAllHR(objRef,GridView) {
             }
 
 
-
-            hlBatches.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Batches.aspx?TableID=" + Cryptography.Encrypt(TableID.ToString());
-
-
-
-            //_ObjUser = (User)Session["User"];
-
+            hlBatches.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Batches.aspx?TableID=" + Cryptography.Encrypt(TableID.ToString());
             _qsTableID = TableID.ToString();
-
 
             cbcSearch1.TableID = TableID;
             cbcSearch2.TableID = TableID;
             cbcSearch3.TableID = TableID;
             cbcSearchMain.TableID = TableID;
-            //cbcvSumFilter.TableID = TableID;
 
             if (_theView != null)
             {
@@ -2872,47 +2844,15 @@ function checkAllHR(objRef,GridView) {
                 //cbcvSumFilter.ViewID = _theView.ViewID;
             }
 
-            //cbcvSumFilter.HideColumn = true;
-
-            //if ((bool)_ObjUser.IsAdvancedSecurity)
-            //{
-            //    DataTable dtUserTable = SecurityManager.ets_UserTable_Select(null,
-            //        int.Parse(_qsTableID), _ObjUser.UserID, null);
-
-            //    if (dtUserTable.Rows.Count > 0)
-            //    {
-            //        _strRecordRightID = dtUserTable.Rows[0]["RoleType"].ToString();
-            //    }
-            //}
-            //else
-            //{
-            //    _strRecordRightID = Session["roletype"].ToString();
-            //}
-
-
+           
 
             if (_strRecordRightID == Common.UserRoleType.None) //none role
             {
-                Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Empty.aspx", false);
+                Response.Redirect(Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Empty.aspx", false);
                 return;
             }
 
-            if (Request.UserAgent.Contains("Android"))
-            {
-                //lblRecords.Visible = true;
-                //ddlTableMenu.Visible = true;
-                //lblTitle.Visible = false;
-            }
-            else
-            {
-                //lblRecords.Visible = false;
-                //ddlTableMenu.Visible = false;
-                ////lblTitle.Visible = true;
-                //if (ShowTitle)
-                //{
-                //    lblTitle.Visible = true;
-                //}
-            }
+           
 
             //Ticket 846: Removing dropdown when in mobile
             //modified by: Ismael
@@ -2932,7 +2872,7 @@ function checkAllHR(objRef,GridView) {
                     PopulateExportTemplate((int)_theTable.TableID);
                     ddlTemplate_SelectedIndexChanged(null, null);
 
-                    hlExportTemplateNew.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Export/ExportTemplateItem.aspx?mode=" + Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&SearchCriteriaET=" + Cryptography.Encrypt("-1") + "&fixedbackurl=" + Cryptography.Encrypt(Request.RawUrl);
+                    hlExportTemplateNew.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Export/ExportTemplateItem.aspx?mode=" + Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&SearchCriteriaET=" + Cryptography.Encrypt("-1") + "&fixedbackurl=" + Cryptography.Encrypt(Request.RawUrl);
                     //hlExportTemplate.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) +"&SearchCriteriaET=" + Cryptography.Encrypt("-1");
                 }
 
@@ -2986,12 +2926,7 @@ function checkAllHR(objRef,GridView) {
                         chkShowOnlyWarning.Checked = true;
                     }
 
-                    Table qsTable = RecordManager.ets_Table_Details(TableID);
-                    //Menu qsMenu = RecordManager.ets_Menu_Details((int)qsTable.MenuID);
-
-                    //lblTableCaptionForFilter.Text = qsTable.TableName;
-
-                    //PopulateFilterColumn(qsTable);
+                    Table qsTable = RecordManager.ets_Table_Details(TableID);                   
 
                     if (qsTable.HideAdvancedOption != null)
                     {
@@ -3002,7 +2937,7 @@ function checkAllHR(objRef,GridView) {
                     }
 
 
-                    hlConfig.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "#topline";
+                    hlConfig.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "#topline";
 
                     if (Common.HaveAccess(_strRecordRightID, "1,2"))
                     {
@@ -3152,9 +3087,6 @@ function checkAllHR(objRef,GridView) {
             {
                 _gvPager = (Common_Pager)gvr.FindControl("Pager");
 
-                //edit view link
-
-
                 if (PageType == "p")
                 {
                     if (_strRecordRightID == Common.UserRoleType.Administrator
@@ -3179,6 +3111,7 @@ function checkAllHR(objRef,GridView) {
         }
         catch (Exception ex)
         {
+            //
         }
 
         string strXX = @"
@@ -3188,7 +3121,7 @@ function checkAllHR(objRef,GridView) {
 
                                     var chk = document.getElementById('ctl00_HomeContentPlaceHolder_rlOne_chkShowAdvancedOptions');
                                     var x = document.getElementById('" + tblAdvancedOption.ClientID + @"');
-                                    var trChkOnlyWarning = document.getElementById('"+trChkShowOnlyWarning.ClientID+@"');
+                                    var trChkOnlyWarning = document.getElementById('" + trChkShowOnlyWarning.ClientID + @"');
 
                                     if(chk==null)
                                     {
@@ -3350,7 +3283,7 @@ function checkAllHR(objRef,GridView) {
 
                                     var chk = document.getElementById('" + chkShowAdvancedOptions.ClientID + @"');
                                     var x = document.getElementById('" + tblAdvancedOption.ClientID + @"');
-                                    var trChkOnlyWarning = document.getElementById('"+trChkShowOnlyWarning.ClientID+@"');
+                                    var trChkOnlyWarning = document.getElementById('" + trChkShowOnlyWarning.ClientID + @"');
                                     
                                     var tdFilterDynamic = document.getElementById('" + tdFilterDynamic.ClientID + @"');
                                     var tdFilterYAxis = document.getElementById('" + tdFilterYAxis.ClientID + @"');
@@ -3503,14 +3436,7 @@ function checkAllHR(objRef,GridView) {
         TheDatabase.SetValidationGroup(_collection, _strDynamictabPart);
         SetOtherValidationGroup();
         //put speed test here       
-        if (Session["RunSpeedLog"] != null && _theTable != null)
-        {
-            SpeedLog theSpeedLog = new SpeedLog();
-            theSpeedLog.FunctionName = _theTable.TableName + "Page_Load - END ";
-            theSpeedLog.FunctionLineNumber = 1430;
-            SecurityManager.AddSpeedLog(theSpeedLog);
-        }
-
+       
     EndSub:
         int iFXX;
 
@@ -3626,7 +3552,7 @@ function checkAllHR(objRef,GridView) {
                 _gvPager.HideDelete = true;
             }
 
-           
+
 
 
         }
@@ -3640,7 +3566,7 @@ function checkAllHR(objRef,GridView) {
                 if ((bool)_theView.ShowEditIcon == false)
                     gvTheGrid.Columns[2].Visible = false;//edit
             }
-            
+
 
             if (_theView != null)
             {
@@ -3900,7 +3826,7 @@ function checkAllHR(objRef,GridView) {
             strExtra = "";
         }
 
-        return Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/ViewEditPage.aspx?" + _strNoAjaxView + "TableID=" + Cryptography.Encrypt(_qsTableID)
+        return Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/ViewEditPage.aspx?" + _strNoAjaxView + "TableID=" + Cryptography.Encrypt(_qsTableID)
                         + "&ViewSession=" + Cryptography.Encrypt(_strViewSession)
                         + "&ViewID=" + _theView.ViewID.ToString() + (PageType == "c" ? "&tabindex=" + DetailTabIndex.ToString() : "")
                         + ((_strViewPageType == "child" && _iParentTableID != null) ? "&ParentTableID=" + Cryptography.Encrypt(_iParentTableID.ToString()) : "")
@@ -3999,7 +3925,7 @@ function checkAllHR(objRef,GridView) {
                _dtDateFrom, _dtDateTo, sParentColumnSortSQL, "", _strViewName, int.Parse(hfViewID.Value), ref strReturnSQL, ref strReturnSQL);
 
 
-           
+
 
             //put speed test here       
 
@@ -4215,7 +4141,7 @@ function checkAllHR(objRef,GridView) {
 
                 ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strStaticheaderJS_key", strStaticheaderJS, true);
 
-                
+
                 lnkEditManyCancel.Visible = false;
                 lnkEditManyCancel2.Visible = true;
                 mpeEditMany.OkControlID = "";
@@ -4612,7 +4538,7 @@ function checkAllHR(objRef,GridView) {
 
             if (_gvPager != null)
             {
-                
+
                 if (PageType == "c")
                 {
                     if (ShowAddButton == false)
@@ -4620,7 +4546,7 @@ function checkAllHR(objRef,GridView) {
                         _gvPager.HideAdd = true;
 
                     }
-                     _gvPager.HideAllExport = true;
+                    _gvPager.HideAllExport = true;
                 }
                 else
                 {
@@ -4631,7 +4557,7 @@ function checkAllHR(objRef,GridView) {
                         {
                             _gvPager.HideParmanentDelete = false;
                             _gvPager.HideEditMany = true;
-                            
+
                         }
                         else
                         {
@@ -4666,16 +4592,16 @@ function checkAllHR(objRef,GridView) {
             }
 
 
-           
+
 
             if (_gvPager != null && Request.QueryString["RecordTable"] != null)
-            {               
+            {
                 divShowGraph.Visible = false;
                 divUpload.Visible = false;
                 divEmail.Visible = false;
                 divConfig.Visible = false;
                 divBatches.Visible = false;
-                
+
             }
 
             //implement view final touch
@@ -4787,7 +4713,7 @@ function checkAllHR(objRef,GridView) {
             {
                 _gvPager.TableID = TableID;
             }
-            if(divEmptyData.Visible==true & divNoFilter.Visible==true)
+            if (divEmptyData.Visible == true & divNoFilter.Visible == true)
             {
                 divEmptyData.Visible = false;
             }
@@ -5196,7 +5122,7 @@ function checkAllHR(objRef,GridView) {
                    " <bIsNumericY>" + HttpUtility.HtmlEncode(bIsNumericY.ToString()) + "</bIsNumericY>" +
 
                    " <" + ddlEnteredBy.ID + ">" + HttpUtility.HtmlEncode(ddlEnteredBy.Text) + "</" + ddlEnteredBy.ID + ">" +
-                   //" <" + cbcvSumFilter.ID + ">" + HttpUtility.HtmlEncode(cbcvSumFilter.GetValue) + "</" + cbcvSumFilter.ID + ">" +
+                //" <" + cbcvSumFilter.ID + ">" + HttpUtility.HtmlEncode(cbcvSumFilter.GetValue) + "</" + cbcvSumFilter.ID + ">" +
                    " <" + chkIsActive.ID + ">" + HttpUtility.HtmlEncode(chkIsActive.Checked.ToString()) + "</" + chkIsActive.ID + ">" +
                    " <" + chkShowOnlyWarning.ID + ">" + HttpUtility.HtmlEncode(chkShowOnlyWarning.Checked.ToString()) + "</" + chkShowOnlyWarning.ID + ">" +
                    " <" + chkShowAdvancedOptions.ID + ">" + HttpUtility.HtmlEncode(chkShowAdvancedOptions.Checked.ToString()) + "</" + chkShowAdvancedOptions.ID + ">" +
@@ -5213,7 +5139,7 @@ function checkAllHR(objRef,GridView) {
                    " <strViewID>" + HttpUtility.HtmlEncode(hfViewID.Value) + "</strViewID>" +
                     " <" + ddlUploadedBatch.ID + ">" + HttpUtility.HtmlEncode(ddlUploadedBatch.Text) + "</" + ddlUploadedBatch.ID + ">" +
                    strOtherXMLTags +
-                  //" <" + ddlDropdownColumnSearch.ID + ">" + HttpUtility.HtmlEncode(ddlDropdownColumnSearch.SelectedValue == null ? "" : ddlDropdownColumnSearch.SelectedValue) + "</" + ddlDropdownColumnSearch.ID + ">" + strDynamicSearch +
+                //" <" + ddlDropdownColumnSearch.ID + ">" + HttpUtility.HtmlEncode(ddlDropdownColumnSearch.SelectedValue == null ? "" : ddlDropdownColumnSearch.SelectedValue) + "</" + ddlDropdownColumnSearch.ID + ">" + strDynamicSearch +
                   "</root>";
 
             SearchCriteria theSearchCriteria = new SearchCriteria(null, xml);
@@ -5221,10 +5147,10 @@ function checkAllHR(objRef,GridView) {
             ViewState["_iSearchCriteriaID"] = _iSearchCriteriaID;
             Session["SCid" + hfViewID.Value] = _iSearchCriteriaID;
 
-            hlShowGraph.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Graph/RecordChart.aspx?SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString());
+            hlShowGraph.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Graph/RecordChart.aspx?SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString());
             //hlSchedule.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Schedule/MonitorSchedules.aspx?SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString());
 
-            hlUpload.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordUpload.aspx?SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString());
+            hlUpload.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordUpload.aspx?SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString());
 
             //hlDocuments.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/Document.aspx?SSearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString());
 
@@ -5434,7 +5360,7 @@ function checkAllHR(objRef,GridView) {
                 strExtra = strExtra + "&fixedurl=" + Cryptography.Encrypt("~/Default.aspx");
             }
 
-            string strAddURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + strExtra;
+            string strAddURL = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + strExtra;
 
             if (_theTable.AddOpensForm != null && (bool)_theTable.AddOpensForm && _theTable.AddRecordSP != "")
             {
@@ -5565,7 +5491,7 @@ function checkAllHR(objRef,GridView) {
         {
             strSearch = Request.QueryString["SearchCriteriaID"].ToString();
         }
-        string strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetWizard.aspx?SearchCriteriaID=" + strSearch
+        string strURL = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetWizard.aspx?SearchCriteriaID=" + strSearch
     + "&FormSetID=" + Cryptography.Encrypt(ddlFormSet.SelectedValue)
     + "&ParentTableID=" + Cryptography.Encrypt(_theTable.TableID.ToString())
     + "&ParentRecordID=" + Cryptography.Encrypt(iNewRecordID.ToString()) + "&ps=0";
@@ -6579,13 +6505,13 @@ function checkAllHR(objRef,GridView) {
             {
                 if (_bCustomDDL)
                 {
-                    EditHyperLink.ImageUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Pager/Images/rrp/edit_s.png";
+                    EditHyperLink.ImageUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Pager/Images/rrp/edit_s.png";
                 }
             }
 
 
             if (_strRecordRightID == Common.UserRoleType.EditOwnViewOther
-                || _strRecordRightID==Common.UserRoleType.OwnData)
+                || _strRecordRightID == Common.UserRoleType.OwnData)
             {
                 Record theRecord = RecordManager.ets_Record_Detail_Full(int.Parse(rowView["DBGSystemRecordID"].ToString()));
                 if (theRecord != null)
@@ -6602,7 +6528,7 @@ function checkAllHR(objRef,GridView) {
                     }
                     else
                     {
-                      
+
                         strURL = GetViewURL() + Cryptography.Encrypt(strDBGSystemRecordID);
                         if (EditHyperLink != null)
                             EditHyperLink.Visible = false;
@@ -6951,7 +6877,7 @@ function checkAllHR(objRef,GridView) {
 
                                     if (strLinkURL.IndexOf("http") == -1)
                                     {
-                                        strLinkURL = Request.Url.Scheme +"://" + strLinkURL;
+                                        strLinkURL = Request.Url.Scheme + "://" + strLinkURL;
                                     }
 
                                     e.Row.Cells[j + 4].Text = "<a target='_blank' href='" + strLinkURL + "'>"
@@ -7007,7 +6933,7 @@ function checkAllHR(objRef,GridView) {
                                         {
                                             string strFilePath = Cryptography.Encrypt(_strFilesLocation + "/UserFiles/AppFiles/" + strValueAsString);
                                             string strFileName = Cryptography.Encrypt(strValueAsString.Substring(37));
-                                            string strFileURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Filedownload.aspx?FilePath="
+                                            string strFileURL = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Filedownload.aspx?FilePath="
                             + strFilePath + "&FileName=" + strFileName;
 
                                             e.Row.Cells[j + 4].Text = "<a target='_blank' href='" + strFileURL + "'>"
@@ -7200,7 +7126,7 @@ function checkAllHR(objRef,GridView) {
 
                                     if (strImageURL != "")
                                     {
-                                        e.Row.Cells[j + 4].Text = "<img alt='Traffic Light' src='" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + strImageURL + "' />";
+                                        e.Row.Cells[j + 4].Text = "<img alt='Traffic Light' src='" + Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + strImageURL + "' />";
                                     }
 
                                 }
@@ -7363,7 +7289,7 @@ function checkAllHR(objRef,GridView) {
                                                 if (strPaRecordID != "" && bIsRecord)
                                                 {
 
-                                                    string strLink = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" +
+                                                    string strLink = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" +
                                                 Cryptography.Encrypt(strMode) + "&TableID=" + Cryptography.Encrypt(_dtRecordColums.Rows[i]["TableTableID"].ToString())
                                                 + "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&RecordID=" + Cryptography.Encrypt(strPaRecordID) + "&UrlReferrer=y" + strFixedURL;
                                                     string strViewHTML = "<a  href='" + strLink + "' target='" + strTarget + "'> " + e.Row.Cells[j + 4].Text.ToString() + " <a>";
@@ -7383,7 +7309,7 @@ function checkAllHR(objRef,GridView) {
                                                             if (dtTheRecord.Rows.Count > 0)
                                                             {
                                                                 strPaRecordID = dtTheRecord.Rows[0]["RecordID"].ToString();
-                                                                string strLink = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" +
+                                                                string strLink = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" +
                                                Cryptography.Encrypt(strMode) + "&TableID=" + Cryptography.Encrypt(_dtRecordColums.Rows[i]["TableTableID"].ToString())
                                                + "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&RecordID=" + Cryptography.Encrypt(strPaRecordID) + "&UrlReferrer=y" + strFixedURL;
                                                                 string strViewHTML = "<a  href='" + strLink + "'  target='" + strTarget + "'> " + e.Row.Cells[j + 4].Text.ToString() + " <a>";
@@ -7694,7 +7620,7 @@ function checkAllHR(objRef,GridView) {
                                             else if (aRecord.WarningResults.IndexOf("INVALID (and ignored): " + _dtRecordColums.Rows[i]["DisplayName"].ToString()) >= 0)
                                             {
                                                 e.Row.Cells[j + 4].ForeColor = System.Drawing.Color.Red;
-                                                strToolTips =  Common.GetFromulaMsg("i", _dtRecordColums.Rows[i]["DisplayName"].ToString(), strEachFormulaV);// "INVALID (and ignored):" + strEachFormulaV + ". ";
+                                                strToolTips = Common.GetFromulaMsg("i", _dtRecordColums.Rows[i]["DisplayName"].ToString(), strEachFormulaV);// "INVALID (and ignored):" + strEachFormulaV + ". ";
                                             }
                                             else if (aRecord.WarningResults.IndexOf("WARNING: " + _dtRecordColums.Rows[i]["DisplayName"].ToString()) >= 0)
                                             {
@@ -7763,7 +7689,7 @@ function checkAllHR(objRef,GridView) {
                                     //validation
 
 
-                                   
+
 
 
                                 }
@@ -7959,7 +7885,7 @@ function checkAllHR(objRef,GridView) {
                 //liTemp.Attributes.Add("DataValue", dr["SystemName"].ToString());
                 chklstFields.Items.Add(liTemp);
             }
-            hlExportTemplate.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&SearchCriteriaET=" + Cryptography.Encrypt("-1");
+            hlExportTemplate.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&SearchCriteriaET=" + Cryptography.Encrypt("-1");
 
         }
         else
@@ -7975,7 +7901,7 @@ function checkAllHR(objRef,GridView) {
                 //liTemp.Attributes.Add("DataValue", dr["SystemName"].ToString());
                 chklstFields.Items.Add(liTemp);
             }
-            hlExportTemplate.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Export/ExportTemplateItem.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&SearchCriteriaET=" + Cryptography.Encrypt("-1") + "&ExportTemplateID=" + Cryptography.Encrypt(ddlTemplate.SelectedValue) + "&fixedbackurl=" + Cryptography.Encrypt(Request.RawUrl);
+            hlExportTemplate.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Export/ExportTemplateItem.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&SearchCriteriaET=" + Cryptography.Encrypt("-1") + "&ExportTemplateID=" + Cryptography.Encrypt(ddlTemplate.SelectedValue) + "&fixedbackurl=" + Cryptography.Encrypt(Request.RawUrl);
 
         }
 
@@ -8402,7 +8328,7 @@ function checkAllHR(objRef,GridView) {
         if (string.IsNullOrEmpty(sCheck))
         {
             Session["tdbmsgpb"] = "Please select a record.";
-            if (hfUsingScrol.Value == "yes" && _gvPager!=null)
+            if (hfUsingScrol.Value == "yes" && _gvPager != null)
             {
                 BindTheGrid(_gvPager.StartIndex, gvTheGrid.PageSize);
             }
@@ -8618,11 +8544,11 @@ function checkAllHR(objRef,GridView) {
     protected void SetOtherValidationGroup()
     {
         //delete related
-     
+
         TheDatabase.SetValidationGroup(pnlDeleteAll.Controls, "DE" + _strDynamictabPart);
         //edit many related
         TheDatabase.SetValidationGroup(pnlEditMany.Controls, "EM" + _strDynamictabPart);
-        
+
 
         //delete related
         //rfvDeleteReason.ValidationGroup = "DR";
@@ -8863,7 +8789,7 @@ function checkAllHR(objRef,GridView) {
             DateTime dtRightNow = DateTime.Now;
             RecordManager.Record_Audit(null, sCheck, false, dtRightNow);
             Common.ExecuteText("UPDATE Record SET " + theColumn.SystemName + "='" + strValue.Replace("'", "''") + "' WHERE RecordID IN (" + sCheck + ")");
-            DataTable dtRecords = Common.DataTableFromText(@"SELECT " +  theColumn.SystemName  + @",RecordID,WarningResults,ValidationResults FROM Record
+            DataTable dtRecords = Common.DataTableFromText(@"SELECT " + theColumn.SystemName + @",RecordID,WarningResults,ValidationResults FROM Record
 	                    WHERE  RecordID IN (" + sCheck + @")");
 
             string strInvalidRecordIDs = "";
@@ -8874,9 +8800,9 @@ function checkAllHR(objRef,GridView) {
 
             RecordManager.Record_Audit(null, sCheck, true, dtRightNow);
 
-            if (strInvalidRecordIDs!="")
+            if (strInvalidRecordIDs != "")
             {
-                Session["tdbmsgpb"]="Total invalid records:" + (strInvalidRecordIDs.Split(',').Length-1).ToString();
+                Session["tdbmsgpb"] = "Total invalid records:" + (strInvalidRecordIDs.Split(',').Length - 1).ToString();
             }
 
             lnkSearch_Click(null, null);
@@ -9266,7 +9192,7 @@ function checkAllHR(objRef,GridView) {
 
         if (strSendEmailURl != "")
         {
-            strSendEmailURl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + strSendEmailURl;
+            strSendEmailURl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + strSendEmailURl;
             if (_bOpenInParent == false)
             {
                 Response.Redirect(strSendEmailURl, false);
@@ -9543,7 +9469,7 @@ function checkAllHR(objRef,GridView) {
 
         if (string.IsNullOrEmpty(sCheck))
         {
-           // ScriptManager.RegisterClientScriptBlock(gvTheGrid, typeof(Page), "message_alert", "alert('Please select a record.');", true);
+            // ScriptManager.RegisterClientScriptBlock(gvTheGrid, typeof(Page), "message_alert", "alert('Please select a record.');", true);
             Session["tdbmsgpb"] = "Please select a record.";
         }
         else
@@ -9744,7 +9670,7 @@ function checkAllHR(objRef,GridView) {
         {
             if (!string.IsNullOrEmpty(strRecordIDs))
             {
-             
+
                 _dtRecordColums = RecordManager.ets_Table_Columns_All(TableID);
 
                 bool _bShowExceedances = false;
@@ -9781,24 +9707,24 @@ function checkAllHR(objRef,GridView) {
                         Record aRecord = RecordManager.ets_Record_Detail_Full(int.Parse(sTemp));
                         bool bIsValid = true;
 
-                        if(TheDatabase.IsRecordDuplicate(aRecord,strUniqueColumnIDSys,strUniqueColumnID2Sys,(int)aRecord.RecordID))
+                        if (TheDatabase.IsRecordDuplicate(aRecord, strUniqueColumnIDSys, strUniqueColumnID2Sys, (int)aRecord.RecordID))
                         {
                             iDuplicateRecord = iDuplicateRecord + 1;
                             bIsValid = false;
                         }
-                        DataTable dtValidWarning=null;
+                        DataTable dtValidWarning = null;
                         string strtempRef = "";
                         string _strInValidResults = "";
                         string _strExceedanceResults = "";
                         string _strWarningResults = "";
                         int _iWarningColumnCount = 0;
-                        int _iExceedanceColumnCount = 0;                        
+                        int _iExceedanceColumnCount = 0;
 
                         TheDatabase.PerformAllValidation(ref aRecord, ref dtValidWarning, false, false, _dtColumnsAll, ref strtempRef, ref _strInValidResults, _bShowExceedances,
                             ref _strExceedanceResults, (int)_theTable.AccountID, strtempRef, ref strtempRef, ref strtempRef, ref _iExceedanceColumnCount, ref _strWarningResults,
                             ref strtempRef, ref strtempRef, ref _iWarningColumnCount);
 
-                        if (_strInValidResults!="")
+                        if (_strInValidResults != "")
                         {
                             aRecord.ValidationResults = _strExceedanceResults;
                             bIsValid = false;
@@ -9828,7 +9754,7 @@ function checkAllHR(objRef,GridView) {
                         else
                         {
                             aRecord.IsActive = false;
-                          
+
                         }
                         aRecord.LastUpdatedUserID = _ObjUser.UserID;
                         RecordManager.ets_Record_Update(aRecord, false);
@@ -9838,13 +9764,13 @@ function checkAllHR(objRef,GridView) {
                 string strNotification = "";
 
                 if (iDuplicateRecord > 0)
-                    strNotification = "Total duplicate records:" + iDuplicateRecord.ToString()+". ";
-                if(iTotalInvalid>0)
+                    strNotification = "Total duplicate records:" + iDuplicateRecord.ToString() + ". ";
+                if (iTotalInvalid > 0)
                     strNotification = strNotification + "Total invalid records:" + iTotalInvalid.ToString() + ". ";
-                if(iTotalRestoredRecords>0)
+                if (iTotalRestoredRecords > 0)
                     strNotification = strNotification + "Total restored records:" + iTotalRestoredRecords.ToString() + ".";
 
-                if (strNotification!="")
+                if (strNotification != "")
                     Session["tdbmsgpb"] = strNotification;
             }
         }
@@ -10682,22 +10608,22 @@ function checkAllHR(objRef,GridView) {
             chklstFields.Items.Clear();
             DataTable dtColumns = TheDatabase.spBulkExportColumns((int)_theTable.TableID);
 
-            if(dtColumns!=null)
+            if (dtColumns != null)
             {
-                 foreach (DataRow dr in dtColumns.Rows)
-                 {
-                     string strColumnText =dr["TableName"].ToString()+ " " + dr["ColumnDisplayName"].ToString();
+                foreach (DataRow dr in dtColumns.Rows)
+                {
+                    string strColumnText = dr["TableName"].ToString() + " " + dr["ColumnDisplayName"].ToString();
 
-                     ListItem liTemp = new ListItem(strColumnText, dr["ColumnID"].ToString());
-                     liTemp.Selected = true;
-                     //liTemp.Attributes.Add("DataValue", dr["SystemName"].ToString());
-                     chklstFields.Items.Add(liTemp);
-                 }
+                    ListItem liTemp = new ListItem(strColumnText, dr["ColumnID"].ToString());
+                    liTemp.Selected = true;
+                    //liTemp.Attributes.Add("DataValue", dr["SystemName"].ToString());
+                    chklstFields.Items.Add(liTemp);
+                }
             }
         }
         else
         {
-            if (hlExportTemplate.Visible==false)
+            if (hlExportTemplate.Visible == false)
                 ddlTemplate_SelectedIndexChanged(null, null);
 
 
@@ -10795,7 +10721,7 @@ function checkAllHR(objRef,GridView) {
             HtmlTextWriter hw = new HtmlTextWriter(sw);
 
 
-           
+
 
             int iTN = 0;
             gvTheGrid.PageIndex = 0;
@@ -10818,7 +10744,7 @@ function checkAllHR(objRef,GridView) {
 
 
 
-         
+
             string strHeaderXML = "";
             if (rdbRecords.SelectedValue == "a" && strExportType != "email")
             {
@@ -10855,23 +10781,23 @@ function checkAllHR(objRef,GridView) {
                     return;
                 }
 
-               
+
                 if (rdbRecords.SelectedValue == "t")
                 {
                     sCheck = sCheck + "-1";
                     TextSearch = TextSearch + " AND Record.RecordID IN(" + sCheck + ")";
                 }
-                   
-                 if (rdbRecords.SelectedValue == "d")
-                 {
-                     if(sCheck!="")
-                     {
-                         sCheck = sCheck.Substring(0, sCheck.Length - 1);
-                         TextSearch = TextSearch + " AND Record.RecordID IN(" + sCheck + ")";
-                     }
-                        
 
-                 }
+                if (rdbRecords.SelectedValue == "d")
+                {
+                    if (sCheck != "")
+                    {
+                        sCheck = sCheck.Substring(0, sCheck.Length - 1);
+                        TextSearch = TextSearch + " AND Record.RecordID IN(" + sCheck + ")";
+                    }
+
+
+                }
 
 
             }
@@ -10884,7 +10810,7 @@ function checkAllHR(objRef,GridView) {
             //    return;
             //}
 
-           
+
 
             bool bFoundHeader = false;
 
@@ -11124,61 +11050,61 @@ function checkAllHR(objRef,GridView) {
                 {
                     if (item.Selected)
                     {
-                         if (item.Selected)
-                         {
-                             strSelectedColumnIDs = strSelectedColumnIDs + item.Value + ",";
-                         }
+                        if (item.Selected)
+                        {
+                            strSelectedColumnIDs = strSelectedColumnIDs + item.Value + ",";
+                        }
                     }
                 }
                 if (strSelectedColumnIDs != "")
                     strSelectedColumnIDs = strSelectedColumnIDs.Substring(0, strSelectedColumnIDs.Length - 1);
-                
-                    try
+
+                try
+                {
+                    //DataTable dtDump = TheDatabaseS.spExportAllTables(TableID);
+
+                    DataTable dtDump = TheDatabase.spBulkExportData(_theTable.TableID.ToString(), strReturnSQL, strSelectedColumnIDs);
+
+                    int iColCountD = dtDump.Columns.Count;
+
+                    foreach (DataRow dr in dtDump.Rows)
                     {
-                        //DataTable dtDump = TheDatabaseS.spExportAllTables(TableID);
-
-                        DataTable dtDump=TheDatabase.spBulkExportData(_theTable.TableID.ToString(),strReturnSQL,strSelectedColumnIDs);
-
-                        int iColCountD = dtDump.Columns.Count;
-                      
-                        foreach (DataRow dr in dtDump.Rows)
+                        for (int i = 0; i < iColCountD; i++)
                         {
-                            for (int i = 0; i < iColCountD; i++)
+                            if (!Convert.IsDBNull(dr[i]))
                             {
-                                if (!Convert.IsDBNull(dr[i]))
-                                {
-                                    //sw.Write("\"" + dr[i].ToString().Replace("\"", "'") + "\"");
-                                    sw.Write(dr[i].ToString());
-                                }
+                                //sw.Write("\"" + dr[i].ToString().Replace("\"", "'") + "\"");
+                                sw.Write(dr[i].ToString());
                             }
-
-                            sw.Write(sw.NewLine);
-
                         }
 
-                        sw.Close();
+                        sw.Write(sw.NewLine);
 
-                        HttpContext.Current.Response.Output.Write(sw.ToString());
-                        HttpContext.Current.Response.Flush();
-                        HttpContext.Current.Response.End();
-
-                        HttpContext.Current.Response.Flush(); // Sends all currently buffered output to the client.
-                        HttpContext.Current.Response.SuppressContent = true;  // Gets or sets a value indicating whether to send HTTP content to the client.
-                        HttpContext.Current.ApplicationInstance.CompleteRequest(); // Causes ASP.NET to bypass all events and filtering in the HTTP pipeline chain of execution and directly execute the EndRequest event.
-                        return;
-                    }
-                    catch (Exception ex)
-                    {
-                        ErrorLog theErrorLog = new ErrorLog(null, "Dump Export", ex.Message, ex.StackTrace, DateTime.Now, Request.Path);
-                        SystemData.ErrorLog_Insert(theErrorLog);
-                        return;
                     }
 
-                
+                    sw.Close();
+
+                    HttpContext.Current.Response.Output.Write(sw.ToString());
+                    HttpContext.Current.Response.Flush();
+                    HttpContext.Current.Response.End();
+
+                    HttpContext.Current.Response.Flush(); // Sends all currently buffered output to the client.
+                    HttpContext.Current.Response.SuppressContent = true;  // Gets or sets a value indicating whether to send HTTP content to the client.
+                    HttpContext.Current.ApplicationInstance.CompleteRequest(); // Causes ASP.NET to bypass all events and filtering in the HTTP pipeline chain of execution and directly execute the EndRequest event.
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    ErrorLog theErrorLog = new ErrorLog(null, "Dump Export", ex.Message, ex.StackTrace, DateTime.Now, Request.Path);
+                    SystemData.ErrorLog_Insert(theErrorLog);
+                    return;
+                }
+
+
             }
-            
-                        
-            
+
+
+
             if (iTN > Common.MaxRecordsExport(_theTable.AccountID, _theTable.TableID))
             {
                 if (strReturnSQL != "" && sReturnHeaderSQL != "")
@@ -11724,7 +11650,7 @@ function checkAllHR(objRef,GridView) {
                         //
                         return;
                     }
-                   
+
                 }
                 if (strExportType == "email")
                 {
@@ -11752,7 +11678,7 @@ function checkAllHR(objRef,GridView) {
                     csvWriter.Close();
 
                     Fs.Close();
-                    HttpContext.Current.Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/SendEmail.aspx?Source=" + Cryptography.Encrypt("Recordlist") + "&SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&FileName=" + Cryptography.Encrypt(strFileName), false);
+                    HttpContext.Current.Response.Redirect(Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/User/SendEmail.aspx?Source=" + Cryptography.Encrypt("Recordlist") + "&SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&FileName=" + Cryptography.Encrypt(strFileName), false);
 
                 }
             }
@@ -15792,7 +15718,7 @@ function checkAllHR(objRef,GridView) {
 
     protected void ddlTableMenu_SelectedIndexChanged(object sender, EventArgs e)
     {
-        Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordList.aspx?TableID=" + Cryptography.Encrypt(ddlTableMenu.SelectedValue), false);
+        Response.Redirect(Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordList.aspx?TableID=" + Cryptography.Encrypt(ddlTableMenu.SelectedValue), false);
     }
 
 

@@ -9,9 +9,9 @@
     <%--<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/base/jquery-ui.css"
         rel="stylesheet" type="text/css" />--%>
     <%--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script>--%>
-    <script src="../Document/Uploadify/jquery.uploadify.v2.1.4.js" type="text/javascript"></script>
+   <%-- <script src="../Document/Uploadify/jquery.uploadify.v2.1.4.js" type="text/javascript"></script>
     <script src="../Document/Uploadify/swfobject.js" type="text/javascript"></script>
-    <link href="../Document/Uploadify/uploadify.css" rel="stylesheet" type="text/css" />
+    <link href="../Document/Uploadify/uploadify.css" rel="stylesheet" type="text/css" />--%>
    <%-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/base/jquery-ui.css"
@@ -85,7 +85,7 @@
                                                                     </td>
                                                                     <td>
                                                                         <div>
-                                                                            <div runat="server" id="trConfirmation" visible="false" >
+                                                                            <%--<div runat="server" id="trConfirmation" visible="false" >
                                                                                 <table>
                                                                                     <tr>
                                                                                         <td>
@@ -102,7 +102,7 @@
                                                                                         </td>
                                                                                     </tr>
                                                                                 </table>
-                                                                            </div>
+                                                                            </div>--%>
                                                                             <div runat="server" id="trMainSave">
                                                                                 <table>
                                                                                     <tr>
@@ -140,7 +140,7 @@
                                                                                         </td>
                                                                                         <td>
                                                                                             <div runat="server" id="divSaveClose" visible="false">
-                                                                                                <asp:LinkButton runat="server" ID="lnkSaveClose" OnClick="lnkSaveClose_Click" CausesValidation="true">
+                                                                                                <asp:LinkButton runat="server" ID="lnkSaveClose" CausesValidation="false">
                                                                                                     <asp:Image runat="server" ID="Image1" ImageUrl="~/App_Themes/Default/images/Save.png"
                                                                                                         ToolTip="Save" />
                                                                                                 </asp:LinkButton>
@@ -206,38 +206,8 @@
                                                             </td>
                                                         </tr>
                                                     </table>
-
-
-
-                                                    <div>
-                                                        <table>
-                                                            <tr>
-                                                                <td style="width: 50px;">
-                                                                </td>
-                                                                <td colspan="2">
-                                                                </td>
-                                                                <td style="width: 30px;">
-                                                                </td>
-                                                                <td>
-                                                                    <table runat="server" id="trReasonForChange" visible="false">
-                                                                        <tr>
-                                                                            <td>
-                                                                                <strong runat="server" id="stgReasonForChange">Reason for change</strong>
-                                                                            </td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>
-                                                                                <asp:TextBox runat="server" ID="txtReasonForChange" Width="300px" CssClass="NormalTextBox"
-                                                                                    TextMode="MultiLine" Height="50px"></asp:TextBox>
-                                                                                <asp:RequiredFieldValidator runat="server" ID="rfvReasonForChange" ControlToValidate="txtReasonForChange"
-                                                                                    ErrorMessage="Reason for change is Required" Display="None" Enabled="false"></asp:RequiredFieldValidator>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </table>
-                                                                </td>
-                                                            </tr>
-                                                        </table>
-                                                    </div>
+                                                    
+                                                   
                                                 </asp:Panel>
                                             </td>
                                             <td>

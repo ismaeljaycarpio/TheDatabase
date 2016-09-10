@@ -4305,6 +4305,7 @@ public class UploadManager
             {
 
                 command.CommandType = CommandType.StoredProcedure;
+                command.CommandTimeout = 3600;
                 command.Parameters.Add(new SqlParameter("@nBatchID", nBatchID));
                 
 
@@ -4438,9 +4439,10 @@ public class UploadManager
 
             using (SqlCommand command = new SqlCommand("ets_Record_ImportByBatch", connection))
             {
-
-                command.CommandType = CommandType.StoredProcedure;
                 
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandTimeout = 3600;
+
                 command.Parameters.Add(new SqlParameter("@nBatchID", nBatchID));
 
                 int i = 1;
@@ -4474,6 +4476,7 @@ public class UploadManager
             using (SqlCommand command = new SqlCommand("ets_Record_UpdateByBatch", connection))
             {
                 command.CommandType = CommandType.StoredProcedure;
+                command.CommandTimeout = 3600;
                 command.Parameters.Add(new SqlParameter("@nBatchID", nBatchID));
                 SqlParameter pRV = new SqlParameter("@nUpdatedRowCount", SqlDbType.Int);
                 pRV.Direction = ParameterDirection.Output;

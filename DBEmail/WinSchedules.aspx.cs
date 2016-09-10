@@ -41,7 +41,7 @@ public partial class DBEmail_WinSchedules : System.Web.UI.Page
         if (!IsPostBack)
         {
 
-            Page.Server.ScriptTimeout = 1600;
+            Page.Server.ScriptTimeout = 3600;
 
 
             //Dynamasters Blast data - Latedata.aspx
@@ -69,11 +69,8 @@ public partial class DBEmail_WinSchedules : System.Web.UI.Page
             {
                 if (Request.QueryString["AutoImportRecords"] != null)
                 {
-
                     if (Application["ALSLive"]==null)
                         RegisterAsyncTask(new PageAsyncTask(AutoImportRecords_A));
-
-
                     return;//only run this method
                 }
                 else
@@ -89,10 +86,7 @@ public partial class DBEmail_WinSchedules : System.Web.UI.Page
                 ErrorLog theErrorLog = new ErrorLog(null, " DBEmail -WinSchedules -AutoImportRecords ", ex.Message, ex.StackTrace, DateTime.Now, Request.Path);
                 SystemData.ErrorLog_Insert(theErrorLog);
             }
-
-
-
-
+            
 
 
             try

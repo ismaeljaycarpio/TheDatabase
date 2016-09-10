@@ -2405,6 +2405,29 @@ public class TheDatabase
         SetValidationGroup(_control.Controls, strValidationGroup);
     
     }
+
+    public static void CausesValidationFalse(ControlCollection _collection)
+    {
+        foreach (Control _control in _collection)
+        {
+            // set each child
+            CausesValidationFalse(_control);
+        }
+
+    }
+    public static void CausesValidationFalse(Control _control)
+    {
+
+        // the logic of scanning
+        if (_control.GetType().GetProperty("CausesValidation") != null && !string.IsNullOrEmpty(_control.ID))
+        {
+            _control.GetType().GetProperty("CausesValidation").SetValue(_control, false);
+
+        }
+        // recursive search within children
+        CausesValidationFalse(_control.Controls);
+
+    }
     public static bool IsRecordDuplicate(Record theRecord, string strUniqueColumnIDSys, string strUniqueColumnID2Sys,int iRecordID)
     {
         if (strUniqueColumnIDSys != "" || strUniqueColumnID2Sys != "")

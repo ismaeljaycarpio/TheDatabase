@@ -489,7 +489,7 @@ public partial class Pages_Record_FormSetWizard : SecurePage
 
         _ctDetailEdit[(int)ViewState["TabIndex"]].SaveOK = false;
         _ctDetailEdit[(int)ViewState["TabIndex"]].DoValidation = false;
-        _ctDetailEdit[(int)ViewState["TabIndex"]].lnkSaveClose_Click(null, null);
+        //_ctDetailEdit[(int)ViewState["TabIndex"]].lnkSaveClose_Click(null, null);
 
         if (_ctDetailEdit[(int)ViewState["TabIndex"]].SaveOK == true)
         {
@@ -518,7 +518,7 @@ public partial class Pages_Record_FormSetWizard : SecurePage
         if (_strMode == "edit")
         {
             _ctDetailEdit[(int)ViewState["TabIndex"]].SaveOK = false;
-            _ctDetailEdit[(int)ViewState["TabIndex"]].lnkSaveClose_Click(null, null);
+            //_ctDetailEdit[(int)ViewState["TabIndex"]].lnkSaveClose_Click(null, null);
 
             if (Request.QueryString["showparent"] != null)
             {
@@ -585,7 +585,7 @@ public partial class Pages_Record_FormSetWizard : SecurePage
     protected void lnkSubmit_Click(object sender, EventArgs e)
     {
         _ctDetailEdit[(int)ViewState["TabIndex"]].SaveOK = false;
-        _ctDetailEdit[(int)ViewState["TabIndex"]].lnkSaveClose_Click(null, null);
+        //_ctDetailEdit[(int)ViewState["TabIndex"]].lnkSaveClose_Click(null, null);
 
         if (_ctDetailEdit[(int)ViewState["TabIndex"]].SaveOK == true)
         {
