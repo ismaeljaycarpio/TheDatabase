@@ -8295,6 +8295,10 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
         string sCheck = "";
         if (bHeaderChecked)
         {
+            //Ticket 1013
+            trUndo.Style.Add("display", "none");
+            //End Ticket 1013
+
             bIsAllCheckeD = true;
             for (int i = 0; i < gvTheGrid.Rows.Count; i++)
             {
@@ -9321,8 +9325,9 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
         string sCheck = "";
         if (bHeaderChecked)
         {
-            //display the checkbox if select all is triggered
+            //Ticket 1013
             trUndo.Style.Add("display", "table-row");
+            //End Ticket
 
             bIsAllCheckeD = true;
             for (int i = 0; i < gvTheGrid.Rows.Count; i++)
