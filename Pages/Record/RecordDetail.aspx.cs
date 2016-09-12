@@ -9041,7 +9041,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             //
         }
 
-        ResetTabs();
+        //ResetTabs();
     }
 
     protected void IB_CalRef_Click(object sender, ImageClickEventArgs e)
@@ -9051,7 +9051,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
         _bCancelSave = true;
         PerformSave();
-        ResetTabs();
+        //ResetTabs();
         //lnkSaveClose_Click(null,null);
 
 
@@ -10439,8 +10439,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
         }
 
-
-
+        
+        ResetTabs();
 
 
     }
@@ -10919,7 +10919,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 tabDetail.ActiveTabIndex = 0;
             }
         }
-        ResetTabs();
+        //ResetTabs();
     }
 
     protected void lnkWordWxport_Click(object sender, EventArgs e)
@@ -11244,7 +11244,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         {
 
         }
-        ResetTabs();
+        //ResetTabs();
     }
     protected void lnkSaveClose_Click(object sender, EventArgs e)
     {
@@ -11311,7 +11311,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             lblMsg.Text = ex.Message + "  " + ex.StackTrace;
            
         }
-        ResetTabs();
+        //ResetTabs();
     }
 
 
@@ -11488,7 +11488,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
             BindTheChangedLogGrid(0, gvChangedLog.PageSize);
         }
-        ResetTabs();
+        //ResetTabs();
     }
 
     protected void lnkHideHistory_Click(object sender, EventArgs e)
@@ -11496,7 +11496,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         lnkShowHistory.Visible = true;
         lnkHideHistory.Visible = false;
         trTab.Visible = false;
-        ResetTabs();
+        //ResetTabs();
     }
 
     protected void lnkNavigateNext_Click(object sender, EventArgs e)
@@ -11548,7 +11548,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         {
             //
         }
-        ResetTabs();
+        //ResetTabs();
     }
 
     protected void AutoCreateUser()

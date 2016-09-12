@@ -1203,18 +1203,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
        
         string strTitle = _theTable.TableName + " View";
 
-        if (!IsPostBack)
-        {
-            PopulateDynamicControls();
-            PopulateRecord();
-            PopulateTable();
-
-            if (_bTableTabYes)
-            {
-                ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "ShowHideMainDivsOnlyOne" + _theTable.TableID.ToString(), "ShowHideMainDivs" + _theTable.TableID.ToString() + "('" + pnlDetailTab.ClientID + "',this,0);", true);
-            }
-
-        }
+      
 
        
 
@@ -1279,7 +1268,20 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
             TheDatabase.CausesValidationFalse(_collection);
         }
 
+        if (!IsPostBack)
+        {
 
+            //if (_bTableTabYes)
+            //{
+            //    ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "ShowHideMainDivsOnlyOne" + _theTable.TableID.ToString(), "ShowHideMainDivs" + _theTable.TableID.ToString() + "('" + pnlDetailTab.ClientID + "',this,0);", true);
+            //}
+
+            PopulateTable();
+            PopulateDynamicControls();
+            EmptyControl();
+            PopulateRecord();
+
+        }
        
 
     }
@@ -2907,7 +2909,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                 string strTableTabsJS = @" function ShowHideMainDivs" + _theTable.TableID.ToString() + @"(divSelected,lnk,ttID) {
                                         var divSelectedO = document.getElementsByName(divSelected.toString());
-                                            $('.showhidedivs_hide').hide();
+                                            $('.showhidedivs_hide"+ _theTable.TableID.ToString()+@"').hide();
                                             if (divSelectedO != null) 
                                             {                                              
                                                 if(ttID!=0)
@@ -3074,7 +3076,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                              
                         if (Common.IsIn(_dtDBTableTab.Rows[t]["TableTabID"].ToString(), strHiddenTableTabID))
                         {
-                            _pnlDetailTabD[t].CssClass = "showhidedivs_hide";
+                            _pnlDetailTabD[t].CssClass = "showhidedivs_hide" + _theTable.TableID.ToString();
                             _pnlDetailTabD[t].Style.Add("display", "none");
                             lnkDetialTabD.Style.Add("display", "none");
                         }
@@ -3087,42 +3089,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     }
                 }
 
-
-
-                string strTableTabsJS = @" function ShowHideMainDivs" + _theTable.TableID.ToString() + @"(divSelected,lnk,ttID) {
-                                        var divSelectedO = document.getElementsByName(divSelected.toString());
-                                            $('.showhidedivs_hide').hide();
-                                            if (divSelectedO != null) 
-                                            {
-                                              
-                                                 if(ttID!=0)
-                                                {
-                                                    var hlEdit= document.getElementById('" + hlEdit.ClientID + @"');
-                                                    if(hlEdit!=null)
-                                                    {
-                                                        hlEdit.href = document.getElementById('" + hfEdit.ClientID + @"').value + '&TableTabID=' + ttID;
-                                                    }
-                                                }
-
-                                                $('.showhidedivs" + _theTable.TableID.ToString() + @"').hide();
-                                                //divSelectedO.style.display = 'block';
-                                                $('#'+divSelected).fadeIn();
-                                                if ($('.TablLinkClass" + _theTable.TableID.ToString() + @"') != null && lnk != null) {
-                                                    $('.TablLinkClass" + _theTable.TableID.ToString() + @"').css('font-weight', 'normal');
-                                                }
-                                                if (lnk != null) {
-                                                    try{
-                                                    lnk.style.fontWeight = 'bold';}
-                                                    catch(err) { 
-                                                        //
-                                                        }
-                                                }
-                                            }
-
-                                        }
-
-                                        ";
-                ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strTableTabsJS" + _strDynamictabPart, strTableTabsJS, true);
+                
+               
             }
         }
     }
@@ -3187,7 +3155,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     _ibValue[i].ID = "ib" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                     _ibValue[i].ImageUrl = "~/Images/Calendar.png";
                     _ibValue[i].Style.Add("padding-left", "3px");
-
+                    _ibValue[i].Enabled = false;
 
 
                     if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "datetime")
@@ -3295,7 +3263,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         _ibValue[i].ID = "ib" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _ibValue[i].ImageUrl = "~/Images/Calendar.png";
                         _ibValue[i].Style.Add("padding-left", "3px");
-
+                        _ibValue[i].Enabled = false;
                         cell[(i * 2) + 1].Controls.Add(_txtValue[i]);
                         cell[(i * 2) + 1].Controls.Add(_ibValue[i]);
                     }
@@ -3325,7 +3293,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         _ibValue[i].ImageUrl = "~/Images/Calendar.png";
                         _ibValue[i].AlternateText = "Click to show calendar";
                         _ibValue[i].Style.Add("padding-left", "3px");
-
+                        _ibValue[i].Enabled = false;
 
                         _lblTime[i] = new Label();
                         _lblTime[i].ID = "lblTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
@@ -3568,6 +3536,27 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                         _hfValue3[i] = new HiddenField();
                         _hfValue3[i].ID = "hf3" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        if (_theAccount.MapCentreLat != null)
+                        {
+                            _hfValue[i].Value = _theAccount.MapCentreLat.ToString();
+                        }
+                        else
+                        {
+                            _hfValue[i].Value = "-25.80339840765346";
+                        }
+
+                        if (_theAccount.MapCentreLong != null)
+                        {
+                            _hfValue2[i].Value = _theAccount.MapCentreLong.ToString();
+                        }
+                        else
+                        {
+                            _hfValue2[i].Value = "135.56235835000007";
+                        }
+
+                        _hfValue3[i].Value = "3";
+
+
 
                         cell[(i * 2) + 1].Controls.Add(_hfValue[i]);
                         cell[(i * 2) + 1].Controls.Add(_hfValue2[i]);
@@ -3604,6 +3593,28 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 _txtValue2[i].CssClass = "NormalTextBox";
                                 cell[(i * 2) + 1].Controls.Add(_txtValue2[i]);
 
+//                                if (bShowMap)
+//                                {
+//                                    strSearchAddressJS = @"                                                   
+//                                                        function showAddress" + _strDynamictabPart + i.ToString() + @"() {                                                      
+//                                                        if(document.getElementById('" + _strDynamictabPart + "searchbox" + i.ToString() + @"')==null){return;};
+//                                                        var address = document.getElementById('" + _strDynamictabPart + "searchbox" + i.ToString() + @"').value;         
+//                                                        var geocoder = new google.maps.Geocoder();
+//                                                        geocoder.geocode({ 'address': address }, function (results, status) {
+//                                                            if (status == google.maps.GeocoderStatus.OK) {
+//                                                                results[0].geometry.location;
+//                                                                var b = new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
+//                                                                map" + _strDynamictabPart + i.ToString() + @".setCenter(b);
+//
+//                                                            } else {
+//                                                                alert('Google Maps had some trouble finding ' + address + '.');
+//                                                            }
+//                                                        });
+//                                                    };  showAddress" + _strDynamictabPart + i.ToString() + @"();
+//
+//                                                   ";
+//                                }
+
                             }
                         }
 
@@ -3636,12 +3647,15 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                                 if (bShowMap)
                                 {
-                                    strShowLatLong = @"  var txtLatitude = document.getElementById('" + _strDynamictabPart + _txtValue[i].ID.ToString() + @"');
+                                    strShowLatLong = @"  
+                                       
+                                            var txtLatitude = document.getElementById('" + _strDynamictabPart + _txtValue[i].ID.ToString() + @"');
                                             if(txtLatitude!=null){
-                                            txtLatitude.value = map" + _strDynamictabPart + i.ToString() + @".getCenter().lat();}
+                                                txtLatitude.value = map" + _strDynamictabPart + i.ToString() + @".getCenter().lat();}
                                             var txtLongitude = document.getElementById('" + _strDynamictabPart + _txtTime[i].ID.ToString() + @"');
-                                             if(txtLongitude!=null){
-                                            txtLongitude.value = map" + _strDynamictabPart + i.ToString() + @".getCenter().lng(); }";
+                                            if(txtLongitude!=null){
+                                                txtLongitude.value = map" + _strDynamictabPart + i.ToString() + @".getCenter().lng(); }
+                                        ";
 
                                 }
 
@@ -3653,26 +3667,31 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         {
 
                             string strMapJS = @"//$(document).ready(function () {
-                                        if(document.getElementById('" + _strDynamictabPart + _hfValue3[i].ID.ToString() + @"')!=null){
-                                         var mapOptions = {
+                                    if(document.getElementById('" + _strDynamictabPart + _hfValue3[i].ID.ToString() + @"')!=null
+                                                && document.getElementById('map" + _strDynamictabPart + i.ToString() + @"')!=null){
+                                    try{
+                                            var mapOptions = {
                                                 zoom:parseFloat(document.getElementById('" + _strDynamictabPart + _hfValue3[i].ID.ToString() + @"').value),
                                                 mapTypeId: google.maps.MapTypeId.ROADMAP,scrollwheel: false,
                                                 center: new google.maps.LatLng(document.getElementById('" + _strDynamictabPart + _hfValue[i].ID.ToString() + @"').value, document.getElementById('" + _strDynamictabPart + _hfValue2[i].ID.ToString() + @"').value)          
                                             };
-                                     var map" + _strDynamictabPart + i.ToString() + @" = new google.maps.Map(document.getElementById('map" + _strDynamictabPart + i.ToString() + @"'), mapOptions);
-                                     var geocoder = new google.maps.Geocoder();" + strShowAddress + @"
+                                             var map" + _strDynamictabPart + i.ToString() + @" = new google.maps.Map(document.getElementById('map" + _strDynamictabPart + i.ToString() + @"'), mapOptions);
+                                             var geocoder = new google.maps.Geocoder();" + strShowAddress + @"
 
-                                     google.maps.event.addListener(map" + _strDynamictabPart + i.ToString() + @", 'center_changed', function () {
-                                            document.getElementById('" + _strDynamictabPart + _hfValue[i].ID.ToString() + @"').value = map" + _strDynamictabPart + i.ToString() + @".getCenter().lat();
-                                            document.getElementById('" + _strDynamictabPart + _hfValue2[i].ID.ToString() + @"').value = map" + _strDynamictabPart + i.ToString() + @".getCenter().lng();
-                                                  " + strShowLatLong + @" 
-                                        });
-
-                                    google.maps.event.addListener(map" + _strDynamictabPart + i.ToString() + @", 'zoom_changed', function () {
-                                                    document.getElementById('" + _strDynamictabPart + _hfValue3[i].ID.ToString() + @"').value = map" + _strDynamictabPart + i.ToString() + @".getZoom();
-
+                                             google.maps.event.addListener(map" + _strDynamictabPart + i.ToString() + @", 'center_changed', function () {
+                                                    document.getElementById('" + _strDynamictabPart + _hfValue[i].ID.ToString() + @"').value = map" + _strDynamictabPart + i.ToString() + @".getCenter().lat();
+                                                    document.getElementById('" + _strDynamictabPart + _hfValue2[i].ID.ToString() + @"').value = map" + _strDynamictabPart + i.ToString() + @".getCenter().lng();
+                                                          " + strShowLatLong + @" 
                                                 });
-                                        " + strSearchAddressJS + @" }
+
+                                            google.maps.event.addListener(map" + _strDynamictabPart + i.ToString() + @", 'zoom_changed', function () {
+                                                      document.getElementById('" + _strDynamictabPart + _hfValue3[i].ID.ToString() + @"').value = map" + _strDynamictabPart + i.ToString() + @".getZoom();
+                                                        });
+                                        }
+                                        catch (err) {
+                                            //
+                                        }
+                                    }
                                    // });
 
                                     ";
@@ -4440,26 +4459,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "location")
                     {
 
-
-                        if (_theAccount.MapCentreLat != null)
-                        {
-                            _hfValue[i].Value = _theAccount.MapCentreLat.ToString();
-                        }
-                        else
-                        {
-                            _hfValue[i].Value = "-25.80339840765346";
-                        }
-
-                        if (_theAccount.MapCentreLong != null)
-                        {
-                            _hfValue2[i].Value = _theAccount.MapCentreLong.ToString();
-                        }
-                        else
-                        {
-                            _hfValue2[i].Value = "135.56235835000007";
-                        }
-
-                        _hfValue3[i].Value = "3";
+                        //
+                        
                     }
                     if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "checkbox")
                     {
