@@ -730,9 +730,11 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
     protected void PopulateDynamicControls()
     {
-       
+        if (_dtDynamicSearchColumns == null)
+            return;
 
-        if (_dtDynamicSearchColumns.Rows.Count == 0)
+
+        if (_dtDynamicSearchColumns!=null && _dtDynamicSearchColumns.Rows.Count == 0)
             pnlSearch.Visible = false;
 
       
