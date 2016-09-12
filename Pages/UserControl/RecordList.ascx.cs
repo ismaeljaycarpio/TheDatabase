@@ -8288,6 +8288,10 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
     protected void Pager_DeleteAction(object sender, EventArgs e)
     {
+        //Ticket 1013
+        trUndo.Style.Add("display", "none");
+        //End
+
         EnsureSecurity();
         bool bIsAllCheckeD = false;
 
@@ -8295,10 +8299,6 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
         string sCheck = "";
         if (bHeaderChecked)
         {
-            //Ticket 1013
-            trUndo.Style.Add("display", "none");
-            //End Ticket 1013
-
             bIsAllCheckeD = true;
             for (int i = 0; i < gvTheGrid.Rows.Count; i++)
             {
@@ -9327,7 +9327,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
         {
             //Ticket 1013
             trUndo.Style.Add("display", "table-row");
-            //End Ticket
+            //End
 
             bIsAllCheckeD = true;
             for (int i = 0; i < gvTheGrid.Rows.Count; i++)
