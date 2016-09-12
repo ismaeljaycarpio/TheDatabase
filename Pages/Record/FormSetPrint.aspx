@@ -30,6 +30,10 @@
     <link href="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.css")%>" rel="stylesheet"
         type="text/css" />
     <script type="text/javascript" src="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.pack.js")%>"></script>
+        <script type="text/javascript" src="<%=Request.Url.Scheme+@"://maps.google.com/maps/api/js?sensor=false" %>"></script>
+
+    <script src="<%=Request.Url.Scheme+@"://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js" %>"></script>
+    <link href="<%=Request.Url.Scheme+@"://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/themes/base/jquery-ui.css" %>" rel="stylesheet" type="text/css" />
 
     <form id="form1" runat="server" style="background-color:White; background-image:none;">
      <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true" AsyncPostBackTimeout="36000">
