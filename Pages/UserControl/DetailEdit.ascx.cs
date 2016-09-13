@@ -59,7 +59,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
     int _TabIndex = 0;
     string _strDynamictabPart = "";
     bool _bCustomDDL = false;
-
+    string _strTableTabsJS = "";
     Panel[] _pnlDetailTabD;
     HtmlTable[] _tblMainD;
     HtmlTable[] _tblLeftD;
@@ -106,8 +106,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
     FilteredTextBoxExtender[] _ftbExt;
     SliderExtender[] _seValue;
 
-    FileUpload[] _fuValue;
-    FileUpload[] _fuValue2;
+    //FileUpload[] _fuValue;
+    //FileUpload[] _fuValue2;
     Panel[] _pnlDIV;
     Panel[] _pnlDIV2;
     Label[] _lblValue;
@@ -258,8 +258,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
         _imgWarning = new Image[_dtColumnsDetail.Rows.Count];
         _imgValues = new Image[_dtColumnsDetail.Rows.Count];
         _ftbExt = new FilteredTextBoxExtender[_dtColumnsDetail.Rows.Count];
-        _fuValue = new FileUpload[_dtColumnsDetail.Rows.Count];
-        _fuValue2 = new FileUpload[_dtColumnsDetail.Rows.Count];
+        //_fuValue = new FileUpload[_dtColumnsDetail.Rows.Count];
+        //_fuValue2 = new FileUpload[_dtColumnsDetail.Rows.Count];
         _pnlDIV = new Panel[_dtColumnsDetail.Rows.Count];
         _pnlDIV2 = new Panel[_dtColumnsDetail.Rows.Count];
         _lblValue = new Label[_dtColumnsDetail.Rows.Count];
@@ -487,6 +487,30 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
+    protected void ShowWhenJS()
+    {
+        for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
+        {
+            if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image")
+            {
+                trX[i].Style.Add("vertical-align", "top");
+            }
+
+            if (ViewState["trX_ID"  + i.ToString()] != null)
+                trX[i].ID = ViewState["trX_ID" + i.ToString()].ToString();
+
+            if (ViewState["ShowHideAdmin" + _strDynamictabPart + i.ToString()] != null)
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideAdmin" + _strDynamictabPart + i.ToString(), ViewState["ShowHideAdmin" + _strDynamictabPart + i.ToString()].ToString(), true);
+            }
+
+            if (ViewState["strShowHideFunction" + _strDynamictabPart + i.ToString()] != null)
+            {
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "strShowHideFunction" + _strDynamictabPart + i.ToString(), ViewState["strShowHideFunction" + _strDynamictabPart + i.ToString()].ToString(), true);
+            }
+        }
+
+    }
 
     public void ShowHideControls()
     {
@@ -537,12 +561,13 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 if (bHide)
                 {
                     trX[i].ID = "trX" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    ViewState["trX_ID" + i.ToString()] = trX[i].ID;
                     string targetID = "#" + _strDynamictabPart + trX[i].ID;
                     string strOnlyAdminJS = @"$('" + targetID + @"').fadeOut();";
 
 
-                    //if (!IsPostBack)
-                    ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "ShowHideAdmin" + _strDynamictabPart + i.ToString(), strOnlyAdminJS, true);
+                    ViewState["ShowHideAdmin" + _strDynamictabPart + i.ToString()] = strOnlyAdminJS;
+                   // ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "ShowHideAdmin" + _strDynamictabPart + i.ToString(), strOnlyAdminJS, true);
 
 
                 }
@@ -557,7 +582,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
             if (dtShowWhen.Rows.Count > 0)
             {
                 trX[i].ID = "trX" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-                //string strTargetTRID = "#" + trX[i].ClientID.Substring(0, trX[i].ClientID.Length - 7) + trX[i].ID;
+                ViewState["trX_ID" + i.ToString()] = trX[i].ID;
                 string strTargetTRID = "#" + _strDynamictabPart + trX[i].ID;
 
 
@@ -583,7 +608,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                             if (drSW["HideColumnID"].ToString() == _dtColumnsDetail.Rows[m]["ColumnID"].ToString() && trX[m] != null)
                             {
                                 trX[m].ID = "trX" + _dtColumnsDetail.Rows[m]["SystemName"].ToString();
-                                //string strEachDriverID = "#" + trX[m].ClientID.Substring(0, trX[m].ClientID.Length - 7);
+                                ViewState["trX_ID" + m.ToString()] = trX[m].ID;
 
                                 string strEachDriverID = "#" + _strDynamictabPart;
 
@@ -996,19 +1021,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                             {
                                                 strAllLogic = strAllLogic + strEachPreJoinOperator + " (strEachValue" + m.ToString() + @" " + strEachHideOperator + @" '" + strEachHideColumnValue + "') ";
                                             }
-
                                         }
-
                                     }
-
                                 }
-
-
-
-
-
-
-
                             }
                         }
 
@@ -1062,8 +1077,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                                     });
                                         ";
 
-
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "strShowHideFunction" + _strDynamictabPart + i.ToString(), strShowHideFunction, true);
+                    ViewState["strShowHideFunction" + _strDynamictabPart + i.ToString()] = strShowHideFunction;
+                    //ScriptManager.RegisterStartupScript(this, this.GetType(), "strShowHideFunction" + _strDynamictabPart + i.ToString(), strShowHideFunction, true);
                 }
             }
         }
@@ -1083,8 +1098,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
             strparentRecordid = Session["CopyRecordID"].ToString();
         }
 
-
-        return Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&tabindex=" + DetailTabIndex.ToString() + "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&Recordid=" + Cryptography.Encrypt(RecordID.ToString()) + "&parentRecordid=" + strparentRecordid;
+        return Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/" + _strRecordFolder + "/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&tabindex=" + DetailTabIndex.ToString() + "&SearchCriteriaID=" + Cryptography.Encrypt("-1") + "&TableID=" + Cryptography.Encrypt(TableID.ToString()) + "&Recordid=" + Cryptography.Encrypt( ViewState["RecordID"].ToString()) + "&parentRecordid=" + strparentRecordid;
 
     }
 
@@ -1103,14 +1117,12 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
     }
 
-    protected void GetRoleRight()
+    protected void ShowHideControlByRole()
     {
 
-        _strChildSession = "child" + _iParentRecordID.ToString() + "_" + _theTable.TableID.ToString();
+            hlAdd.NavigateUrl = GetAddURL();
+            hlNewData.NavigateUrl = GetAddURL();
 
-        if (!IsPostBack)
-        {
-            Session[_strChildSession] = null;
             if (ContentPage == "record")
             {
                 lnkPrevious.Visible = true;
@@ -1118,6 +1130,46 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 hlEdit.Visible = true;
                 lnkNext.Visible = true;
             }
+            if (ShowAddButton == false)
+            {
+                hlAdd.Visible = false;
+            }
+
+            if (ShowEditButton == false)
+            {
+                hlEdit.Visible = false;
+            }
+
+
+            if (OnlyOneRecord)
+            {
+                lnkPrevious.Visible = false;
+                lnkNext.Visible = false;
+            }
+            EnableTheRecordControls(false);
+
+            if (ViewState["RecordID"] == null || ViewState["RecordID"].ToString() == "")
+            {
+                lnkPrevious.Visible = false;
+                hlEdit.Visible = false;
+                lnkNext.Visible = false;
+            }
+
+            if (_bPrivate == false)
+            {
+                hlBack.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Public.aspx?TableID=" + TableID.ToString();
+            }               
+
+
+    }
+    protected void GetRoleRight()
+    {
+
+        _strChildSession = "child" + _iParentRecordID.ToString() + "_" + _theTable.TableID.ToString();
+
+        if (!IsPostBack)
+        {
+            Session[_strChildSession] = null;           
         }
         if (_bPrivate)
         {
@@ -1147,18 +1199,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 _strRecordRightID = Session["roletype"].ToString();
         }
 
-        if (_strRecordRightID == Common.UserRoleType.AddRecord)
-        {
-            hlEdit.Visible = false;
-        }
-
-        if (_strRecordRightID == Common.UserRoleType.ReadOnly)
-        {
-            hlEdit.Visible = false;
-            hlAdd.Visible = false;
-            divNorecordAdd.Visible = false;
-        }
-
+        
         if (Request.QueryString["public"] != null)
         {
             if (_theTable.AddWithoutLogin != null)
@@ -1199,83 +1240,16 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
     {
 
         _strURL = Request.Url.Scheme + "://" + Request.Url.Authority + Request.RawUrl;
-
        
         string strTitle = _theTable.TableName + " View";
 
-      
-
-       
-
-
-        if (!IsPostBack)
-        {
-
-            hlAdd.NavigateUrl = GetAddURL();
-            hlNewData.NavigateUrl = GetAddURL();
-
-            if (ShowAddButton == false)
-            {
-                hlAdd.Visible = false;
-            }
-
-            if (ShowEditButton == false)
-            {
-                hlEdit.Visible = false;
-            }
-
-
-            if (OnlyOneRecord)
-            {
-                lnkPrevious.Visible = false;
-                lnkNext.Visible = false;
-            }
-
-
-        }
-
-
-
-        if (!IsPostBack)
-        {
-            EnableTheRecordControls(false);
-            if (_bPrivate == false)
-            {                
-                hlBack.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Public.aspx?TableID=" + TableID.ToString();
-            }
-        }
-
         strTitle = "View " + _theTable.TableName;
        
-
-
-        string strFancy = @"$(function () {
-            $("".popuplink"").fancybox({
-                scrolling: 'auto',
-                type: 'iframe',
-                width: 600,
-                height: 650,
-                titleShow: false
-            });
-        });";
-        ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "FancyBox" + _strDynamictabPart, strFancy, true);
-
-      
-
         if (!IsPostBack)
         {
             ControlCollection _collection = this.Controls;
             TheDatabase.CausesValidationFalse(_collection);
-        }
-
-        if (!IsPostBack)
-        {
-
-            //if (_bTableTabYes)
-            //{
-            //    ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "ShowHideMainDivsOnlyOne" + _theTable.TableID.ToString(), "ShowHideMainDivs" + _theTable.TableID.ToString() + "('" + pnlDetailTab.ClientID + "',this,0);", true);
-            //}
-
+            
             PopulateTable();
             PopulateDynamicControls();
             EmptyControl();
@@ -1283,6 +1257,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
         }
        
+        ShowWhenJS();
+        if (ViewState["jsClickFirstTab"] != null)
+            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "jsClickFirstTab" + _strDynamictabPart, ViewState["jsClickFirstTab"].ToString(), true);
 
     }
 
@@ -1460,7 +1437,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                     if (_theTable.AddRecordSP != "")
                         RecordManager.AddRecordSP(_theTable.AddRecordSP, iNewRecordID, null);
-
+                    RecordID = iNewRecordID;
                     ViewState["RecordID"] = iNewRecordID.ToString();
 
                 }
@@ -1476,9 +1453,6 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
             CreatABlank();
         }
 
-
-
-
         if(!IsPostBack)
         {
             
@@ -1489,22 +1463,28 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
             }
 
             string strFirstRecord = "";
-            if (TextSearch != "")
-            {
-                strFirstRecord = Common.GetValueFromSQL("SELECT TOP 1 RecordID FROM Record WHERE TableID=" + TableID.ToString() + " AND IsActive= 1 AND (" + TextSearch + ") ORDER BY RecordID");
-            }
-            else
-            {
-                strFirstRecord = "";
-            }
 
-            if (strFirstRecord == "" && RecordID != null)
+            if (RecordID != null)
             {
                 strFirstRecord = RecordID.ToString();
             }
+            else
+            {
+                if (TextSearch != "")
+                {
+                    strFirstRecord = Common.GetValueFromSQL("SELECT TOP 1 RecordID FROM Record WHERE TableID=" + TableID.ToString() + " AND IsActive= 1 AND (" + TextSearch + ") ORDER BY RecordID");
+                }
+                else
+                {
+                    strFirstRecord = "";
+                }
+            }
+           
+           
             if (strFirstRecord != "")
             {
                 ViewState["RecordID"] = strFirstRecord;
+                Session[_strChildSession] = strFirstRecord;
             }
 
         }
@@ -1528,10 +1508,11 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 if (strRecordID != "")
                 {
                     ViewState["RecordID"] = strRecordID;
+                    Session[_strChildSession] = strRecordID;
                 }
             }
         }
-       
+        ShowHideControlByRole();
 
         //added and updated part
         if (ViewState["RecordID"] == null || ViewState["RecordID"].ToString() == "")
@@ -1540,8 +1521,6 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
         }
         else
         {
-            RecordID = int.Parse(ViewState["RecordID"].ToString());
-
             if (OnlyOneRecord)
             {
                 hlAdd.Visible = false;
@@ -1561,25 +1540,17 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
         if (_strChildSession != "")
         {
-            Session[_strChildSession] = RecordID.ToString();
+            Session[_strChildSession] = ViewState["RecordID"].ToString() ;
         }
 
-        //RecordID = int.Parse(_qsRecordID);
-        _dtRecordedetail = RecordManager.ets_Record_Details((int)RecordID).Tables[1];
-        _theRecord = RecordManager.ets_Record_Detail_Full((int)RecordID);
+        _dtRecordedetail = RecordManager.ets_Record_Details( int.Parse(ViewState["RecordID"].ToString())).Tables[1];
+        _theRecord = RecordManager.ets_Record_Detail_Full( int.Parse(ViewState["RecordID"].ToString()));
        
         AddEditInfo();
-
-
-
-       
-
+        
         if (_strRecordRightID == Common.UserRoleType.OwnData)
         {
-
             hlEdit.Visible = false;
-
-
             if (_theRecord != null)
             {
                 if (_theRecord.OwnerUserID.ToString() == _objUser.UserID.ToString())
@@ -1594,7 +1565,6 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
         {
 
             hlEdit.Visible = false;
-
             if (_theRecord != null)
             {
                 if (_theRecord.EnteredBy.ToString() == _objUser.UserID.ToString())
@@ -1602,10 +1572,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     hlEdit.Visible = true;
                 }
             }
-
-        }
-
-
+        }        
 
         //Get warning and validation here
         string strWarning = "";
@@ -1621,7 +1588,6 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
             {
                 strValidation = _dtRecordedetail.Rows[0][i].ToString();
             }
-
         }
 
 
@@ -2273,7 +2239,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                                         Column theChildColumn = RecordManager.ets_Column_Details(int.Parse(drCT["ColumnID"].ToString()));
                                         Column theLinkedColumn = RecordManager.ets_Column_Details((int)theChildColumn.LinkedParentColumnID);
-                                        Record theLinkedRecord = RecordManager.ets_Record_Detail_Full((int)RecordID);
+                                        Record theLinkedRecord = RecordManager.ets_Record_Detail_Full( int.Parse(ViewState["RecordID"].ToString()));
                                         string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
                                         strLinkedColumnValue = strLinkedColumnValue.Replace("'", "''");
 
@@ -2696,13 +2662,15 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
         ShowHideNextPrev();
         ShowHideControls();
         ShowHideTableTab();
+        if(_strTableTabsJS!="")
+        {
+            ViewState["strTableTabsJS"] = _strTableTabsJS;
+        }
+       
+        //if (_jsClickFirstTab != "")
+        //    ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strTableTabsJSFirstTab" + _strDynamictabPart, _jsClickFirstTab, true);
 
-        //if (!IsPostBack)
-        //{
-            if (_jsClickFirstTab != "")
-                ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strTableTabsJSFirstTab" + _strDynamictabPart, _jsClickFirstTab, true);
-
-        //}
+      
 
 
 
@@ -2751,8 +2719,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "file"
                         || _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image")
                     {
-                        if (_fuValue[i] != null)
-                            _fuValue[i].Enabled = false;
+                        //if (_fuValue[i] != null)
+                        //    _fuValue[i].Enabled = false;
                     }
 
                     if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "dropdown"
@@ -2851,7 +2819,10 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         lnkDetialTab.ID = "lnkDetialTab" + _theTable.TableID.ToString();
                         lnkDetialTab.Text = _dtDBTableTab.Rows[t]["TabName"].ToString(); //"Detail";
                         lnkDetialTab.Font.Bold = true;
-                        _jsClickFirstTab = "ShowHideMainDivs" + _theTable.TableID.ToString() + "('" + pnlDetailTab.ClientID + "',this," + _dtDBTableTab.Rows[t]["TableTabID"].ToString() + ");";
+                        //_jsClickFirstTab = "ShowHideMainDivs" + _theTable.TableID.ToString() + "('" + pnlDetailTab.ClientID + "',this," + _dtDBTableTab.Rows[t]["TableTabID"].ToString() + ");";
+                        _jsClickFirstTab = " $('#"+_strDynamictabPart + lnkDetialTab.ID + "').trigger('click');";
+                        ViewState["jsClickFirstTab"] = _jsClickFirstTab;
+                        
                         lnkDetialTab.Attributes.Add("onclick", "ShowHideMainDivs" + _theTable.TableID.ToString() + "('" + pnlDetailTab.ClientID + "',this," + _dtDBTableTab.Rows[t]["TableTabID"].ToString() + "); return false");
                         lnkDetialTab.CssClass = "TablLinkClass" + _theTable.TableID.ToString();
                         
@@ -2907,7 +2878,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                string strTableTabsJS = @" function ShowHideMainDivs" + _theTable.TableID.ToString() + @"(divSelected,lnk,ttID) {
+                 _strTableTabsJS = @" function ShowHideMainDivs" + _theTable.TableID.ToString() + @"(divSelected,lnk,ttID) {
                                         var divSelectedO = document.getElementsByName(divSelected.toString());
                                             $('.showhidedivs_hide"+ _theTable.TableID.ToString()+@"').hide();
                                             if (divSelectedO != null) 
@@ -2939,7 +2910,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                         }
 
                                         ";
-                ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strTableTabsJS" + _strDynamictabPart, strTableTabsJS, true);
+                
+                ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strTableTabsJS" + _strDynamictabPart, _strTableTabsJS, true);
             }
         }
     }
@@ -3341,9 +3313,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         _pnlDIV[i] = new Panel();
                         _pnlDIV[i].ID = "pnl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
 
-                        _fuValue[i] = new FileUpload();
-                        _fuValue[i].ID = "fu" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-                        _pnlDIV[i].Controls.Add(_fuValue[i]);
+                        //_fuValue[i] = new FileUpload();
+                        //_fuValue[i].ID = "fu" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        //_pnlDIV[i].Controls.Add(_fuValue[i]);
 
 
                         if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image")
@@ -4855,9 +4827,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
             string strRecordID = GetNextRecordID(ViewState["RecordID"].ToString());// Common.GetValueFromSQL("SELECT TOP 1 RecordID FROM Record WHERE TableID=" + TableID.ToString() + " AND IsActive= 1 AND RecordID>" + ViewState["RecordID"].ToString() + " AND (" + TextSearch + ") ORDER BY RecordID");
 
             if (strRecordID != "")
-            {
+            {               
                 ViewState["RecordID"] = strRecordID;
-
             }
             EmptyControl();
             PopulateRecord();

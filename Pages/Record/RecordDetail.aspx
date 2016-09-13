@@ -18,7 +18,7 @@
     <script src="../Document/Uploadify/jquery.uploadify.v2.1.4.js" type="text/javascript"></script>
     <script src="../Document/Uploadify/swfobject.js" type="text/javascript"></script>
     <link href="../Document/Uploadify/uploadify.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="<%=Request.Url.Scheme+@"://maps.google.com/maps/api/js?sensor=false" %>"></script>
+    <script type="text/javascript" src="<%=Request.Url.Scheme+@"://maps.google.com/maps/api/js?sensor=false" %>"></script>
 
     <script src="<%=Request.Url.Scheme+@"://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js" %>"></script>
     <link href="<%=Request.Url.Scheme+@"://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/themes/base/jquery-ui.css" %>" rel="stylesheet" type="text/css" />
@@ -88,8 +88,7 @@
         function ShowHideMainDivs(divSelected, lnk) {
             var hfCurrentSelectedTabLink = document.getElementsByName('hfCurrentSelectedTabLink');
             $(".showhidedivs_hide").hide();
-            if (divSelected == null)
-            {
+            if (divSelected == null) {
                 return;
             }
             if (lnk != null) {
@@ -111,7 +110,7 @@
             var hfCurrentSelectedTabLink = document.getElementsByName('hfCurrentSelectedTabLink');
             var divSelected = document.getElementsByName(divSelectedN);
             var lnk = document.getElementsByName(lnkN);
-           
+
             if (divSelected == null) {
                 return;
             }
@@ -135,7 +134,7 @@
             if (divSelected.style != null) {
                 divSelected.style.display = 'block';
             }
-           
+
 
             if ($(".TablLinkClass") != null && lnk != null) {
                 $(".TablLinkClass").css('font-weight', 'normal');
@@ -251,8 +250,9 @@
 
         }
 
-      
+
     </script>
+
     <asp:UpdateProgress class="ajax-indicator-full" ID="UpdateProgress3" runat="server">
         <ProgressTemplate>
             <table style="width: 100%; height: 100%; text-align: center;">
@@ -668,16 +668,17 @@
                                                                         </div>
                                                                         <%--//oliver <begin> Ticket 1476--%>
                                                                         <div style="margin: 10px;">
-                                                                            <div style="float:left; margin-left:-30px;">
+                                                                            <div style="float: left; margin-left: -30px;">
                                                                                 <asp:LinkButton runat="server" ID="lnkShowHistory" ClientIDMode="Static" Text="Show Change History"
                                                                                     OnClick="lnkShowHistory_Click" CausesValidation="false"></asp:LinkButton>
                                                                                 <asp:LinkButton runat="server" ID="lnkHideHistory" ClientIDMode="Static" Text="Hide Change History"
                                                                                     Visible="false" CausesValidation="false" OnClick="lnkHideHistory_Click"></asp:LinkButton>
                                                                             </div>
-                                                                            <div style="float:right; color: #C0C0C0;">
-                                                                                Record ID: <asp:Label ID="lblRecordID" runat="server" Text=""></asp:Label>
+                                                                            <div style="float: right; color: #C0C0C0;">
+                                                                                Record ID:
+                                                                                <asp:Label ID="lblRecordID" runat="server" Text=""></asp:Label>
                                                                             </div>
-                                                                            <div style="float:left;"></div>
+                                                                            <div style="float: left;"></div>
                                                                         </div>
                                                                         <%--//oliver <end>--%>
                                                                     </td>
@@ -700,7 +701,7 @@
                     </table>
                 </div>
             </asp:Panel>
-        
+
         </ContentTemplate>
         <Triggers>
             <asp:PostBackTrigger ControlID="lnkWordWxport" />
@@ -777,30 +778,36 @@
                                             </EmptyDataTemplate>
                                         </dbg:dbgGridView>
                                     </div>
-                                    <div runat="server" id="divLastUpdatedInfo" visible="true" style="float:right; width: 45%; margin-top:50px; position:relative;">
+                                    <div runat="server" id="divLastUpdatedInfo" visible="true" style="float: right; width: 45%; margin-top: 50px; position: relative;">
                                         <!--oliver: additional fields here...-->
-                                            <div style="width:100%; margin-left: 60px;">
-                                                <div style="float:left; width:100px; padding:10px 0 0;"><b>Created By:</b></div>
-                                                <div style="float:left; width:180px; padding:10px 0 0;"><asp:Label ID="lblCreatedBy" runat="server" Text=""></asp:Label></div>
-                                                <div style="clear:both;"></div>
-                                            </div>
-                                            <div style="width:100%; margin-left: 60px;">
-                                                <div style="float:left; width:100px; padding:10px 0 0;"><b>Date Created:</b></div>
-                                                <div style="float:left; width:180px; padding:10px 0 0;"><asp:Label ID="lblDateCreated" runat="server" Text=""></asp:Label></div>
-                                                <div style="clear:both;"></div>
-                                            </div>
-                                            <div style="width:100%; margin-left: 60px;">
-                                                <div style="float:left; width:100px; padding:10px 0 0;"><asp:Label ID="lblUpdatedByText" runat="server" Text="<b>Updated By:</b>"></asp:Label></div>
-                                                <div style="float:left; width:180px; padding:10px 0 0;"><asp:Label ID="lblUpdatedBy" runat="server" Text=""></asp:Label></div>
-                                                <div style="clear:both;"></div>
-                                            </div>
-                                            <div style="width:100%; margin-left: 60px;">
-                                                <div style="float:left; width:100px; padding:10px 0 0;"><asp:Label ID="lblDateUpdatedText" runat="server" Text="<b>Date Updated:</b>"></asp:Label></div>
-                                                <div style="float:left; width:180px; padding:10px 0 0;"><asp:Label ID="lblDateUpdated" runat="server" Text=""></asp:Label></div>
-                                                <div style="clear:both;"></div>
-                                            </div>
+                                        <div style="width: 100%; margin-left: 60px;">
+                                            <div style="float: left; width: 100px; padding: 10px 0 0;"><b>Created By:</b></div>
+                                            <div style="float: left; width: 180px; padding: 10px 0 0;">
+                                                <asp:Label ID="lblCreatedBy" runat="server" Text=""></asp:Label></div>
+                                            <div style="clear: both;"></div>
+                                        </div>
+                                        <div style="width: 100%; margin-left: 60px;">
+                                            <div style="float: left; width: 100px; padding: 10px 0 0;"><b>Date Created:</b></div>
+                                            <div style="float: left; width: 180px; padding: 10px 0 0;">
+                                                <asp:Label ID="lblDateCreated" runat="server" Text=""></asp:Label></div>
+                                            <div style="clear: both;"></div>
+                                        </div>
+                                        <div style="width: 100%; margin-left: 60px;">
+                                            <div style="float: left; width: 100px; padding: 10px 0 0;">
+                                                <asp:Label ID="lblUpdatedByText" runat="server" Text="<b>Updated By:</b>"></asp:Label></div>
+                                            <div style="float: left; width: 180px; padding: 10px 0 0;">
+                                                <asp:Label ID="lblUpdatedBy" runat="server" Text=""></asp:Label></div>
+                                            <div style="clear: both;"></div>
+                                        </div>
+                                        <div style="width: 100%; margin-left: 60px;">
+                                            <div style="float: left; width: 100px; padding: 10px 0 0;">
+                                                <asp:Label ID="lblDateUpdatedText" runat="server" Text="<b>Date Updated:</b>"></asp:Label></div>
+                                            <div style="float: left; width: 180px; padding: 10px 0 0;">
+                                                <asp:Label ID="lblDateUpdated" runat="server" Text=""></asp:Label></div>
+                                            <div style="clear: both;"></div>
+                                        </div>
                                     </div>
-                                    <div style="clear:both;"></div>
+                                    <div style="clear: both;"></div>
                                 </div>
                             </td>
                         </tr>

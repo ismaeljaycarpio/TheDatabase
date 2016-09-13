@@ -122,8 +122,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
     HtmlTableCell[] cell;
 
 
-    string _strJS = "";
-    string _strJSPostBack = "";
+    string _stValidator_TF = "";
+    //string _strJSPostBack = "";
     DataTable _dtColumnsDetail;
     DataTable _dtColumnsNotDetail;
     DataTable _dtColumnsAll;
@@ -462,7 +462,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
            _theTable.TableID.ToString() + " ORDER BY DisplayOrder");
         ManageTableTab();
         CreateDynamicControls();
-        ManageShowWhen();
+        //ManageShowWhen();
 
         ManageCompareThings();
         if (Request.QueryString["RecordID"] != null || _bCopyRecord == true)
@@ -1056,7 +1056,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
     protected void ResetTabs()
     {
-        if (_bTableTabYes && _strActionMode!="add")
+        if (_bTableTabYes)
         {
 
             if (Request.QueryString["TableTabID"] == null)
@@ -1233,10 +1233,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
     
     protected void ManageTableTab()
     {
-        if(_qsMode!="add")
-        {
-           
-
+       
             if (_dtDBTableTab != null)
             {
                 if (_dtDBTableTab.Rows.Count > 1)
@@ -1460,7 +1457,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                 }
             }
-        }
+        
     }
     
     protected void CreateDynamicControls()
@@ -2050,7 +2047,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                             if (Request.QueryString["RecordID"] != null)
                             {
-                                _strJS = _strJS + strValidatorF;
+                                _stValidator_TF = _stValidator_TF + strValidatorF;
                             }
                         }
 
@@ -2071,7 +2068,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             + " <img style=\"padding-bottom:7px; max-height:"
                             + strMaxHeight + "px;\" id=\"img" + _hfValue[i].ID + "\"  />" + "</a><br/>";
 
-                            _strJSPostBack = _strJSPostBack + @" $(document).ready(function () {
+                           string strFUJS =  @" $(document).ready(function () {
                                         $('#" + _fuValue[i].ID + @"').uploadify({
                                             'uploader': '../Document/uploadify/uploadify.swf',
                                             'script': '" + strScriptPath + @"',
@@ -2127,13 +2124,15 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                                           
                                     });";
+
+                            ScriptManager.RegisterStartupScript(this, this.GetType(), "uploadfile" + i.ToString(), strFUJS, true);
                         }
                         else
                         {
                             string strInnerHTML = "<img  title=\"Remove this file\" style=\"cursor:pointer;\"  id=\"dimg" + _hfValue[i].ID + "\" src=\"" + Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath
                                + "/App_Themes/Default/Images/icon_delete.gif\" />";
 
-                            _strJSPostBack = _strJSPostBack + @" $(document).ready(function () {
+                          string  strFUJS = @" $(document).ready(function () {
                                         $('#" + _fuValue[i].ID + @"').uploadify({
                                             'uploader': '../Document/uploadify/uploadify.swf',
                                             'script': '" + strScriptPath + @"',
@@ -2182,10 +2181,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                     });";
 
 
-
+                          ScriptManager.RegisterStartupScript(this, this.GetType(), "uploadimage" + i.ToString(), strFUJS, true);
                         }
 
-                        //ScriptManager.RegisterStartupScript(this, this.GetType(), "uploadfile" + i.ToString(), "strFUJS", true);
+                        
 
                     }
 
@@ -5415,6 +5414,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                       $('#" + _lblValue[i].ID + @"').html(''); 
                                             });";
 
+                            ViewState["filedelete" + i.ToString()] = strTempJS;
                             ScriptManager.RegisterStartupScript(this, this.GetType(), "filedelete" + i.ToString(), strTempJS, true);
                         }
                     }
@@ -5468,7 +5468,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                      document.getElementById('" + _hfValue[i].ID + @"').value='';
                                                       $('#" + _lblValue[i].ID + @"').html(''); 
                                             });";
-
+                            ViewState["imagedelete" + i.ToString()] = strTempJS;
                             ScriptManager.RegisterStartupScript(this, this.GetType(), "imagedelete" + i.ToString(), strTempJS, true);
                         }
                     }
@@ -6754,6 +6754,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 {
 
                     trX[i].ID = "trX" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    ViewState["trX_ID" + i.ToString()] = trX[i].ID;
                     string targetID = "#ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + trX[i].ID;
                     string strOnlyAdminJS = @"$('" + targetID + @"').fadeOut();";
 
@@ -6762,7 +6763,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     {
                         strOnlyAdminJS = strOnlyAdminJS + "ValidatorEnable(document.getElementById('" + _rfvValue[i].ClientID.ToString() + "'), false);";
                     }
-                    //ViewState["ShowHideAdmin" + i.ToString()] = strOnlyAdminJS;
+                    ViewState["ShowHideAdmin" + i.ToString()] = strOnlyAdminJS;
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideAdmin" + i.ToString(), strOnlyAdminJS, true);
 
                 }
@@ -6778,6 +6779,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             if (dtShowWhen.Rows.Count > 0)
             {
                 trX[i].ID = "trX" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                ViewState["trX_ID" + i.ToString()] = trX[i].ID;
                 string strTargetTRID = "#ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + trX[i].ID;
 
 
@@ -6808,6 +6810,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             if (drSW["HideColumnID"].ToString() == _dtColumnsDetail.Rows[m]["ColumnID"].ToString() && trX[m] != null)
                             {
                                 trX[m].ID = "trX" + _dtColumnsDetail.Rows[m]["SystemName"].ToString();
+                                ViewState["trX_ID" + m.ToString()] = trX[m].ID;
                                 string strEachDriverID = "#ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_";
                                 string strControlClientIDPrefix = "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_";
                                 string strEachHideColumnValue = HttpUtility.JavaScriptStringEncode(drSW["HideColumnValue"].ToString()); //drSW["HideColumnValue"].ToString().Replace("'","\\'");
@@ -7276,7 +7279,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                         }
                                                     });
                                         ";
-                    //ViewState["strShowHideFunction" + i.ToString()] = strShowHideFunction;
+                    ViewState["strShowHideFunction" + i.ToString()] = strShowHideFunction;
                     ScriptManager.RegisterStartupScript(this, this.GetType(), "strShowHideFunction" + i.ToString(), strShowHideFunction, true);
                 }
             }
@@ -7284,10 +7287,18 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
     }
     
 
-    protected void ShowWhenJS()
+    protected void OtherJSCode()
     {
           for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
           {
+              if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image")
+              {
+                  trX[i].Style.Add("vertical-align", "top");
+              }
+
+              if (ViewState["trX_ID" + i.ToString()] != null)
+                  trX[i].ID = ViewState["trX_ID" + i.ToString()].ToString();
+
               if( ViewState["ShowHideAdmin" + i.ToString()]!=null)
               {
                   ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideAdmin" + i.ToString(), ViewState["ShowHideAdmin" + i.ToString()].ToString(), true);
@@ -7297,6 +7308,15 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
               {
                   ScriptManager.RegisterStartupScript(this, this.GetType(), "strShowHideFunction" + i.ToString(), ViewState["strShowHideFunction" + i.ToString()].ToString(), true);
               }
+              if( ViewState["filedelete" + i.ToString()]!=null)
+              {
+                  ScriptManager.RegisterStartupScript(this, this.GetType(), "filedelete" + i.ToString(), ViewState["filedelete" + i.ToString()].ToString(), true);
+              }
+              if (ViewState["imagedelete" + i.ToString()] != null)
+              {
+                  ScriptManager.RegisterStartupScript(this, this.GetType(), "imagedelete" + i.ToString(), ViewState["imagedelete" + i.ToString()].ToString(), true);
+              }
+             
           }
 
     }
@@ -7318,6 +7338,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         _strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.RawUrl;
         if(!IsPostBack)
         {
+            ManageShowWhen();
+            PopulateTable();
             PopulateDynamicControls();
            
 
@@ -7326,10 +7348,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                    PopulateRecord();
                }
         }
-        //else
-        //{
-        //    ShowWhenJS();
-        //}
+        else
+        {
+            OtherJSCode();
+        }
 
         _strSaveAndStay = SystemData.SystemOption_ValueByKey_Account("SaveAndStay", _iSessionAccountID, int.Parse(_qsTableID));
         if (_strSaveAndStay == "")
@@ -7854,20 +7876,26 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
         if (!IsPostBack)
         {
-            if (_strJS != "")
-            {
-                if (_qsMode != "view")
+                if (_qsMode != "view" && _stValidator_TF != "")
                 {
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "_strJS", _strJS, true);
+                    ViewState["stValidator_TF"] = _stValidator_TF;
+                    ScriptManager.RegisterStartupScript(this, this.GetType(), "stValidator_TF", _stValidator_TF, true);
                 }
-            }
-            PopulateTable();
+
+                //if (_qsMode != "view" && _strJSPostBack != "")
+                //{
+                //    ScriptManager.RegisterStartupScript(this, this.GetType(), "_strJSPostBack", _strJSPostBack, true);
+
+                //}
+        }
+        else
+        {
+            if (ViewState["stValidator_TF"] != null)
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "stValidator_TF", ViewState["stValidator_TF"].ToString(), true);
+
         }
 
-        if (_qsMode != "view" && _strJSPostBack != "")
-        {
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "_strJSPostBack", _strJSPostBack, true);
-        }
+       
 
         if (!IsPostBack)
         {            

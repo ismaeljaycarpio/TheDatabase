@@ -6910,7 +6910,7 @@ FROM         [Table] INNER JOIN
                         }
                         if (chkColumnColour.Checked == false)
                         {
-                            Common.ExecuteText("DELETE ColumnColour WHERE Context=''columnid'' and ID=" + _qsColumnID);
+                            Common.ExecuteText("DELETE ColumnColour WHERE Context='columnid' and ID=" + _qsColumnID);
                         }
 
                         //update child tables
