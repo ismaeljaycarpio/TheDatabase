@@ -3976,9 +3976,6 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
                              $(document).ready(function () {
         
-
-
-
                                         $.fn.visibleHeight = function () {
                                             var elBottom, elTop, scrollBot, scrollTop, visibleBottom, visibleTop;
                                             scrollTop = $(window).scrollTop();
@@ -3989,9 +3986,6 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                                             visibleBottom = elBottom > scrollBot ? scrollBot : elBottom;
                                             return visibleBottom - visibleTop
                                         }
-
-
-
 
                                 function SetStyleEvent() {
 
@@ -4167,12 +4161,10 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             if (_dtDataSource == null)
             {
                 //divEmptyData.Visible = true;
-
                 if (IsFiltered())
                 {
                     divNoFilter.Visible = true;
                     divEmptyData.Visible = false;
-
                 }
                 else
                 {
@@ -4214,7 +4206,6 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                     if (hfViewID.Value != "")
                     {
                         iViewID = int.Parse(hfViewID.Value);
-
                     }
 
                     _gvPager.EditViewCSSClass = "popuplink2";
@@ -4230,10 +4221,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                     if (_strNoAjaxView != "")
                     {
                         _gvPager.EditViewTarget = "_parent";
-
                     }
-                    //_gvPager.EditViewURL = "#";
-                    //_gvPager.EditViewOnClick = "window.parent.callMe('" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/ViewEditPage.aspx?TableID=" + Cryptography.Encrypt(_qsTableID) + "&ViewID=" + iViewID.ToString() + "');return false;";
 
                 }
 

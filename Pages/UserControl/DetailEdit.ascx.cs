@@ -2662,18 +2662,19 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
         ShowHideNextPrev();
         ShowHideControls();
         ShowHideTableTab();
-        if(_strTableTabsJS!="")
+        
+        
+
+
+        if (_strTableTabsJS != "")
+            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strTableTabsJS" + _strDynamictabPart, _strTableTabsJS, true);
+
+        if (!IsPostBack)
         {
-            ViewState["strTableTabsJS"] = _strTableTabsJS;
+            if (_jsClickFirstTab != "")
+                ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strTableTabsJSFirstTab" + _strDynamictabPart, _jsClickFirstTab, true);
         }
        
-        //if (_jsClickFirstTab != "")
-        //    ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strTableTabsJSFirstTab" + _strDynamictabPart, _jsClickFirstTab, true);
-
-      
-
-
-
     }
 
     protected void EnableTheRecordControls(bool p_bEnable)
@@ -2819,9 +2820,10 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         lnkDetialTab.ID = "lnkDetialTab" + _theTable.TableID.ToString();
                         lnkDetialTab.Text = _dtDBTableTab.Rows[t]["TabName"].ToString(); //"Detail";
                         lnkDetialTab.Font.Bold = true;
-                        //_jsClickFirstTab = "ShowHideMainDivs" + _theTable.TableID.ToString() + "('" + pnlDetailTab.ClientID + "',this," + _dtDBTableTab.Rows[t]["TableTabID"].ToString() + ");";
-                        _jsClickFirstTab = " $('#"+_strDynamictabPart + lnkDetialTab.ID + "').trigger('click');";
-                        ViewState["jsClickFirstTab"] = _jsClickFirstTab;
+
+                        _jsClickFirstTab = "ShowHideMainDivs" + _theTable.TableID.ToString() + "('" + pnlDetailTab.ClientID + "',this," + _dtDBTableTab.Rows[t]["TableTabID"].ToString() + ");";
+                        //_jsClickFirstTab = " $('#"+_strDynamictabPart + lnkDetialTab.ID + "').trigger('click');";
+                        
                         
                         lnkDetialTab.Attributes.Add("onclick", "ShowHideMainDivs" + _theTable.TableID.ToString() + "('" + pnlDetailTab.ClientID + "',this," + _dtDBTableTab.Rows[t]["TableTabID"].ToString() + "); return false");
                         lnkDetialTab.CssClass = "TablLinkClass" + _theTable.TableID.ToString();
@@ -2911,7 +2913,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                                         ";
                 
-                ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strTableTabsJS" + _strDynamictabPart, _strTableTabsJS, true);
+                
             }
         }
     }

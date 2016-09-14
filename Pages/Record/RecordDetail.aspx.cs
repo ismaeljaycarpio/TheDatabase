@@ -270,7 +270,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
     protected override void OnPreInit(EventArgs e)
     {
         
-
+        
+        //upDetailDynamic.
 
         _strFilesLocation = Session["FilesLocation"].ToString();
         _strFilesPhisicalPath = Session["FilesPhisicalPath"].ToString();
@@ -1065,10 +1066,12 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             {
                 strTableTabLink = hfCurrentSelectedTabLink.Value;
             }
-
+            //if (lblCurrentSelectedTabLink.Text != "")
+            //{
+            //    strTableTabLink = lblCurrentSelectedTabLink.Text;
+            //}
             for (int t = 0; t < _dtDBTableTab.Rows.Count; t++)
             {
-
                 string strPanelID = "";
                 string strLnk = "";
                 if (("ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTab" == strTableTabLink))
@@ -1084,22 +1087,18 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                 if (strPanelID != "")
                 {
-
                     if (strLnk != "")
                     {
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab", "ShowHideMainDivs(" + strPanelID + "," + strLnk + ");", true);
-                        break;
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab2", "ShowHideMainDivs(" + strPanelID + "," + strLnk + ");", true);
+                       
                     }
                     else if (strTableTabLink != "")
                     {
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab", "ShowHideMainDivs(" + strPanelID + "," + strTableTabLink + ");", true);
-                        break;
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab3", "ShowHideMainDivs(" + strPanelID + "," + strTableTabLink + ");", true);
+                       
                     }
-
-                }
-               
+                }               
             }
-
         }
     }
 
@@ -7588,7 +7587,34 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
     {
         //int iTemp=0;
         //_objUser = (User)Session["User"];
+        if(_bTableTabYes)
+        {
+            string strCommonJS = @"  function ShowHideMainDivs(divSelected, lnk) {
+            //var hfCurrentSelectedTabLink = document.getElementsByName('hfCurrentSelectedTabLink');
+            $('.showhidedivs_hide').hide();
+            if (divSelected == null)
+            {
+                return;
+            }
+            if (lnk != null) {
+                document.getElementsByName('hfCurrentSelectedTabLink').value = lnk.id;    
+                 $('#lblCurrentSelectedTabLink').text(document.getElementsByName('hfCurrentSelectedTabLink').value);
+            }
+            $('.showhidedivs').hide();
+            divSelected.style.display = 'block';
+            if ($('.TablLinkClass') != null && lnk != null) {
+                $('.TablLinkClass').css('font-weight', 'normal');
+            }
+            if (lnk != null) {
+                lnk.style.fontWeight = 'bold';
+            }
 
+        }";
+
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "strCommonJS", strCommonJS, true);
+
+        }
+       
 
         if (_iSessionAccountID == -1)
         {
@@ -7975,14 +8001,19 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         }
 
 
-        if(!IsPostBack)
+        if(_bTableTabYes)
         {
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsOnlyOne", "ShowHideMainDivs(" + pnlDetailTab.ClientID + ");", true);
+            if (!IsPostBack)
+            {
+                string strTableTabLink = "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTab";
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab1", "ShowHideMainDivs(" + pnlDetailTab.ClientID + "," + strTableTabLink + ");", true);
+            }
+            else
+            {
+                ResetTabs();
+            }
         }
-        else
-        {
-            ResetTabs();
-        }
+       
       
 
 
@@ -8605,17 +8636,12 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             {
                 if (_strActionMode.ToLower() == "add")
                 {
-                    //Response.Redirect(hlEditLink.NavigateUrl, false);
-
-
-
                     if (_bPrivate == false)
                     {
                         Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Login.aspx" + "?frompublic=yes", false);
                     }
                     else
                     {
-
                         if (Request.QueryString["quickadd"] != null)
                         {
                             hlBack.NavigateUrl = hlBack.NavigateUrl;
@@ -8623,10 +8649,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             Session["controlvalue"] = Cryptography.Encrypt(_iNewRecordID.ToString());
                         }
 
-
                         if (_theTable.ShowEditAfterAdd != null && (bool)_theTable.ShowEditAfterAdd)
                         {
-
                             Response.Redirect(GetEditURLAfterAdd(), false);
                         }
                         else
@@ -8635,7 +8659,6 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         }
                     }
 
-
                 }
                 else
                 {
@@ -8643,15 +8666,13 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     {
                         Response.Redirect(hlBack.NavigateUrl, false);
                     }
-
                 }
             }
             
         }
         catch (Exception ex)
         {
-            lblMsg.Text = ex.Message + "  " + ex.StackTrace;
-           
+            lblMsg.Text = ex.Message + "  " + ex.StackTrace;           
         }
     }
 
