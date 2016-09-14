@@ -3896,15 +3896,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                 strDynamicSearchXMLPart = GetDynamicSeachXMLPart();
             }
 
-            string strOtherXMLTags = @" <iStartIndex>" + HttpUtility.HtmlEncode(iStartIndex.ToString()) + "</iStartIndex>" +
-                   " <iMaxRows>" + HttpUtility.HtmlEncode(iMaxRows.ToString()) + "</iMaxRows>" +
-                 " <sOrder>" + HttpUtility.HtmlEncode(sOrder) + "</sOrder>" +
-                 " <strOrderDirection>" + HttpUtility.HtmlEncode(strOrderDirection) + "</strOrderDirection>" +
-                 " <sParentColumnSortSQL>" + HttpUtility.HtmlEncode(sParentColumnSortSQL) + "</sParentColumnSortSQL>";
-
-            strOtherXMLTags = strOtherXMLTags + strDynamicSearchXMLPart;
-
-            UpdateSearchCriteriaForTheGrid(strOtherXMLTags);
+           
 
 
             //put speed test here       
@@ -3919,15 +3911,27 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
 
             string strReturnSQL = "";
+            string sReturnHeaderSQL = "";
             _dtDataSource = RecordManager.ets_Record_List(int.Parse(TableID.ToString()),
                 ddlEnteredBy.SelectedValue == "-1" ? null : (int?)int.Parse(ddlEnteredBy.SelectedValue),
                 !chkIsActive.Checked,
                 chkShowOnlyWarning.Checked == false ? null : (bool?)true, null, null,
                 sOrder, strOrderDirection, iStartIndex, iMaxRows, ref iTN, ref _iTotalDynamicColumns, _strListType, _strNumericSearch, TextSearch + TextSearchParent,
-               _dtDateFrom, _dtDateTo, sParentColumnSortSQL, "", _strViewName, int.Parse(hfViewID.Value), ref strReturnSQL, ref strReturnSQL);
+               _dtDateFrom, _dtDateTo, sParentColumnSortSQL, "", _strViewName, int.Parse(hfViewID.Value), ref strReturnSQL, ref sReturnHeaderSQL);
 
+           
+            string strOtherXMLTags = @" <iStartIndex>" + HttpUtility.HtmlEncode(iStartIndex.ToString()) + "</iStartIndex>" +
+                  " <iMaxRows>" + HttpUtility.HtmlEncode(iMaxRows.ToString()) + "</iMaxRows>" +
+                " <sOrder>" + HttpUtility.HtmlEncode(sOrder) + "</sOrder>" +
+                " <strOrderDirection>" + HttpUtility.HtmlEncode(strOrderDirection) + "</strOrderDirection>" +
+                " <sParentColumnSortSQL>" + HttpUtility.HtmlEncode(sParentColumnSortSQL) + "</sParentColumnSortSQL>"+
+                  " <strReturnSQL>" + HttpUtility.HtmlEncode(strReturnSQL.Replace("RowNum >= "+iStartIndex.ToString(), "RowNum >= 1")) + "</strReturnSQL>" +
+                " <sReturnHeaderSQL>" + HttpUtility.HtmlEncode(sReturnHeaderSQL) + "</sReturnHeaderSQL>"
+                ;
 
+            strOtherXMLTags = strOtherXMLTags + strDynamicSearchXMLPart;
 
+            UpdateSearchCriteriaForTheGrid(strOtherXMLTags);
 
             //put speed test here       
 

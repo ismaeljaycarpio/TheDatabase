@@ -22,6 +22,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 {
     Stack<string> _stackURL = new Stack<string>();
     Stack<IDnText> _stackTabIndex = new Stack<IDnText>();
+     Stack<IDnText> _stackTableTabID = new Stack<IDnText>();
+    
     bool _bShowExceedances = false;
     string _strWarningResults = "";
     string _strExceedanceResults = "";
@@ -1058,56 +1060,46 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
     {
         if (_bTableTabYes)
         {
-
-            if (Request.QueryString["TableTabID"] == null)
+            string strTableTabLink = "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTab";
+            if (hfCurrentSelectedTabLink.Value != "")
             {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsOnlyOne", "ShowHideMainDivs(" + pnlDetailTab.ClientID + ");", true);
+                strTableTabLink = hfCurrentSelectedTabLink.Value;
             }
-            else
+
+            for (int t = 0; t < _dtDBTableTab.Rows.Count; t++)
             {
-                for (int t = 0; t < _dtDBTableTab.Rows.Count; t++)
+
+                string strPanelID = "";
+                string strLnk = "";
+                if (("ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTab" == strTableTabLink))
+                {
+                    strPanelID = pnlDetailTab.ClientID;
+                    strLnk = "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTab";
+                }
+                if (("ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTabD" + _dtDBTableTab.Rows[t]["TableTabID"].ToString() == strTableTabLink))
+                {
+                    strPanelID = _pnlDetailTabD[t].ClientID;
+                    strLnk = "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTabD" + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
+                }               
+
+                if (strPanelID != "")
                 {
 
-                    string strPanelID = "";
-                    string strLnk = "";
-                    string strTableTabLink = "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTabD" + Request.QueryString["TableTabID"].ToString();
-                    if (hfCurrentSelectedTabLink.Value != "")
+                    if (strLnk != "")
                     {
-                        strTableTabLink = hfCurrentSelectedTabLink.Value;
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab", "ShowHideMainDivs(" + strPanelID + "," + strLnk + ");", true);
+                        break;
                     }
-
-                    if (_dtDBTableTab.Rows[t]["TableTabID"].ToString() == Request.QueryString["TableTabID"].ToString())
+                    else if (strTableTabLink != "")
                     {
-                        if (t == 0)
-                        {
-                            strPanelID = pnlDetailTab.ClientID;
-                            strLnk = "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTab";
-                        }
-                        else
-                        {
-                            strPanelID = _pnlDetailTabD[t].ClientID;
-                            strLnk = "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTabD" + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
-                        }
-                    }
-
-                    if (strPanelID != "" )
-                    {
-
-                        if (strLnk != "")
-                        {
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab", "ShowHideMainDivs(" + strPanelID + "," + strLnk + ");", true);
-
-                        }
-                        else if (strTableTabLink != "")
-                        {
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab", "ShowHideMainDivs(" + strPanelID + "," + strTableTabLink + ");", true);
-
-                        }
-                        
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab", "ShowHideMainDivs(" + strPanelID + "," + strTableTabLink + ");", true);
+                        break;
                     }
 
                 }
+               
             }
+
         }
     }
 
@@ -1408,52 +1400,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             _tblRightD[t] = new HtmlTable();
                             _tblRightD[t].ID = "tblRightD" + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
                             cellRight.Controls.Add(_tblRightD[t]);
-
-
-
+                            
                             _pnlDetailTabD[t].Controls.Add(_tblMainD[t]);
 
                             pnlMain.Controls.Add(_pnlDetailTabD[t]);
 
                         }
-
-
                     }
-
-                    if (!IsPostBack)
-                    {
-                        if (Request.QueryString["TableTabID"] != null)
-                        {
-                            for (int t = 0; t < _dtDBTableTab.Rows.Count; t++)
-                            {
-
-                                string strPanelID = "";
-                                string strLnk = "";
-                                if (_dtDBTableTab.Rows[t]["TableTabID"].ToString() == Request.QueryString["TableTabID"].ToString())
-                                {
-                                    if (t == 0)
-                                    {
-                                        strPanelID = pnlDetailTab.ClientID;
-                                        strLnk = "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTab";
-                                    }
-                                    else
-                                    {
-                                        strPanelID = _pnlDetailTabD[t].ClientID;
-                                        strLnk = "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTabD" + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
-                                    }
-                                }
-
-                                if (strPanelID != "" && strLnk != "")
-                                {
-                                    ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab", " ShowHideMainDivs(" + strPanelID + "," + strLnk + ");", true);
-
-                                }
-
-                            }
-
-                        }
-
-                    }
+                   
 
                 }
             }
@@ -3479,6 +3433,315 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
 
+    }
+
+    protected void DoPrintThings()
+    {
+        if (_qsMode.ToLower() == "add")
+        {
+            divPrint.Visible = false;
+        }
+        else
+        {
+            if (_theTable != null)
+            {
+
+                string strShowPrintOnRecordDetail = SystemData.SystemOption_ValueByKey_Account("ShowPrintOnRecordDetail", null, (int)_theTable.TableID);
+
+                if (strShowPrintOnRecordDetail != "")
+                {
+                    if (strShowPrintOnRecordDetail.ToLower() == "yes")
+                    {
+                        divPrint.Visible = true;
+                        hlPrint.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetPrint.aspx?NoFormSet=yes&ParentRecordID=" + Cryptography.Encrypt(_qsRecordID) + "&ParentTableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
+                    }
+                }
+            }
+        }
+    }
+    protected void FlashCheck()
+    {
+        if (_bNeedFullPostback)
+        {
+            try
+            {
+                //may be i need to check FLASH active or not
+
+                if (Session["IsFlashSupported"] != null && Session["IsFlashSupported"].ToString() == "no")
+                {
+                    //we have flash
+                    PostBackTrigger trigger = new PostBackTrigger();
+                    trigger.ControlID = lnkSaveClose.ID;
+                    upDetailDynamic.Triggers.Add(trigger);
+
+                    PostBackTrigger trigger2 = new PostBackTrigger();
+                    trigger2.ControlID = lnkSaveAndAdd.ID;
+                    upDetailDynamic.Triggers.Add(trigger2);
+
+                    PostBackTrigger trigger3 = new PostBackTrigger();
+                    trigger3.ControlID = lnkSaveAndStay.ID;
+                    upDetailDynamic.Triggers.Add(trigger3);
+
+
+                    if (Page.MasterPageFile.ToLower().IndexOf("rrp") > -1)
+                    {
+                        PostBackTrigger trigger4 = new PostBackTrigger();
+                        trigger4.ControlID = tabDetail.ID;
+                        upDetailDynamic.Triggers.Add(trigger4);
+
+                    }
+                }
+            }
+            catch
+            {
+                //
+            }
+        }
+    }
+
+    protected void PopulateNavigation()
+    {
+        if (Request.QueryString["SearchCriteriaID"] != null && (bool)_theTable.NavigationArrows)
+        {
+            SearchCriteria theSearchCriteria = SystemData.SearchCriteria_Detail(int.Parse(Cryptography.Decrypt(Request.QueryString["SearchCriteriaID"].ToString())));
+            if (theSearchCriteria != null)
+            {
+                try
+                {
+                    System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
+
+                    xmlDoc.Load(new StringReader(theSearchCriteria.SearchText));
+                    //string strddlEnteredBy = xmlDoc.FirstChild["ddlEnteredBy"].InnerText;
+                    //string strchkIsActive = xmlDoc.FirstChild["chkIsActive"].InnerText;
+                    //string strchkShowOnlyWarning = xmlDoc.FirstChild["chkShowOnlyWarning"].InnerText;
+                    //string sOrder = xmlDoc.FirstChild["sOrder"].InnerText;
+                    //string strOrderDirection = xmlDoc.FirstChild["strOrderDirection"].InnerText;
+                    //string strNumericSearch = "";// xmlDoc.FirstChild["_strNumericSearch"].InnerText;
+                    //string TextSearch = xmlDoc.FirstChild["TextSearch"].InnerText;
+                    //string TextSearchParent = xmlDoc.FirstChild["TextSearchParent"].InnerText;
+                    //string strDateFrom = xmlDoc.FirstChild["txtDateFrom"].InnerText;
+                    //string strDateTo = xmlDoc.FirstChild["txtDateTo"].InnerText;
+                    //string sParentColumnSortSQL = xmlDoc.FirstChild["sParentColumnSortSQL"].InnerText;
+                    //string strViewName = xmlDoc.FirstChild["_strViewName"].InnerText;
+                    //string strViewID = xmlDoc.FirstChild["strViewID"].InnerText;
+
+                    string strReturnSQL = "";
+                    int iPreRecordID = -1;
+                    int iNextRecordID = -1;
+
+                    if (xmlDoc.FirstChild["strReturnSQL"] != null)
+                        strReturnSQL = xmlDoc.FirstChild["strReturnSQL"].InnerText;
+                    string strMaxRowNum = "";
+                    if (strReturnSQL!="")
+                        strMaxRowNum= Common.GetValueFromSQL(@"SELECT MAX(RowNum) FROM (" + strReturnSQL + @")  FullResult");
+
+                    if (strReturnSQL != "" && strMaxRowNum != "" && int.Parse(strMaxRowNum) > 1)
+                    {
+                        string strCurrentRowNum = Common.GetValueFromSQL(@"SELECT RowNum FROM (" + strReturnSQL + @")  FullResult  WHERE DBGSystemRecordID=" + _qsRecordID);
+
+                        if (strCurrentRowNum != "")
+                        {
+                            if (int.Parse(strCurrentRowNum) > 1)
+                            {
+                                string strPreRecordID = Common.GetValueFromSQL(@"SELECT DBGSystemRecordID FROM (" + strReturnSQL + @")  FullResult  WHERE RowNum=" + (int.Parse(strCurrentRowNum) - 1).ToString());
+                                if (strPreRecordID != "")
+                                    iPreRecordID = int.Parse(strPreRecordID);
+                            }
+                            else
+                            {
+                                if (strMaxRowNum != "")
+                                {
+                                    string strMaxRecordID = Common.GetValueFromSQL(@"SELECT DBGSystemRecordID FROM (" + strReturnSQL + @")  FullResult WHERE RowNum=" + strMaxRowNum);
+                                    if (strMaxRecordID != "")
+                                        iPreRecordID = int.Parse(strMaxRecordID);
+                                }
+                            }
+
+                            if (int.Parse(strCurrentRowNum) < int.Parse(strMaxRowNum))
+                            {
+                                string strNextRecordID = Common.GetValueFromSQL(@"SELECT DBGSystemRecordID FROM (" + strReturnSQL + @")  FullResult  WHERE RowNum=" + (int.Parse(strCurrentRowNum) + 1).ToString());
+                                if (strNextRecordID != "")
+                                    iNextRecordID = int.Parse(strNextRecordID);
+
+                            }
+                            else
+                            {
+                                string strMinRecordID = Common.GetValueFromSQL(@"SELECT DBGSystemRecordID FROM (" + strReturnSQL + @")  FullResult WHERE RowNum=1");
+                                if (strMinRecordID != "")
+                                    iNextRecordID = int.Parse(strMinRecordID);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        tblNavigateRecords.Visible = false;
+                    }
+
+
+                    //make the URL
+
+                    string strRawURL = GetStackRawURL();
+                    strRawURL = Common.GetUpdatedFullURLRemoveQueryString(strRawURL, "stackhault");
+                    strRawURL = Common.GetUpdatedFullURLWithQueryString(strRawURL, "stackhault", "y");
+
+                    string strPreRawURL = strRawURL.Replace("&Recordid=" + Cryptography.Encrypt(_qsRecordID.ToString()), "&Recordid=" + Cryptography.Encrypt(iPreRecordID.ToString()));
+                    string strNextRawURL = strRawURL.Replace("&Recordid=" + Cryptography.Encrypt(_qsRecordID.ToString()), "&Recordid=" + Cryptography.Encrypt(iNextRecordID.ToString()));
+
+                    if (iPreRecordID != -1)
+                    {                       
+                        hlNavigatePrev.NavigateUrl = strPreRawURL;
+                    }                   
+
+                    if (iNextRecordID != -1)
+                    {                      
+                        hlNavigateNext.NavigateUrl = strNextRawURL;
+                    }
+                   
+
+                }
+                catch
+                {
+                    //
+                }
+            }
+            else
+            {
+                tblNavigateRecords.Visible = false;
+
+            }
+        }
+        else
+        {
+            tblNavigateRecords.Visible = false;
+        }
+    }
+
+    protected void AddQuickDone()
+    {
+        if (!IsPostBack && Session["quickdone"] != null && Session["controlvalue"] != null)
+        {
+            try
+            {
+                SearchCriteria theSearchCriteria = SystemData.SearchCriteria_Detail(int.Parse(Cryptography.Decrypt(Session["quickdone"].ToString())));
+                if (theSearchCriteria != null)
+                {
+                    System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
+
+                    xmlDoc.Load(new StringReader(theSearchCriteria.SearchText));
+                    string strControl = xmlDoc.FirstChild["control"].InnerText;
+                    string strControlValue = Cryptography.Decrypt(Session["controlvalue"].ToString());
+
+                    string strDisplayColumn = xmlDoc.FirstChild["DisplayColumn"].InnerText;
+                    string strTableTableID = xmlDoc.FirstChild["TableTableID"].InnerText;
+                    string strLinkedParentColumnID = xmlDoc.FirstChild["LinkedParentColumnID"].InnerText;
+                    string strDropDownType = xmlDoc.FirstChild["DropDownType"].InnerText;
+
+
+
+
+                    if (strDropDownType == "table")
+                    {
+                        string str_hfValue = xmlDoc.FirstChild["_hfValue"].InnerText;
+                        TextBox txtP = (TextBox)pnlMain.FindControl(strControl);
+                        HiddenField _hfValue = (HiddenField)pnlMain.FindControl(str_hfValue);
+
+
+                        try
+                        {
+                            //int iTableRecordID = int.Parse(_dtRecordedetail.Rows[0][i].ToString());
+
+                            Column theLinkedColumn = RecordManager.ets_Column_Details(int.Parse(strLinkedParentColumnID));
+
+                            Record theLinkedRecord = RecordManager.ets_Record_Detail_Full(int.Parse(strControlValue));
+                            string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
+
+
+                            //Record theLinkedRecord = RecordManager.ets_Record_Detail_Full(iTableRecordID);
+                            //string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
+
+                            _hfValue.Value = strLinkedColumnValue;
+                            DataTable dtTableTableSC = Common.DataTableFromText(@"SELECT SystemName,DisplayName 
+                                FROM [Column] WHERE   TableID ="
+                       + strTableTableID);
+
+                            //string strDisplayColumn = _dtColumnsDetail.Rows[i]["DisplayColumn"].ToString();
+
+                            foreach (DataRow dr in dtTableTableSC.Rows)
+                            {
+                                strDisplayColumn = strDisplayColumn.Replace("[" + dr["DisplayName"].ToString() + "]", "[" + dr["SystemName"].ToString() + "]");
+
+                            }
+
+                            string sstrDisplayColumnOrg = strDisplayColumn;
+                            string strFilterSQL = "";
+                            if (theLinkedColumn.SystemName.ToLower() == "recordid")
+                            {
+                                strFilterSQL = strLinkedColumnValue;
+                            }
+                            else
+                            {
+                                strFilterSQL = "'" + strLinkedColumnValue.Replace("'", "''") + "'";
+                            }
+
+                            //DataTable dtTheRecord = Common.DataTableFromText("SELECT * FROM Record WHERE RecordID=" + _dtRecordedetail.Rows[0][i].ToString());
+
+                            DataTable dtTheRecord = Common.DataTableFromText("SELECT * FROM Record WHERE TableID=" + theLinkedColumn.TableID.ToString() + " AND " + theLinkedColumn.SystemName + "=" + strFilterSQL);
+
+                            if (dtTheRecord.Rows.Count > 0)
+                            {
+                                foreach (DataColumn dc in dtTheRecord.Columns)
+                                {
+                                    //strDisplayColumn = strDisplayColumn.Replace("[" + dc.ColumnName + "]", dtTheRecord.Rows[0][dc.ColumnName].ToString());
+                                    Column theColumn = RecordManager.ets_Column_Details_By_Sys((int)theLinkedColumn.TableID, dc.ColumnName);
+                                    if (theColumn != null)
+                                    {
+                                        if (theColumn.ColumnType == "date")
+                                        {
+                                            string strDatePartOnly = dtTheRecord.Rows[0][dc.ColumnName].ToString();
+
+                                            if (strDatePartOnly.Length > 9)
+                                            {
+                                                strDatePartOnly = strDatePartOnly.Substring(0, 10);
+                                            }
+
+                                            strDisplayColumn = strDisplayColumn.Replace("[" + dc.ColumnName + "]", strDatePartOnly);
+                                        }
+                                        else
+                                        {
+                                            strDisplayColumn = strDisplayColumn.Replace("[" + dc.ColumnName + "]", dtTheRecord.Rows[0][dc.ColumnName].ToString());
+                                        }
+                                    }
+                                }
+                            }
+                            if (sstrDisplayColumnOrg != strDisplayColumn)
+                                txtP.Text = strDisplayColumn;
+                        }
+                        catch
+                        {
+                            //
+                        }
+                    }
+                    else
+                    {
+
+                        Column theLinkedColumn = RecordManager.ets_Column_Details(int.Parse(strLinkedParentColumnID));
+
+                        Record theLinkedRecord = RecordManager.ets_Record_Detail_Full(int.Parse(strControlValue));
+                        string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
+
+
+                        DropDownList ddlP = (DropDownList)pnlMain.FindControl(strControl);
+                        ddlP.SelectedValue = strLinkedColumnValue;
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+            Session["quickdone"] = null;
+            Session["controlvalue"] = null;
+        }
     }
 
     protected void PopulateDynamicControls()
@@ -7316,6 +7579,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
               {
                   ScriptManager.RegisterStartupScript(this, this.GetType(), "imagedelete" + i.ToString(), ViewState["imagedelete" + i.ToString()].ToString(), true);
               }
+
              
           }
 
@@ -7334,14 +7598,12 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             }
         }
 
-
         _strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.RawUrl;
         if(!IsPostBack)
         {
             ManageShowWhen();
             PopulateTable();
-            PopulateDynamicControls();
-           
+            PopulateDynamicControls();           
 
                if (Request.QueryString["RecordID"] != null || _bCopyRecord == true)
                {
@@ -7373,364 +7635,17 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         if (!IsPostBack)
         {
             CreateValidWarningDataTable();
-            if (_qsMode.ToLower() == "add")
+
+            DoPrintThings();
+            FlashCheck();
+
+            if (!IsPostBack && _qsMode.ToLower() !="add" &&  _theTable.NavigationArrows != null)
             {
-                divPrint.Visible = false;
+                PopulateNavigation();
             }
-            else
-            {
-                if (_theTable != null)
-                {
-
-                    string strShowPrintOnRecordDetail = SystemData.SystemOption_ValueByKey_Account("ShowPrintOnRecordDetail", null, (int)_theTable.TableID);
-
-                    if (strShowPrintOnRecordDetail != "")
-                    {
-                        if (strShowPrintOnRecordDetail.ToLower() == "yes")
-                        {
-                            divPrint.Visible = true;
-                            hlPrint.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetPrint.aspx?NoFormSet=yes&ParentRecordID=" + Cryptography.Encrypt(_qsRecordID) + "&ParentTableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
-                        }
-                    }
-                }
-            }
-
-
-            if (_bNeedFullPostback)
-            {
-                try
-                {
-                    //may be i need to check FLASH active or not
-
-                    if (Session["IsFlashSupported"] != null && Session["IsFlashSupported"].ToString() == "no")
-                    {
-                        //we have flash
-
-
-                        PostBackTrigger trigger = new PostBackTrigger();
-                        trigger.ControlID = lnkSaveClose.ID;
-                        upDetailDynamic.Triggers.Add(trigger);
-
-                        PostBackTrigger trigger2 = new PostBackTrigger();
-                        trigger2.ControlID = lnkSaveAndAdd.ID;
-                        upDetailDynamic.Triggers.Add(trigger2);
-
-                        PostBackTrigger trigger3 = new PostBackTrigger();
-                        trigger3.ControlID = lnkSaveAndStay.ID;
-                        upDetailDynamic.Triggers.Add(trigger3);
-
-
-                        if (Page.MasterPageFile.ToLower().IndexOf("rrp") > -1)
-                        {
-                            PostBackTrigger trigger4 = new PostBackTrigger();
-                            trigger4.ControlID = tabDetail.ID;
-                            upDetailDynamic.Triggers.Add(trigger4);
-
-                        }
-                    }
-
-
-
-                }
-                catch
-                {
-                    //
-                }
-
-
-
-
-            }
-
-            //navigate records
-
-            if (_qsMode.ToLower() != "add" && _theTable.NavigationArrows != null)
-            {
-
-                if (Request.QueryString["SearchCriteriaID"] != null && (bool)_theTable.NavigationArrows)
-                {
-                    SearchCriteria theSearchCriteria = SystemData.SearchCriteria_Detail(int.Parse(Cryptography.Decrypt(Request.QueryString["SearchCriteriaID"].ToString())));
-                    if (theSearchCriteria != null)
-                    {
-                        try
-                        {
-                            System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
-
-                            xmlDoc.Load(new StringReader(theSearchCriteria.SearchText));
-                            string strddlEnteredBy = xmlDoc.FirstChild["ddlEnteredBy"].InnerText;
-                            string strchkIsActive = xmlDoc.FirstChild["chkIsActive"].InnerText;
-                            string strchkShowOnlyWarning = xmlDoc.FirstChild["chkShowOnlyWarning"].InnerText;
-                            string sOrder = xmlDoc.FirstChild["sOrder"].InnerText;
-                            string strOrderDirection = xmlDoc.FirstChild["strOrderDirection"].InnerText;
-                            string strNumericSearch = "";// xmlDoc.FirstChild["_strNumericSearch"].InnerText;
-                            string TextSearch = xmlDoc.FirstChild["TextSearch"].InnerText;
-                            string TextSearchParent = xmlDoc.FirstChild["TextSearchParent"].InnerText;
-                            string strDateFrom = xmlDoc.FirstChild["txtDateFrom"].InnerText;
-                            string strDateTo = xmlDoc.FirstChild["txtDateTo"].InnerText;
-                            string sParentColumnSortSQL = xmlDoc.FirstChild["sParentColumnSortSQL"].InnerText;
-                            string strViewName = xmlDoc.FirstChild["_strViewName"].InnerText;
-                            string strViewID = xmlDoc.FirstChild["strViewID"].InnerText;
-
-                            if (strViewID != "")
-                            {
-                                _iViewID = int.Parse(strViewID);
-                                _strListType = "view";
-                            }
-
-                            int iTN = 0;
-                            int iTotalDynamicColumns = 0;
-
-
-                            DateTime? dtDateFrom = null;
-                            DateTime? dtDateTo = null;
-
-
-                            if (strDateFrom != "")
-                            {
-                                DateTime dtTemp;
-                                if (DateTime.TryParseExact(strDateFrom.Trim(), Common.Dateformats, new CultureInfo("en-GB"), DateTimeStyles.None, out dtTemp))
-                                {
-                                    dtDateFrom = dtTemp;
-                                }
-                            }
-                            if (strDateTo != "")
-                            {
-                                DateTime dtTemp;
-                                if (DateTime.TryParseExact(strDateTo.Trim(), Common.Dateformats, new CultureInfo("en-GB"), DateTimeStyles.None, out dtTemp))
-                                {
-                                    dtDateTo = dtTemp;
-                                    dtDateTo = dtDateTo.Value.AddHours(23).AddMinutes(59);
-                                }
-                            }
-
-                            string strReturnSQL = "";
-                            DataTable dtAllRecords = RecordManager.ets_Record_List(int.Parse(_qsTableID),
-                            strddlEnteredBy == "-1" ? null : (int?)int.Parse(strddlEnteredBy), !bool.Parse(strchkIsActive),
-                            bool.Parse(strchkShowOnlyWarning) == false ? null : (bool?)true, null, null, sOrder, strOrderDirection,
-                            null, null, ref iTN, ref iTotalDynamicColumns, _strListType, strNumericSearch, TextSearch + TextSearchParent, dtDateFrom, dtDateTo,
-                            sParentColumnSortSQL, "", strViewName, _iViewID, ref strReturnSQL, ref strReturnSQL);
-
-                            int iRecordNo = 0;
-                            int iPreRecordID = -1;
-                            int iNextRecordID = -1;
-
-                            for (int i = 0; i < dtAllRecords.Rows.Count; i++)
-                            {
-                                if (dtAllRecords.Rows[i]["DBGSystemRecordID"].ToString() == _qsRecordID)
-                                {
-                                    iRecordNo = i;
-                                    iNextRecordID = int.Parse(dtAllRecords.Rows[i]["DBGSystemRecordID"].ToString());
-                                    iPreRecordID = int.Parse(dtAllRecords.Rows[i]["DBGSystemRecordID"].ToString());
-
-                                    if (i < (dtAllRecords.Rows.Count - 1))
-                                    {
-                                        iNextRecordID = int.Parse(dtAllRecords.Rows[i + 1]["DBGSystemRecordID"].ToString());
-
-                                    }
-
-                                    if (i == (dtAllRecords.Rows.Count - 1))
-                                    {
-                                        iNextRecordID = int.Parse(dtAllRecords.Rows[0]["DBGSystemRecordID"].ToString());
-
-                                    }
-
-                                    if (i > 0)
-                                    {
-                                        iPreRecordID = int.Parse(dtAllRecords.Rows[i - 1]["DBGSystemRecordID"].ToString());
-                                    }
-
-                                    if (i == 0)
-                                    {
-                                        iPreRecordID = int.Parse(dtAllRecords.Rows[dtAllRecords.Rows.Count - 1]["DBGSystemRecordID"].ToString());
-                                    }
-
-                                    break;
-                                }
-
-                                iRecordNo = iRecordNo + 1;
-                            }
-
-                            //make the URL
-
-
-
-                            string strRawURL = GetStackRawURL();
-                            strRawURL = Common.GetUpdatedFullURLRemoveQueryString(strRawURL, "stackhault");
-                            strRawURL = Common.GetUpdatedFullURLWithQueryString(strRawURL, "stackhault", "y");
-                            
-                            string strPreRawURL = strRawURL.Replace("&Recordid=" + Cryptography.Encrypt(_qsRecordID.ToString()), "&Recordid=" + Cryptography.Encrypt(iPreRecordID.ToString()));
-                            string strNextRawURL = strRawURL.Replace("&Recordid=" + Cryptography.Encrypt(_qsRecordID.ToString()), "&Recordid=" + Cryptography.Encrypt(iNextRecordID.ToString()));
-
-                            if (iPreRecordID != -1)
-                                hlNavigatePrev.NavigateUrl = strPreRawURL;
-
-                            if (iNextRecordID != -1)
-                                hlNavigateNext.NavigateUrl = strNextRawURL;
-
-                        }
-                        catch
-                        {
-                            //
-                        }
-
-
-
-                    }
-                    else
-                    {
-                        tblNavigateRecords.Visible = false;
-
-                    }
-
-                }
-                else
-                {
-                    tblNavigateRecords.Visible = false;
-                }
-
-            }
-
-
-
-
-            if (_bTableTabYes)
-            {
-                if (Request.QueryString["TableTabID"] == null)
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsOnlyOne", "ShowHideMainDivs(" + pnlDetailTab.ClientID + ");", true);
-            }
-
-            if (!IsPostBack && Session["quickdone"] != null && Session["controlvalue"] != null)
-            {
-                try
-                {
-                    SearchCriteria theSearchCriteria = SystemData.SearchCriteria_Detail(int.Parse(Cryptography.Decrypt(Session["quickdone"].ToString())));
-                    if (theSearchCriteria != null)
-                    {
-                        System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
-
-                        xmlDoc.Load(new StringReader(theSearchCriteria.SearchText));
-                        string strControl = xmlDoc.FirstChild["control"].InnerText;
-                        string strControlValue = Cryptography.Decrypt(Session["controlvalue"].ToString());
-
-                        string strDisplayColumn = xmlDoc.FirstChild["DisplayColumn"].InnerText;
-                        string strTableTableID = xmlDoc.FirstChild["TableTableID"].InnerText;
-                        string strLinkedParentColumnID = xmlDoc.FirstChild["LinkedParentColumnID"].InnerText;
-                        string strDropDownType = xmlDoc.FirstChild["DropDownType"].InnerText;
-
-
-
-
-                        if (strDropDownType == "table")
-                        {
-                            string str_hfValue = xmlDoc.FirstChild["_hfValue"].InnerText;
-                            TextBox txtP = (TextBox)pnlMain.FindControl(strControl);
-                            HiddenField _hfValue = (HiddenField)pnlMain.FindControl(str_hfValue);
-
-
-                            try
-                            {
-                                //int iTableRecordID = int.Parse(_dtRecordedetail.Rows[0][i].ToString());
-
-                                Column theLinkedColumn = RecordManager.ets_Column_Details(int.Parse(strLinkedParentColumnID));
-
-                                Record theLinkedRecord = RecordManager.ets_Record_Detail_Full(int.Parse(strControlValue));
-                                string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
-
-
-                                //Record theLinkedRecord = RecordManager.ets_Record_Detail_Full(iTableRecordID);
-                                //string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
-
-                                _hfValue.Value = strLinkedColumnValue;
-                                DataTable dtTableTableSC = Common.DataTableFromText(@"SELECT SystemName,DisplayName 
-                                FROM [Column] WHERE   TableID ="
-                           + strTableTableID);
-
-                                //string strDisplayColumn = _dtColumnsDetail.Rows[i]["DisplayColumn"].ToString();
-
-                                foreach (DataRow dr in dtTableTableSC.Rows)
-                                {
-                                    strDisplayColumn = strDisplayColumn.Replace("[" + dr["DisplayName"].ToString() + "]", "[" + dr["SystemName"].ToString() + "]");
-
-                                }
-
-                                string sstrDisplayColumnOrg = strDisplayColumn;
-                                string strFilterSQL = "";
-                                if (theLinkedColumn.SystemName.ToLower() == "recordid")
-                                {
-                                    strFilterSQL = strLinkedColumnValue;
-                                }
-                                else
-                                {
-                                    strFilterSQL = "'" + strLinkedColumnValue.Replace("'", "''") + "'";
-                                }
-
-                                //DataTable dtTheRecord = Common.DataTableFromText("SELECT * FROM Record WHERE RecordID=" + _dtRecordedetail.Rows[0][i].ToString());
-
-                                DataTable dtTheRecord = Common.DataTableFromText("SELECT * FROM Record WHERE TableID=" + theLinkedColumn.TableID.ToString() + " AND " + theLinkedColumn.SystemName + "=" + strFilterSQL);
-
-                                if (dtTheRecord.Rows.Count > 0)
-                                {
-                                    foreach (DataColumn dc in dtTheRecord.Columns)
-                                    {
-                                        //strDisplayColumn = strDisplayColumn.Replace("[" + dc.ColumnName + "]", dtTheRecord.Rows[0][dc.ColumnName].ToString());
-                                        Column theColumn = RecordManager.ets_Column_Details_By_Sys((int)theLinkedColumn.TableID, dc.ColumnName);
-                                        if (theColumn != null)
-                                        {
-                                            if (theColumn.ColumnType == "date")
-                                            {
-                                                string strDatePartOnly = dtTheRecord.Rows[0][dc.ColumnName].ToString();
-
-                                                if (strDatePartOnly.Length > 9)
-                                                {
-                                                    strDatePartOnly = strDatePartOnly.Substring(0, 10);
-                                                }
-
-                                                strDisplayColumn = strDisplayColumn.Replace("[" + dc.ColumnName + "]", strDatePartOnly);
-                                            }
-                                            else
-                                            {
-                                                strDisplayColumn = strDisplayColumn.Replace("[" + dc.ColumnName + "]", dtTheRecord.Rows[0][dc.ColumnName].ToString());
-                                            }
-                                        }
-                                    }
-                                }
-                                if (sstrDisplayColumnOrg != strDisplayColumn)
-                                    txtP.Text = strDisplayColumn;
-
-
-
-                            }
-                            catch
-                            {
-                                //
-                            }
-
-
-
-                        }
-                        else
-                        {
-
-                            Column theLinkedColumn = RecordManager.ets_Column_Details(int.Parse(strLinkedParentColumnID));
-
-                            Record theLinkedRecord = RecordManager.ets_Record_Detail_Full(int.Parse(strControlValue));
-                            string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
-
-
-                            DropDownList ddlP = (DropDownList)pnlMain.FindControl(strControl);
-                            ddlP.SelectedValue = strLinkedColumnValue;
-                        }
-                    }
-                }
-                catch
-                {
-
-                }
-                Session["quickdone"] = null;
-                Session["controlvalue"] = null;
-            }
-
-           
+            
+            AddQuickDone();
+                       
 
             if (Request.QueryString["mode"] != null)
             {
@@ -7755,12 +7670,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         {
                             divWordExport.Visible = false;
                         }
-
-
                     }
-
                 }
-
             }
         }
         else
@@ -7790,7 +7701,6 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                              
                     if (!IsPostBack)
                     {
-
                         if (_theTable.ReasonChangeType == "mandatory")
                         {
                             rfvReasonForChange.Enabled = true;
@@ -7804,14 +7714,11 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         if (_theTable.ReasonChangeType == "none" || _theTable.ReasonChangeType == "")
                         {
                             trReasonForChange.Visible = false;
-                        }
-                        
+                        }                        
 
                         if (Session["GridPageSize"] != null && Session["GridPageSize"].ToString() != "")
                         {
-
                             gvChangedLog.PageSize = int.Parse(Session["GridPageSize"].ToString());
-
                         }
 
                     }
@@ -7848,18 +7755,13 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         //tabDetail.AutoPostBack = true;
                         tabDetail.OnClientActiveTabChanged = "ClientActiveTabChanged";
                     }
-
                 }
-
             }
             else
             {
                 Server.Transfer("~/Default.aspx");
             }
-
-
-        }
-       
+        }       
 
         // checking permission
 
@@ -7876,32 +7778,24 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
         if (!IsPostBack)
         {
-                if (_qsMode != "view" && _stValidator_TF != "")
-                {
-                    ViewState["stValidator_TF"] = _stValidator_TF;
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "stValidator_TF", _stValidator_TF, true);
-                }
-
-                //if (_qsMode != "view" && _strJSPostBack != "")
-                //{
-                //    ScriptManager.RegisterStartupScript(this, this.GetType(), "_strJSPostBack", _strJSPostBack, true);
-
-                //}
+            if (_qsMode != "view" && _stValidator_TF != "")
+            {
+                ViewState["stValidator_TF"] = _stValidator_TF;
+                ScriptManager.RegisterStartupScript(this, this.GetType(), "stValidator_TF", _stValidator_TF, true);
+            }
+          
         }
         else
         {
             if (ViewState["stValidator_TF"] != null)
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "stValidator_TF", ViewState["stValidator_TF"].ToString(), true);
 
-        }
-
-       
+        }            
+        
 
         if (!IsPostBack)
-        {            
-
-            StackProcess();
-          
+        {          
+            StackProcess();          
             //OK Back
             if (_bPrivate == false)
             {
@@ -7909,8 +7803,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 {
                     hlBack.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Public.aspx?TableID=" + _qsTableID;
                 }
-            }
-                                  
+            }                                  
 
             if (Request.QueryString["UrlReferrer"] != null && Request.UrlReferrer != null)
             {
@@ -7925,9 +7818,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             if(hlBack.NavigateUrl=="")
             {
                 hlBack.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
-
             }
-
         }
 
         
@@ -8050,8 +7941,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 _stackTabIndex.Pop();
                 Session["stackTabIndex"] = _stackTabIndex;
                 Session["viewtabindex"] = null;
-            }
-           
+            }           
 
             if (Session["viewtabindex"] != null)
             {
@@ -8063,17 +7953,13 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 {
 
                 }
-                Session["viewtabindex"] = null;
-                
+                Session["viewtabindex"] = null;                
             }
-
-           
+                       
             if (tabDetail.ActiveTabIndex > 0)
             {
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "ActiveTabIndex", "$('#divMainSaveEditAddetc').fadeOut();", true);
             }
-
-
         }
 
         //is it ok? process Tab
@@ -8081,122 +7967,23 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         {
             //Session["tabindex"] = Request.QueryString["tabindex"].ToString();
             IDnText aIDnText = new IDnText(Request.QueryString["tabindex"].ToString(), hlBack.NavigateUrl.Replace("//Pages","/Pages"));
-
             if (_stackTabIndex.Contains(aIDnText)==false)
             {
                 _stackTabIndex.Push(aIDnText);
                 Session["stackTabIndex"] = _stackTabIndex;
-            }
-                
+            }                
         }
 
-        if (IsPostBack)
+
+        if(!IsPostBack)
         {
-           
-            try
-            {
-                for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
-                {
-                    if (_hfValue2[i] != null && _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "file")
-                    {
-                        if (_hfValue2[i].Value != "")
-                        {
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "UserBasicPostFile" + i.ToString(), "UserBasic" + i.ToString() + @"();", true);
-
-                            if (_rfvValue[i] != null)
-                            {
-                                ScriptManager.RegisterStartupScript(this, this.GetType(), "UserBasicPostFileV" + i.ToString(), "ValidatorEnable(document.getElementById('ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + _rfvValue[i].ID.ToString() + "'), false);", true);
-                            }
-                        }
-                    }
-                    if (_hfValue2[i] != null && _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image")
-                    {
-                        if (_hfValue2[i].Value != "")
-                        {
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "UserBasicPostImage" + i.ToString(), "UserBasic" + i.ToString() + @"();", true);
-
-                            if (_rfvValue[i] != null)
-                            {
-                                ScriptManager.RegisterStartupScript(this, this.GetType(), "UserBasicPostImageV" + i.ToString(), "ValidatorEnable(document.getElementById('ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + _rfvValue[i].ID.ToString() + "'), false);", true);
-                            }
-                        }
-                    }
-
-                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "file" &&
-                        _hfValue[i] != null && _qsMode != "view"
-                        && _hfValue2[i] != null)
-                    {
-                        if (_hfValue[i].Value != "" && _hfValue2[i].Value == "")
-                        {
-                          
-                            string strFilePath = Cryptography.Encrypt(_strFilesLocation + "/UserFiles/AppFiles/" + _hfValue[i].Value);
-                            string strFileName = Cryptography.Encrypt(_hfValue[i].Value.Substring(37));
-
-                            _lblValue[i].Text = "<a target='_blank' href='" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Filedownload.aspx?FilePath="
-                                + strFilePath + "&FileName=" + strFileName + "'>" +
-                                  _hfValue[i].Value.Substring(37) + "</a>";
-
-
-
-
-                            _lblValue[i].Text = "<img  title=\"Remove this file\" style=\"cursor:pointer;\"  id=\"dimg" + _hfValue[i].ID + "\" src=\"" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
-                               + "/App_Themes/Default/Images/icon_delete.gif\" />" + _lblValue[i].Text;
-
-                            string strTempJS = @"  document.getElementById('dimg" + _hfValue[i].ID + @"').addEventListener('click', function (e) {
-                                                     document.getElementById('" + _hfValue[i].ID + @"').value='';
-                                                      $('#" + _lblValue[i].ID + @"').html(''); 
-                                            });";
-
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "filedelete2" + i.ToString(), strTempJS, true);
-
-
-                        }
-                    }
-                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image" &&
-                        _hfValue[i] != null && _qsMode != "view"
-                        && _hfValue2[i] != null)
-                    {
-                        if (_hfValue[i].Value != "" && _hfValue2[i].Value == "")
-                        {
-                            string strMaxHeight = "50";
-                            if (_dtColumnsDetail.Rows[i]["TextHeight"] != DBNull.Value)
-                            {
-                                strMaxHeight = _dtColumnsDetail.Rows[i]["TextHeight"].ToString();
-                            }
-
-                            string strFilePath = _strFilesLocation + "/UserFiles/AppFiles/"
-                                    + _hfValue[i].Value;
-                            _lblValue[i].Text = "<a target='_blank' href='" + strFilePath + "'>"
-                                + "<img style='padding-bottom:7px; max-height:" + strMaxHeight + "px;' alt='" + _hfValue[i].Value.Substring(37)
-                                + "' src='" + strFilePath + "' title='" + _hfValue[i].Value.Substring(37) + "'  />" + "</a><br/>";
-
-
-                            _lblValue[i].Text = "<img title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + _hfValue[i].ID + "\" src=\"" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
-                               + "/App_Themes/Default/Images/icon_delete.gif\" />" + _lblValue[i].Text;
-
-
-                            string strTempJS = @"  document.getElementById('dimg" + _hfValue[i].ID + @"').addEventListener('click', function (e) {
-                                                     document.getElementById('" + _hfValue[i].ID + @"').value='';
-                                                      $('#" + _lblValue[i].ID + @"').html(''); 
-                                            });";
-
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "imagedelete2" + i.ToString(), strTempJS, true);
-
-
-                        }
-                    }
-
-                }
-            }
-            catch
-            {
-                //
-            }
-
+            ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsOnlyOne", "ShowHideMainDivs(" + pnlDetailTab.ClientID + ");", true);
         }
-
-        
-        ResetTabs();
+        else
+        {
+            ResetTabs();
+        }
+      
 
 
     }
@@ -8632,6 +8419,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             {
                 Session["stackURL"] = null;
                 Session["stackTabIndex"] = null;
+                Session["stackTableTabID"] = null;
             }
 
            
@@ -11772,3 +11560,185 @@ public class DynamicTemplateField : ITemplate
 
     }
 }
+
+
+
+
+//if (IsPostBack)
+//        {           
+//            try
+//            {
+//                for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
+//                {
+//                    if (_hfValue2[i] != null && _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "file")
+//                    {
+//                        if (_hfValue2[i].Value != "")
+//                        {
+//                            ScriptManager.RegisterStartupScript(this, this.GetType(), "UserBasicPostFile" + i.ToString(), "UserBasic" + i.ToString() + @"();", true);
+
+//                            if (_rfvValue[i] != null)
+//                            {
+//                                ScriptManager.RegisterStartupScript(this, this.GetType(), "UserBasicPostFileV" + i.ToString(), "ValidatorEnable(document.getElementById('ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + _rfvValue[i].ID.ToString() + "'), false);", true);
+//                            }
+//                        }
+//                    }
+//                    if (_hfValue2[i] != null && _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image")
+//                    {
+//                        if (_hfValue2[i].Value != "")
+//                        {
+//                            ScriptManager.RegisterStartupScript(this, this.GetType(), "UserBasicPostImage" + i.ToString(), "UserBasic" + i.ToString() + @"();", true);
+
+//                            if (_rfvValue[i] != null)
+//                            {
+//                                ScriptManager.RegisterStartupScript(this, this.GetType(), "UserBasicPostImageV" + i.ToString(), "ValidatorEnable(document.getElementById('ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + _rfvValue[i].ID.ToString() + "'), false);", true);
+//                            }
+//                        }
+//                    }
+
+//                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "file" &&
+//                        _hfValue[i] != null && _qsMode != "view"
+//                        && _hfValue2[i] != null)
+//                    {
+//                        if (_hfValue[i].Value != "" && _hfValue2[i].Value == "")
+//                        {
+                          
+//                            string strFilePath = Cryptography.Encrypt(_strFilesLocation + "/UserFiles/AppFiles/" + _hfValue[i].Value);
+//                            string strFileName = Cryptography.Encrypt(_hfValue[i].Value.Substring(37));
+
+//                            _lblValue[i].Text = "<a target='_blank' href='" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Filedownload.aspx?FilePath="
+//                                + strFilePath + "&FileName=" + strFileName + "'>" +
+//                                  _hfValue[i].Value.Substring(37) + "</a>";
+
+
+
+
+//                            _lblValue[i].Text = "<img  title=\"Remove this file\" style=\"cursor:pointer;\"  id=\"dimg" + _hfValue[i].ID + "\" src=\"" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
+//                               + "/App_Themes/Default/Images/icon_delete.gif\" />" + _lblValue[i].Text;
+
+//                            string strTempJS = @"  document.getElementById('dimg" + _hfValue[i].ID + @"').addEventListener('click', function (e) {
+//                                                     document.getElementById('" + _hfValue[i].ID + @"').value='';
+//                                                      $('#" + _lblValue[i].ID + @"').html(''); 
+//                                            });";
+
+//                            ScriptManager.RegisterStartupScript(this, this.GetType(), "filedelete2" + i.ToString(), strTempJS, true);
+
+
+//                        }
+//                    }
+//                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image" &&
+//                        _hfValue[i] != null && _qsMode != "view"
+//                        && _hfValue2[i] != null)
+//                    {
+//                        if (_hfValue[i].Value != "" && _hfValue2[i].Value == "")
+//                        {
+//                            string strMaxHeight = "50";
+//                            if (_dtColumnsDetail.Rows[i]["TextHeight"] != DBNull.Value)
+//                            {
+//                                strMaxHeight = _dtColumnsDetail.Rows[i]["TextHeight"].ToString();
+//                            }
+
+//                            string strFilePath = _strFilesLocation + "/UserFiles/AppFiles/"
+//                                    + _hfValue[i].Value;
+//                            _lblValue[i].Text = "<a target='_blank' href='" + strFilePath + "'>"
+//                                + "<img style='padding-bottom:7px; max-height:" + strMaxHeight + "px;' alt='" + _hfValue[i].Value.Substring(37)
+//                                + "' src='" + strFilePath + "' title='" + _hfValue[i].Value.Substring(37) + "'  />" + "</a><br/>";
+
+
+//                            _lblValue[i].Text = "<img title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + _hfValue[i].ID + "\" src=\"" + Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath
+//                               + "/App_Themes/Default/Images/icon_delete.gif\" />" + _lblValue[i].Text;
+
+
+//                            string strTempJS = @"  document.getElementById('dimg" + _hfValue[i].ID + @"').addEventListener('click', function (e) {
+//                                                     document.getElementById('" + _hfValue[i].ID + @"').value='';
+//                                                      $('#" + _lblValue[i].ID + @"').html(''); 
+//                                            });";
+
+//                            ScriptManager.RegisterStartupScript(this, this.GetType(), "imagedelete2" + i.ToString(), strTempJS, true);
+
+
+//                        }
+//                    }
+
+//                }
+//            }
+//            catch
+//            {
+//                //
+//            }
+
+//        }
+
+
+  //protected void ResetTabs()
+  //  {
+  //      if (_bTableTabYes)
+  //      {
+
+  //          if (Request.QueryString["TableTabID"] == null)
+  //          {
+  //              if (hfCurrentSelectedTabLink.Value == "")
+  //              {
+  //                  ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsOnlyOne", "ShowHideMainDivs(" + pnlDetailTab.ClientID + ");", true);
+  //              }
+  //              else
+  //              {
+  //                  string strPanelID = "";
+  //                  if (hfCurrentSelectedTabLink.Value.IndexOf("lnkDetialTabD") > -1)
+  //                  {
+  //                      //strPanelID=
+  //                  }
+  //                  else
+  //                  {
+
+  //                  }
+  //                  ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab", "ShowHideMainDivs(" + strPanelID + "," + hfCurrentSelectedTabLink.Value + ");", true);
+
+  //              }
+  //          }
+  //          else
+  //          {
+  //              for (int t = 0; t < _dtDBTableTab.Rows.Count; t++)
+  //              {
+
+  //                  string strPanelID = "";
+  //                  string strLnk = "";
+  //                  string strTableTabLink = "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTabD" + Request.QueryString["TableTabID"].ToString();
+  //                  if (hfCurrentSelectedTabLink.Value != "")
+  //                  {
+  //                      strTableTabLink = hfCurrentSelectedTabLink.Value;
+  //                  }
+
+  //                  if (_dtDBTableTab.Rows[t]["TableTabID"].ToString() == Request.QueryString["TableTabID"].ToString())
+  //                  {
+  //                      if (t == 0)
+  //                      {
+  //                          strPanelID = pnlDetailTab.ClientID;
+  //                          strLnk = "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTab";
+  //                      }
+  //                      else
+  //                      {
+  //                          strPanelID = _pnlDetailTabD[t].ClientID;
+  //                          strLnk = "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTabD" + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
+  //                      }
+  //                  }
+
+  //                  if (strPanelID != "")
+  //                  {
+
+  //                      if (strLnk != "")
+  //                      {
+  //                          ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab", "ShowHideMainDivs(" + strPanelID + "," + strLnk + ");", true);
+
+  //                      }
+  //                      else if (strTableTabLink != "")
+  //                      {
+  //                          ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab", "ShowHideMainDivs(" + strPanelID + "," + strTableTabLink + ");", true);
+
+  //                      }
+
+  //                  }
+
+  //              }
+  //          }
+  //      }
+  //  }

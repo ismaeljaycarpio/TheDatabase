@@ -7362,7 +7362,7 @@ public class RecordManager
                 if (pReturnHeaderSQL.Value != null)
                     sReturnHeaderSQL = pReturnHeaderSQL.Value.ToString();
 
-                if (sType == "SQLOnly" && ds != null && ds.Tables.Count > 2)
+                if (ds != null && ds.Tables.Count > 2)
                 {
                     if (ds.Tables[2] != null && ds.Tables[2].Columns.Count == 2 && ds.Tables[2].Rows.Count == 1)
                     {

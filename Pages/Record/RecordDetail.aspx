@@ -93,7 +93,7 @@
             }
             if (lnk != null) {
                 hfCurrentSelectedTabLink.value = lnk.id;
-                //alert(hfCurrentSelectedTabLink.value);
+               //alert(hfCurrentSelectedTabLink.value);
             }
             $(".showhidedivs").hide();
             divSelected.style.display = 'block';
@@ -271,6 +271,7 @@
     <asp:UpdatePanel ID="upDetailDynamic" runat="server" UpdateMode="Conditional">
         <ContentTemplate>
             <div runat="server" id="divHeaderColorDetail" style="">
+                 <asp:HiddenField runat="server" ID="hfCurrentSelectedTabLink" ClientIDMode="Static" />
                 <table width="100%" cellpadding="0" cellspacing="0">
                     <tr>
                         <td align="left" style="width: 500px;">
@@ -529,7 +530,7 @@
                                                         <div id="search" style="padding-bottom: 10px">
                                                             <asp:ValidationSummary ID="ValidationSummary1" runat="server" EnableClientScript="true"
                                                                 ShowMessageBox="true" ShowSummary="false" HeaderText="Please correct the following errors:" />
-                                                            <asp:HiddenField runat="server" ID="hfCurrentSelectedTabLink" ClientIDMode="Static" />
+                                                           
                                                         </div>
                                                         <asp:Panel ID="Panel2" runat="server">
                                                             <table>
