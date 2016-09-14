@@ -10883,7 +10883,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                                 //Create export header for Date:
                                 strHeaderXML = strHeaderXML + "<Records>";
                                 strHeaderXML = strHeaderXML + "<ColumnID>" + item.Value + "</ColumnID>";
-                                strHeaderXML = strHeaderXML + "<DisplayText>" + System.Security.SecurityElement.Escape(item.Text) + ",Date" + "</DisplayText>";
+                                strHeaderXML = strHeaderXML + "<DisplayText>" + System.Security.SecurityElement.Escape(item.Text) + "-Date" + "</DisplayText>";
                                 strHeaderXML = strHeaderXML + "<SystemName>" + theColumn.SystemName + "</SystemName>";
                                 strHeaderXML = strHeaderXML + "<FieldsToShow>" + System.Security.SecurityElement.Escape(strFieldsToShow) + "</FieldsToShow>";
                                 strHeaderXML = strHeaderXML + "<ParentTableID>" + strParentTableID + "</ParentTableID>";
@@ -10896,7 +10896,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                                 //Create export header for Time:
                                 strHeaderXML = strHeaderXML + "<Records>";
                                 strHeaderXML = strHeaderXML + "<ColumnID>" + item.Value + "</ColumnID>";
-                                strHeaderXML = strHeaderXML + "<DisplayText>" + System.Security.SecurityElement.Escape(item.Text) + ",Time" + "</DisplayText>";
+                                strHeaderXML = strHeaderXML + "<DisplayText>" + System.Security.SecurityElement.Escape(item.Text) + "-Time" + "</DisplayText>";
                                 strHeaderXML = strHeaderXML + "<SystemName>" + theColumn.SystemName + "</SystemName>";
                                 strHeaderXML = strHeaderXML + "<FieldsToShow>" + System.Security.SecurityElement.Escape(strFieldsToShow) + "</FieldsToShow>";
                                 strHeaderXML = strHeaderXML + "<ParentTableID>" + strParentTableID + "</ParentTableID>";
@@ -11541,7 +11541,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                                 DateTime chkDateTime;
                                 if (DateTime.TryParse(dr[j].ToString(), out chkDateTime))
                                 {
-                                    string[] ColumnTypeSplit = dt.Columns[j].ColumnName.ToString().Split(',');
+                                    string[] ColumnTypeSplit = dt.Columns[j].ColumnName.ToString().Split('-');
                                     if (ColumnTypeSplit.Length > 1)
                                     {
                                         if (ColumnTypeSplit[1].ToLower() == "date")
@@ -11587,7 +11587,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
                 for (int i = 0; i < iColCount - 2; i++)
                 {
-                    sw.Write(dt.Columns[i]);
+                    sw.Write(dt.Columns[i].ToString().Replace("-Date", " (Date)").Replace("-Time", " (Time)"));
                     if (i < iColCount - 3)
                     {
                         sw.Write(",");

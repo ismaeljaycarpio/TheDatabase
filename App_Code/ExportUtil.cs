@@ -110,17 +110,17 @@ namespace DBG.Common
                 headerCell.CellStyle = boldStyle;
 
                 //oliver <begin> Ticket 1461
-                headerColumnTypeSplit = column.ToString().Split(',');
+                headerColumnTypeSplit = column.ToString().Split('-');
                 if (headerColumnTypeSplit.Length > 1)
                 {
                     if (headerColumnTypeSplit[1].ToLower() == "date")
                     {
-                        tmpColumnName = column.ColumnName.ToString().Replace(",Date", " (Date)");
+                        tmpColumnName = column.ColumnName.ToString().Replace("-Date", " (Date)");
                         headerCell.SetCellValue(tmpColumnName);
                     }
                     if (headerColumnTypeSplit[1].ToLower() == "time")
                     {
-                        tmpColumnName = column.ColumnName.ToString().Replace(",Time", " (Time)");
+                        tmpColumnName = column.ColumnName.ToString().Replace("-Time", " (Time)");
                         headerCell.SetCellValue(tmpColumnName);
                     }
                 }
