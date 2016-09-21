@@ -563,7 +563,7 @@ public partial class DBEmail_WinSchedules : System.Web.UI.Page
 
                                                 UploadManager.UploadCSV(iUserID, targetTable, messageH.Subject,
                                                     null, new Guid(parameters), strSamplesFolder,
-                                                    out strMsg, out iBatchID, "virtual", "", iAccountID, null, null, null);
+                                                    out strMsg, out iBatchID, "virtual", "", iAccountID, targetTable.IsDataUpdateAllowed, null, null);
 
                                                 strBatchIDs = strBatchIDs + iBatchID.ToString() + ",";
                                                 Batch oMapBatch = UploadManager.ets_Batch_Details(iBatchID);

@@ -298,7 +298,7 @@ public class ALSLiveImport
 
                                     UploadManager.UploadCSV(userID, targetTable, "ALS Live Feed",
                                         null, new Guid(parameters), "",
-                                        out strMsg, out tempBatchID, "virtual", "", accountID, null, null, null);
+                                        out strMsg, out tempBatchID, "virtual", "", accountID, targetTable.IsDataUpdateAllowed, null, null);
 
                                     Batch oMapBatch = UploadManager.ets_Batch_Details(tempBatchID);
 
