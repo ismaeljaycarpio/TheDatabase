@@ -298,7 +298,7 @@ public class ALSLiveImport
 
                                     UploadManager.UploadCSV(userID, targetTable, "ALS Live Feed",
                                         null, new Guid(parameters), "",
-                                        out strMsg, out tempBatchID, "virtual", "", accountID, targetTable.IsDataUpdateAllowed, null, null);
+                                        out strMsg, out tempBatchID, "virtual", "", accountID, null, null, null);
 
                                     Batch oMapBatch = UploadManager.ets_Batch_Details(tempBatchID);
 
@@ -498,10 +498,13 @@ public class ALSLiveImport
         string strTypeOfDataColumnName = typeOfDataColumn == null ? String.Empty : typeOfDataColumn.SystemName;
 
         Batch newBatch = new Batch(null, tempTableID,
-            "ALS Live Feed", "ALS Live Data", null, new Guid(), userID, accountID, false);
+            "ALS Live Feed", "ALS Live Data", null, new Guid(), userID, accountID);//false
 
         //need a single transaction
-        newBatch.AllowDataUpdate = true;
+        //newBatch.AllowDataUpdate = true;
+        int? iImportTemplateID = ImportManager.GetDefaultImportTemplate(tempTableID);
+        newBatch.ImportTemplateID = iImportTemplateID;//This will be needed in validation page's grid's captions. This has no funciton here
+
         tempBatchID = UploadManager.ets_Batch_Insert(newBatch);
 
         int count = 0;

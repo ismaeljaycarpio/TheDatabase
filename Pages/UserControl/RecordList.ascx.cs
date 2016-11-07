@@ -39,7 +39,8 @@ using AjaxControlToolkit;
 
 public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 {
-
+    string _strJSDynamicShowHide="";
+    string _strCommonJS = "";
     //Label[] _lbl;
     //TextBox[] _txtValue;   
 
@@ -47,6 +48,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
     //bool _bDBGSortColumnHide = false;\
     System.Xml.XmlDocument _xmlView_FC_Doc;
     string _strEqualOrGreaterOperator = " = ";
+    bool _bFixedHeader = false;
     bool _bBindWithSC = true;
     bool _bShowGraphIcon = true;
     bool _bReset = false;
@@ -430,6 +432,30 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                 Session[_strViewSession] = _theView.ViewID.ToString();
                 hfViewID.Value = _theView.ViewID.ToString();
             }
+
+            if(IsPostBack)
+            {
+                if (Session["ViewItemID" + _theView.ViewID.ToString()] != null)
+                {
+                    string strOldViewItemID = Session["ViewItemID" + _theView.ViewID.ToString()].ToString();
+                    Session["ViewItemID" + _theView.ViewID.ToString()] = null;
+                    string strViewItemID = Common.Get_Comma_Sep_IDs("ViewItemID", "[ViewItem]", " ViewID=" + _theView.ViewID.ToString() + " AND SearchField=1");
+                    if (strOldViewItemID != strViewItemID)
+                    {
+                        try
+                        {
+                            Response.Redirect(Request.RawUrl, true);
+                        }
+                        catch
+                        {
+                            return;
+                        }
+                    }
+
+
+                    Session["ViewItemID" + _theView.ViewID.ToString()] = null;
+                }
+            }
         }
 
     }
@@ -456,14 +482,10 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
         string strMainListJS = "";
 
-
-
-        ltScriptHere.Text = @"
-                            <script type='text/javascript'>
-
-
-
-                                function MouseEvents(objRef, evt) {
+        if(PageType=="p")
+        {
+            strMainListJS = @"
+                         function MouseEvents(objRef, evt) {
                                     var checkbox = objRef.getElementsByTagName('input')[0];
 
 
@@ -497,26 +519,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                                         document.getElementById(hf).value = t.text;
                                     }
 
-                                    function abc() {
-                                        var b = document.getElementById('" + lnkSearch.ClientID + @"');
-                                        if (b && typeof (b.click) == 'undefined') {
-                                            b.click = function () {
-                                                var result = true;
-                                                if (b.onclick) result = b.onclick();
-                                                if (typeof (result) == 'undefined' || result) {
-                                                    eval(b.getAttribute('href'));
-                                                }
-                                            }
-                                        }
-
-                                    }
-
-                                    function AddClick() {
-
-                                        $('#ctl00_HomeContentPlaceHolder_rlOne_btnAdd').trigger('click');
-                                    }
-
-                                    function CreateFile() {
+                                      function CreateFile() {
 
                                             document.getElementById('btnEmail').click();
 
@@ -719,11 +722,37 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                                         }
                                     }
 
+                            ";
+        }
+        //ltScriptHere.Text
+       _strCommonJS = @"
+                           
+                               
+                                    function abc() {
+                                        var b = document.getElementById('" + lnkSearch.ClientID + @"');
+                                        if (b && typeof (b.click) == 'undefined') {
+                                            b.click = function () {
+                                                var result = true;
+                                                if (b.onclick) result = b.onclick();
+                                                if (typeof (result) == 'undefined' || result) {
+                                                    eval(b.getAttribute('href'));
+                                                }
+                                            }
+                                        }
+
+                                    }
+
+//                                    function AddClick() {
+//
+//                                        $('#ctl00_HomeContentPlaceHolder_rlOne_btnAdd').trigger('click');
+//                                    }
+
+                              
                                    " + strMainListJS + @"
 
 
 
-                            </script>
+                           
                             ";
 
     }
@@ -1269,7 +1298,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
         HtmlTableRow theRow = new HtmlTableRow();
         int s = 0;
 
-        string strJSDynamicShowHide = "";
+        _strJSDynamicShowHide = "";
 
         foreach (DataRow dr in _dtDynamicSearchColumns.Rows)
         {
@@ -1374,11 +1403,11 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                 //                        $('#" + _strDynamictabPart + txtLowerLimit.ID + @"').on('keyup',function () {
                 //                                                                var strLowerValue = $('#" + _strDynamictabPart + txtLowerLimit.ID + @"').val();
                 //                                                                 if (strLowerValue.trim() != '') {
-                //                                                                    $('#" + _strDynamictabPart + rowTwo.ID + @"').fadeIn();
+                //                                                                    $('#" + _strDynamictabPart + rowTwo.ID + @"').show();
                 //                                                                }
                 //                                                                else {
                 //                                                                     $('#" + _strDynamictabPart + txtUpperLimit.ID + @"').val('');
-                //                                                                    $('#" + _strDynamictabPart + rowTwo.ID + @"').fadeOut(); 
+                //                                                                    $('#" + _strDynamictabPart + rowTwo.ID + @"').hide(); 
                 //                                                                }
                 //                                                            });
                 //                         $('#" + _strDynamictabPart + txtLowerLimit.ID + @"').trigger('keyup');
@@ -1388,14 +1417,14 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
 
                 //if (strLowerValue.trim() != '') {     and style.display<>'none' if we want to avoid
-                strJSDynamicShowHide = strJSDynamicShowHide + @"
+                _strJSDynamicShowHide = _strJSDynamicShowHide + @"
                     function ShowHideUP_" + _strDynamictabPart + txtUpperLimit.ID + @"(keepvalue) {                                                               
                             try
                             {
                                     var strLowerValue = $('#" + _strDynamictabPart + txtLowerLimit.ID + @"').val();
                                                                   
                                     if (strLowerValue.trim() != '') {                        
-                                        $('#" + _strDynamictabPart + rowTwo.ID + @"').fadeIn();
+                                        $('#" + _strDynamictabPart + rowTwo.ID + @"').show();
                                          var strUpperValue = $('#" + _strDynamictabPart + txtUpperLimit.ID + @"').val();
                                          if (strUpperValue.trim() == '' && keepvalue=='0') {
                                           $('#" + _strDynamictabPart + txtUpperLimit.ID + @"').val(strLowerValue);
@@ -1403,7 +1432,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                                     }
                                     else {
                                             $('#" + _strDynamictabPart + txtUpperLimit.ID + @"').val('');
-                                            $('#" + _strDynamictabPart + rowTwo.ID + @"').fadeOut();
+                                            $('#" + _strDynamictabPart + rowTwo.ID + @"').hide();
                                     }
                             }
                             catch(err)
@@ -1591,18 +1620,18 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                 //                        $('#" + _strDynamictabPart + txtLowerDate.ID + @"').on('keyup',function () {
                 //                                                                var strLowerValue = $('#" + _strDynamictabPart + txtLowerDate.ID + @"').val();
                 //                                                                 if (strLowerValue.trim() != '') {
-                //                                                                    $('#" + _strDynamictabPart + rowTwo.ID + @"').fadeIn();
+                //                                                                    $('#" + _strDynamictabPart + rowTwo.ID + @"').show();
                 //                                                                }
                 //                                                                else {
                 //                                                                     $('#" + _strDynamictabPart + txtUpperDate.ID + @"').val('');
-                //                                                                    $('#" + _strDynamictabPart + rowTwo.ID + @"').fadeOut(); 
+                //                                                                    $('#" + _strDynamictabPart + rowTwo.ID + @"').hide(); 
                 //                                                                }
                 //                                                            });
                 //                         $('#" + _strDynamictabPart + txtLowerDate.ID + @"').trigger('keyup');
                 //
                 //                    ";
 
-                strJSDynamicShowHide = strJSDynamicShowHide + @"
+                _strJSDynamicShowHide = _strJSDynamicShowHide + @"
 
 
                                 function ShowHideUP_" + _strDynamictabPart + txtUpperDate.ID + @"(keepvalue) {                                                               
@@ -1611,7 +1640,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                                                 var strLowerValue = $('#" + _strDynamictabPart + txtLowerDate.ID + @"').val();
                                                                   
                                                 if (strLowerValue.trim() != '') {                        
-                                                    $('#" + _strDynamictabPart + rowTwo.ID + @"').fadeIn();
+                                                    $('#" + _strDynamictabPart + rowTwo.ID + @"').show();
                                                      var strUpperValue = $('#" + _strDynamictabPart + txtUpperDate.ID + @"').val();
                                                      if (strUpperValue.trim() == '' && keepvalue=='0') {
                                                       $('#" + _strDynamictabPart + txtUpperDate.ID + @"').val(strLowerValue);
@@ -1619,7 +1648,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                                                 }
                                                 else {
                                                         $('#" + _strDynamictabPart + txtUpperDate.ID + @"').val('');
-                                                        $('#" + _strDynamictabPart + rowTwo.ID + @"').fadeOut();
+                                                        $('#" + _strDynamictabPart + rowTwo.ID + @"').hide();
                                                 }
                                         }
                                         catch(err)
@@ -1801,11 +1830,11 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                 //                        $('#" + _strDynamictabPart + txtLowerDate.ID + @"').on('keyup',function () {
                 //                                                                var strLowerValue = $('#" + _strDynamictabPart + txtLowerDate.ID + @"').val();
                 //                                                                 if (strLowerValue.trim() != '') {
-                //                                                                    $('#" + _strDynamictabPart + rowTwo.ID + @"').fadeIn();
+                //                                                                    $('#" + _strDynamictabPart + rowTwo.ID + @"').show();
                 //                                                                }
                 //                                                                else {
                 //                                                                     $('#" + _strDynamictabPart + txtUpperDate.ID + @"').val('');
-                //                                                                    $('#" + _strDynamictabPart + rowTwo.ID + @"').fadeOut(); 
+                //                                                                    $('#" + _strDynamictabPart + rowTwo.ID + @"').hide(); 
                 //                                                                }
                 //                                                            });
                 //                         $('#" + _strDynamictabPart + txtLowerDate.ID + @"').trigger('keyup');
@@ -1816,18 +1845,18 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                 //                        $('#" + _strDynamictabPart + txtLowerDate.ID + @"').change(function () {
                 //                                                                var strLowerValue = $('#" + _strDynamictabPart + txtLowerDate.ID + @"').val();
                 //                                                                 if (strLowerValue.trim() != '') {
-                //                                                                    $('#" + _strDynamictabPart + rowTwo.ID + @"').fadeIn();
+                //                                                                    $('#" + _strDynamictabPart + rowTwo.ID + @"').show();
                 //                                                                }
                 //                                                                else {
                 //                                                                     $('#" + _strDynamictabPart + txtUpperDate.ID + @"').val('');
-                //                                                                    $('#" + _strDynamictabPart + rowTwo.ID + @"').fadeOut(); 
+                //                                                                    $('#" + _strDynamictabPart + rowTwo.ID + @"').hide(); 
                 //                                                                }
                 //                                                            });
                 //                         $('#" + _strDynamictabPart + txtLowerDate.ID + @"').trigger('change');
                 //
                 //                    ";
 
-                strJSDynamicShowHide = strJSDynamicShowHide + @"
+                _strJSDynamicShowHide = _strJSDynamicShowHide + @"
 
 
                                 function ShowHideUP_" + _strDynamictabPart + txtUpperDate.ID + @"(keepvalue) {                                                               
@@ -1837,7 +1866,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                                                 var strLowerValueT = $('#" + _strDynamictabPart + txtLowerTime.ID + @"').val();   
                                                 var strUpperValue = $('#" + _strDynamictabPart + txtUpperDate.ID + @"').val();               
                                                 if (strLowerValue.trim() != '') {                        
-                                                         $('#" + _strDynamictabPart + rowTwo.ID + @"').fadeIn();
+                                                         $('#" + _strDynamictabPart + rowTwo.ID + @"').show();
                                                        
                                                          if (strUpperValue.trim() == '' && keepvalue=='0') {
                                                                 $('#" + _strDynamictabPart + txtUpperDate.ID + @"').val(strLowerValue);
@@ -1853,7 +1882,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                                                                     $('#" + _strDynamictabPart + txtUpperDate.ID + @"').val('');
                                                                     $('#" + _strDynamictabPart + txtUpperTime.ID + @"').val('');  
                                                                     $('#" + _strDynamictabPart + txtLowerTime.ID + @"').val('');  
-                                                                    $('#" + _strDynamictabPart + rowTwo.ID + @"').fadeOut();
+                                                                    $('#" + _strDynamictabPart + rowTwo.ID + @"').hide();
                                                             
                                                      
                                                 }
@@ -1877,7 +1906,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                                             ";
 
 
-                strJSDynamicShowHide = strJSDynamicShowHide + @"
+                _strJSDynamicShowHide = _strJSDynamicShowHide + @"
 
 
                                 function ShowHideUP_" + _strDynamictabPart + txtUpperTime.ID + @"(keepvalue) {                                                               
@@ -1982,11 +2011,11 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                 //                        $('#" + _strDynamictabPart + txtLowerTime.ID + @"').on('keyup',function () {
                 //                                                                var strLowerValue = $('#" + _strDynamictabPart + txtLowerTime.ID + @"').val();
                 //                                                                 if (strLowerValue.trim() != '') {
-                //                                                                    $('#" + _strDynamictabPart + txtUpperTime.ID + @"').fadeIn();
+                //                                                                    $('#" + _strDynamictabPart + txtUpperTime.ID + @"').show();
                 //                                                                }
                 //                                                                else {
                 //                                                                     $('#" + _strDynamictabPart + txtUpperTime.ID + @"').val('');
-                //                                                                    $('#" + _strDynamictabPart + txtUpperTime.ID + @"').fadeOut(); 
+                //                                                                    $('#" + _strDynamictabPart + txtUpperTime.ID + @"').hide(); 
                 //                                                                }
                 //                                                            });
                 //                         $('#" + _strDynamictabPart + txtLowerTime.ID + @"').trigger('keyup');
@@ -1997,11 +2026,11 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                 //                        $('#" + _strDynamictabPart + txtLowerTime.ID + @"').change(function () {
                 //                                                                var strLowerValue = $('#" + _strDynamictabPart + txtLowerTime.ID + @"').val();
                 //                                                                 if (strLowerValue.trim() != '') {
-                //                                                                    $('#" + _strDynamictabPart + txtUpperTime.ID + @"').fadeIn();
+                //                                                                    $('#" + _strDynamictabPart + txtUpperTime.ID + @"').show();
                 //                                                                }
                 //                                                                else {
                 //                                                                     $('#" + _strDynamictabPart + txtUpperTime.ID + @"').val('');
-                //                                                                    $('#" + _strDynamictabPart + txtUpperTime.ID + @"').fadeOut(); 
+                //                                                                    $('#" + _strDynamictabPart + txtUpperTime.ID + @"').hide(); 
                 //                                                                }
                 //                                                            });
                 //                         $('#" + _strDynamictabPart + txtLowerTime.ID + @"').trigger('change');
@@ -2009,7 +2038,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                 //                    ";
 
 
-                strJSDynamicShowHide = strJSDynamicShowHide + @"
+                _strJSDynamicShowHide = _strJSDynamicShowHide + @"
 
 
                                 function ShowHideUP_" + _strDynamictabPart + txtUpperTime.ID + @"(keepvalue) {                                                               
@@ -2018,7 +2047,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                                                 var strLowerValue = $('#" + _strDynamictabPart + txtLowerTime.ID + @"').val();
                                                                   
                                                 if (strLowerValue.trim() != '') {                       
-                                                      $('#" + _strDynamictabPart + txtUpperTime.ID + @"').fadeIn();
+                                                      $('#" + _strDynamictabPart + txtUpperTime.ID + @"').show();
                                                      var strUpperValue = $('#" + _strDynamictabPart + txtUpperTime.ID + @"').val();
                                                      if (strUpperValue.trim() == '' && keepvalue=='0') {
                                                       $('#" + _strDynamictabPart + txtUpperTime.ID + @"').val(strLowerValue);
@@ -2026,7 +2055,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                                                 }
                                                 else {
                                                         $('#" + _strDynamictabPart + txtUpperTime.ID + @"').val('');  
-                                                         $('#" + _strDynamictabPart + txtUpperTime.ID + @"').fadeOut();                                                    
+                                                         $('#" + _strDynamictabPart + txtUpperTime.ID + @"').hide();                                                    
                                                 }
                                         }
                                         catch(err)
@@ -2192,21 +2221,28 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
         tblSearchControls.Rows.Add(theRow);
 
-        if (strJSDynamicShowHide != "")
+        if (_strJSDynamicShowHide != "")
         {
-            strJSDynamicShowHide = @"$(document).ready(function () { 
+            _strJSDynamicShowHide = @"$(document).ready(function () { 
                         try {  
-                                " + strJSDynamicShowHide + @" 
+                                " + _strJSDynamicShowHide + @" 
                             }
                         catch(err) {
                                 //do ntohing
                                 }
                             });";
-            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strJSDynamicShowHide" + _strDynamictabPart, strJSDynamicShowHide, true);
+
+            //ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "strJSDynamicShowHide" + _strDynamictabPart, _strJSDynamicShowHide, true);
         }
 
     }
-
+    protected void Page_PreRender(object sender, EventArgs e)
+    {
+        
+            ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "strJSDynamicShowHide" + _strDynamictabPart, _strCommonJS + _strJSDynamicShowHide, true);
+           
+        
+    }
     protected void SetCosmetic()
     {
         //need to use class instead of fixed color
@@ -2309,7 +2345,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             }
            catch
             {
-               //
+                return;
             }            
         }
 
@@ -2635,6 +2671,11 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
     {
         if(!IsPostBack)
         {
+            Session["ExportClass"] = null;
+            if(_theView!=null)
+            {
+                Session["ViewItemID" + _theView.ViewID.ToString()] = null;
+            }
             PopulateDynamicControls();
         }
 
@@ -2662,6 +2703,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
             if (!IsPostBack)
             {
+                ViewState["ViewAlignmentDefault"] = Common.SO_ViewAlignmentDefault(_theTable.AccountID, _theTable.TableID);
                 string HidePagerGoButton = SystemData.SystemOption_ValueByKey_Account("Hide Pager Go Button", _theTable.AccountID, _theTable.TableID);
                 if (HidePagerGoButton != "")
                 {
@@ -2707,6 +2749,10 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
         {
             divShowGraph.Visible = false;
         }
+        else
+        {
+            divShowGraph.Visible = true;
+        }
 
       
         //Title = "Records";
@@ -2728,28 +2774,23 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             string strW = "1";
             if (Request.QueryString["width"] != null)
             {
-                //gvTheGrid.Width = 450;
-                //lblTitle.Width = 450;
                 gvTheGrid.Style.Add("min-width", "450px");
 
-                //tblTopCaption.Width = "100%";
                 strW = "2";
             }
             else
             {
 
                 gvTheGrid.Style.Add("min-width", "1000px");
-                //tblTopCaption.Width = "100%";
             }
 
-            //ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "autoResizeMe", "<script>autoResizeMe('" + UpdatePanel1.ClientID + "'," + strW + " );autoResizeMe('" + tblTopCaption.ClientID + "'," + strW + " ); </script>", false);
+            //ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "autoResizeMe", "<script>autoResizeMe('" + UpdatePanel1.ClientID + "'," + strW + " );autoResizeMe('" + tblTopCaption.ClientID + "'," + strW + " ); </script>", false);
         }
         else
         {
 
             gvTheGrid.Style.Add("min-width", "1000px");
-            //tblTopCaption.Width = "1000px";
-            //tblTopCaption.Width = "100%";
+           
         }
 
 
@@ -2760,12 +2801,6 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
            
             _theAccount = SecurityManager.Account_Details(int.Parse(Session["AccountID"].ToString()));
 
-            //this.Page.Master.
-            //if (Request.QueryString["viewname"] != null)
-            //{
-            //    _strViewName = Request.QueryString["viewname"].ToString().Trim();
-            //}
-
             if (PageType == "p")
             {
                 if (_strViewPageType == "dash")
@@ -2775,10 +2810,10 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                 }
                 else
                 {
-                    tblTopCaption.Style.Add("width", "1000px;");
+                    //new responsive layout
+                    tblTopCaption.Style.Add("width", "100%;");
                 }
 
-                //TableID = int.Parse(Cryptography.Decrypt(Request.QueryString["TableID"].ToString()));
                 if (!IsPostBack)
                 {
 
@@ -2801,31 +2836,13 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                             }
                         }
                     }
-
-                    mpeDeleteAll.BehaviorID = "DA_BehaviorID_" + DetailTabIndex.ToString();
-
-                    if (_theTable.AddOpensForm != null && (bool)_theTable.AddOpensForm && _theTable.AddRecordSP != "")
-                    {
-                        lblAddRecordTitle.Text = "Add " + _theTable.TableName;
-
-                        ddlFormSet.DataSource = Common.DataTableFromText(@"SELECT FormSetID, FormSetName FROM FormSet FS
-                            INNER JOIN FormSetGroup FSG ON FS.FormSetGroupID=FSG.FormSetGroupID
-                            WHERE ParentTableID=" + _theTable.TableID.ToString() + @" AND ShowOnAdd=1 
-                            ORDER BY FormSetName");
-
-                        ddlFormSet.DataBind();
-                    }
+                                     
 
                 }
             }
             else
             {
                 trRecordListTitle.Visible = false;
-
-                if (!IsPostBack)
-                {
-                    mpeDeleteAll.BehaviorID = "DA_BehaviorID_" + TableID.ToString();
-                }
             }
 
 
@@ -2869,15 +2886,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             if (!IsPostBack)
             {
 
-                if (_theTable != null)
-                {
-                    PopulateExportTemplate((int)_theTable.TableID);
-                    ddlTemplate_SelectedIndexChanged(null, null);
-
-                    hlExportTemplateNew.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Export/ExportTemplateItem.aspx?mode=" + Cryptography.Encrypt("add") + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&SearchCriteriaET=" + Cryptography.Encrypt("-1") + "&fixedbackurl=" + Cryptography.Encrypt(Request.RawUrl);
-                    //hlExportTemplate.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) +"&SearchCriteriaET=" + Cryptography.Encrypt("-1");
-                }
-
+               
 
                 if (Request.QueryString["TextSearch"] != null)
                 {
@@ -2891,24 +2900,20 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
                 //lnkAndOr1.Attributes.Add("text", "and");
 
-                lnkAddSearch1.Attributes.Add("onclick", "$('#" + trSearch1.ClientID + "').fadeIn();$('#" + lnkAddSearch1.ClientID + "').fadeOut();if ($('#" + hfAndOr1.ClientID + "').val()==''){ $('#" + hfAndOr1.ClientID + "').val(document.getElementById('" + lnkAndOr1.ClientID + "').text)};");//return false;
-                lnkAddSearch2.Attributes.Add("onclick", "$('#" + trSearch2.ClientID + "').fadeIn();$('#" + lnkAddSearch2.ClientID + "').fadeOut();if ($('#" + hfAndOr2.ClientID + "').val()==''){$('#" + hfAndOr2.ClientID + "').val(document.getElementById('" + lnkAndOr2.ClientID + "').text)};");//return false;
-                lnkAddSearch3.Attributes.Add("onclick", "$('#" + trSearch3.ClientID + "').fadeIn();$('#" + lnkAddSearch3.ClientID + "').fadeOut();if ($('#" + hfAndOr3.ClientID + "').val()==''){$('#" + hfAndOr3.ClientID + "').val(document.getElementById('" + lnkAndOr3.ClientID + "').text)};");//return false;
+                lnkAddSearch1.Attributes.Add("onclick", "$('#" + trSearch1.ClientID + "').show();$('#" + lnkAddSearch1.ClientID + "').hide();if ($('#" + hfAndOr1.ClientID + "').val()==''){ $('#" + hfAndOr1.ClientID + "').val(document.getElementById('" + lnkAndOr1.ClientID + "').text)};");//return false;
+                lnkAddSearch2.Attributes.Add("onclick", "$('#" + trSearch2.ClientID + "').show();$('#" + lnkAddSearch2.ClientID + "').hide();if ($('#" + hfAndOr2.ClientID + "').val()==''){$('#" + hfAndOr2.ClientID + "').val(document.getElementById('" + lnkAndOr2.ClientID + "').text)};");//return false;
+                lnkAddSearch3.Attributes.Add("onclick", "$('#" + trSearch3.ClientID + "').show();$('#" + lnkAddSearch3.ClientID + "').hide();if ($('#" + hfAndOr3.ClientID + "').val()==''){$('#" + hfAndOr3.ClientID + "').val(document.getElementById('" + lnkAndOr3.ClientID + "').text)};");//return false;
 
-                lnkMinusSearch1.Attributes.Add("onclick", "$('#" + trSearch1.ClientID + "').fadeOut();$('#" + lnkAddSearch1.ClientID + "').fadeIn();$('#" + hfAndOr1.ClientID + "').val('');return false;");
-                lnkMinusSearch2.Attributes.Add("onclick", "$('#" + trSearch2.ClientID + "').fadeOut();$('#" + lnkAddSearch2.ClientID + "').fadeIn();$('#" + hfAndOr2.ClientID + "').val('');return false;");
-                lnkMinusSearch3.Attributes.Add("onclick", "$('#" + trSearch3.ClientID + "').fadeOut();$('#" + lnkAddSearch3.ClientID + "').fadeIn();$('#" + hfAndOr3.ClientID + "').val('');return false;");
+                lnkMinusSearch1.Attributes.Add("onclick", "$('#" + trSearch1.ClientID + "').hide();$('#" + lnkAddSearch1.ClientID + "').show();$('#" + hfAndOr1.ClientID + "').val('');return false;");
+                lnkMinusSearch2.Attributes.Add("onclick", "$('#" + trSearch2.ClientID + "').hide();$('#" + lnkAddSearch2.ClientID + "').show();$('#" + hfAndOr2.ClientID + "').val('');return false;");
+                lnkMinusSearch3.Attributes.Add("onclick", "$('#" + trSearch3.ClientID + "').hide();$('#" + lnkAddSearch3.ClientID + "').show();$('#" + hfAndOr3.ClientID + "').val('');return false;");
 
 
-                //ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "PutDefaultSearcUI", "$('#" + trSearch1.ClientID + "').fadeOut();$('#" + trSearch2.ClientID + "').fadeOut();$('#" + trSearch3.ClientID + "').fadeOut();", true);
+                //ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "PutDefaultSearcUI", "$('#" + trSearch1.ClientID + "').hide();$('#" + trSearch2.ClientID + "').hide();$('#" + trSearch3.ClientID + "').hide();", true);
 
 
                 PopulateTerminology();
-                //hfFileName.Value = Guid.NewGuid().ToString() + ".csv";
-                //PopulateYAxis();
-                PopulateYAxisBulk();
-
-
+              
                 if (Session["GridPageSize"] != null && Session["GridPageSize"].ToString() != "")
                 { gvTheGrid.PageSize = int.Parse(Session["GridPageSize"].ToString()); }
 
@@ -2978,6 +2983,20 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                 {
                     PopulateSearchCriteria(int.Parse(Session["SCid" + hfViewID.Value].ToString()));
                 }
+                else if (Session["SCid" + hfViewID.Value] == null)
+                {
+                    int? iGetNewSCid = SystemData.UserSearch_GetNewSCid(new UserSearch(null, _ObjUser.UserID, int.Parse(hfViewID.Value), "", null));
+
+                    if(iGetNewSCid!=null && iGetNewSCid>0)
+                    {
+                        Session["SCid" + hfViewID.Value] = iGetNewSCid;
+                        PopulateSearchCriteria(int.Parse(Session["SCid" + hfViewID.Value].ToString()));
+                    }
+                    else
+                    {
+                        _bBindWithSC = false;
+                    }
+                }
                 else
                 {
                     _bBindWithSC = false;
@@ -3029,9 +3048,6 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
                     }
 
-                    //PopulateSearchParams();
-                    //BindTheGrid(0, gvTheGrid.PageSize);
-
                 }
             }
             else
@@ -3043,24 +3059,24 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
             if (hfAndOr1.Value != "")
             {
-                strJSSearchShowHide = "$('#" + trSearch1.ClientID + "').fadeIn();$('#" + lnkAddSearch1.ClientID + "').fadeOut();";
+                strJSSearchShowHide = "$('#" + trSearch1.ClientID + "').show();$('#" + lnkAddSearch1.ClientID + "').hide();";
             }
 
             if (hfAndOr2.Value != "")
             {
-                //strJSSearchShowHide = "$('#" + trSearch1.ClientID + "').fadeIn();$('#" + lnkAddSearch1.ClientID + "').fadeOut();$('#" + trSearch2.ClientID + "').fadeIn();$('#" + lnkAddSearch2.ClientID + "').fadeOut();";
-                strJSSearchShowHide = strJSSearchShowHide + "$('#" + trSearch2.ClientID + "').fadeIn();$('#" + lnkAddSearch2.ClientID + "').fadeOut();";
+                //strJSSearchShowHide = "$('#" + trSearch1.ClientID + "').show();$('#" + lnkAddSearch1.ClientID + "').hide();$('#" + trSearch2.ClientID + "').show();$('#" + lnkAddSearch2.ClientID + "').hide();";
+                strJSSearchShowHide = strJSSearchShowHide + "$('#" + trSearch2.ClientID + "').show();$('#" + lnkAddSearch2.ClientID + "').hide();";
             }
 
             if (hfAndOr3.Value != "")
             {
-                //strJSSearchShowHide = "$('#" + trSearch1.ClientID + "').fadeIn();$('#" + lnkAddSearch1.ClientID + "').fadeOut();$('#" + trSearch2.ClientID + "').fadeIn();$('#" + lnkAddSearch2.ClientID + "').fadeOut();$('#" + trSearch3.ClientID + "').fadeIn();$('#" + lnkAddSearch3.ClientID + "').fadeOut();";
-                strJSSearchShowHide = strJSSearchShowHide + "$('#" + trSearch3.ClientID + "').fadeIn();$('#" + lnkAddSearch3.ClientID + "').fadeOut();";
+                //strJSSearchShowHide = "$('#" + trSearch1.ClientID + "').show();$('#" + lnkAddSearch1.ClientID + "').hide();$('#" + trSearch2.ClientID + "').show();$('#" + lnkAddSearch2.ClientID + "').hide();$('#" + trSearch3.ClientID + "').show();$('#" + lnkAddSearch3.ClientID + "').hide();";
+                strJSSearchShowHide = strJSSearchShowHide + "$('#" + trSearch3.ClientID + "').show();$('#" + lnkAddSearch3.ClientID + "').hide();";
             }
 
 
             if (strJSSearchShowHide != "")
-                ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "PutDefaultSearcUI_PB", strJSSearchShowHide, true);
+                ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "PutDefaultSearcUI_PB" + _strDynamictabPart, strJSSearchShowHide, true);
 
 
             if (PageType == "p")
@@ -3082,33 +3098,15 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             //lblTitle.Text = Title;
             if (!IsPostBack)
             {
-                BindTheGrid(0, gvTheGrid.PageSize);
+                BindTheGrid(_iStartIndex, gvTheGrid.PageSize);
             }
             GridViewRow gvr = gvTheGrid.TopPagerRow;
             if (gvr != null)
             {
                 _gvPager = (Common_Pager)gvr.FindControl("Pager");
-
-                if (PageType == "p")
-                {
-                    if (_strRecordRightID == Common.UserRoleType.Administrator
-                                 || _strRecordRightID == Common.UserRoleType.GOD)
-                    {
-                        if (chkIsActive.Checked == false)
-                            _gvPager.HideEditMany = false;
-
-                        if (_theView != null)
-                        {
-                            if ((bool)_theView.ShowBulkUpdateIcon == false)
-                                _gvPager.HideEditMany = true;
-                        }
-                    }
-                }
-
+                             
+                   
             }
-
-
-            //PopulateSearchParams();
 
         }
         catch (Exception ex)
@@ -3116,9 +3114,9 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             //
         }
 
-        string strXX = @"
+        string strJS_SearchBox = @"
 
-                              $(document).ready(function () {
+                 $(document).ready(function () {
                                   function ShowHide() {
 
                                     var chk = document.getElementById('ctl00_HomeContentPlaceHolder_rlOne_chkShowAdvancedOptions');
@@ -3131,13 +3129,13 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                                     }
                                    
                                     if (chk.checked == false) {
-                                            $('#" + tdFilterDynamic.ClientID + @"').fadeIn();
-                                            $('#" + tdFilterYAxis.ClientID + @"').fadeOut();
+                                            $('#" + tdFilterDynamic.ClientID + @"').show();
+                                            $('#" + tdFilterYAxis.ClientID + @"').hide();
                                             trChkOnlyWarning.style.display = 'none';
                                         }  
                                     if (chk.checked == true) {
-                                             $('#" + tdFilterYAxis.ClientID + @"').fadeIn();
-                                             $('#" + tdFilterDynamic.ClientID + @"').fadeOut();
+                                             $('#" + tdFilterYAxis.ClientID + @"').show();
+                                             $('#" + tdFilterDynamic.ClientID + @"').hide();
                                             trChkOnlyWarning.style.display = 'table-row';
                                         } 
 
@@ -3147,9 +3145,9 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
                                     var hfHideAdvancedOption = document.getElementById('" + hfHideAdvancedOption.ClientID + @"');
                                     if (hfHideAdvancedOption.value == 'yes') {
-                                        $('#" + tblAdvancedOption.ClientID + @"').fadeOut();
-                                        $('#" + tblAdvancedOptionChk.ClientID + @"').fadeOut();
-                                        $('#" + tblAdvancedOptionChkC.ClientID + @"').fadeOut();
+                                        $('#" + tblAdvancedOption.ClientID + @"').hide();
+                                        $('#" + tblAdvancedOptionChk.ClientID + @"').hide();
+                                        $('#" + tblAdvancedOptionChkC.ClientID + @"').hide();
                                         
                                     }   
                                     else
@@ -3175,46 +3173,18 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                                     var chk = document.getElementById('ctl00_HomeContentPlaceHolder_rlOne_chkShowAdvancedOptions');
 
                                         if (chk.checked == true) {
-                                            $('#" + tblAdvancedOption.ClientID + @"').fadeIn();
-                                            $('#" + tdFilterYAxis.ClientID + @"').fadeIn();
-                                            $('#" + tdFilterDynamic.ClientID + @"').fadeOut();
+                                            $('#" + tblAdvancedOption.ClientID + @"').show();
+                                            $('#" + tdFilterYAxis.ClientID + @"').show();
+                                            $('#" + tdFilterDynamic.ClientID + @"').hide();
                                         }
                                         else {
-                                            $('#" + tblAdvancedOption.ClientID + @"').fadeOut();
-                                            $('#" + tdFilterDynamic.ClientID + @"').fadeIn();
-                                            $('#" + tdFilterYAxis.ClientID + @"').fadeOut();
+                                            $('#" + tblAdvancedOption.ClientID + @"').hide();
+                                            $('#" + tdFilterDynamic.ClientID + @"').show();
+                                            $('#" + tdFilterYAxis.ClientID + @"').hide();
                                         }
 
                                     });
-
-                                 $('#" + chkDeleteParmanent.ClientID + @"').click(function () {
-                                        var chk = document.getElementById('" + chkDeleteParmanent.ClientID + @"');
-                                        if (chk.checked == true) {
-                                            $('#" + trUndo.ClientID + @"').fadeIn();
-
-                                        }
-                                        else {
-                                            $('#" + trUndo.ClientID + @"').fadeOut();
-                                             var chkUndo = document.getElementById('" + chkUndo.ClientID + @"');
-                                            chkUndo.checked=false;
-                                        }
-                                    });
-                         if( document.getElementById('" + hfParmanentDelete.ClientID + @"').value=='yes' && document.getElementById('" + chkDelateAllEvery.ClientID + @"')==null)
-                                         {
-                                            $('#" + trUndo.ClientID + @"').fadeIn();
-                                            }
-                        $('#" + chkDelateAllEvery.ClientID + @"').click(function () {
-                                            if( document.getElementById('" + hfParmanentDelete.ClientID + @"').value=='yes')
-                                            {
-                                                    var chk = document.getElementById('" + chkDelateAllEvery.ClientID + @"');
-                                                    if (chk.checked == true) {
-                                                        $('#" + trUndo.ClientID + @"').fadeIn();
-
-                                                    }
-                                            }
-
-                                    });
-
+                                
                                 });
 
                 ";
@@ -3266,19 +3236,19 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
         if (PageType == "p")
         {
-            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strCellToolTip", strCellToolTip, true);
+            ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "strCellToolTip", strCellToolTip, true);
         }
         else
         {
-            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strCellToolTip" + (DetailTabIndex - 1).ToString(), strCellToolTip, true);
+            ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "strCellToolTip" + (DetailTabIndex - 1).ToString(), strCellToolTip, true);
         }
 
-        // ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strCellToolTip", strCellToolTip, true);
+        // ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "strCellToolTip", strCellToolTip, true);
 
 
         if (PageType == "c")
         {
-            strXX = @"
+            strJS_SearchBox = @"
 
                               $(document).ready(function () {
                                   function ShowHide" + (DetailTabIndex - 1).ToString() + @"() {
@@ -3304,8 +3274,8 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                                     if (chk!=null && chk.checked == true) { x.style.display = 'inline'; } 
                                         var hfHideAdvancedOption = document.getElementById('" + hfHideAdvancedOption.ClientID + @"');
                                     if (hfHideAdvancedOption!=null && hfHideAdvancedOption.value == 'yes') {
-                                        //$('#" + tblAdvancedOption.ClientID + @"').fadeOut();
-                                       // $('#" + tblAdvancedOptionChk.ClientID + @"').fadeOut();
+                                        //$('#" + tblAdvancedOption.ClientID + @"').hide();
+                                       // $('#" + tblAdvancedOptionChk.ClientID + @"').hide();
                                         var x1 = document.getElementById('" + tblAdvancedOptionChk.ClientID + @"');
                                         x1.style.display = 'none';
                                         var x2 = document.getElementById('" + tblAdvancedOptionChkC.ClientID + @"');
@@ -3313,12 +3283,6 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                                     }            
                                 }
                                 ShowHide" + (DetailTabIndex - 1).ToString() + @"();
-//                                   if (window.addEventListener)
-//                                    window.addEventListener('load', ShowHide" + (DetailTabIndex - 1).ToString() + @", false);
-//                                else if (window.attachEvent)
-//                                    window.attachEvent('onload', ShowHide" + (DetailTabIndex - 1).ToString() + @");
-//                                else if (document.getElementById)
-//                                    window.onload = ShowHide" + (DetailTabIndex - 1).ToString() + @";
                          });
 
 
@@ -3332,45 +3296,16 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                                      var tdFilterYAxis = document.getElementById('" + tdFilterYAxis.ClientID + @"');
 
                                         if (chk.checked == true) {
-                                            $('#" + tblAdvancedOption.ClientID + @"').fadeIn();
+                                            $('#" + tblAdvancedOption.ClientID + @"').show();
                                              tdFilterDynamic.style.display = 'none';tdFilterYAxis.style.display = 'inline';
 
                                         }
                                         else {
-                                            $('#" + tblAdvancedOption.ClientID + @"').fadeOut();
+                                            $('#" + tblAdvancedOption.ClientID + @"').hide();
                                            tdFilterDynamic.style.display = 'inline';tdFilterYAxis.style.display = 'none';
 
                                         }
-                                    });  
-
-                                $('#" + chkDeleteParmanent.ClientID + @"').click(function () {
-                                        var chk = document.getElementById('" + chkDeleteParmanent.ClientID + @"');
-                                        if (chk.checked == true) {
-                                            $('#" + trUndo.ClientID + @"').fadeIn();
-
-                                        }
-                                        else {
-                                            $('#" + trUndo.ClientID + @"').fadeOut();
-                                             var chkUndo = document.getElementById('" + chkUndo.ClientID + @"');
-                                            chkUndo.checked=false;
-                                        }
-                                    });
-                         if( document.getElementById('" + hfParmanentDelete.ClientID + @"').value=='yes' && document.getElementById('" + chkDelateAllEvery.ClientID + @"')==null)
-                                         {
-                                            $('#" + trUndo.ClientID + @"').fadeIn();
-                                            }
-                        $('#" + chkDelateAllEvery.ClientID + @"').click(function () {
-                                            if( document.getElementById('" + hfParmanentDelete.ClientID + @"').value=='yes')
-                                            {
-                                                    var chk = document.getElementById('" + chkDelateAllEvery.ClientID + @"');
-                                                    if (chk.checked == true) {
-                                                        $('#" + trUndo.ClientID + @"').fadeIn();
-
-                                                    }
-                                            }
-
-                                    });
-                               
+                                    });                         
 
                                 });
 
@@ -3378,31 +3313,25 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
         }
 
         if (this.Page.MasterPageFile != null && this.Page.MasterPageFile.ToLower().IndexOf("his") > -1)
-        {
-            //divBatches.Visible = false;
-            //divConfig.Visible = false;
-            //divEmail.Visible = false;
-            //divShowGraph.Visible = false;
-            //divUpload.Visible = false;
-            //lblTitle.Visible = false;
+        {        
             trRecordListTitle.Visible = false;
         }
 
         if (PageType == "p")
         {
-            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "JSCode", strXX, true);
+            ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "JSCode", strJS_SearchBox, true);
         }
         else
         {
-            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "JSCode" + (DetailTabIndex - 1).ToString(), strXX, true);
+            ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "JSCode" + (DetailTabIndex - 1).ToString(), strJS_SearchBox, true);
         }
 
 
 
-
+        //beforeClose onClosed
         string strFancy = @"
                     $(function () {
-                            $('.popuplink2').fancybox({
+                            $('.popuplinkEV"+ _theTable.TableID.ToString()+ @"').fancybox({
                                 scrolling: 'auto',
                                 type: 'iframe',
                                 'transitionIn': 'elastic',
@@ -3410,13 +3339,16 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                                 width: 1000,
                                 height: 800,
                                 titleShow: false,                        
-                              onClosed: function () { $('#loadingredirect').fadeIn(); window.parent.location.reload();}
+                              onClosed: function () { $('.ajax-indicator-full').show(); window.parent.document.getElementById('"+btnRefreshViewChange.ClientID+@"').click();}
                             });
                         });
-
+                    
                 ";
 
         // onClosed: function () { window.parent.document.getElementById('btnReloadMe').click();}
+        // onClosed: function () { $('.ajax-indicator-full').show(); window.parent.location.reload();}
+        hlEditView.CssClass = "popuplinkEV" + _theTable.TableID.ToString();
+        hlEditView2.CssClass = hlEditView.CssClass;
         if (Request.RawUrl.IndexOf("EachRecordTable.aspx") > -1)
         {
             //_strNoAjaxView = "noajax=yes&";
@@ -3424,164 +3356,618 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
         else
         {
             //_strNoAjaxView = "";
-            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strFancy", strFancy, true);
+            ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "popuplinkEV" + _theTable.TableID.ToString(), strFancy, true);
         }
-        if (IsPostBack && Request.Params["__EVENTTARGET"] != null && Request.Params["__EVENTTARGET"].ToString() == "")
-        {
-            mpeExportRecords.Hide();
-        }
-
-
-        ControlCollection _collection = this.Controls;
-        //lblMsg.Visible = true;
-        //lblMsg.Text = TheDatabase.GetCode(_collection, _strDynamictabPart).Replace("\r\n", "<br/>");
+       
+        ControlCollection _collection = this.Controls;      
         TheDatabase.SetValidationGroup(_collection, _strDynamictabPart);
         SetOtherValidationGroup();
         //put speed test here       
-       
-    EndSub:
-        int iFXX;
+        
 
     }
 
-    protected void EnsureSecurity()
+    protected void EnsureSecurity(int iTN)
     {
-        GridViewRow gvr = gvTheGrid.TopPagerRow;
-        if (_strRecordRightID == Common.UserRoleType.ReadOnly)
+        //GridViewRow gvr = gvTheGrid.TopPagerRow;
+
+        if (_gvPager==null)
         {
-            //gvTheGrid.Columns[0].Visible = false;//delete check
-            gvTheGrid.Columns[2].Visible = false;//edit   
-            gvTheGrid.Columns[3].Visible = true;//view
-            divAddAndViewControls.Visible = false;
-            if (_theView != null)
-            {
-                if ((bool)_theView.ShowViewIcon == false)
-                    gvTheGrid.Columns[3].Visible = false;//view
-            }
-
-            divEmptyData.Visible = false;
-            //_bReadOnly = true;
-            divUpload.Visible = false;
-
+            GridViewRow gvr = gvTheGrid.TopPagerRow;
             if (gvr != null)
             {
                 _gvPager = (Common_Pager)gvr.FindControl("Pager");
-                _gvPager.HideAdd = true;
-                _gvPager.HideDelete = true;
             }
         }
-        else if (_strRecordRightID == Common.UserRoleType.None)
+
+        bool bShowAdd = false;
+        bool bShowEdit = false;
+        bool bShowDelete = false;
+        bool bShowParmaDelete = false;
+        bool bShowEditView = false;
+        bool bShowViewIcon = false;
+        bool bShowBulkEdit = false;
+
+        if (_theView != null)
         {
-            Response.Redirect("~/Empty.aspx", true);
-            return;
+            if ((bool)_theView.ShowBulkUpdateIcon == true)
+                bShowBulkEdit = true;
+            if ((bool)_theView.ShowAddIcon == true)
+                bShowAdd = true;
+            if ((bool)_theView.ShowDeleteIcon == true)
+                bShowDelete = true;
+            if ((bool)_theView.ShowEditIcon == true)
+                bShowEdit = true;
+            if ((bool)_theView.ShowViewIcon == true)
+                bShowViewIcon = true;
+        }
+
+
+        if (_strRecordRightID == Common.UserRoleType.None)
+        {
+            try
+            {
+                Response.Redirect("~/Empty.aspx", true);
+                return;
+            }
+            catch
+            {
+
+            }
+          
+        }
+        else if (_strRecordRightID == Common.UserRoleType.ReadOnly)
+        {
+            bShowAdd = false;
+            bShowEdit = false;
+            bShowDelete = false;
+            bShowParmaDelete = false;        
+            bShowBulkEdit = false;
+            //gvTheGrid.Columns[0].Visible = false;//delete check
+            
+                gvTheGrid.Columns[2].Visible = false;//edit   
+
+           
+                gvTheGrid.Columns[3].Visible = bShowViewIcon;//view
+           
+            divUpload.Visible = false;
+         
         }
         else if (_strRecordRightID == Common.UserRoleType.OwnData)
         {
-            //gvTheGrid.Columns[0].Visible = false;//delete check
-            gvTheGrid.Columns[2].Visible = true;//edit   
-            gvTheGrid.Columns[3].Visible = true;//view
-            divEmptyData.Visible = false;
-            divAddAndViewControls.Visible = false;
-            if (_theView != null)
-            {
-                if ((bool)_theView.ShowViewIcon == false)
-                    gvTheGrid.Columns[3].Visible = false;//view
-                if ((bool)_theView.ShowEditIcon == false)
-                    gvTheGrid.Columns[2].Visible = false;//edit
-            }
-
-            //_bReadOnly = false;
+            bShowDelete = false;
+            bShowParmaDelete = false;
+            bShowBulkEdit = false;
+         
+                gvTheGrid.Columns[2].Visible = bShowEdit;//edit   
+                gvTheGrid.Columns[3].Visible = bShowViewIcon;//view
+           
             divUpload.Visible = true;
-            //hlLocations.Visible = false;
             divEmail.Visible = true;
-
-            if (_bShowGraphIcon)
-                divShowGraph.Visible = true;
-
-            if (gvr != null)
-            {
-                _gvPager = (Common_Pager)gvr.FindControl("Pager");
-                _gvPager.HideAdd = true;
-                _gvPager.HideDelete = true;
-            }
         }
         else if (_strRecordRightID == Common.UserRoleType.EditOwnViewOther)
         {
-            //gvTheGrid.Columns[0].Visible = false;//delete check
-            gvTheGrid.Columns[2].Visible = true;//edit   
-            gvTheGrid.Columns[3].Visible = true;//view
-            //divEmptyData.Visible = false;
-            //divAddAndViewControls.Visible = false;
-            if (_theView != null)
-            {
-                if ((bool)_theView.ShowViewIcon == false)
-                    gvTheGrid.Columns[3].Visible = false;//view
-                if ((bool)_theView.ShowEditIcon == false)
-                    gvTheGrid.Columns[2].Visible = false;//edit
-            }
+            bShowDelete = false;
+            bShowParmaDelete = false;
+            bShowBulkEdit = false;
+
+            gvTheGrid.Columns[2].Visible = bShowEdit;//edit   
+            gvTheGrid.Columns[3].Visible = bShowViewIcon;//view
+            
             divUpload.Visible = true;
 
             divEmail.Visible = true;
-            if (_bShowGraphIcon)
-                divShowGraph.Visible = true;
-            if (gvr != null)
-            {
-                _gvPager = (Common_Pager)gvr.FindControl("Pager");
-                //_gvPager.HideAdd = true;
-                _gvPager.HideDelete = true;
-            }
         }
         else if (_strRecordRightID == Common.UserRoleType.AddRecord)
         {
-            //gvTheGrid.Columns[0].Visible = false;//delete check
-
-
+            bShowDelete = false;
+            bShowParmaDelete = false;
+            bShowBulkEdit = false;
             gvTheGrid.Columns[2].Visible = false;//edit   
-            gvTheGrid.Columns[3].Visible = true;//view
-
-            if (_theView != null)
-            {
-                if ((bool)_theView.ShowViewIcon == false)
-                    gvTheGrid.Columns[3].Visible = false;//view
-            }
-            //_bReadOnly = true;
+            gvTheGrid.Columns[3].Visible = bShowViewIcon;//view
+           
             divUpload.Visible = true;
-
-            if (gvr != null)
+        }
+        else if (_strRecordRightID == Common.UserRoleType.AddEditRecord)
+        {
+            bShowParmaDelete = false;
+            gvTheGrid.Columns[2].Visible = bShowEdit;//edit   
+            gvTheGrid.Columns[3].Visible = false;//view
+          
+        }
+        else if (_strRecordRightID == Common.UserRoleType.Administrator)
+        {
+            if((bool)_theUserRole.IsAccountHolder)
             {
-                _gvPager = (Common_Pager)gvr.FindControl("Pager");
-
-                _gvPager.HideDelete = true;
+                bShowParmaDelete = true;
             }
+            else
+            {
+                bShowParmaDelete = false;
 
+                if(_theUserRole.AllowDeleteRecord!=null && (bool)_theUserRole.AllowDeleteRecord)
+                {
+                    bShowParmaDelete = true;
+                }
+            }
+            gvTheGrid.Columns[2].Visible = true;//edit   
+            gvTheGrid.Columns[3].Visible = false;//view
+          
+        }
+        else if (_strRecordRightID == Common.UserRoleType.GOD)
+        {
+            bShowParmaDelete = true;
+            gvTheGrid.Columns[2].Visible = true;//edit   
+            gvTheGrid.Columns[3].Visible = false;//view
+         
+        }
 
+        if (PageType == "c")
+        {
+            if (ShowAddButton == false)
+            {
+                bShowAdd = false;
+
+            }           
+        }
+
+        if(_gvPager!=null)
+        {
+            _gvPager.HideAdd = true;
+            _gvPager.HideEditMany = true;
+            _gvPager.HideDelete = true;
+            _gvPager.ShowCopyRecord = false;
+            _gvPager.HideUnDelete = true;
+            _gvPager.HideParmanentDelete = true;
+            if (chkShowDeletedRecords.Checked == false)
+            {
+               if(bShowDelete)
+                   _gvPager.HideDelete = false;
+            }
+            else
+            {
+                if (bShowDelete)
+                    _gvPager.HideUnDelete = false;
+                if (bShowParmaDelete)
+                    _gvPager.HideParmanentDelete = false;
+            }
+            
+            if (_theTable.AllowCopyRecords != null && (bool)_theTable.AllowCopyRecords && bShowAdd)
+            {
+                _gvPager.ShowCopyRecord = true;
+            }
+            if (bShowAdd)
+                _gvPager.HideAdd = false;
+            if (bShowBulkEdit)
+                _gvPager.HideEditMany = false;
+
+            if (bShowBulkEdit)
+                _gvPager.HideEditMany = false;
 
 
         }
-        else
-        {
-            gvTheGrid.Columns[2].Visible = true;//edit   
-            gvTheGrid.Columns[3].Visible = false;//view
-
-            if (_theView != null)
+        
+            if (iTN == 0)
             {
-                if ((bool)_theView.ShowEditIcon == false)
-                    gvTheGrid.Columns[2].Visible = false;//edit
-            }
-
-
-            if (_theView != null)
-            {
-                if ((bool)_theView.ShowAddIcon == false)
+                if (IsFiltered())
                 {
+                    
+                   divNoFilter.Visible = true;
                     divEmptyData.Visible = false;
 
                 }
+                else
+                {
+                    if (_strRecordRightID == Common.UserRoleType.ReadOnly)
+                    {
+                        divEmptyData.Visible = false;
+                    }
+                    else
+                    {
+                        divEmptyData.Visible = true;
+                    }
+                    divNoFilter.Visible = false;
+                }
+                hplNewData.NavigateUrl = GetAddURL();
+
+                hplNewDataFilter.NavigateUrl = GetAddURL();
+                hplNewDataFilter2.NavigateUrl = hplNewDataFilter.NavigateUrl;
+
+                if (_theView != null)
+                {
+                    if ((bool)_theView.ShowAddIcon == false)
+                    {
+                        divEmptyData.Visible = false;
+                        divNoFilter.Visible = false;
+                    }
+                }
+                if (bShowAdd == false && bShowEditView==false)
+                {
+                    divEmptyData.Visible = false;
+                    divNoFilter.Visible = false;
+                }
+                else if (bShowAdd == false && bShowEditView == true)
+                {
+                    hplNewData.Visible = false;
+                    hplNewDataFilter.Visible = false;
+                    hplNewDataFilter2.Visible = false;
+                    
+                }
+            }
+            else
+            {
+                divEmptyData.Visible = false;
+                divNoFilter.Visible = false;
+            }
+        
+
+        if (_bHideAllExport)
+        {
+            _gvPager.HideAllExport = true;
+            divEmail.Visible = false;
+        }
+        if (_gvPager != null && Request.QueryString["RecordTable"] != null)
+        {
+            divShowGraph.Visible = false;
+            divUpload.Visible = false;
+            divEmail.Visible = false;
+            divConfig.Visible = false;
+            divBatches.Visible = false;
+
+        }
+
+
+        if (_theView != null)
+        {
+            if ((bool)_theView.ShowViewIcon == false)
+                gvTheGrid.Columns[3].Visible = false;//view
+            if ((bool)_theView.ShowEditIcon == false)
+                gvTheGrid.Columns[2].Visible = false;//edit
+            if ((bool)_theView.ShowDeleteIcon == false)
+            {
+                // gvTheGrid.Columns[0].Visible = false;//delete check
+                if (_gvPager != null)
+                    _gvPager.HideDelete = true;
+            }
+
+            if ((bool)_theView.ShowAddIcon == false)
+            {
+                divEmptyData.Visible = false;
+                divNoFilter.Visible = false;
+                if (_gvPager != null)
+                    _gvPager.HideAdd = true;
+            }
+
+            if ((bool)_theView.ShowBulkUpdateIcon == false)
+            {
+                if (_gvPager != null)
+                    _gvPager.HideEditMany = true;
+            }
+
+
+        }
+
+        if (_theRoleTable != null)
+        {
+            if (_theRoleTable.AllowEditView != null && (bool)_theRoleTable.AllowEditView == false)
+            {
+                if (_gvPager != null)
+                    _gvPager.HideEditView = true;
+
+                hlEditView.Visible = false;
+                hlEditView2.Visible = false;
+
+            }
+        }
+        else
+        {
+            if (_theRole != null && _theUserRole.IsAccountHolder != null && (bool)_theUserRole.IsAccountHolder == false)
+            {
+                if (_theRole.AllowEditView != null && (bool)_theRole.AllowEditView == false)
+                {
+                    if (_gvPager != null)
+                        _gvPager.HideEditView = true;
+
+                    hlEditView.Visible = false;
+                    hlEditView2.Visible = false;
+
+                }
+
+            }
+        }
+
+
+        if (Request.QueryString["ViewID"] != null || Request.QueryString["View"] != null)
+        {
+            if ((bool)_theUserRole.IsAccountHolder)
+            {
+                if (_gvPager != null)
+                    _gvPager.HideEditView = false;
+
+                hlEditView.Visible = true;
+                hlEditView2.Visible = true;
+            }
+            else
+            {
+
+                if (_gvPager != null && _strViewPageType != "dash")
+                    _gvPager.HideEditView = true;
+
+                hlEditView.Visible = false;
+                hlEditView2.Visible = false;
+            }
+
+        }
+
+        if (Request.RawUrl.IndexOf("RecordTableSection.aspx") > -1)
+        {
+            if (_gvPager != null)
+                _gvPager.HideEditView = true;
+
+            divEmptyData.Visible = false;
+        }
+        
+        if (_strViewPageType == "dash" && Session["EditDashboard"] == null)
+        {
+            if (_gvPager != null)
+                _gvPager.HideEditView = true;
+
+            hlEditView.Visible = false;
+            hlEditView2.Visible = false;
+        }
+        
+        if (_gvPager != null)
+        {
+            _gvPager.TableID = TableID;
+        }
+        if (divEmptyData.Visible == true & divNoFilter.Visible == true)
+        {
+            divEmptyData.Visible = false;
+        }
+
+
+       
+    }
+    protected void DoPagerFancyThings()
+    {
+        if (_gvPager != null)
+        {
+
+            int iViewID = -1;
+            if (hfViewID.Value != "")
+            {
+                iViewID = int.Parse(hfViewID.Value);
+            }
+
+            _gvPager.EditViewCSSClass = "popuplinkEV" + _theTable.TableID.ToString();
+            _gvPager.EditViewToolTip = "Edit View";
+            _gvPager.EditViewURL = GetEditViewPageURL();
+
+            string strChkAllClientID = "ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid_ctl02_chkAll";
+            if (_bFixedHeader)
+            {
+                //
+            }
+            else
+            {
+                if (gvTheGrid.HeaderRow.FindControl("chkAll") != null)
+                {
+                    strChkAllClientID = ((CheckBox)gvTheGrid.HeaderRow.FindControl("chkAll")).ClientID;
+                }
+            }
+
+            if (_gvPager.HideDelete == false || _gvPager.HideUnDelete==false || _gvPager.HideParmanentDelete==false)
+            {
+                string xml = null;
+                xml = @"<root>" +
+                          " <TableName>" + HttpUtility.HtmlEncode(_theTable.TableName) + "</TableName>" +
+                       " <DynamictabPart>" + HttpUtility.HtmlEncode(_strDynamictabPart) + "</DynamictabPart>" +
+                       " <lnkDeleteAllOK>" + HttpUtility.HtmlEncode(lnkDeleteAllOK.ClientID) + "</lnkDeleteAllOK>" +
+                        " <chkAll>" + HttpUtility.HtmlEncode(strChkAllClientID) + "</chkAll>" +
+                       " <DeleteReason>" + HttpUtility.HtmlEncode(_bDeleteReason.ToString()) + "</DeleteReason>" +
+                       " <RecordRightID>" + HttpUtility.HtmlEncode(_strRecordRightID) + "</RecordRightID>" +
+                        " <hfParmanentDelete>" + HttpUtility.HtmlEncode(hfParmanentDelete.ClientID) + "</hfParmanentDelete>" +
+                         " <hfchkDeleteParmanent>" + HttpUtility.HtmlEncode(hfchkDeleteParmanent.ClientID) + "</hfchkDeleteParmanent>" +
+                          " <hfchkUndo>" + HttpUtility.HtmlEncode(hfchkUndo.ClientID) + "</hfchkUndo>" +
+                           " <hfchkDelateAllEvery>" + HttpUtility.HtmlEncode(hfchkDelateAllEvery.ClientID) + "</hfchkDelateAllEvery>" +
+                            " <hftxtDeleteReason>" + HttpUtility.HtmlEncode(hftxtDeleteReason.ClientID) + "</hftxtDeleteReason>" +
+                              "</root>";
+                SearchCriteria theSearchCriteria = new SearchCriteria(null, xml);
+                int iSCidForDeleteRecord = SystemData.SearchCriteria_Insert(theSearchCriteria);
+
+                if (chkShowDeletedRecords.Checked)
+                {
+                    _gvPager.UnDeleteOnClientClick = "return false;";
+                    _gvPager.UnDeleteCssClass = "popuplinkDEL" + _theTable.TableID.ToString();
+                    _gvPager.UnDeleteHref = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/DeleteRecord.aspx?type=r&sc_id=" + iSCidForDeleteRecord.ToString();
+                    _gvPager.ParmanentDeleteOnClientClick = "return false;";
+                    _gvPager.ParmanentDeleteCssClass = "popuplinkDEL" + _theTable.TableID.ToString();
+                    _gvPager.ParmanentDeleteHref = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/DeleteRecord.aspx?type=p&sc_id=" + iSCidForDeleteRecord.ToString();
+
+                }
+                else
+                {
+                    hfParmanentDelete.Value = "no";
+                    _gvPager.DeleteOnClientClick = "return false;";
+                    _gvPager.DeleteCssClass = "popuplinkDEL" + _theTable.TableID.ToString();
+                    _gvPager.DeleteHref = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/DeleteRecord.aspx?type=d&sc_id=" + iSCidForDeleteRecord.ToString();
+
+                }
+
+                string strDelFancy = @"
+                  
+                                                $(function () {
+                                                        $('.popuplinkDEL" + _theTable.TableID.ToString() + @"').fancybox({  
+                                                                    'onStart': function(){
+                                                                     var chkAll = document.getElementById('" + strChkAllClientID + @"');
+                                                                        if(chkAll!=null && chkAll.checked==true)
+                                                                        {
+
+                                                                        }
+                                                                        if(chkAll!=null && chkAll.checked==false)
+                                                                        {
+                                                                            var GridView =  document.getElementById('" + gvTheGrid.ClientID + @"');
+                                                                            var inputList = GridView.getElementsByTagName('input');
+                                                                            var bFoundTicked=false;
+                                                                             for (var i = 0; i < inputList.length; i++) {
+                                                                                 var row = inputList[i].parentNode.parentNode;
+                                                                                  if (inputList[i].type == 'checkbox' && chkAll != inputList[i]) {
+                                                                                        if (inputList[i].checked)
+                                                                                        {
+                                                                                            bFoundTicked=true;
+                                                                                        }
+                                                                                  }
+                                                                            }
+                                                                            if(bFoundTicked==false)
+                                                                            {
+                                                                                     //alert('Please select a record.');
+                                                                                    CommonAlertMessage('Please select a record.',2000);
+                                                                                    return false;
+                                                                            }
+                                                                        }
+                                       
+                                                                 },                                                         
+                                                            scrolling: 'auto',
+                                                            type: 'iframe',
+                                                            'transitionIn': 'elastic',
+                                                            'transitionOut': 'none',
+                                                            width: 600,
+                                                            height: 700,
+                                                            titleShow: false                       
+                                                        });
+                                                    });
+
+                                            ";
+                ViewState["strDelFancy"] = "ok";
+                ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "strDelFancy" + _theTable.TableID.ToString(), strDelFancy, true);
+            }
+           
+
+           
+
+            if (_gvPager.HideEditMany == false)
+            {
+                string xmlEM = @"<root>" +
+                      " <TableID>" + HttpUtility.HtmlEncode(_theTable.TableID.ToString()) + "</TableID>" +
+                      " <ViewID>" + HttpUtility.HtmlEncode(_theView.ViewID.ToString()) + "</ViewID>" +
+                     " <TableName>" + HttpUtility.HtmlEncode(_theTable.TableName) + "</TableName>" +
+                  " <DynamictabPart>" + HttpUtility.HtmlEncode(_strDynamictabPart) + "</DynamictabPart>" +
+                  " <lnkEditManyOK>" + HttpUtility.HtmlEncode(lnkEditManyOK.ClientID) + "</lnkEditManyOK>" +
+                   " <chkAll>" + HttpUtility.HtmlEncode(strChkAllClientID) + "</chkAll>" +
+                  " <RecordRightID>" + HttpUtility.HtmlEncode(_strRecordRightID) + "</RecordRightID>" +
+                   " <hfddlYAxisBulk>" + HttpUtility.HtmlEncode(hfddlYAxisBulk.ClientID) + "</hfddlYAxisBulk>" +
+                    " <hfBulkValue>" + HttpUtility.HtmlEncode(hfBulkValue.ClientID) + "</hfBulkValue>" +
+                     " <hfchkUpdateEveryItem>" + HttpUtility.HtmlEncode(hfchkUndo.ClientID) + "</hfchkUpdateEveryItem>" +
+                         "</root>";
+                SearchCriteria theSearchCriteriaEM = new SearchCriteria(null, xmlEM);
+                int iSCidForEditMany = SystemData.SearchCriteria_Insert(theSearchCriteriaEM);
+
+
+                _gvPager.EditManyOnClientClick = "return false;";
+                _gvPager.EditManyCssClass = "popuplinkEM" + _theTable.TableID.ToString();
+                _gvPager.EditManyHref = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/EditMany.aspx?sc_id=" + iSCidForEditMany.ToString();
+
+
+
+
+
+                //if(ViewState["strEMFancy"]==null)
+                //{
+                string strEMFancy = @"
+                  
+                                            $(function () {
+                                                    $('.popuplinkEM" + _theTable.TableID.ToString() + @"').fancybox({    
+                                                             'onStart': function(){
+                                                                 var chkAll = document.getElementById('" + strChkAllClientID + @"');
+                                                                    if(chkAll!=null && chkAll.checked==false)
+                                                                    {
+                                                                        var GridView =  document.getElementById('" + gvTheGrid.ClientID + @"');
+                                                                        var inputList = GridView.getElementsByTagName('input');
+                                                                        var bFoundTicked=false;
+                                                                         for (var i = 0; i < inputList.length; i++) {
+                                                                             var row = inputList[i].parentNode.parentNode;
+                                                                              if (inputList[i].type == 'checkbox' && chkAll != inputList[i]) {
+                                                                                    if (inputList[i].checked)
+                                                                                    {
+                                                                                        bFoundTicked=true;
+                                                                                    }
+                                                                              }
+                                                                        }
+                                                                        if(bFoundTicked==false)
+                                                                        {
+                                                                                 //alert('Please select a record.');
+                                                                                CommonAlertMessage('Please select a record.',2000);
+                                                                                return false;
+                                                                        }
+                                                                    }
+                                       
+                                                             },                                                     
+                                                        scrolling: 'auto',
+                                                        type: 'iframe',
+                                                        'transitionIn': 'elastic',
+                                                        'transitionOut': 'none',
+                                                        width: 600,
+                                                        height: 700,
+                                                        titleShow: false                       
+                                                    });
+                                                });
+
+                                        ";
+                ViewState["strEMFancy"] = "ok";
+                ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "strEMFancy" + _theTable.TableID.ToString(), strEMFancy, true);
+
+            }
+
+            
+
+            string xmlExp = @"<root>" +
+                " <TableID>" + HttpUtility.HtmlEncode(_theTable.TableID.ToString()) + "</TableID>" +
+                " <ViewID>" + HttpUtility.HtmlEncode(_theView.ViewID.ToString()) + "</ViewID>" +
+               " <TableName>" + HttpUtility.HtmlEncode(_theTable.TableName) + "</TableName>" +
+            " <DynamictabPart>" + HttpUtility.HtmlEncode(_strDynamictabPart) + "</DynamictabPart>" +
+            " <lnkExportRecords>" + HttpUtility.HtmlEncode(lnkExportRecords.ClientID) + "</lnkExportRecords>" +
+             " <chkAll>" + HttpUtility.HtmlEncode(strChkAllClientID) + "</chkAll>" +
+            " <RecordRightID>" + HttpUtility.HtmlEncode(_strRecordRightID) + "</RecordRightID>" +
+                   "</root>";
+            SearchCriteria theSearchCriteriaExp = new SearchCriteria(null, xmlExp);
+            int iSCidForExport = SystemData.SearchCriteria_Insert(theSearchCriteriaExp);
+
+
+            _gvPager.AllExportOnClientClick = "return false;";
+            _gvPager.AllExportCssClass = "popuplinkExp" + _theTable.TableID.ToString();
+            _gvPager.AllExportHref = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/ExportRecord.aspx?sc_id=" + iSCidForExport.ToString();
+
+            //if (ViewState["strExpFancy"] == null)
+            //{
+            string strExpFancy = @"
+                  
+                                            $(function () {
+                                                    $('.popuplinkExp" + _theTable.TableID.ToString() + @"').fancybox({
+                                                        scrolling: 'auto',
+                                                        type: 'iframe',
+                                                        'transitionIn': 'elastic',
+                                                        'transitionOut': 'none',   
+                                                        width: 800,
+                                                        height: 800,                                                  
+                                                        titleShow: false                       
+                                                    });
+                                                });
+
+                                        ";
+            ViewState["strExpFancy"] = "ok";
+            ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "strExpFancy" + _theTable.TableID.ToString(), strExpFancy, true);
+
+            //}
+
+
+
+            if (_strNoAjaxView != "")
+            {
+                _gvPager.EditViewTarget = "_parent";
             }
 
         }
     }
-
     protected string GetRecursiveDataScope(int iParentTableID, int iScopeTableID, string strReocrdIDs)
     {
         int iCurrentTableID = int.Parse(_qsTableID);
@@ -3837,6 +4223,12 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
     protected void BindTheGrid(int iStartIndex, int iMaxRows)
     {
+        hfchkDelateAllEvery.Value = "";
+        hfchkDeleteParmanent.Value = "";
+        hfchkDeleteParmanent.Value = "";
+        hfchkUndo.Value = "";
+        hftxtDeleteReason.Value = "";
+
         PopulateSearchParams();
 
         if (hfViewID.Value != "")
@@ -3900,26 +4292,19 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
 
             //put speed test here       
-            if (Session["RunSpeedLog"] != null && _theTable != null)
-            {
-                SpeedLog theSpeedLog = new SpeedLog();
-                theSpeedLog.FunctionName = _theTable.TableName + "ets_Record_List - START ";
-                theSpeedLog.FunctionLineNumber = 1950;
-                SecurityManager.AddSpeedLog(theSpeedLog);
-
-            }
+          
 
 
             string strReturnSQL = "";
             string sReturnHeaderSQL = "";
             _dtDataSource = RecordManager.ets_Record_List(int.Parse(TableID.ToString()),
                 ddlEnteredBy.SelectedValue == "-1" ? null : (int?)int.Parse(ddlEnteredBy.SelectedValue),
-                !chkIsActive.Checked,
+                !chkShowDeletedRecords.Checked,
                 chkShowOnlyWarning.Checked == false ? null : (bool?)true, null, null,
                 sOrder, strOrderDirection, iStartIndex, iMaxRows, ref iTN, ref _iTotalDynamicColumns, _strListType, _strNumericSearch, TextSearch + TextSearchParent,
                _dtDateFrom, _dtDateTo, sParentColumnSortSQL, "", _strViewName, int.Parse(hfViewID.Value), ref strReturnSQL, ref sReturnHeaderSQL);
 
-           
+            ViewState["strReturnSQL"] = strReturnSQL;
             string strOtherXMLTags = @" <iStartIndex>" + HttpUtility.HtmlEncode(iStartIndex.ToString()) + "</iStartIndex>" +
                   " <iMaxRows>" + HttpUtility.HtmlEncode(iMaxRows.ToString()) + "</iMaxRows>" +
                 " <sOrder>" + HttpUtility.HtmlEncode(sOrder) + "</sOrder>" +
@@ -3935,16 +4320,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
             //put speed test here       
 
-            if (Session["RunSpeedLog"] != null && _theTable != null)
-            {
-                SpeedLog theSpeedLog = new SpeedLog();
-                theSpeedLog.FunctionName = _theTable.TableName + "SP ets_Record_List - END ";
-                theSpeedLog.FunctionLineNumber = 1960;
-                SecurityManager.AddSpeedLog(theSpeedLog);
-
-            }
-
-
+            
             //remove the parent sort column here
 
             if (sParentColumnSortSQL != "" && _dtDataSource != null)
@@ -3961,230 +4337,14 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             gvTheGrid.DataSource = _dtDataSource;
 
             gvTheGrid.VirtualItemCount = iTN;
+            ViewState[gvTheGrid.ID + "PageIndex"] = (iStartIndex / gvTheGrid.PageSize) + 1;
+
             gvTheGrid.DataBind();
-
-
             ///
-            hfUsingScrol.Value = "";
-            if (PageType == "p" && Request.RawUrl.IndexOf("RecordList.aspx") > -1 && gvTheGrid.PageSize > 20 && iTN > 20
-                && _theView != null && _theView.ShowFixedHeader != null && (bool)_theView.ShowFixedHeader)
-            {
-                hfUsingScrol.Value = "yes";
-
-                //ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "Key", "<script>SetStyleEvent();MakeStaticHeader('" + gvTheGrid.ClientID + "', 600, 1100 , 90 ,false); </script>", false);
-                string strStaticheaderJS = @"
-
-                             $(document).ready(function () {
-        
-                                        $.fn.visibleHeight = function () {
-                                            var elBottom, elTop, scrollBot, scrollTop, visibleBottom, visibleTop;
-                                            scrollTop = $(window).scrollTop();
-                                            scrollBot = scrollTop + $(window).height();
-                                            elTop = this.offset().top;
-                                            elBottom = elTop + this.outerHeight();
-                                            visibleTop = elTop < scrollTop ? scrollTop : elTop;
-                                            visibleBottom = elBottom > scrollBot ? scrollBot : elBottom;
-                                            return visibleBottom - visibleTop
-                                        }
-
-                                function SetStyleEvent() {
-
-                                    $('#ctl00_HomeContentPlaceHolder_rlOne_UpdateProgress1').fadeIn();
-
-                                    var DivPR = document.getElementById('DivPagerRow');
-                                    var DivHR = document.getElementById('DivHeaderRow');
-                                    var DivMC = document.getElementById('DivMainContent');
-                                    var DivFR = document.getElementById('DivFooterRow');
-                                    var DivR = document.getElementById('DivRoot');
-
-                                    DivMC.style.overflowY = 'auto';
-                                    DivMC.style.overflowX = 'hidden';
-                                  
-
-                                    DivMC.style.paddingRight = '17px';
-                                    DivHR.style.paddingRight = '17px'; 
-                                   DivPR.style.paddingRight = '17px';
-//                                   DivMC.style.marginRight=-17px;
-
-
-                                    var tbl = document.getElementById('ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid');
-
-
-                                    var chkAll = $(tbl.rows[1]).find('#ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid_ctl02_chkAll');
-                                    $(chkAll).attr('onclick', 'javascript: SelectAllCheckboxesHR(this,ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid);');
-                    
-
-                                }
-
-
-                                 function MakeStaticHeader(gridId, height, width, headerHeight, isFooter) {
-                                    var tbl = document.getElementById(gridId);
-                                    height = $('#DivMainContent').visibleHeight();
-                                    height = height - 65;
-                                    if (tbl) {
-                                        var DivPR = document.getElementById('DivPagerRow');
-                                        var DivHR = document.getElementById('DivHeaderRow');
-                                        var DivMC = document.getElementById('DivMainContent');
-                                        var DivFR = document.getElementById('DivFooterRow');
-                                        var DivR = document.getElementById('DivRoot');
-
-                                        //*** Set divheaderRow Properties ****
-                                        var oWidth = $(tbl).outerWidth();
-                                        width = $(tbl).width();
-                                       var iWidth = $(tbl).innerWidth();
-                                        headerHeight = DivHR.style.height;
-                                        var paregHeight = 45;
-
-                                        //pager
-                                        DivPR.style.height = paregHeight + 'px'; // headerHeight / 2
-
-                                        DivPR.style.position = 'relative';
-                                        DivPR.style.top = '0px';
-                                        //DivPR.style.verticalAlign = 'top';
-
-                                        DivHR.style.height = headerHeight + 'px';// headerHeight/2
-
-                                        DivHR.style.position = 'relative';
-                                        DivHR.style.top = '0px';
-                                        // DivHR.style.verticalAlign = 'top';
-                                        //DivHR.rules = 'none';
-
-
-                                        //*** Set divMainContent Properties ****
-                                        DivMC.style.height = height + 'px';
-                                        DivMC.style.position = 'relative';
-                                        DivMC.style.top = '0px'; //(headerHeight) + 'px';// //
-                                        DivMC.style.zIndex = '0';
-
-
-
-
-                                        if (isFooter) {
-                                            //*** Set divFooterRow Properties ****
-                                            DivFR.style.width = (parseInt(width)) + 'px';
-                                            DivFR.style.position = 'relative';
-                                            DivFR.style.top = -(headerHeight) + 'px';
-                                            DivFR.style.verticalAlign = 'top';
-                                            DivFR.style.paddingtop = '2px';
-
-
-                                            var tblfr = tbl.cloneNode(true);
-                                            tblfr.removeChild(tblfr.getElementsByTagName('tbody')[0]);
-                                            var tblBody = document.createElement('tbody');
-                                            tblfr.style.width = '100%';
-                                            tblfr.cellSpacing = '0';
-                                            tblfr.border = '0px';
-                                            tblfr.rules = 'none';
-                                            //*****In the case of Footer Row *******
-                                            tblBody.appendChild(tbl.rows[tbl.rows.length - 1]);
-                                            tblfr.appendChild(tblBody);
-                                            DivFR.appendChild(tblfr);
-                                        }
-                                        //****Copy Header in divHeaderRow****
-
-                                        var tblPR = tbl.cloneNode(true);
-                                        tblPR.removeChild(tblPR.getElementsByTagName('tbody')[0]);
-                                        $(tblPR).attr('id', gridId + 'PR');
-
-                                        var tblHR = tbl.cloneNode(true);
-                                        tblHR.removeChild(tblHR.getElementsByTagName('tbody')[0]);
-                                        $(tblHR).attr('id', gridId + 'HR');
-
-
-                                        var tblBodyPR = document.createElement('tbody');
-                                        var tblBodyHR = document.createElement('tbody');
-
-
-                                        tblBodyPR.appendChild(tbl.rows[0]);
-                                        tblBodyHR.appendChild(tbl.rows[0]);
-               
-
-                                        tblPR.appendChild(tblBodyPR);
-                                        tblHR.appendChild(tblBodyHR);
-
-                                        DivPR.appendChild(tblPR);
-                                        DivHR.appendChild(tblHR);
-                                       
-                                    var iTD0 = 0;
-                                    $(tbl.rows[0]).find('td').each(function () {
-
-                                        var aTH = $(tblHR.rows[0]).find('th').eq(iTD0);
-                                        var aTD = $(tbl.rows[0]).find('td').eq(iTD0);                
-                                        var iFirstWidth=$(tbl.rows[0]).find('td').eq(iTD0).width();
-                                        var iColumnWidth=$(tblHR.rows[0]).find('th').eq(iTD0).width();
-                                        if(iColumnWidth>iFirstWidth)
-                                            {iFirstWidth=iColumnWidth;}
-
-                                        $(aTD).css({ minWidth: iFirstWidth+'px' });
-                                        $(aTD).css({ maxWidth: iFirstWidth+'px' });
-                                        $(aTH).css({ minWidth: iFirstWidth+'px' });
-                                        $(aTH).css({ maxWidth: iFirstWidth+'px' });
-
-                                        iTD0 = iTD0 + 1;
-                                    }); 
-                                       
-                                        $('#ctl00_HomeContentPlaceHolder_rlOne_UpdateProgress1').fadeOut();
-                                    }
-                                }
-
-
-
-                                     $('#loadingredirect').fadeIn();
-                                    SetStyleEvent();
-                                    MakeStaticHeader('" + gvTheGrid.ClientID + @"', 600, 1100 , 90 ,false);
-                                    $('#loadingredirect').fadeOut();
-
-                            });
- 
-                        ";
-
-
-                ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strStaticheaderJS_key", strStaticheaderJS, true);
-
-
-                lnkEditManyCancel.Visible = false;
-                lnkEditManyCancel2.Visible = true;
-                mpeEditMany.OkControlID = "";
-
-
-                lnkAddRecordCancel.Visible = false;
-                lnkAddRecordCancel2.Visible = true;
-                mpeAddRecord.OkControlID = "";
-
-                lnkExportRecordsCancel.Visible = false;
-                lnkExportRecordsCancel2.Visible = true;
-                mpeExportRecords.OkControlID = "";
-            }
-
+            DoFixedHeaderThing(iTN);
             ////
 
-            if (_dtDataSource == null)
-            {
-                //divEmptyData.Visible = true;
-                if (IsFiltered())
-                {
-                    divNoFilter.Visible = true;
-                    divEmptyData.Visible = false;
-                }
-                else
-                {
-                    if (_strRecordRightID == Common.UserRoleType.ReadOnly)
-                    {
-                        divEmptyData.Visible = false;
-                    }
-                    else
-                    {
-                        divEmptyData.Visible = true;
-                    }
-                    divNoFilter.Visible = false;
-                }
-                hplNewData.NavigateUrl = GetAddURL();
-
-                hplNewDataFilter.NavigateUrl = GetAddURL();
-                hplNewDataFilter2.NavigateUrl = hplNewDataFilter.NavigateUrl;
-
-                return;
-            }
+           
 
             if (gvTheGrid.TopPagerRow != null)
                 gvTheGrid.TopPagerRow.Visible = true;
@@ -4193,525 +4353,56 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             if (gvr != null)
             {
                 _gvPager = (Common_Pager)gvr.FindControl("Pager");
-                _gvPager.AddURL = GetAddURL();
-
-                if (hfHidePagerGoButton.Value == "yes")
-                {
-                    _gvPager.HidePagerGoButton = true;
-                }
-
                 if (_gvPager != null)
                 {
-                    int iViewID = -1;
-                    if (hfViewID.Value != "")
+                    _gvPager.AddURL = GetAddURL();
+                    if (ViewState[gvTheGrid.ID + "PageIndex"] != null)
+                        _gvPager.PageIndex = int.Parse(ViewState[gvTheGrid.ID + "PageIndex"].ToString());
+
+                    _gvPager.PageSize = gvTheGrid.PageSize;
+                    _gvPager.TotalRows = iTN;
+                    if (hfHidePagerGoButton.Value == "yes")
                     {
-                        iViewID = int.Parse(hfViewID.Value);
-                    }
-
-                    _gvPager.EditViewCSSClass = "popuplink2";
-                    _gvPager.EditViewToolTip = "Edit View";
-                    _gvPager.EditViewURL = GetEditViewPageURL();
-
-                    if (_theTable.AllowCopyRecords != null && (bool)_theTable.AllowCopyRecords)
-                    {
-                        _gvPager.ShowCopyRecord = true;
-                    }
-
-
-                    if (_strNoAjaxView != "")
-                    {
-                        _gvPager.EditViewTarget = "_parent";
-                    }
-
-                }
-
-                if (!IsPostBack)
-                {
-                    string strBulkUpdateSQL = SystemData.SystemOption_ValueByKey_Account("BulkUpdateSQL", null, int.Parse(_qsTableID));
-
-                    if (strBulkUpdateSQL != "")
-                    {
-                        string strEditManyTooltip = SystemData.SystemOption_NotesByKey_Account("BulkUpdateSQL", null, int.Parse(_qsTableID)); ;
-                        if (strEditManyTooltip != "")
-                        {
-                            _gvPager.EditManyToolTip = strEditManyTooltip;
-                        }
+                        _gvPager.HidePagerGoButton = true;
                     }
                 }
-
-                //if (PageType == "p")
-                //{
-
-                if (TableID != null)
-                {
-                    DataTable dtSendEmailCol = Common.DataTableFromText(@"SELECT ColumnID FROM [Column] WHERE TableID=" + TableID.ToString() + @" AND ColumnType='text' 
-                                            AND (TextType='email' OR TextType='mobile')");
-
-                    if (dtSendEmailCol.Rows.Count > 0)
-                    {
-                        _gvPager.HideSendEmail = false;
-                    }
-                }
-                //}
-
-                _gvPager.PageIndexTextSet = (int)(iStartIndex / iMaxRows + 1);
-                if (chkIsActive.Checked)
-                {
-                    _gvPager.HideDelete = true;
-                    _gvPager.HideUnDelete = false;
-                    if (_strRecordRightID == Common.UserRoleType.Administrator
-                               || _strRecordRightID == Common.UserRoleType.GOD)
-                    {
-
-                        _gvPager.HideParmanentDelete = false;
-
-                    }
-                }
-                else
-                {
-                    _gvPager.HideDelete = false;
-                    _gvPager.HideUnDelete = true;
-
-                }
-                ShowHidePermanentDelete();
+               
             }
 
+            EnsureSecurity(iTN);
 
-            if (iTN == 0)
+            if (_dtDataSource == null)
             {
-                if (IsFiltered())
-                {
-                    divNoFilter.Visible = true;
-                    divEmptyData.Visible = false;
-
-                    if (_theView != null)
-                    {
-                        if (_theView.ShowAddIcon == false)
-                        {
-                            divNoFilter.Visible = false;
-                        }
-                    }
-                }
-                else
-                {
-                    divNoFilter.Visible = false;
-                }
-            }
-            else
-            {
-                divNoFilter.Visible = false;
-            }
-
-            if (_strRecordRightID == Common.UserRoleType.ReadOnly)
-            {
-                //gvTheGrid.Columns[0].Visible = false;//delete check
-                gvTheGrid.Columns[2].Visible = false;//edit   
-                gvTheGrid.Columns[3].Visible = true;//view
-                divAddAndViewControls.Visible = false;
-                if (_theView != null)
-                {
-                    if ((bool)_theView.ShowViewIcon == false)
-                        gvTheGrid.Columns[3].Visible = false;//view
-                }
-
-                divEmptyData.Visible = false;
-                //_bReadOnly = true;
-                divUpload.Visible = false;
-
-                if (gvr != null)
-                {
-                    _gvPager = (Common_Pager)gvr.FindControl("Pager");
-                    _gvPager.HideAdd = true;
-                    _gvPager.HideDelete = true;
-                }
-            }
-            else if (_strRecordRightID == Common.UserRoleType.None)
-            {
-                Response.Redirect("~/Empty.aspx", true);
                 return;
             }
-            else if (_strRecordRightID == Common.UserRoleType.OwnData)
+
+            DoPagerFancyThings();
+            if (!IsPostBack && _gvPager!=null)
             {
-                //gvTheGrid.Columns[0].Visible = false;//delete check
-                gvTheGrid.Columns[2].Visible = true;//edit   
-                gvTheGrid.Columns[3].Visible = true;//view
-                divEmptyData.Visible = false;
-                divAddAndViewControls.Visible = false;
-                if (_theView != null)
+                string strBulkUpdateSQL = SystemData.SystemOption_ValueByKey_Account("BulkUpdateSQL", null, int.Parse(_qsTableID));
+
+                if (strBulkUpdateSQL != "")
                 {
-                    if ((bool)_theView.ShowViewIcon == false)
-                        gvTheGrid.Columns[3].Visible = false;//view
-                    if ((bool)_theView.ShowEditIcon == false)
-                        gvTheGrid.Columns[2].Visible = false;//edit
-                }
-
-                //_bReadOnly = false;
-                divUpload.Visible = true;
-                //hlLocations.Visible = false;
-                divEmail.Visible = true;
-
-                if (_bShowGraphIcon)
-                    divShowGraph.Visible = true;
-
-                if (gvr != null)
-                {
-                    _gvPager = (Common_Pager)gvr.FindControl("Pager");
-                    _gvPager.HideAdd = true;
-                    _gvPager.HideDelete = true;
-                }
-            }
-            else if (_strRecordRightID == Common.UserRoleType.EditOwnViewOther)
-            {
-                //gvTheGrid.Columns[0].Visible = false;//delete check
-                gvTheGrid.Columns[2].Visible = true;//edit   
-                gvTheGrid.Columns[3].Visible = true;//view
-                //divEmptyData.Visible = false;
-                //divAddAndViewControls.Visible = false;
-                if (_theView != null)
-                {
-                    if ((bool)_theView.ShowViewIcon == false)
-                        gvTheGrid.Columns[3].Visible = false;//view
-                    if ((bool)_theView.ShowEditIcon == false)
-                        gvTheGrid.Columns[2].Visible = false;//edit
-                }
-                divUpload.Visible = true;
-
-                divEmail.Visible = true;
-                if (_bShowGraphIcon)
-                    divShowGraph.Visible = true;
-                if (gvr != null)
-                {
-                    _gvPager = (Common_Pager)gvr.FindControl("Pager");
-                    //_gvPager.HideAdd = true;
-                    _gvPager.HideDelete = true;
-                }
-            }
-            else if (_strRecordRightID == Common.UserRoleType.AddRecord)
-            {
-                //gvTheGrid.Columns[0].Visible = false;//delete check
-
-
-                gvTheGrid.Columns[2].Visible = false;//edit   
-                gvTheGrid.Columns[3].Visible = true;//view
-
-                if (_theView != null)
-                {
-                    if ((bool)_theView.ShowViewIcon == false)
-                        gvTheGrid.Columns[3].Visible = false;//view
-                }
-                //_bReadOnly = true;
-                divUpload.Visible = true;
-
-                if (gvr != null)
-                {
-                    _gvPager = (Common_Pager)gvr.FindControl("Pager");
-
-                    _gvPager.HideDelete = true;
-                }
-
-                if (iTN == 0)
-                {
-                    if (IsFiltered())
+                    string strEditManyTooltip = SystemData.SystemOption_NotesByKey_Account("BulkUpdateSQL", null, int.Parse(_qsTableID)); ;
+                    if (strEditManyTooltip != "")
                     {
-                        divNoFilter.Visible = true;
-                        divEmptyData.Visible = false;
-
-                    }
-                    else
-                    {
-                        if (_strRecordRightID == Common.UserRoleType.ReadOnly)
-                        {
-                            divEmptyData.Visible = false;
-                        }
-                        else
-                        {
-                            divEmptyData.Visible = true;
-                        }
-                        divNoFilter.Visible = false;
-                    }
-                    hplNewData.NavigateUrl = GetAddURL();
-
-                    hplNewDataFilter.NavigateUrl = GetAddURL();
-                    hplNewDataFilter2.NavigateUrl = hplNewDataFilter.NavigateUrl;
-
-                    if (_theView != null)
-                    {
-                        if ((bool)_theView.ShowAddIcon == false)
-                        {
-                            divEmptyData.Visible = false;
-                            divNoFilter.Visible = false;
-                        }
-                    }
-
-                }
-                else
-                {
-
-                    divEmptyData.Visible = false;
-                    divNoFilter.Visible = false;
-                }
-
-
-            }
-            else
-            {
-                gvTheGrid.Columns[2].Visible = true;//edit   
-                gvTheGrid.Columns[3].Visible = false;//view
-
-                if (_theView != null)
-                {
-                    if ((bool)_theView.ShowEditIcon == false)
-                        gvTheGrid.Columns[2].Visible = false;//edit
-                }
-                if (iTN == 0)
-                {
-
-                    if (_strRecordRightID == Common.UserRoleType.ReadOnly)
-                    {
-                        divEmptyData.Visible = false;
-                    }
-                    else
-                    {
-                        divEmptyData.Visible = true;
-                    }
-                    hplNewData.NavigateUrl = GetAddURL();
-                    hplNewDataFilter.NavigateUrl = GetAddURL();
-                    hplNewDataFilter2.NavigateUrl = hplNewDataFilter.NavigateUrl;
-                }
-                else
-                {
-                    divEmptyData.Visible = false;
-                }
-
-                if (_theView != null)
-                {
-                    if ((bool)_theView.ShowAddIcon == false)
-                    {
-                        divEmptyData.Visible = false;
-
-                    }
-                }
-
-            }
-
-
-            if (iTN == 0)
-            {
-                hplNewData.NavigateUrl = GetAddURL();
-                if (ShowAddButton)
-                {
-                    if (_strRecordRightID == Common.UserRoleType.ReadOnly)
-                    {
-                        divEmptyData.Visible = false;
-                    }
-                    //else
-                    //{
-                    //    divEmptyData.Visible = true;
-                    //}
-                }
-
-                if (_theView != null)
-                {
-                    if ((bool)_theView.ShowAddIcon == false)
-                    {
-                        divEmptyData.Visible = false;
-
+                        _gvPager.EditManyToolTip = strEditManyTooltip;
                     }
                 }
             }
-            else
+
+            if(_gvPager!=null)
             {
-                divEmptyData.Visible = false;
+                DataTable dtSendEmailCol = Common.DataTableFromText(@"SELECT ColumnID FROM [Column] WHERE TableID=" + TableID.ToString() + @" AND ColumnType='text' 
+                                        AND (TextType='email' OR TextType='mobile')");
 
-                //if (ShowEditButton == false)
-                //{
-                //    gvTheGrid.Columns[2].Visible = false;
-                //}
-
-            }
-
-            if (_gvPager != null)
-            {
-
-                if (PageType == "c")
+                if (dtSendEmailCol.Rows.Count > 0)
                 {
-                    if (ShowAddButton == false)
-                    {
-                        _gvPager.HideAdd = true;
-
-                    }
-                    _gvPager.HideAllExport = true;
-                }
-                else
-                {
-                    if (_strRecordRightID == Common.UserRoleType.Administrator
-                        || _strRecordRightID == Common.UserRoleType.GOD)
-                    {
-                        if (chkIsActive.Checked)
-                        {
-                            _gvPager.HideParmanentDelete = false;
-                            _gvPager.HideEditMany = true;
-
-                        }
-                        else
-                        {
-                            _gvPager.HideEditMany = false;
-
-                        }
-
-                        if (_theView != null)
-                        {
-                            if ((bool)_theView.ShowBulkUpdateIcon == false)
-                                _gvPager.HideEditMany = true;
-                        }
-                    }
-                    ShowHidePermanentDelete();
-                }
-
-                if (_bHideAllExport)
-                {
-                    _gvPager.HideAllExport = true;
-                    divEmail.Visible = false;
-                }
-
+                    _gvPager.HideSendEmail = false;
+                }                
+             
             }
-
-            if (PageType == "c")
-            {
-                if (ShowAddButton == false)
-                {
-                    divEmptyData.Visible = false;
-
-                }
-            }
-
-
-
-
-            if (_gvPager != null && Request.QueryString["RecordTable"] != null)
-            {
-                divShowGraph.Visible = false;
-                divUpload.Visible = false;
-                divEmail.Visible = false;
-                divConfig.Visible = false;
-                divBatches.Visible = false;
-
-            }
-
-            //implement view final touch
-
-            if (_theView != null)
-            {
-                if ((bool)_theView.ShowViewIcon == false)
-                    gvTheGrid.Columns[3].Visible = false;//view
-                if ((bool)_theView.ShowEditIcon == false)
-                    gvTheGrid.Columns[2].Visible = false;//edit
-                if ((bool)_theView.ShowDeleteIcon == false)
-                {
-                    // gvTheGrid.Columns[0].Visible = false;//delete check
-                    if (_gvPager != null)
-                        _gvPager.HideDelete = true;
-                }
-
-                if ((bool)_theView.ShowAddIcon == false)
-                {
-                    divEmptyData.Visible = false;
-                    divNoFilter.Visible = false;
-                    if (_gvPager != null)
-                        _gvPager.HideAdd = true;
-                }
-
-                if ((bool)_theView.ShowBulkUpdateIcon == false)
-                {
-                    if (_gvPager != null)
-                        _gvPager.HideEditMany = true;
-                }
-
-
-            }
-
-            if (_theRoleTable != null)
-            {
-                if (_theRoleTable.AllowEditView != null && (bool)_theRoleTable.AllowEditView == false)
-                {
-                    if (_gvPager != null)
-                        _gvPager.HideEditView = true;
-
-                    hlEditView.Visible = false;
-                    hlEditView2.Visible = false;
-
-                }
-            }
-            else
-            {
-                if (_theRole != null && _theUserRole.IsAccountHolder != null && (bool)_theUserRole.IsAccountHolder == false)
-                {
-                    if (_theRole.AllowEditView != null && (bool)_theRole.AllowEditView == false)
-                    {
-                        if (_gvPager != null)
-                            _gvPager.HideEditView = true;
-
-                        hlEditView.Visible = false;
-                        hlEditView2.Visible = false;
-
-                    }
-
-                }
-            }
-
-
-            if (Request.QueryString["ViewID"] != null || Request.QueryString["View"] != null)
-            {
-                if ((bool)_theUserRole.IsAccountHolder)
-                {
-                    if (_gvPager != null)
-                        _gvPager.HideEditView = false;
-
-                    hlEditView.Visible = true;
-                    hlEditView2.Visible = true;
-                }
-                else
-                {
-
-                    if (_gvPager != null && _strViewPageType != "dash")
-                        _gvPager.HideEditView = true;
-
-                    hlEditView.Visible = false;
-                    hlEditView2.Visible = false;
-                }
-
-            }
-
-            if (Request.RawUrl.IndexOf("RecordTableSection.aspx") > -1)
-            {
-                if (_gvPager != null)
-                    _gvPager.HideEditView = true;
-
-                divEmptyData.Visible = false;
-            }
-
-
-
-            if (_strViewPageType == "dash" && Session["EditDashboard"] == null)
-            {
-                if (_gvPager != null)
-                    _gvPager.HideEditView = true;
-
-                hlEditView.Visible = false;
-                hlEditView2.Visible = false;
-            }
-
-
-
-            if (_gvPager != null)
-            {
-                _gvPager.TableID = TableID;
-            }
-            if (divEmptyData.Visible == true & divNoFilter.Visible == true)
-            {
-                divEmptyData.Visible = false;
-            }
-
+           
 
         }
         catch (Exception ex)
@@ -4765,7 +4456,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
     protected bool IsFiltered()
     {
         if (txtDateFrom.Text != "" || txtDateTo.Text != "" || ddlEnteredBy.SelectedIndex != 0
-            || chkIsActive.Checked != false || chkShowOnlyWarning.Checked != false
+            || chkShowDeletedRecords.Checked != false || chkShowOnlyWarning.Checked != false
             || cbcSearchMain.ddlYAxisV != ""
             //|| ddlYAxis.SelectedIndex != 0 || txtSearchText.Text != "" || txtLowerLimit.Text != ""
             //|| txtUpperLimit.Text != "" || ddlDropdownColumnSearch.SelectedValue!="" 
@@ -4901,27 +4592,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
         return false;
     }
 
-    protected void ShowHidePermanentDelete()
-    {
-        if (chkIsActive.Checked == true)
-        {
-            if (_gvPager != null && _theUserRole != null && _theUserRole.IsAccountHolder != null && (bool)_theUserRole.IsAccountHolder)
-            {
-                _gvPager.HideParmanentDelete = false;
-            }
-            else
-            {
-                _gvPager.HideParmanentDelete = true;
-                if (_theRole != null && _theRole.RoleType == "2")
-                {
-                    if (_theUserRole != null && _theUserRole.AllowDeleteRecord != null && (bool)_theUserRole.AllowDeleteRecord)
-                    {
-                        _gvPager.HideParmanentDelete = false;
-                    }
-                }
-            }
-        }
-    }
+  
 
     protected string GetDynamicSeachXMLPart()
     {
@@ -5117,7 +4788,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
                    " <" + ddlEnteredBy.ID + ">" + HttpUtility.HtmlEncode(ddlEnteredBy.Text) + "</" + ddlEnteredBy.ID + ">" +
                 //" <" + cbcvSumFilter.ID + ">" + HttpUtility.HtmlEncode(cbcvSumFilter.GetValue) + "</" + cbcvSumFilter.ID + ">" +
-                   " <" + chkIsActive.ID + ">" + HttpUtility.HtmlEncode(chkIsActive.Checked.ToString()) + "</" + chkIsActive.ID + ">" +
+                   " <" + chkShowDeletedRecords.ID + ">" + HttpUtility.HtmlEncode(chkShowDeletedRecords.Checked.ToString()) + "</" + chkShowDeletedRecords.ID + ">" +
                    " <" + chkShowOnlyWarning.ID + ">" + HttpUtility.HtmlEncode(chkShowOnlyWarning.Checked.ToString()) + "</" + chkShowOnlyWarning.ID + ">" +
                    " <" + chkShowAdvancedOptions.ID + ">" + HttpUtility.HtmlEncode(chkShowAdvancedOptions.Checked.ToString()) + "</" + chkShowAdvancedOptions.ID + ">" +
                    " <" + hfTextSearch.ID + ">" + HttpUtility.HtmlEncode(hfTextSearch.Value) + "</" + hfTextSearch.ID + ">" +
@@ -5140,6 +4811,13 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             _iSearchCriteriaID = SystemData.SearchCriteria_Insert(theSearchCriteria);
             ViewState["_iSearchCriteriaID"] = _iSearchCriteriaID;
             Session["SCid" + hfViewID.Value] = _iSearchCriteriaID;
+            SystemData.UserSearch_InsertUpdate(new UserSearch(null, _ObjUser.UserID, _theView.ViewID, theSearchCriteria.SearchText, null));
+
+            if(!string.IsNullOrEmpty( _theTable.SPSearchGo))
+            {
+                SystemData.Table_SPSearchGo(_theTable.SPSearchGo, _ObjUser.UserID, _theView.ViewID, Request.RawUrl);
+            }
+
 
             hlShowGraph.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Graph/RecordChart.aspx?SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString());
             //hlSchedule.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Schedule/MonitorSchedules.aspx?SearchCriteriaID=" + Cryptography.Encrypt(SearchCriteriaID.ToString()) + "&TableID=" + Cryptography.Encrypt(TableID.ToString());
@@ -5155,149 +4833,342 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
         }
     }
 
-    protected void BindTheGridForExport(int iStartIndex, int iMaxRows)
+    protected void DoFixedHeaderThing(int iTN)
     {
-        lblMsg.Text = "";
-        _bIsForExport = true;
-        try
+        hfUsingScrol.Value = "";
+        if (PageType == "p" && Request.RawUrl.IndexOf("RecordList.aspx") > -1 && gvTheGrid.PageSize > 20 && iTN > 20
+            && _theView != null && _theView.ShowFixedHeader != null && (bool)_theView.ShowFixedHeader)
         {
-            int iTN = 0;
+            hfUsingScrol.Value = "yes";
+            _bFixedHeader = true;
+            //ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "Key", "<script>SetStyleEvent();MakeStaticHeader('" + gvTheGrid.ClientID + "', 600, 1100 , 90 ,false); </script>", false);
+            string strStaticheaderJS = @"
 
-            string strOrderDirection = "DESC";
-            string sOrder = "DBGSystemRecordID";
+                             $(document).ready(function () {
+        
+                                        $.fn.visibleHeight = function () {
+                                            var elBottom, elTop, scrollBot, scrollTop, visibleBottom, visibleTop;
+                                            scrollTop = $(window).scrollTop();
+                                            scrollBot = scrollTop + $(window).height();
+                                            elTop = this.offset().top;
+                                            elBottom = elTop + this.outerHeight();
+                                            visibleTop = elTop < scrollTop ? scrollTop : elTop;
+                                            visibleBottom = elBottom > scrollBot ? scrollBot : elBottom;
+                                            return visibleBottom - visibleTop
+                                        }
 
-            _dtRecordColums = RecordManager.ets_Table_Columns_Summary_Export(TableID, int.Parse(hfViewID.Value));
+                                function SetStyleEvent() {
 
-            bool bSortColumnFound = false;
-            string strNameOnExport1 = "";
-            for (int i = 0; i < _dtRecordColums.Rows.Count; i++)
-            {
+                                   // $('#ctl00_HomeContentPlaceHolder_rlOne_UpdateProgress1').show();
 
-                if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() != "" && strNameOnExport1 == "")
-                {
-                    strNameOnExport1 = _dtRecordColums.Rows[i]["NameOnExport"].ToString();
-                }
+                                    var DivPR = document.getElementById('DivPagerRow');
+                                    var DivHR = document.getElementById('DivHeaderRow');
+                                    var DivMC = document.getElementById('DivMainContent');
+                                    var DivFR = document.getElementById('DivFooterRow');
+                                    var DivR = document.getElementById('DivRoot');
 
-                if (gvTheGrid.GridViewSortColumn.IndexOf(_dtRecordColums.Rows[i]["Heading"].ToString(), 0) >= 0
-                    && _dtRecordColums.Rows[i]["NameOnExport"].ToString() != "")
-                {
-                    SortDirection sdTEmp = gvTheGrid.GridViewSortDirection;
-                    gvTheGrid.GridViewSortColumn = gvTheGrid.GridViewSortColumn.Replace(_dtRecordColums.Rows[i]["Heading"].ToString(), _dtRecordColums.Rows[i]["NameOnExport"].ToString());
-                    gvTheGrid.GridViewSortDirection = sdTEmp;
-                    bSortColumnFound = true;
-                }
-            }
+                                    DivMC.style.overflowY = 'auto';
+                                    DivMC.style.overflowX = 'hidden';
+                                  
 
-            if (bSortColumnFound == false && strNameOnExport1 != "")
-            {
-                gvTheGrid.GridViewSortColumn = strNameOnExport1;
-            }
-
-            if (gvTheGrid.GridViewSortDirection == SortDirection.Ascending)
-            {
-                strOrderDirection = "ASC";
-            }
-            if (gvTheGrid.GridViewSortColumn != "")
-            {
-                sOrder = gvTheGrid.GridViewSortColumn;
-            }
-
-            TextSearch = TextSearch + hfTextSearch.Value;
-
-            if ((bool)_theUserRole.IsAdvancedSecurity)
-            {
-                if (_strRecordRightID == Common.UserRoleType.OwnData)
-                {
-                    TextSearch = TextSearch + " AND (Record.OwnerUserID=" + _ObjUser.UserID.ToString() + " OR Record.EnteredBy=" + _ObjUser.UserID.ToString() + ")";
-                }
-            }
-            else
-            {
-                if (Session["roletype"].ToString() == Common.UserRoleType.OwnData)
-                {
-                    TextSearch = TextSearch + " AND (Record.OwnerUserID=" + _ObjUser.UserID.ToString() + " OR Record.EnteredBy=" + _ObjUser.UserID.ToString() + ")";
-                }
-            }
-
-            PopulateDateAddedSearch();
-
-            if (chkShowAdvancedOptions.Checked && ddlUploadedBatch.SelectedValue != "")
-            {
-                TextSearch = TextSearch + "  AND Record.BatchID=" + ddlUploadedBatch.SelectedValue + "";
-            }
-            string strReturnSQL = "";
-            _dtDataSource = RecordManager.ets_Record_List(int.Parse(TableID.ToString()),
-                ddlEnteredBy.SelectedValue == "-1" ? null : (int?)int.Parse(ddlEnteredBy.SelectedValue),
-                !chkIsActive.Checked,
-                chkShowOnlyWarning.Checked == false ? null : (bool?)true,
-                null, null,
-                sOrder, strOrderDirection, iStartIndex, iStartIndex, ref iTN, ref _iTotalDynamicColumns, "export", _strNumericSearch, TextSearch + TextSearchParent,
-               _dtDateFrom, _dtDateTo, "", "", "", null, ref strReturnSQL, ref strReturnSQL);
+                                    DivMC.style.paddingRight = '17px';
+                                    DivHR.style.paddingRight = '17px'; 
+                                   DivPR.style.paddingRight = '17px';
+//                                   DivMC.style.marginRight=-17px;
 
 
-
-            //now lets play with Record list and columns list
-            _dtRecordColums = RecordManager.ets_Table_Columns_Summary(TableID, int.Parse(hfViewID.Value));
-
-            DataRow drFooter = _dtDataSource.NewRow();
-
-            for (int i = 0; i < _dtRecordColums.Rows.Count; i++)
-            {
-                for (int j = 0; j < _dtDataSource.Columns.Count; j++)
-                {
-
-                    if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == _dtDataSource.Columns[j].ColumnName)
-                    {
-                        if (_dtRecordColums.Rows[i]["ShowTotal"].ToString().ToLower() == "true")
-                        {
-                            drFooter[_dtRecordColums.Rows[i]["NameOnExport"].ToString()] = CalculateTotalForAColumn(_dtDataSource, _dtDataSource.Columns[j].ColumnName, bool.Parse(_dtRecordColums.Rows[i]["IgnoreSymbols"].ToString().ToLower()));
-                        }
-                    }
-                }
-            }
-
-            _dtDataSource.Rows.Add(drFooter);
-
-            gvTheGrid.ShowFooter = false;
-            gvTheGrid.DataSource = _dtDataSource;
-            gvTheGrid.VirtualItemCount = iTN;//+ 1
-            gvTheGrid.DataBind();
-            if (gvTheGrid.TopPagerRow != null)
-                gvTheGrid.TopPagerRow.Visible = true;
-
-            GridViewRow gvr = gvTheGrid.TopPagerRow;
-            if (gvr != null)
-            {
-                _gvPager = (Common_Pager)gvr.FindControl("Pager");
-                _gvPager.AddURL = GetAddURL();
-
-                if (_gvPager != null)
-                {
-                    int iViewID = -1;
-                    if (hfViewID.Value != "")
-                        iViewID = int.Parse(hfViewID.Value);
+                                    var tbl = document.getElementById('ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid'); 
 
 
-                    _gvPager.EditViewCSSClass = "popuplink2";
-                    _gvPager.EditViewToolTip = "Edit View";
-                    _gvPager.EditViewURL = GetEditViewPageURL();
+                                    var chkAll = $(tbl.rows[1]).find('#ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid_ctl02_chkAll');
+                                    $(chkAll).attr('onclick', 'javascript: SelectAllCheckboxesHR(this,ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid);');
+                    
 
-                    if (_strNoAjaxView != "")
-                    {
-                        _gvPager.EditViewTarget = "_parent";
-                    }
-                }
-            }
+                                }
 
+
+                                 function MakeStaticHeader(gridId, height, width, headerHeight, isFooter) {
+                                    var tbl = document.getElementById(gridId);
+                                    height = $('#DivMainContent').visibleHeight();
+                                    height = height - 65;
+                                    if (tbl) {
+                                        var DivPR = document.getElementById('DivPagerRow');
+                                        var DivHR = document.getElementById('DivHeaderRow');
+                                        var DivMC = document.getElementById('DivMainContent');
+                                        var DivFR = document.getElementById('DivFooterRow');
+                                        var DivR = document.getElementById('DivRoot');
+
+                                        //*** Set divheaderRow Properties ****
+                                        var oWidth = $(tbl).outerWidth();
+                                        width = $(tbl).width();
+                                       var iWidth = $(tbl).innerWidth();
+                                        headerHeight = DivHR.style.height;
+                                        var paregHeight = 45;
+
+                                        //pager
+                                        DivPR.style.height = paregHeight + 'px'; // headerHeight / 2
+
+                                        DivPR.style.position = 'relative';
+                                        DivPR.style.top = '0px';
+                                        //DivPR.style.verticalAlign = 'top';
+
+                                        DivHR.style.height = headerHeight + 'px';// headerHeight/2
+
+                                        DivHR.style.position = 'relative';
+                                        DivHR.style.top = '0px';
+                                        // DivHR.style.verticalAlign = 'top';
+                                        //DivHR.rules = 'none';
+
+
+                                        //*** Set divMainContent Properties ****
+                                        DivMC.style.height = height + 'px';
+                                        DivMC.style.position = 'relative';
+                                        DivMC.style.top = '0px'; //(headerHeight) + 'px';// //
+                                        DivMC.style.zIndex = '0';
+
+
+
+
+                                        if (isFooter) {
+                                            //*** Set divFooterRow Properties ****
+                                            DivFR.style.width = (parseInt(width)) + 'px';
+                                            DivFR.style.position = 'relative';
+                                            DivFR.style.top = -(headerHeight) + 'px';
+                                            DivFR.style.verticalAlign = 'top';
+                                            DivFR.style.paddingtop = '2px';
+
+
+                                            var tblfr = tbl.cloneNode(true);
+                                            tblfr.removeChild(tblfr.getElementsByTagName('tbody')[0]);
+                                            var tblBody = document.createElement('tbody');
+                                            tblfr.style.width = '100%';
+                                            tblfr.cellSpacing = '0';
+                                            tblfr.border = '0px';
+                                            tblfr.rules = 'none';
+                                            //*****In the case of Footer Row *******
+                                            tblBody.appendChild(tbl.rows[tbl.rows.length - 1]);
+                                            tblfr.appendChild(tblBody);
+                                            DivFR.appendChild(tblfr);
+                                        }
+                                        //****Copy Header in divHeaderRow****
+
+                                        var tblPR = tbl.cloneNode(true);
+                                        tblPR.removeChild(tblPR.getElementsByTagName('tbody')[0]);
+                                        $(tblPR).attr('id', gridId + 'PR');
+
+                                        var tblHR = tbl.cloneNode(true);
+                                        tblHR.removeChild(tblHR.getElementsByTagName('tbody')[0]);
+                                        $(tblHR).attr('id', gridId + 'HR');
+
+
+                                        var tblBodyPR = document.createElement('tbody');
+                                        var tblBodyHR = document.createElement('tbody');
+
+
+                                        tblBodyPR.appendChild(tbl.rows[0]);
+                                        tblBodyHR.appendChild(tbl.rows[0]);
+               
+
+                                        tblPR.appendChild(tblBodyPR);
+                                        tblHR.appendChild(tblBodyHR);
+
+                                        DivPR.appendChild(tblPR);
+                                        DivHR.appendChild(tblHR);
+                                       
+                                    var iTD0 = 0;
+                                    $(tbl.rows[0]).find('td').each(function () {
+
+                                        var aTH = $(tblHR.rows[0]).find('th').eq(iTD0);
+                                        var aTD = $(tbl.rows[0]).find('td').eq(iTD0);                
+                                        var iFirstWidth=$(tbl.rows[0]).find('td').eq(iTD0).width();
+                                        var iColumnWidth=$(tblHR.rows[0]).find('th').eq(iTD0).width();
+                                        if(iColumnWidth>iFirstWidth)
+                                            {iFirstWidth=iColumnWidth;}
+
+                                        $(aTD).css({ minWidth: iFirstWidth+'px' });
+                                        $(aTD).css({ maxWidth: iFirstWidth+'px' });
+                                        $(aTH).css({ minWidth: iFirstWidth+'px' });
+                                        $(aTH).css({ maxWidth: iFirstWidth+'px' });
+
+                                        iTD0 = iTD0 + 1;
+                                    }); 
+                                       
+                                        //$('#ctl00_HomeContentPlaceHolder_rlOne_UpdateProgress1').hide();
+                                    }
+                                }
+
+
+
+                                     $('.ajax-indicator-full').show();
+                                    SetStyleEvent();
+                                    MakeStaticHeader('" + gvTheGrid.ClientID + @"', 600, 1100 , 90 ,false);
+                                    $('.ajax-indicator-full').hide();
+
+                            });
+ 
+                        ";
+
+
+            ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "strStaticheaderJS_key", strStaticheaderJS, true);
+
+
+            //lnkEditManyCancel.Visible = false;
+            //lnkEditManyCancel2.Visible = true;
+            //mpeEditMany.OkControlID = "";
+
+
+            //lnkAddRecordCancel.Visible = false;
+            //lnkAddRecordCancel2.Visible = true;
+            //mpeAddRecord.OkControlID = "";
+
+            //lnkExportRecordsCancel.Visible = false;
+            //lnkExportRecordsCancel2.Visible = true;
+            //mpeExportRecords.OkControlID = "";
         }
-        catch (Exception ex)
-        {
-            ErrorLog theErrorLog = new ErrorLog(null, "Records", ex.Message, ex.StackTrace, DateTime.Now, Request.Path);
-            SystemData.ErrorLog_Insert(theErrorLog);
-            lblMsg.Text = ex.Message;
-        }
-
     }
+    //protected void BindTheGridForExport(int iStartIndex, int iMaxRows)
+    //{
+    //    lblMsg.Text = "";
+    //    _bIsForExport = true;
+    //    try
+    //    {
+    //        int iTN = 0;
+
+    //        string strOrderDirection = "DESC";
+    //        string sOrder = "DBGSystemRecordID";
+
+    //        _dtRecordColums = RecordManager.ets_Table_Columns_Summary_Export(TableID, int.Parse(hfViewID.Value));
+
+    //        bool bSortColumnFound = false;
+    //        string strNameOnExport1 = "";
+    //        for (int i = 0; i < _dtRecordColums.Rows.Count; i++)
+    //        {
+
+    //            if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() != "" && strNameOnExport1 == "")
+    //            {
+    //                strNameOnExport1 = _dtRecordColums.Rows[i]["NameOnExport"].ToString();
+    //            }
+
+    //            if (gvTheGrid.GridViewSortColumn.IndexOf(_dtRecordColums.Rows[i]["Heading"].ToString(), 0) >= 0
+    //                && _dtRecordColums.Rows[i]["NameOnExport"].ToString() != "")
+    //            {
+    //                SortDirection sdTEmp = gvTheGrid.GridViewSortDirection;
+    //                gvTheGrid.GridViewSortColumn = gvTheGrid.GridViewSortColumn.Replace(_dtRecordColums.Rows[i]["Heading"].ToString(), _dtRecordColums.Rows[i]["NameOnExport"].ToString());
+    //                gvTheGrid.GridViewSortDirection = sdTEmp;
+    //                bSortColumnFound = true;
+    //            }
+    //        }
+
+    //        if (bSortColumnFound == false && strNameOnExport1 != "")
+    //        {
+    //            gvTheGrid.GridViewSortColumn = strNameOnExport1;
+    //        }
+
+    //        if (gvTheGrid.GridViewSortDirection == SortDirection.Ascending)
+    //        {
+    //            strOrderDirection = "ASC";
+    //        }
+    //        if (gvTheGrid.GridViewSortColumn != "")
+    //        {
+    //            sOrder = gvTheGrid.GridViewSortColumn;
+    //        }
+
+    //        TextSearch = TextSearch + hfTextSearch.Value;
+
+    //        if ((bool)_theUserRole.IsAdvancedSecurity)
+    //        {
+    //            if (_strRecordRightID == Common.UserRoleType.OwnData)
+    //            {
+    //                TextSearch = TextSearch + " AND (Record.OwnerUserID=" + _ObjUser.UserID.ToString() + " OR Record.EnteredBy=" + _ObjUser.UserID.ToString() + ")";
+    //            }
+    //        }
+    //        else
+    //        {
+    //            if (Session["roletype"].ToString() == Common.UserRoleType.OwnData)
+    //            {
+    //                TextSearch = TextSearch + " AND (Record.OwnerUserID=" + _ObjUser.UserID.ToString() + " OR Record.EnteredBy=" + _ObjUser.UserID.ToString() + ")";
+    //            }
+    //        }
+
+    //        PopulateDateAddedSearch();
+
+    //        if (chkShowAdvancedOptions.Checked && ddlUploadedBatch.SelectedValue != "")
+    //        {
+    //            TextSearch = TextSearch + "  AND Record.BatchID=" + ddlUploadedBatch.SelectedValue + "";
+    //        }
+    //        string strReturnSQL = "";
+    //        _dtDataSource = RecordManager.ets_Record_List(int.Parse(TableID.ToString()),
+    //            ddlEnteredBy.SelectedValue == "-1" ? null : (int?)int.Parse(ddlEnteredBy.SelectedValue),
+    //            !chkIsActive.Checked,
+    //            chkShowOnlyWarning.Checked == false ? null : (bool?)true,
+    //            null, null,
+    //            sOrder, strOrderDirection, iStartIndex, iStartIndex, ref iTN, ref _iTotalDynamicColumns, "export", _strNumericSearch, TextSearch + TextSearchParent,
+    //           _dtDateFrom, _dtDateTo, "", "", "", null, ref strReturnSQL, ref strReturnSQL);
+
+
+
+    //        //now lets play with Record list and columns list
+    //        _dtRecordColums = RecordManager.ets_Table_Columns_Summary(TableID, int.Parse(hfViewID.Value));
+
+    //        DataRow drFooter = _dtDataSource.NewRow();
+
+    //        for (int i = 0; i < _dtRecordColums.Rows.Count; i++)
+    //        {
+    //            for (int j = 0; j < _dtDataSource.Columns.Count; j++)
+    //            {
+
+    //                if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == _dtDataSource.Columns[j].ColumnName)
+    //                {
+    //                    if (_dtRecordColums.Rows[i]["ShowTotal"].ToString().ToLower() == "true")
+    //                    {
+    //                        drFooter[_dtRecordColums.Rows[i]["NameOnExport"].ToString()] = CalculateTotalForAColumn(_dtDataSource, _dtDataSource.Columns[j].ColumnName, bool.Parse(_dtRecordColums.Rows[i]["IgnoreSymbols"].ToString().ToLower()));
+    //                    }
+    //                }
+    //            }
+    //        }
+
+    //        _dtDataSource.Rows.Add(drFooter);
+
+    //        gvTheGrid.ShowFooter = false;
+    //        gvTheGrid.DataSource = _dtDataSource;
+    //        gvTheGrid.VirtualItemCount = iTN;//+ 1
+    //        gvTheGrid.DataBind();
+    //        if (gvTheGrid.TopPagerRow != null)
+    //            gvTheGrid.TopPagerRow.Visible = true;
+
+    //        GridViewRow gvr = gvTheGrid.TopPagerRow;
+    //        if (gvr != null)
+    //        {
+    //            _gvPager = (Common_Pager)gvr.FindControl("Pager");
+    //            _gvPager.AddURL = GetAddURL();
+
+    //            if (_gvPager != null)
+    //            {
+    //                int iViewID = -1;
+    //                if (hfViewID.Value != "")
+    //                    iViewID = int.Parse(hfViewID.Value);
+
+
+    //                _gvPager.EditViewCSSClass = "popuplinkEV" + _theTable.TableID.ToString();
+    //                _gvPager.EditViewToolTip = "Edit View";
+    //                _gvPager.EditViewURL = GetEditViewPageURL();
+
+    //                if (_strNoAjaxView != "")
+    //                {
+    //                    _gvPager.EditViewTarget = "_parent";
+    //                }
+    //            }
+    //        }
+
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ErrorLog theErrorLog = new ErrorLog(null, "Records", ex.Message, ex.StackTrace, DateTime.Now, Request.Path);
+    //        SystemData.ErrorLog_Insert(theErrorLog);
+    //        lblMsg.Text = ex.Message;
+    //    }
+
+    //}
 
     protected void ddl_search(Object sender, EventArgs e)
     {
@@ -5381,119 +5252,129 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
         lnkSearch_Click(null, null);
     }
 
+    protected void btnRefreshViewChange_Click(object sender, EventArgs e)
+    {
+       
+        if (Session["SCid" + hfViewID.Value] != null)
+        {
+            PopulateSearchCriteria(int.Parse(Session["SCid" + hfViewID.Value].ToString()));
+            PopulateDynamicControls();
+            BindTheGrid(0, gvTheGrid.PageSize);
+        }
+    }
     protected void lnkExportRecordsCancel2_Click(object sender, EventArgs e)
     {
         lnkSearch_Click(null, null);
     }
 
-    protected void lnkAddRecordOK_Click(object sender, EventArgs e)
-    {
-        lblMsgAddRecord.Text = "";
-        if (ddlFormSet.SelectedItem == null)
-        {
-            lblMsgAddRecord.Text = "Please select a Form.";
-            mpeAddRecord.Show();
-            return;
-        }
+    //protected void lnkAddRecordOK_Click(object sender, EventArgs e)
+    //{
+    //    lblMsgAddRecord.Text = "";
+    //    if (ddlFormSet.SelectedItem == null)
+    //    {
+    //        lblMsgAddRecord.Text = "Please select a Form.";
+    //        mpeAddRecord.Show();
+    //        return;
+    //    }
 
 
 
-        if (SecurityManager.IsRecordsExceeded((int)_theUserRole.AccountID))
-        {
-            Session["DoNotAllow"] = "true";
-            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "DoNotAllow", "alert('" + Common.RecordExceededMessage.Replace("'", "''") + "');", true);
-            return;
-        }
+    //    if (SecurityManager.IsRecordsExceeded((int)_theUserRole.AccountID))
+    //    {
+    //        Session["DoNotAllow"] = "true";
+    //        ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "DoNotAllow", "alert('" + Common.RecordExceededMessage.Replace("'", "''") + "');", true);
+    //        return;
+    //    }
 
 
-        //add a record and goto the edit record page
+    //    //add a record and goto the edit record page
 
-        Record theRecord = new Record();
-        theRecord.TableID = _theTable.TableID;
-        theRecord.IsActive = true;
-        theRecord.EnteredBy = _ObjUser.UserID;
-        //DataTable _dtColumnsAll = RecordManager.ets_Table_Columns_All((int)_theTable.TableID, null, null);
-        for (int i = 0; i < _dtColumnsAll.Rows.Count; i++)
-        {
-            if (_dtColumnsAll.Rows[i]["ColumnType"].ToString() == "number")
-            {
-                if (_dtColumnsAll.Rows[i]["NumberType"] != null)
-                {
-                    if (_dtColumnsAll.Rows[i]["NumberType"].ToString() == "8")
-                    {
-                        string strValue = "1";
-                        try
-                        {
-                            string strMax = Common.GetValueFromSQL("SELECT MAX(CONVERT(INT," + _dtColumnsAll.Rows[i]["SystemName"].ToString() + ")) FROM  Record  WHERE  IsNumeric(" + _dtColumnsAll.Rows[i]["SystemName"].ToString() + ")=1 AND  TableID=" + _qsTableID);
-                            if (strMax == "")
-                            {
-                                strValue = "1";
-                            }
-                            else
-                            {
-                                strValue = (int.Parse(strMax) + 1).ToString();
-                            }
-                        }
-                        catch
-                        {
-                            strValue = "1";
-                        }
-                        RecordManager.MakeTheRecord(ref theRecord, _dtColumnsAll.Rows[i]["SystemName"].ToString(), strValue);
-                    }
+    //    Record theRecord = new Record();
+    //    theRecord.TableID = _theTable.TableID;
+    //    theRecord.IsActive = true;
+    //    theRecord.EnteredBy = _ObjUser.UserID;
+    //    //DataTable _dtColumnsAll = RecordManager.ets_Table_Columns_All((int)_theTable.TableID, null, null);
+    //    for (int i = 0; i < _dtColumnsAll.Rows.Count; i++)
+    //    {
+    //        if (_dtColumnsAll.Rows[i]["ColumnType"].ToString() == "number")
+    //        {
+    //            if (_dtColumnsAll.Rows[i]["NumberType"] != null)
+    //            {
+    //                if (_dtColumnsAll.Rows[i]["NumberType"].ToString() == "8")
+    //                {
+    //                    string strValue = "1";
+    //                    try
+    //                    {
+    //                        string strMax = Common.GetValueFromSQL("SELECT MAX(CONVERT(INT," + _dtColumnsAll.Rows[i]["SystemName"].ToString() + ")) FROM  Record  WHERE  IsNumeric(" + _dtColumnsAll.Rows[i]["SystemName"].ToString() + ")=1 AND  TableID=" + _qsTableID);
+    //                        if (strMax == "")
+    //                        {
+    //                            strValue = "1";
+    //                        }
+    //                        else
+    //                        {
+    //                            strValue = (int.Parse(strMax) + 1).ToString();
+    //                        }
+    //                    }
+    //                    catch
+    //                    {
+    //                        strValue = "1";
+    //                    }
+    //                    RecordManager.MakeTheRecord(ref theRecord, _dtColumnsAll.Rows[i]["SystemName"].ToString(), strValue);
+    //                }
 
-                }
-            }
+    //            }
+    //        }
 
-        }
-        for (int i = 0; i < _dtColumnsAll.Rows.Count; i++)
-        {
-            if (_dtColumnsAll.Rows[i]["DefaultValue"].ToString() != "")
-            {
-                if (_dtColumnsAll.Rows[i]["ColumnType"].ToString().Trim().ToLower() == "datetime"
-                    || _dtColumnsAll.Rows[i]["ColumnType"].ToString().Trim().ToLower() == "date"
-                    || _dtColumnsAll.Rows[i]["ColumnType"].ToString().Trim().ToLower() == "time")
-                {
-
-
-                    RecordManager.MakeTheRecord(ref theRecord, _dtColumnsAll.Rows[i]["SystemName"].ToString(), DateTime.Now);
-                }
-                else
-                {
+    //    }
+    //    for (int i = 0; i < _dtColumnsAll.Rows.Count; i++)
+    //    {
+    //        if (_dtColumnsAll.Rows[i]["DefaultValue"].ToString() != "")
+    //        {
+    //            if (_dtColumnsAll.Rows[i]["ColumnType"].ToString().Trim().ToLower() == "datetime"
+    //                || _dtColumnsAll.Rows[i]["ColumnType"].ToString().Trim().ToLower() == "date"
+    //                || _dtColumnsAll.Rows[i]["ColumnType"].ToString().Trim().ToLower() == "time")
+    //            {
 
 
-
-                    RecordManager.MakeTheRecord(ref theRecord, _dtColumnsAll.Rows[i]["SystemName"].ToString(),
-                        _dtColumnsAll.Rows[i]["DefaultValue"].ToString());
-                }
-
-            }
-
-        }
+    //                RecordManager.MakeTheRecord(ref theRecord, _dtColumnsAll.Rows[i]["SystemName"].ToString(), DateTime.Now);
+    //            }
+    //            else
+    //            {
 
 
 
+    //                RecordManager.MakeTheRecord(ref theRecord, _dtColumnsAll.Rows[i]["SystemName"].ToString(),
+    //                    _dtColumnsAll.Rows[i]["DefaultValue"].ToString());
+    //            }
 
-        int iNewRecordID = RecordManager.ets_Record_Insert(theRecord);
+    //        }
+
+    //    }
 
 
-        //call the SP
 
-        RecordManager.AddRecordSP(_theTable.AddRecordSP, iNewRecordID, int.Parse(ddlFormSet.SelectedValue));
 
-        string strSearch = Cryptography.Encrypt("-1");
-        if (Request.QueryString["SearchCriteriaID"] != null)
-        {
-            strSearch = Request.QueryString["SearchCriteriaID"].ToString();
-        }
-        string strURL = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetWizard.aspx?SearchCriteriaID=" + strSearch
-    + "&FormSetID=" + Cryptography.Encrypt(ddlFormSet.SelectedValue)
-    + "&ParentTableID=" + Cryptography.Encrypt(_theTable.TableID.ToString())
-    + "&ParentRecordID=" + Cryptography.Encrypt(iNewRecordID.ToString()) + "&ps=0";
-        Response.Redirect(strURL);
+    //    int iNewRecordID = RecordManager.ets_Record_Insert(theRecord);
 
-    }
 
-    protected HorizontalAlign GetHorizontalAlign(string strAlignment)
+    //    //call the SP
+
+    //    RecordManager.AddRecordSP(_theTable.AddRecordSP, iNewRecordID, int.Parse(ddlFormSet.SelectedValue));
+
+    //    string strSearch = Cryptography.Encrypt("-1");
+    //    if (Request.QueryString["SearchCriteriaID"] != null)
+    //    {
+    //        strSearch = Request.QueryString["SearchCriteriaID"].ToString();
+    //    }
+    //    string strURL = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetWizard.aspx?SearchCriteriaID=" + strSearch
+    //+ "&FormSetID=" + Cryptography.Encrypt(ddlFormSet.SelectedValue)
+    //+ "&ParentTableID=" + Cryptography.Encrypt(_theTable.TableID.ToString())
+    //+ "&ParentRecordID=" + Cryptography.Encrypt(iNewRecordID.ToString()) + "&ps=0";
+    //    Response.Redirect(strURL);
+
+    //}
+
+    protected HorizontalAlign GetHorizontalAlign(string strAlignment,string strColumntype)
     {
         switch (strAlignment.ToLower())
         {
@@ -5506,13 +5387,46 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
         }
 
+        string strViewAlignmentDefault = "Auto";
+        if (ViewState["ViewAlignmentDefault"] != null)
+            strViewAlignmentDefault = ViewState["ViewAlignmentDefault"].ToString();
+
+
+        switch (strViewAlignmentDefault.ToLower())
+        {
+            case "left":
+                return HorizontalAlign.Left;
+            case "right":
+                return HorizontalAlign.Right;
+            case "center":
+                return HorizontalAlign.Center;
+
+        }
+
+        switch (strColumntype.ToLower())
+        {
+            case "calculation":
+                return HorizontalAlign.Right;
+            case "number":
+                return HorizontalAlign.Right;
+            case "text":
+                return HorizontalAlign.Left;
+            case "staticcontent":
+                return HorizontalAlign.Left;
+            case "content":
+                return HorizontalAlign.Left;
+            case "location":
+                return HorizontalAlign.Left;
+
+        }
+
         return HorizontalAlign.Center;
 
     }
 
     protected void gvTheGrid_Sorting(object sender, GridViewSortEventArgs e)
     {
-        gvTheGrid.PageIndex = 0;// why???
+        //gvTheGrid.PageIndex = 0;// why???
         _dtRecordColums = RecordManager.ets_Table_Columns_Summary(TableID, int.Parse(hfViewID.Value));
 
         for (int i = 0; i < _dtRecordColums.Rows.Count; i++)
@@ -5523,39 +5437,13 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                 ViewState["SortOrderColumnID"] = _dtRecordColums.Rows[i]["ColumnID"].ToString();
                 if (_dtRecordColums.Rows[i]["ColumnType"].ToString() == "number" || _dtRecordColums.Rows[i]["ColumnType"].ToString() == "calculation")
                 {
-                    //if (!bool.Parse(_dtRecordColums.Rows[i]["IgnoreSymbols"].ToString()))
-                    //{
+                    
 
                     gvTheGrid.GridViewSortColumn = "CONVERT(decimal(20,10), dbo.RemoveSpecialChars([" + _dtRecordColums.Rows[i]["Heading"].ToString() + "])) ";
 
-                    if (ViewState[_dtRecordColums.Rows[i]["Heading"].ToString()] == null)
-                    {
-                        ViewState[_dtRecordColums.Rows[i]["Heading"].ToString()] = "ASC";
-                        gvTheGrid.GridViewSortDirection = SortDirection.Ascending;
-                    }
-                    else
-                    {
-                        if (ViewState[_dtRecordColums.Rows[i]["Heading"].ToString()].ToString() == "ASC")
-                        {
-                            ViewState[_dtRecordColums.Rows[i]["Heading"].ToString()] = "DESC";
-                            gvTheGrid.GridViewSortDirection = SortDirection.Descending;
-                        }
-                        else
-                        {
-                            gvTheGrid.GridViewSortDirection = SortDirection.Ascending;
-                            ViewState[_dtRecordColums.Rows[i]["Heading"].ToString()] = "ASC";
-                        }
-
-                    }
-
-                    //}
-                    // return;
+                   
                 }
-
-
-                //datetime, date & time
-
-                if (_dtRecordColums.Rows[i]["ColumnType"].ToString() == "date"
+                else if (_dtRecordColums.Rows[i]["ColumnType"].ToString() == "date"
                     || _dtRecordColums.Rows[i]["ColumnType"].ToString() == "datetime"
                     || _dtRecordColums.Rows[i]["ColumnType"].ToString() == "time")
                 {
@@ -5573,32 +5461,36 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
                     gvTheGrid.GridViewSortColumn = "CONVERT(Datetime,[dbo].[fnRemoveNonDate]( [" + _dtRecordColums.Rows[i]["Heading"].ToString() + "]),103) ";
 
-                    if (ViewState[_dtRecordColums.Rows[i]["Heading"].ToString()] == null)
-                    {
-                        ViewState[_dtRecordColums.Rows[i]["Heading"].ToString()] = "ASC";
-                        gvTheGrid.GridViewSortDirection = SortDirection.Ascending;
-                    }
-                    else
-                    {
-                        if (ViewState[_dtRecordColums.Rows[i]["Heading"].ToString()].ToString() == "ASC")
-                        {
-                            ViewState[_dtRecordColums.Rows[i]["Heading"].ToString()] = "DESC";
-                            gvTheGrid.GridViewSortDirection = SortDirection.Descending;
-                        }
-                        else
-                        {
-                            gvTheGrid.GridViewSortDirection = SortDirection.Ascending;
-                            ViewState[_dtRecordColums.Rows[i]["Heading"].ToString()] = "ASC";
-                        }
-
-                    }
+                   
 
 
                     // return;
                 }
+                else
+                {
+                    //
+                }
 
+                if (ViewState[_dtRecordColums.Rows[i]["Heading"].ToString()] == null)
+                {
+                    ViewState[_dtRecordColums.Rows[i]["Heading"].ToString()] = "ASC";
+                    gvTheGrid.GridViewSortDirection = SortDirection.Ascending;
+                }
+                else
+                {
+                    if (ViewState[_dtRecordColums.Rows[i]["Heading"].ToString()].ToString() == "ASC")
+                    {
+                        ViewState[_dtRecordColums.Rows[i]["Heading"].ToString()] = "DESC";
+                        gvTheGrid.GridViewSortDirection = SortDirection.Descending;
+                    }
+                    else
+                    {
+                        gvTheGrid.GridViewSortDirection = SortDirection.Ascending;
+                        ViewState[_dtRecordColums.Rows[i]["Heading"].ToString()] = "ASC";
+                    }
 
-
+                }
+                break;
             }
         }
 
@@ -5634,17 +5526,18 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
     {
         //gvTheGrid.GridViewSortColumn = "";
 
-        gvTheGrid.PageIndex = 0;// why???
+        //gvTheGrid.PageIndex = 0;// why???
         BindTheGrid(0, gvTheGrid.PageSize);
 
     }
 
-    protected int GetSearchCriteriaIDForCBC(Pages_UserControl_ControlByColumn cbcX)
+    protected string GetSearchCriteriaIDForCBC(Pages_UserControl_ControlByColumn cbcX)
     {
+        string strXML = "";
         if (cbcX.ddlYAxisV != "")
         {
-            string xml = null;
-            xml = @"<root>" +
+
+            strXML = @"<root>" +
                    " <ddlYAxisV>" + HttpUtility.HtmlEncode(cbcX.ddlYAxisV) + "</ddlYAxisV>" +
                    " <txtUpperLimitV>" + HttpUtility.HtmlEncode(cbcX.txtUpperLimitV) + "</txtUpperLimitV>" +
                    " <txtLowerLimitV>" + HttpUtility.HtmlEncode(cbcX.txtLowerLimitV) + "</txtLowerLimitV>" +
@@ -5656,13 +5549,36 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                     " <CompareOperator>" + HttpUtility.HtmlEncode(cbcX.CompareOperator) + "</CompareOperator>" +
                   "</root>";
 
-            SearchCriteria theSearchCriteria = new SearchCriteria(null, xml);
-            return SystemData.SearchCriteria_Insert(theSearchCriteria);
+            
         }
 
-        return -1;
+        return strXML;
     }
 
+
+    //protected int GetSearchCriteriaIDForCBC(Pages_UserControl_ControlByColumn cbcX)
+    //{
+    //    if (cbcX.ddlYAxisV != "")
+    //    {
+    //        string xml = null;
+    //        xml = @"<root>" +
+    //               " <ddlYAxisV>" + HttpUtility.HtmlEncode(cbcX.ddlYAxisV) + "</ddlYAxisV>" +
+    //               " <txtUpperLimitV>" + HttpUtility.HtmlEncode(cbcX.txtUpperLimitV) + "</txtUpperLimitV>" +
+    //               " <txtLowerLimitV>" + HttpUtility.HtmlEncode(cbcX.txtLowerLimitV) + "</txtLowerLimitV>" +
+    //               " <hfTextSearchV>" + HttpUtility.HtmlEncode(cbcX.hfTextSearchV) + "</hfTextSearchV>" +
+    //               " <txtLowerDateV>" + HttpUtility.HtmlEncode(cbcX.txtLowerDateV) + "</txtLowerDateV>" +
+    //               " <txtUpperDateV>" + HttpUtility.HtmlEncode(cbcX.txtUpperDateV) + "</txtUpperDateV>" +
+    //               " <ddlDropdownColumnSearchV>" + HttpUtility.HtmlEncode(cbcX.ddlDropdownColumnSearchV) + "</ddlDropdownColumnSearchV>" +
+    //               " <txtSearchTextV>" + HttpUtility.HtmlEncode(cbcX.txtSearchTextV) + "</txtSearchTextV>" +
+    //                " <CompareOperator>" + HttpUtility.HtmlEncode(cbcX.CompareOperator) + "</CompareOperator>" +
+    //              "</root>";
+
+    //        SearchCriteria theSearchCriteria = new SearchCriteria(null, xml);
+    //        return SystemData.SearchCriteria_Insert(theSearchCriteria);
+    //    }
+
+    //    return -1;
+    //}
     protected void gvTheGrid_PreRender(object sender, EventArgs e)
     {
         GridView grid = (GridView)sender;
@@ -5755,7 +5671,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                 {
                     m = 3;// 4;
                 }
-                if (chkIsActive.Checked)
+                if (chkShowDeletedRecords.Checked)
                 {
                     m = m + 2;
                 }
@@ -5832,40 +5748,40 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
 
 
-                                if (_dtRecordColums.Rows[i]["Alignment"] == DBNull.Value)
-                                {
-                                    if (_dtRecordColums.Rows[i]["ColumnType"].ToString().ToLower() != "number")
-                                    {
-                                        gvTheGrid.FooterRow.Cells[i + m].HorizontalAlign = HorizontalAlign.Left;
-                                    }
-                                    else
-                                    {
-                                        gvTheGrid.FooterRow.Cells[i + m].HorizontalAlign = HorizontalAlign.Right;
-                                    }
+                                //if (_dtRecordColums.Rows[i]["Alignment"] == DBNull.Value)
+                                //{
+                                //    if (_dtRecordColums.Rows[i]["ColumnType"].ToString().ToLower() != "number")
+                                //    {
+                                //        gvTheGrid.FooterRow.Cells[i + m].HorizontalAlign = HorizontalAlign.Left;
+                                //    }
+                                //    else
+                                //    {
+                                //        gvTheGrid.FooterRow.Cells[i + m].HorizontalAlign = HorizontalAlign.Right;
+                                //    }
 
-                                    if (_dtRecordColums.Rows[i]["SystemName"].ToString() == "RecordID")
-                                    {
-                                        gvTheGrid.FooterRow.Cells[i + m].HorizontalAlign = HorizontalAlign.Right;
-                                    }
+                                //    if (_dtRecordColums.Rows[i]["SystemName"].ToString() == "RecordID")
+                                //    {
+                                //        gvTheGrid.FooterRow.Cells[i + m].HorizontalAlign = HorizontalAlign.Right;
+                                //    }
 
-                                    if (_dtRecordColums.Rows[i]["SystemName"].ToString() == "IsActive"
-                                   || _dtRecordColums.Rows[i]["SystemName"].ToString() == "DateTimeRecorded"
-                                        || _dtRecordColums.Rows[i]["SystemName"].ToString() == "EnteredBy")
-                                    {
+                                //    if (_dtRecordColums.Rows[i]["SystemName"].ToString() == "IsActive"
+                                //   || _dtRecordColums.Rows[i]["SystemName"].ToString() == "DateTimeRecorded"
+                                //        || _dtRecordColums.Rows[i]["SystemName"].ToString() == "EnteredBy")
+                                //    {
 
-                                        gvTheGrid.FooterRow.Cells[i + m].HorizontalAlign = HorizontalAlign.Center;
-                                    }
+                                //        gvTheGrid.FooterRow.Cells[i + m].HorizontalAlign = HorizontalAlign.Center;
+                                //    }
 
-                                    if (_dtRecordColums.Rows[i]["SystemName"].ToString() == "Notes")
-                                    {
-                                        gvTheGrid.FooterRow.Cells[i + m].HorizontalAlign = HorizontalAlign.Left;
-                                    }
+                                //    if (_dtRecordColums.Rows[i]["SystemName"].ToString() == "Notes")
+                                //    {
+                                //        gvTheGrid.FooterRow.Cells[i + m].HorizontalAlign = HorizontalAlign.Left;
+                                //    }
 
-                                }
-                                else
-                                {
-                                    gvTheGrid.FooterRow.Cells[i + m].HorizontalAlign = GetHorizontalAlign(_dtRecordColums.Rows[i]["Alignment"].ToString());
-                                }
+                                //}
+                                //else
+                                //{
+                                    gvTheGrid.FooterRow.Cells[i + m].HorizontalAlign = GetHorizontalAlign(_dtRecordColums.Rows[i]["Alignment"].ToString(), _dtRecordColums.Rows[i]["ColumnType"].ToString().ToLower());
+                                //}
 
 
                                 //if (_dtRecordColums.Rows[i]["ColumnType"].ToString().ToLower() == "number"
@@ -6193,15 +6109,15 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
 
 
-        if (HttpContext.Current.Session["RunSpeedLog"] != null && _theTable != null)
-        {
+        //if (HttpContext.Current.Session["RunSpeedLog"] != null && _theTable != null)
+        //{
 
-            SpeedLog theSpeedLog = new SpeedLog();
-            theSpeedLog.FunctionName = _theTable.TableName + " " + e.Row.RowType.ToString() + " Event - RowDataBound - START ";
-            theSpeedLog.FunctionLineNumber = 3259;
-            SecurityManager.AddSpeedLog(theSpeedLog);
+        //    SpeedLog theSpeedLog = new SpeedLog();
+        //    theSpeedLog.FunctionName = _theTable.TableName + " " + e.Row.RowType.ToString() + " Event - RowDataBound - START ";
+        //    theSpeedLog.FunctionLineNumber = 3259;
+        //    SecurityManager.AddSpeedLog(theSpeedLog);
 
-        }
+        //}
 
 
 
@@ -6244,7 +6160,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
             if (chkShowOnlyWarning.Checked == true)
             {
-                if (chkIsActive.Checked)
+                if (chkShowDeletedRecords.Checked)
                 {
                     e.Row.Cells[5].ForeColor = System.Drawing.Color.Blue;
                     e.Row.Cells[4].ForeColor = System.Drawing.Color.Red;
@@ -6262,7 +6178,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             }
             else
             {
-                if (chkIsActive.Checked)
+                if (chkShowDeletedRecords.Checked)
                 {
                     e.Row.Cells[5].ForeColor = System.Drawing.Color.Red;
                     e.Row.Cells[4].ForeColor = System.Drawing.Color.Red;
@@ -6326,40 +6242,40 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
 
 
-                        if (_dtRecordColums.Rows[i]["Alignment"] == DBNull.Value)
-                        {
-                            if (_dtRecordColums.Rows[i]["ColumnType"].ToString().ToLower() != "number")
-                            {
-                                e.Row.Cells[j + 4].HorizontalAlign = HorizontalAlign.Left;
-                            }
-                            else
-                            {
-                                e.Row.Cells[j + 4].HorizontalAlign = HorizontalAlign.Right;
-                            }
+                        //if (_dtRecordColums.Rows[i]["Alignment"] == DBNull.Value)
+                        //{
+                        //    if (_dtRecordColums.Rows[i]["ColumnType"].ToString().ToLower() != "number")
+                        //    {
+                        //        e.Row.Cells[j + 4].HorizontalAlign = HorizontalAlign.Left;
+                        //    }
+                        //    else
+                        //    {
+                        //        e.Row.Cells[j + 4].HorizontalAlign = HorizontalAlign.Right;
+                        //    }
 
-                            if (_dtRecordColums.Rows[i]["SystemName"].ToString() == "RecordID")
-                            {
-                                e.Row.Cells[j + 4].HorizontalAlign = HorizontalAlign.Right;
-                            }
+                        //    if (_dtRecordColums.Rows[i]["SystemName"].ToString() == "RecordID")
+                        //    {
+                        //        e.Row.Cells[j + 4].HorizontalAlign = HorizontalAlign.Right;
+                        //    }
 
-                            if (_dtRecordColums.Rows[i]["SystemName"].ToString() == "IsActive"
-                           || _dtRecordColums.Rows[i]["SystemName"].ToString() == "DateTimeRecorded"
-                                || _dtRecordColums.Rows[i]["SystemName"].ToString() == "EnteredBy")
-                            {
+                        //    if (_dtRecordColums.Rows[i]["SystemName"].ToString() == "IsActive"
+                        //   || _dtRecordColums.Rows[i]["SystemName"].ToString() == "DateTimeRecorded"
+                        //        || _dtRecordColums.Rows[i]["SystemName"].ToString() == "EnteredBy")
+                        //    {
 
-                                e.Row.Cells[j + 4].HorizontalAlign = HorizontalAlign.Center;
-                            }
+                        //        e.Row.Cells[j + 4].HorizontalAlign = HorizontalAlign.Center;
+                        //    }
 
-                            if (_dtRecordColums.Rows[i]["SystemName"].ToString() == "Notes")
-                            {
-                                e.Row.Cells[j + 4].HorizontalAlign = HorizontalAlign.Left;
-                            }
+                        //    if (_dtRecordColums.Rows[i]["SystemName"].ToString() == "Notes")
+                        //    {
+                        //        e.Row.Cells[j + 4].HorizontalAlign = HorizontalAlign.Left;
+                        //    }
 
-                        }
-                        else
-                        {
-                            e.Row.Cells[j + 4].HorizontalAlign = GetHorizontalAlign(_dtRecordColums.Rows[i]["Alignment"].ToString());
-                        }
+                        //}
+                        //else
+                        //{
+                            e.Row.Cells[j + 4].HorizontalAlign = GetHorizontalAlign(_dtRecordColums.Rows[i]["Alignment"].ToString(), _dtRecordColums.Rows[i]["ColumnType"].ToString().ToLower());
+                        //}
 
 
 
@@ -6443,7 +6359,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                     {
                         if (_dtRecordColums.Rows[i]["Heading"].ToString() == _dtDataSource.Columns[j].ColumnName)
                         {
-                            if (_dtRecordColums.Rows[i]["NameOnExport"] == DBNull.Value)
+                            if (_dtRecordColums.Rows[i]["Heading"] == DBNull.Value)
                             {
                                 e.Row.Cells[j + 4].Visible = false;
 
@@ -6451,7 +6367,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                             }
                             else
                             {
-                                e.Row.Cells[j + 4].Text = _dtRecordColums.Rows[i]["NameOnExport"].ToString();
+                                e.Row.Cells[j + 4].Text = _dtRecordColums.Rows[i]["Heading"].ToString();
 
                                 break;
                             }
@@ -6626,7 +6542,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                     }
                 }
 
-                if (chkIsActive.Checked)
+                if (chkShowDeletedRecords.Checked)
                 {
 
                     e.Row.Cells[5].ForeColor = colWarningColor;
@@ -6645,7 +6561,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             }
             else
             {
-                if (chkIsActive.Checked)
+                if (chkShowDeletedRecords.Checked)
                 {
 
                     if (_bDeleteReason == false)
@@ -6669,7 +6585,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                     {
                         if (_dtRecordColums.Rows[i]["Heading"].ToString() == _dtDataSource.Columns[j].ColumnName)
                         {
-                            if (_dtRecordColums.Rows[i]["NameOnExport"] == DBNull.Value)
+                            if (_dtRecordColums.Rows[i]["Heading"] == DBNull.Value)
                             {
                                 e.Row.Cells[j + 4].Visible = false;
                                 break;
@@ -6691,7 +6607,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                     for (int j = 0; j < _dtDataSource.Columns.Count; j++)
                     {
                         //DisplayTextSummary
-                        if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == _dtDataSource.Columns[j].ColumnName)
+                        if (_dtRecordColums.Rows[i]["Heading"].ToString() == _dtDataSource.Columns[j].ColumnName)
                         {
                             if (IsStandard(_dtRecordColums.Rows[i]["SystemName"].ToString()) == false)
                             {
@@ -6746,7 +6662,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                         //hh:mm
                         if (_dtRecordColums.Rows[i]["SystemName"].ToString().ToLower() == "datetimerecorded")
                         {
-                            if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == _dtDataSource.Columns[j].ColumnName)
+                            if (_dtRecordColums.Rows[i]["Heading"].ToString() == _dtDataSource.Columns[j].ColumnName)
                             {
                                 if (_dtRecordColums.Rows[i]["ColumnType"].ToString().ToLower() == "datetime")
                                 {
@@ -6806,14 +6722,14 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
                             if (_dtRecordColums.Rows[i]["SystemName"].ToString() == "RecordID")
                             {
-                                if (_dtRecordColums.Rows[i]["Alignment"] == DBNull.Value)
-                                {
-                                    e.Row.Cells[j + 4].HorizontalAlign = HorizontalAlign.Right;
-                                }
-                                else
-                                {
-                                    e.Row.Cells[j + 4].HorizontalAlign = GetHorizontalAlign(_dtRecordColums.Rows[i]["Alignment"].ToString());
-                                }
+                                //if (_dtRecordColums.Rows[i]["Alignment"] == DBNull.Value)
+                                //{
+                                //    e.Row.Cells[j + 4].HorizontalAlign = HorizontalAlign.Right;
+                                //}
+                                //else
+                                //{
+                                    e.Row.Cells[j + 4].HorizontalAlign = GetHorizontalAlign(_dtRecordColums.Rows[i]["Alignment"].ToString(), _dtRecordColums.Rows[i]["ColumnType"].ToString().ToLower());
+                                //}
                                 //strRecordID = e.Row.Cells[j + 4].Text;
                             }
 
@@ -7448,21 +7364,21 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                                 }
 
 
-                                if (_dtRecordColums.Rows[i]["Alignment"] == DBNull.Value)
-                                {
-                                    if (_dtRecordColums.Rows[i]["ColumnType"].ToString().ToLower() != "number")
-                                    {
-                                        e.Row.Cells[j + 4].HorizontalAlign = HorizontalAlign.Left;
-                                    }
-                                    else
-                                    {
-                                        e.Row.Cells[j + 4].HorizontalAlign = HorizontalAlign.Right;
-                                    }
-                                }
-                                else
-                                {
-                                    e.Row.Cells[j + 4].HorizontalAlign = GetHorizontalAlign(_dtRecordColums.Rows[i]["Alignment"].ToString());
-                                }
+                                //if (_dtRecordColums.Rows[i]["Alignment"] == DBNull.Value)
+                                //{
+                                //    if (_dtRecordColums.Rows[i]["ColumnType"].ToString().ToLower() != "number")
+                                //    {
+                                //        e.Row.Cells[j + 4].HorizontalAlign = HorizontalAlign.Left;
+                                //    }
+                                //    else
+                                //    {
+                                //        e.Row.Cells[j + 4].HorizontalAlign = HorizontalAlign.Right;
+                                //    }
+                                //}
+                                //else
+                                //{
+                                    e.Row.Cells[j + 4].HorizontalAlign = GetHorizontalAlign(_dtRecordColums.Rows[i]["Alignment"].ToString(), _dtRecordColums.Rows[i]["ColumnType"].ToString().ToLower());
+                                //}
 
                                 if (_dtRecordColums.Rows[i]["ColumnType"].ToString().ToLower() == "date")
                                 {
@@ -7500,28 +7416,28 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                             || _dtRecordColums.Rows[i]["SystemName"].ToString() == "EnteredBy")
                             {
 
-                                if (_dtRecordColums.Rows[i]["Alignment"] == DBNull.Value)
-                                {
-                                    e.Row.Cells[j + 4].HorizontalAlign = HorizontalAlign.Center;
-                                }
-                                else
-                                {
-                                    e.Row.Cells[j + 4].HorizontalAlign = GetHorizontalAlign(_dtRecordColums.Rows[i]["Alignment"].ToString());
-                                }
+                                //if (_dtRecordColums.Rows[i]["Alignment"] == DBNull.Value)
+                                //{
+                                //    e.Row.Cells[j + 4].HorizontalAlign = HorizontalAlign.Center;
+                                //}
+                                //else
+                                //{
+                                    e.Row.Cells[j + 4].HorizontalAlign = GetHorizontalAlign(_dtRecordColums.Rows[i]["Alignment"].ToString(), _dtRecordColums.Rows[i]["ColumnType"].ToString().ToLower());
+                                //}
 
                             }
 
                             if (_dtRecordColums.Rows[i]["SystemName"].ToString() == "Notes")
                             {
 
-                                if (_dtRecordColums.Rows[i]["Alignment"] == DBNull.Value)
-                                {
-                                    e.Row.Cells[j + 4].HorizontalAlign = HorizontalAlign.Left;
-                                }
-                                else
-                                {
-                                    e.Row.Cells[j + 4].HorizontalAlign = GetHorizontalAlign(_dtRecordColums.Rows[i]["Alignment"].ToString());
-                                }
+                                //if (_dtRecordColums.Rows[i]["Alignment"] == DBNull.Value)
+                                //{
+                                //    e.Row.Cells[j + 4].HorizontalAlign = HorizontalAlign.Left;
+                                //}
+                                //else
+                                //{
+                                    e.Row.Cells[j + 4].HorizontalAlign = GetHorizontalAlign(_dtRecordColums.Rows[i]["Alignment"].ToString(), _dtRecordColums.Rows[i]["ColumnType"].ToString().ToLower());
+                                //}
 
 
                             }
@@ -7643,7 +7559,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
 
 
-                                            if (aRecord.ValidationResults != "" && chkIsActive.Checked == false)
+                                            if (aRecord.ValidationResults != "" && chkShowDeletedRecords.Checked == false)
                                             {
                                                 if (IsStandard(_dtRecordColums.Rows[i]["SystemName"].ToString()) == false)
                                                 {
@@ -7780,7 +7696,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
 
         _gvPager.ExportFileName = lblTitle.Text.Replace("Records - ", "") + " " + DateTime.Today.ToString("yyyyMMdd");
-        gvTheGrid.PageIndex = 0;// why???
+        //gvTheGrid.PageIndex = 0;// why???
         //BindTheGridForExport(0, _gvPager.TotalRows);
         BindTheGrid(0, _gvPager.TotalRows);
 
@@ -7845,62 +7761,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
     protected void Pager_BindTheGridAgain(object sender, EventArgs e)
     {
 
-        BindTheGrid(_gvPager.StartIndex, _gvPager._gridView.PageSize);
-    }
-
-
-    protected void PopulateExportTemplate(int iTableID)
-    {
-        ddlTemplate.Items.Clear();
-        ddlTemplate.DataSource = Common.DataTableFromText("SELECT * FROM ExportTemplate WHERE TableID=" + iTableID + " ORDER BY ExportTemplateName");
-        ddlTemplate.DataBind();
-
-        //ListItem liSelect = new ListItem("--Please select--", "");
-        //ddlTemplate.Items.Insert(0, liSelect);
-
-    }
-    protected void ddlTemplate_SelectedIndexChanged(object sender, EventArgs e)
-    {
-
-        chklstFields.Items.Clear();
-
-        if (ddlTemplate.SelectedValue == "")
-        {
-            //[Column]
-            DataTable dtColumns = Common.DataTableFromText(@" SELECT ColumnID AS FieldID,NameOnExport AS Heading,SystemName 
-                            FROM [Column] WHERE TableID=" + _theTable.TableID.ToString() + @" and Systemname not in('IsActive','TableID') AND NameOnExport IS NOT NULL AND LEN(NameOnExport) > 0
-            AND ColumnType NOT IN ('staticcontent') ORDER BY DisplayRight,DisplayOrder");
-            //chklstFields.DataBind();
-
-            foreach (DataRow dr in dtColumns.Rows)
-            {
-                ListItem liTemp = new ListItem(dr["Heading"].ToString(), dr["FieldID"].ToString());
-                liTemp.Selected = true;
-                //liTemp.Attributes.Add("DataValue", dr["SystemName"].ToString());
-                chklstFields.Items.Add(liTemp);
-            }
-            hlExportTemplate.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/TableDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&SearchCriteriaET=" + Cryptography.Encrypt("-1");
-
-        }
-        else
-        {
-            //[ExportTemplateItem]
-            DataTable dtColumns = Common.DataTableFromText(@" SELECT ColumnID AS FieldID,ExportHeaderName AS Heading  FROM 
-                    ExportTemplateItem WHERE ExportTemplateID=" + ddlTemplate.SelectedValue + " ORDER BY ColumnIndex");
-
-            foreach (DataRow dr in dtColumns.Rows)
-            {
-                ListItem liTemp = new ListItem(dr["Heading"].ToString(), dr["FieldID"].ToString());
-                liTemp.Selected = true;
-                //liTemp.Attributes.Add("DataValue", dr["SystemName"].ToString());
-                chklstFields.Items.Add(liTemp);
-            }
-            hlExportTemplate.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Export/ExportTemplateItem.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Cryptography.Encrypt(_theTable.TableID.ToString()) + "&SearchCriteriaET=" + Cryptography.Encrypt("-1") + "&ExportTemplateID=" + Cryptography.Encrypt(ddlTemplate.SelectedValue) + "&fixedbackurl=" + Cryptography.Encrypt(Request.RawUrl);
-
-        }
-
-        if (IsPostBack)
-            mpeExportRecords.Show();
+        BindTheGrid(_gvPager.StartIndex, gvTheGrid.PageSize);
     }
 
 
@@ -7957,7 +7818,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
         LinkButton lnkResetSender = (LinkButton)sender;
         if (lnkResetSender != null && lnkResetSender == lnkReset)
         {
-            chkIsActive.Checked = false;
+            chkShowDeletedRecords.Checked = false;
             chkShowOnlyWarning.Checked = false;
         }
 
@@ -8243,9 +8104,9 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             hfAndOr2.Value = "";
             hfAndOr3.Value = "";
 
-            string strJSSearchShowHide = "$('#" + trSearch1.ClientID + "').fadeOut();$('#" + trSearch2.ClientID + "').fadeOut();$('#" + trSearch3.ClientID + "').fadeOut();";
+            string strJSSearchShowHide = "$('#" + trSearch1.ClientID + "').hide();$('#" + trSearch2.ClientID + "').hide();$('#" + trSearch3.ClientID + "').hide();";
 
-            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "PutDefaultSearcUI_CS", strJSSearchShowHide, true);
+            ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "PutDefaultSearcUI_CS", strJSSearchShowHide, true);
         }
 
         gvTheGrid.GridViewSortColumn = "DBGSystemRecordID";
@@ -8278,115 +8139,135 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
         //PopulateSearchParams();
 
         BindTheGrid(0, gvTheGrid.PageSize);
+
+        if (!string.IsNullOrEmpty(_theTable.SPSearchReset))
+        {
+            SystemData.Table_SPSearchReset(_theTable.SPSearchReset, _ObjUser.UserID, _theView.ViewID, Request.RawUrl);
+        }
+
     }
 
-    protected void Pager_DeleteAction(object sender, EventArgs e)
-    {
-        //Ticket 1013
-        trUndo.Style.Add("display", "none");
-        //End
+    //protected void Pager_DeleteAction(object sender, EventArgs e)
+    //{
+    //    //Ticket 1013
+    //    trUndo.Style.Add("display", "none");
+    //    //End
 
-        EnsureSecurity();
-        bool bIsAllCheckeD = false;
+    //    EnsureSecurity();
+    //    bool bIsAllCheckeD = false;
 
-        bool bHeaderChecked = ((CheckBox)gvTheGrid.HeaderRow.FindControl("chkAll")).Checked;
-        string sCheck = "";
-        if (bHeaderChecked)
-        {
-            bIsAllCheckeD = true;
-            for (int i = 0; i < gvTheGrid.Rows.Count; i++)
-            {
-                bool ischeck = ((CheckBox)gvTheGrid.Rows[i].FindControl("chkDelete")).Checked;
-                if (ischeck)
-                {
-                    sCheck = sCheck + ((Label)gvTheGrid.Rows[i].FindControl("LblID")).Text + ",";
-                }
-                else
-                {
-                    bIsAllCheckeD = false;
-                }
-            }
+    //    bool bHeaderChecked = ((CheckBox)gvTheGrid.HeaderRow.FindControl("chkAll")).Checked;
+    //    string sCheck = "";
+    //    if (bHeaderChecked)
+    //    {
+    //        bIsAllCheckeD = true;
+    //        for (int i = 0; i < gvTheGrid.Rows.Count; i++)
+    //        {
+    //            bool ischeck = ((CheckBox)gvTheGrid.Rows[i].FindControl("chkDelete")).Checked;
+    //            if (ischeck)
+    //            {
+    //                sCheck = sCheck + ((Label)gvTheGrid.Rows[i].FindControl("LblID")).Text + ",";
+    //            }
+    //            else
+    //            {
+    //                bIsAllCheckeD = false;
+    //            }
+    //        }
 
-        }
-        else
-        {
-            for (int i = 0; i < gvTheGrid.Rows.Count; i++)
-            {
-                bool ischeck = ((CheckBox)gvTheGrid.Rows[i].FindControl("chkDelete")).Checked;
-                if (ischeck)
-                {
-                    sCheck = sCheck + ((Label)gvTheGrid.Rows[i].FindControl("LblID")).Text + ",";
-                }
-            }
+    //    }
+    //    else
+    //    {
+    //        for (int i = 0; i < gvTheGrid.Rows.Count; i++)
+    //        {
+    //            bool ischeck = ((CheckBox)gvTheGrid.Rows[i].FindControl("chkDelete")).Checked;
+    //            if (ischeck)
+    //            {
+    //                sCheck = sCheck + ((Label)gvTheGrid.Rows[i].FindControl("LblID")).Text + ",";
+    //            }
+    //        }
 
-        }
-
-
-
-        if (string.IsNullOrEmpty(sCheck))
-        {
-            Session["tdbmsgpb"] = "Please select a record.";
-            if (hfUsingScrol.Value == "yes" && _gvPager != null)
-            {
-                BindTheGrid(_gvPager.StartIndex, gvTheGrid.PageSize);
-            }
-            //ScriptManager.RegisterClientScriptBlock(gvTheGrid, typeof(Page), "message_alert", "alert('Please select a record.');", true);
-            return;
-        }
-
-
-        chkDelateAllEvery.Checked = false;
-        lblDeleteRestoreMessage.Text = "Are you sure you want to delete selected item(s)?";
-        chkDelateAllEvery.Text = "I would like to delete EVERY item in this table";
-        hfParmanentDelete.Value = "no";
-        lblDeleteMessageNote.Visible = true;
-
-        chkDelateAllEvery.Checked = false;
-        chkDeleteParmanent.Checked = false;
-        chkUndo.Checked = false;
-
-
-        if (bIsAllCheckeD)
-        {
-            trDeleteAllEvery.Visible = true;
-        }
-        else
-        {
-            trDeleteAllEvery.Visible = false;
-        }
-
-        //trDeleteParmanent.Visible = true;
-        trUndo.Visible = true;
-
-        if (_strRecordRightID == Common.UserRoleType.Administrator
-                       || _strRecordRightID == Common.UserRoleType.GOD)
-        {
-        }
-        else
-        {
-            trDeleteParmanent.Visible = false;
-            trUndo.Visible = false;
-        }
+    //    }
 
 
 
+    //    if (string.IsNullOrEmpty(sCheck))
+    //    {
+    //        Session["tdbmsgpb"] = "Please select a record.";
+    //        if (hfUsingScrol.Value == "yes" && _gvPager != null)
+    //        {
+    //            BindTheGrid(_gvPager.StartIndex, gvTheGrid.PageSize);
+    //        }
+    //        //ScriptManager.RegisterClientScriptBlock(gvTheGrid, typeof(Page), "message_alert", "alert('Please select a record.');", true);
+    //        return;
+    //    }
 
-        if (_bDeleteReason)
-        {
-            trDeleteRestoreMessage.Visible = false;
-            trDeleteReason.Visible = true;
-        }
 
-        txtDeleteReason.Text = "";
-        mpeDeleteAll.Show();
+    //    chkDelateAllEvery.Checked = false;
+    //    lblDeleteRestoreMessage.Text = "Are you sure you want to delete selected item(s)?";
+    //    chkDelateAllEvery.Text = "I would like to delete EVERY item in this table";
+    //    hfParmanentDelete.Value = "no";
+    //    lblDeleteMessageNote.Visible = true;
+
+    //    chkDelateAllEvery.Checked = false;
+    //    chkDeleteParmanent.Checked = false;
+    //    chkUndo.Checked = false;
+
+
+    //    if (bIsAllCheckeD)
+    //    {
+    //        trDeleteAllEvery.Visible = true;
+    //    }
+    //    else
+    //    {
+    //        trDeleteAllEvery.Visible = false;
+    //    }
+
+    //    //trDeleteParmanent.Visible = true;
+    //    trUndo.Visible = true;
+
+    //    if (_strRecordRightID == Common.UserRoleType.Administrator
+    //                   || _strRecordRightID == Common.UserRoleType.GOD)
+    //    {
+    //    }
+    //    else
+    //    {
+    //        trDeleteParmanent.Visible = false;
+    //        trUndo.Visible = false;
+    //    }
 
 
 
-    }
+
+    //    if (_bDeleteReason)
+    //    {
+    //        trDeleteRestoreMessage.Visible = false;
+    //        trDeleteReason.Visible = true;
+    //    }
+
+    //    txtDeleteReason.Text = "";
+    //    mpeDeleteAll.Show();
+
+
+
+    //}
 
 
     protected void DeleteAction()
     {
+        bool bchkDelateAllEvery = false;
+        if (hfchkDelateAllEvery.Value != "")
+            bchkDelateAllEvery = bool.Parse(hfchkDelateAllEvery.Value);
+
+        bool bchkDeleteParmanent = false;
+        if (hfchkDeleteParmanent.Value != "")
+            bchkDeleteParmanent = bool.Parse(hfchkDeleteParmanent.Value);
+
+        string strDeleteReason = "";
+
+        if(hftxtDeleteReason.Value!="")
+        {
+            strDeleteReason = hftxtDeleteReason.Value;
+        }
 
         bool bAllChecked = true;
         string sCheck = "";
@@ -8403,7 +8284,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             }
         }
 
-        if (bAllChecked && chkDelateAllEvery.Checked == true && chkDeleteParmanent.Checked == false)
+        if (bAllChecked && bchkDelateAllEvery && bchkDeleteParmanent == false)
         {
             //DataTable dtAllRecordIDs;
             //if (PageType == "c")
@@ -8426,7 +8307,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
             if (_bDeleteReason)
             {
-                Common.ExecuteText("Update [Record] SET IsActive=0,DeleteReason='" + txtDeleteReason.Text.Replace("'", "''") + "',LastUpdatedUserID=" + _ObjUser.UserID + " WHERE IsActive=1 AND TableID=" + _qsTableID + strExtraWHERE);
+                Common.ExecuteText("Update [Record] SET IsActive=0,DeleteReason='" + strDeleteReason.Replace("'", "''") + "',LastUpdatedUserID=" + _ObjUser.UserID + " WHERE IsActive=1 AND TableID=" + _qsTableID + strExtraWHERE);
             }
             else
             {
@@ -8451,11 +8332,11 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
 
         BindTheGrid(_gvPager.StartIndex, gvTheGrid.PageSize);
-        _gvPager._gridView.PageIndex = _gvPager.PageIndex - 1;
-        if (_gvPager._gridView.Rows.Count == 0 && _gvPager._gridView.PageIndex > 0)
-        {
-            BindTheGrid(_gvPager.StartIndex - gvTheGrid.PageSize, gvTheGrid.PageSize);
-        }
+        //_gvPager._gridView.PageIndex = _gvPager.PageIndex - 1;
+        //if (_gvPager._gridView.Rows.Count == 0 && _gvPager._gridView.PageIndex > 0)
+        //{
+        //    BindTheGrid(_gvPager.StartIndex - gvTheGrid.PageSize, gvTheGrid.PageSize);
+        //}
 
 
     }
@@ -8463,6 +8344,22 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
     protected void DeleteParmanentAction()
     {
+
+        bool bchkDelateAllEvery = false;
+        if (hfchkDelateAllEvery.Value != "")
+            bchkDelateAllEvery = bool.Parse(hfchkDelateAllEvery.Value);
+
+        bool bchkDeleteParmanent = false;
+        if (hfchkDeleteParmanent.Value != "")
+            bchkDeleteParmanent = bool.Parse(hfchkDeleteParmanent.Value);
+
+        string strDeleteReason = "";
+
+        if (hftxtDeleteReason.Value != "")
+        {
+            strDeleteReason = hftxtDeleteReason.Value;
+        }
+
 
         string sCheck = "";
         for (int i = 0; i < gvTheGrid.Rows.Count; i++)
@@ -8504,7 +8401,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
         }
         else
         {
-            if (chkDelateAllEvery.Checked == true)
+            if (bchkDelateAllEvery)
             {
                 if (PageType == "c")
                 {
@@ -8525,11 +8422,11 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
         }
 
         BindTheGrid(_gvPager.StartIndex, gvTheGrid.PageSize);
-        _gvPager._gridView.PageIndex = _gvPager.PageIndex - 1;
-        if (_gvPager._gridView.Rows.Count == 0 && _gvPager._gridView.PageIndex > 0)
-        {
-            BindTheGrid(_gvPager.StartIndex - gvTheGrid.PageSize, gvTheGrid.PageSize);
-        }
+        //_gvPager._gridView.PageIndex = _gvPager.PageIndex - 1;
+        //if (_gvPager._gridView.Rows.Count == 0 && _gvPager._gridView.PageIndex > 0)
+        //{
+        //    BindTheGrid(_gvPager.StartIndex - gvTheGrid.PageSize, gvTheGrid.PageSize);
+        //}
 
 
     }
@@ -8541,35 +8438,33 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
     //}
     protected void SetOtherValidationGroup()
     {
-        //delete related
-
-        TheDatabase.SetValidationGroup(pnlDeleteAll.Controls, "DE" + _strDynamictabPart);
+        
         //edit many related
-        TheDatabase.SetValidationGroup(pnlEditMany.Controls, "EM" + _strDynamictabPart);
+        //TheDatabase.SetValidationGroup(pnlEditMany.Controls, "EM" + _strDynamictabPart);
 
 
         //delete related
         //rfvDeleteReason.ValidationGroup = "DR";
         //lnkDeleteAllOK.ValidationGroup = "DR";
     }
-    protected void Pager_AllExport(object sender, EventArgs e)
-    {
-        EnsureSecurity();
-        if (ddlTemplate.Items.Count == 0)
-        {
-            //no template, so lets create one
+    //protected void Pager_AllExport(object sender, EventArgs e)
+    //{
+    //    EnsureSecurity();
+    //    if (ddlTemplate.Items.Count == 0)
+    //    {
+    //        //no template, so lets create one
 
-            ExportManager.CreateDefaultExportTemplate(TableID);
-            PopulateExportTemplate(TableID);
+    //        ExportManager.CreateDefaultExportTemplate(TableID);
+    //        PopulateExportTemplate(TableID);
 
-            ddlTemplate_SelectedIndexChanged(null, null);
-
-
-        }
+    //        ddlTemplate_SelectedIndexChanged(null, null);
 
 
-        mpeExportRecords.Show();
-    }
+    //    }
+
+
+    //    //mpeExportRecords.Show();
+    //}
 
     //protected void lnkCogOK_Click(object sender, EventArgs e)
     //{
@@ -8594,14 +8489,21 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
     {
         try
         {
-            mpeExportRecords.Hide();
+            //mpeExportRecords.Hide();
             //UpdatePanel1.Update();
             //ScriptManager.RegisterClientScriptBlock(this, typeof(Page), "hide_AllExpoerMPE", "$find('" + mpeExportRecords.BehaviorID + "').hide();", true);
 
 
-            lblExportRecords.Text = "";
+            //lblExportRecords.Text = "";
             PopulateSearchParams();
-            switch (ddlExportFiletype.SelectedValue)
+            string ddlExportFiletype = "";
+            if (Session["ExportClass"] != null)
+            {
+                ExportClass aExportClass = (ExportClass)Session["ExportClass"];
+                ddlExportFiletype = aExportClass.strExportFiletype;
+            }
+
+            switch (ddlExportFiletype)
             {
                 case "e":
                     Pager_OnExportForExcel(null, null);
@@ -8623,6 +8525,8 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                 default:
                     break;
             }
+
+            Session["ExportClass"] = null;
         }
         catch (Exception ex)
         {
@@ -8635,114 +8539,39 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
         }
 
-        mpeExportRecords.Hide();
+        //mpeExportRecords.Hide();
     }
-    protected void lnkEditManyCancel2_Click(object sender, EventArgs e)
-    {
-        lnkSearch_Click(null, null);
-    }
+    //protected void lnkEditManyCancel2_Click(object sender, EventArgs e)
+    //{
+    //    lnkSearch_Click(null, null);
+    //}
 
-    protected void lnkUntickAllExport_Click(object sender, EventArgs e)
-    {
-        foreach (ListItem item in chklstFields.Items)
-        {
-            item.Selected = false;
-        }
-
-
-        if (IsPostBack)
-            mpeExportRecords.Show();
-    }
+   
     protected void lnkEditManyOK_Click(object sender, EventArgs e)
     {
-        lblMsgBullk.Text = "";
+        //lblMsgBullk.Text = "";
         string strValue = "";
-        if (ddlYAxisBulk.SelectedValue == "")
+        bool bchkUpdateEveryItem = false;
+        if (hfchkUpdateEveryItem.Value != "")
+            bchkUpdateEveryItem = bool.Parse(hfchkUpdateEveryItem.Value);
+
+
+        if (hfddlYAxisBulk.Value == "")
         {
-            lblMsgBullk.Text = "Please select a column.";
-            mpeEditMany.Show();
+            Session["tdbgmsgpb"] = "Please select a column.";
+            //mpeEditMany.Show();
             return;
         }
         else
         {
-            Column theColumn = RecordManager.ets_Column_Details(int.Parse(ddlYAxisBulk.SelectedValue));
+            Column theColumn = RecordManager.ets_Column_Details(int.Parse(hfddlYAxisBulk.Value));
 
-            if (theColumn.ColumnType == "checkbox")
-            {
-                strValue = Common.GetCheckBoxValue(theColumn.DropdownValues, ref chkCheckboxBulk);
-            }
-            else if (theColumn.ColumnType == "number")
-            {
-                strValue = txtNumberBulk.Text;
-            }
-            else if (theColumn.ColumnType == "text")
-            {
-                strValue = txtTextBulk.Text;
-            }
-            else if (theColumn.ColumnType == "date")
-            {
-                strValue = txtDateBulk.Text;
-            }
-            else if (theColumn.ColumnType == "datetime")
-            {
-                try
-                {
-                    string strDateTime = "";
-                    if (txtDateBulk.Text.Trim() == "")
-                    {
-                        //strDateTime = DateTime.Now.ToShortDateString() + " 12:00:00 AM";
-                    }
-                    else
-                    {
-                        DateTime dtTemp;
-                        if (DateTime.TryParseExact(txtDateBulk.Text.Trim(), Common.Dateformats, new CultureInfo("en-GB"), DateTimeStyles.None, out dtTemp))
-                        {
-                            txtDateBulk.Text = dtTemp.ToShortDateString();
-                        }
-                        string strTimePart = "";
-                        if (txtBulkTime != null)
-                        {
-                            if (txtBulkTime.Text == "")
-                            {
-                                strTimePart = "00:00";
-                            }
-                            else
-                            {
-                                if (txtBulkTime.Text.ToLower().IndexOf(":am") > 0)
-                                {
-                                    strTimePart = txtBulkTime.Text.ToLower().Replace(":am", ":00");
-                                }
-                                else
-                                {
-                                    strTimePart = txtBulkTime.Text.ToLower().Replace(":pm", ":00");
-                                }
-                            }
-                        }
-                        else
-                        {
-                            strTimePart = "00:00";
-                        }
-
-                        strDateTime = txtDateBulk.Text + " " + strTimePart;
-                        strDateTime = strDateTime.Replace("  ", " ");
-                    }
-                    strValue = strDateTime;
-                }
-                catch
-                {
-                    //
-                    strValue = "";
-                }
-            }
-            else if (theColumn.ColumnType == "dropdown")
-            {
-                strValue = ddlDropdownBulk.SelectedValue;
-            }
+            strValue = hfBulkValue.Value;
 
             if (strValue == "")
             {
-                lblMsgBullk.Text = "Please enter the new value.";
-                mpeEditMany.Show();
+                Session["tdbgmsgpb"] = "Please enter the new value.";
+                //mpeEditMany.Show();
                 return;
             }
 
@@ -8751,13 +8580,13 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             bool bAll = ((CheckBox)gvTheGrid.HeaderRow.FindControl("chkAll")).Checked;
 
 
-            if (chkUpdateEveryItem.Checked && bAll)
+            if (bchkUpdateEveryItem && bAll)
             {
                 //DataTable dtTable
                 //Common.ExecuteText("UPDATE Record SET " + theColumn.SystemName + "='" + strValue.Replace("'", "''") 
                 //    + "' WHERE TableID=" + theColumn.TableID.ToString());
 
-                gvTheGrid.PageIndex = 0;// why???
+                //gvTheGrid.PageIndex = 0;// why???
                 //BindTheGridForExport(0, _gvPager.TotalRows);
                 int iOldPS = gvTheGrid.PageSize;
                 gvTheGrid.PageSize = _gvPager.TotalRows + 1;
@@ -8787,24 +8616,48 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             DateTime dtRightNow = DateTime.Now;
             RecordManager.Record_Audit(null, sCheck, false, dtRightNow);
             Common.ExecuteText("UPDATE Record SET " + theColumn.SystemName + "='" + strValue.Replace("'", "''") + "' WHERE RecordID IN (" + sCheck + ")");
-            DataTable dtRecords = Common.DataTableFromText(@"SELECT " + theColumn.SystemName + @",RecordID,WarningResults,ValidationResults FROM Record
-	                    WHERE  RecordID IN (" + sCheck + @")");
-
+//            DataTable dtRecords = Common.DataTableFromText(@"SELECT " + theColumn.SystemName + @",RecordID,WarningResults,ValidationResults FROM Record
+//	                    WHERE  RecordID IN (" + sCheck + @")");
+            if(_theTable.UniqueColumnID!=null && (theColumn.ColumnID==_theTable.UniqueColumnID ||
+                (_theTable.UniqueColumnID2!=null && theColumn.ColumnID==_theTable.UniqueColumnID2)))
+            {
+                UploadManager.Record_Set_UniqueKey("R", _theTable.TableID, null, null, sCheck);
+            }
             string strInvalidRecordIDs = "";
-            string strValidRecordIDs = "";
-            string strSQL = @"SELECT " + theColumn.SystemName + @",RecordID,WarningResults,ValidationResults FROM Record
+            if(theColumn.ColumnType=="number")
+            {
+                bool bHasValidation = false;
+                if(theColumn.ValidationOnEntry!="" || theColumn.ValidationOnExceedance!="" || theColumn.ValidationOnWarning!="")
+                {
+                    bHasValidation = true;
+                }
+                else
+                {
+                    string strHasCondition = Common.GetValueFromSQL("SELECT TOP 1 ConditionID FROM Condition WHERE ColumnID=" + theColumn.ColumnID.ToString());
+                    if(strHasCondition!="")
+                    {
+                        bHasValidation = true;
+                    }
+                }
+                if(bHasValidation)
+                {
+                    string strValidRecordIDs = "";
+                    string strSQL = @"SELECT " + theColumn.SystemName + @",RecordID,WarningResults,ValidationResults FROM Record
 	                    WHERE  RecordID IN (" + sCheck + @")";
-            RecordManager.ets_AdjustValidFormulaChanges(theColumn, ref strInvalidRecordIDs, ref strValidRecordIDs, true, strSQL);
-
+                    RecordManager.ets_AdjustValidFormulaChanges(theColumn, ref strInvalidRecordIDs, ref strValidRecordIDs, true, strSQL);
+                }              
+            }
+           
+            
             RecordManager.Record_Audit(null, sCheck, true, dtRightNow);
 
             if (strInvalidRecordIDs != "")
             {
                 Session["tdbmsgpb"] = "Total invalid records:" + (strInvalidRecordIDs.Split(',').Length - 1).ToString();
             }
-
-            lnkSearch_Click(null, null);
-            mpeEditMany.Hide();
+            BindTheGrid(_gvPager.StartIndex, gvTheGrid.PageSize);
+            //lnkSearch_Click(null, null);
+            //mpeEditMany.Hide();
 
         }
 
@@ -8814,185 +8667,96 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
     protected void lnkDeleteAllOK_Click(object sender, EventArgs e)
     {
 
-        if (chkIsActive.Checked && hfParmanentDelete.Value == "no")
+
+        bool bchkUndo = false;
+        if (hfchkUndo.Value != "")
+            bchkUndo = bool.Parse(hfchkUndo.Value);
+       
+        if (chkShowDeletedRecords.Checked && hfParmanentDelete.Value == "no")
         {
             UnDeleteAction();
         }
 
-        if (chkIsActive.Checked && hfParmanentDelete.Value == "yes")
+        if (chkShowDeletedRecords.Checked && hfParmanentDelete.Value == "yes")
         {
-            if (chkUndo.Checked)
+            if (bchkUndo)
             {
                 DeleteParmanentAction();
             }
             else
             {
-                if (chkIsActive.Checked)
+                if (chkShowDeletedRecords.Checked)
                 {
-                    if (_gvPager != null)
-                    {
-                        _gvPager.HideDelete = true;
-                        _gvPager.HideUnDelete = false;
-                        if (_strRecordRightID == Common.UserRoleType.Administrator
-                                || _strRecordRightID == Common.UserRoleType.GOD)
-                        {
+                    //if (_gvPager != null)
+                    //{
+                    //    _gvPager.HideDelete = true;
+                    //    _gvPager.HideUnDelete = false;
+                    //    if (_strRecordRightID == Common.UserRoleType.Administrator
+                    //            || _strRecordRightID == Common.UserRoleType.GOD)
+                    //    {
 
-                            _gvPager.HideParmanentDelete = false;
+                    //        _gvPager.HideParmanentDelete = false;
 
-                        }
-                        ShowHidePermanentDelete();
-                        ScriptManager.RegisterClientScriptBlock(gvTheGrid, typeof(Page), "message_alertPD", "alert('I will not be able to undo this action checkbox must be ticked to delete PERMANENTLY.');", true);
-                    }
+                    //    }
+                    //    ShowHidePermanentDelete();
+                    //    ScriptManager.RegisterClientScriptBlock(gvTheGrid, typeof(Page), "message_alertPD", "alert('I will not be able to undo this action checkbox must be ticked to delete PERMANENTLY.');", true);
+                    //}
 
                 }
 
             }
         }
 
-        if (chkIsActive.Checked == false)
+        if (chkShowDeletedRecords.Checked == false)
         {
             DeleteAction();
         }
 
-        mpeDeleteAll.Hide();
+        //mpeDeleteAll.Hide();
     }
 
-    protected void ddlYAxisBulk_SelectedIndexChanged(object sender, EventArgs e)
-    {
+   
 
-        txtNumberBulk.Visible = false;
-        txtNumberBulk.Text = "";
-        txtTextBulk.Visible = false;
-        txtTextBulk.Text = "";
-        txtDateBulk.Visible = false;
-        txtDateBulk.Text = "";
-        ibBulkDate.Visible = false;
-        txtBulkTime.Visible = false;
-        txtBulkTime.Text = "";
-        ddlDropdownBulk.Visible = false;
-        chkCheckboxBulk.Visible = false;
-        chkCheckboxBulk.Checked = false;
+    //protected void btnAdd_Click(object sender, EventArgs e)
+    //{
+    //    mpeAddRecord.Show();
+    //}
+    //protected void lnkDeleteAllNo_Click(object sender, EventArgs e)
+    //{
+    //    if (hfUsingScrol.Value == "yes")
+    //    {
+    //        lnkSearch_Click(null, null);
+    //    }
+    //    else
+    //    {
 
-        if (ddlDropdownBulk.Items.Count > 0)
-            ddlDropdownBulk.SelectedIndex = 0;
+    //        if (chkIsActive.Checked)
+    //        {
+    //            if (_gvPager != null)
+    //            {
+    //                _gvPager.HideDelete = true;
+    //                _gvPager.HideUnDelete = false;
+    //                if (_strRecordRightID == Common.UserRoleType.Administrator
+    //                        || _strRecordRightID == Common.UserRoleType.GOD)
+    //                {
 
-        if (ddlYAxisBulk.SelectedValue == "")
-        {
-            //
-        }
-        else
-        {
-            Column theColumn = RecordManager.ets_Column_Details(int.Parse(ddlYAxisBulk.SelectedValue));
+    //                    _gvPager.HideParmanentDelete = false;
 
-            if (theColumn.ColumnType == "checkbox")
-            {
-                chkCheckboxBulk.Visible = true;
-            }
-            else if (theColumn.ColumnType == "number")
-            {
-                txtNumberBulk.Visible = true;
+    //                }
+    //                ShowHidePermanentDelete();
+    //            }
 
-            }
-            else if (theColumn.ColumnType == "text")
-            {
-                txtTextBulk.Visible = true;
-
-            }
-            else if (theColumn.ColumnType == "date")
-            {
-                txtDateBulk.Visible = true;
-                ibBulkDate.Visible = true;
-
-            }
-            else if (theColumn.ColumnType == "datetime")
-            {
-                txtDateBulk.Visible = true;
-                ibBulkDate.Visible = true;
-                txtBulkTime.Visible = true;
-
-            }
-            else if (theColumn.ColumnType == "dropdown")
-            {
-
-                ddlDropdownBulk.Visible = true;
-
-                if (theColumn.DropDownType == "values")
-                {
-                    Common.PutDDLValues(theColumn.DropdownValues, ref ddlDropdownBulk);
-                }
-                else if (theColumn.DropDownType == "value_text")
-                {
-                    Common.PutDDLValue_Text(theColumn.DropdownValues, ref ddlDropdownBulk);
-                }
-                else if ((theColumn.DropDownType == "table" || theColumn.DropDownType == "tabledd")
-                    && theColumn.ParentColumnID == null)
-                {
-                    ddlDropdownBulk.Items.Clear();
-                    RecordManager.PopulateTableDropDown((int)theColumn.ColumnID, ref ddlDropdownBulk);
-                    // PutDDLValue_Text(theColumn.DropdownValues, ref ddlDropdownBulk);
-                }
-                else
-                {
-                    ddlDropdownBulk.Items.Clear();
-                }
-
-            }
-        }
-
-        bool bAll = ((CheckBox)gvTheGrid.HeaderRow.FindControl("chkAll")).Checked;
-
-        if (bAll)
-        {
-            trUpdateEveryItem.Visible = true;
-        }
-        else
-        {
-            trUpdateEveryItem.Visible = false;
-        }
-
-        mpeEditMany.Show();
-    }
-
-    protected void btnAdd_Click(object sender, EventArgs e)
-    {
-        mpeAddRecord.Show();
-    }
-    protected void lnkDeleteAllNo_Click(object sender, EventArgs e)
-    {
-        if (hfUsingScrol.Value == "yes")
-        {
-            lnkSearch_Click(null, null);
-        }
-        else
-        {
-
-            if (chkIsActive.Checked)
-            {
-                if (_gvPager != null)
-                {
-                    _gvPager.HideDelete = true;
-                    _gvPager.HideUnDelete = false;
-                    if (_strRecordRightID == Common.UserRoleType.Administrator
-                            || _strRecordRightID == Common.UserRoleType.GOD)
-                    {
-
-                        _gvPager.HideParmanentDelete = false;
-
-                    }
-                    ShowHidePermanentDelete();
-                }
-
-            }
-        }
+    //        }
+    //    }
 
 
-        chkDelateAllEvery.Checked = false;
-        mpeDeleteAll.Hide();
-    }
+    //    chkDelateAllEvery.Checked = false;
+    //    mpeDeleteAll.Hide();
+    //}
 
     protected void Pager_CopyRecordAction(object sender, EventArgs e)
     {
-        EnsureSecurity();
+        //EnsureSecurity();
         string sCheck = "";
         for (int i = 0; i < gvTheGrid.Rows.Count; i++)
         {
@@ -9033,7 +8797,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
     }
     protected void Pager_EditManyAction(object sender, EventArgs e)
     {
-        EnsureSecurity();
+        //EnsureSecurity();
         string sCheck = "";
         for (int i = 0; i < gvTheGrid.Rows.Count; i++)
         {
@@ -9086,23 +8850,23 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
         bool bAll = ((CheckBox)gvTheGrid.HeaderRow.FindControl("chkAll")).Checked;
 
-        if (bAll)
-        {
-            trUpdateEveryItem.Visible = true;
-        }
-        else
-        {
-            trUpdateEveryItem.Visible = false;
-        }
+        //if (bAll)
+        //{
+        //    trUpdateEveryItem.Visible = true;
+        //}
+        //else
+        //{
+        //    trUpdateEveryItem.Visible = false;
+        //}
 
-        mpeEditMany.Show();
+        //mpeEditMany.Show();
 
 
     }
 
     protected void Pager_OnSendEmailAction(object sender, EventArgs e)
     {
-        EnsureSecurity();
+        //EnsureSecurity();
         string sCheck = "";
 
         bool bHeaderChecked = ((CheckBox)gvTheGrid.HeaderRow.FindControl("chkAll")).Checked;
@@ -9124,7 +8888,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             string strReturnSQL = "";
             DataTable dtTemp = RecordManager.ets_Record_List(int.Parse(TableID.ToString()),
                        ddlEnteredBy.SelectedValue == "-1" ? null : (int?)int.Parse(ddlEnteredBy.SelectedValue),
-                       !chkIsActive.Checked,
+                       !chkShowDeletedRecords.Checked,
                        chkShowOnlyWarning.Checked == false ? null : (bool?)true,
                        null, null,
                          "DBGSystemRecordID", "DESC", 0, _gvPager.TotalRows, ref iTN, ref _iTotalDynamicColumns,
@@ -9204,228 +8968,231 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
         }
 
     }
-    protected void Pager_UnDeleteAction(object sender, EventArgs e)
-    {
-        EnsureSecurity();
-        bool bIsAllCheckeD = false;
+    //protected void Pager_UnDeleteAction(object sender, EventArgs e)
+    //{
+    //    EnsureSecurity();
+    //    bool bIsAllCheckeD = false;
 
-        bool bHeaderChecked = ((CheckBox)gvTheGrid.HeaderRow.FindControl("chkAll")).Checked;
-        string sCheck = "";
-        if (bHeaderChecked)
-        {
-            bIsAllCheckeD = true;
-            for (int i = 0; i < gvTheGrid.Rows.Count; i++)
-            {
-                bool ischeck = ((CheckBox)gvTheGrid.Rows[i].FindControl("chkDelete")).Checked;
-                if (ischeck)
-                {
-                    sCheck = sCheck + ((Label)gvTheGrid.Rows[i].FindControl("LblID")).Text + ",";
-                }
-                else
-                {
-                    bIsAllCheckeD = false;
-                }
-            }
+    //    bool bHeaderChecked = ((CheckBox)gvTheGrid.HeaderRow.FindControl("chkAll")).Checked;
+    //    string sCheck = "";
+    //    if (bHeaderChecked)
+    //    {
+    //        bIsAllCheckeD = true;
+    //        for (int i = 0; i < gvTheGrid.Rows.Count; i++)
+    //        {
+    //            bool ischeck = ((CheckBox)gvTheGrid.Rows[i].FindControl("chkDelete")).Checked;
+    //            if (ischeck)
+    //            {
+    //                sCheck = sCheck + ((Label)gvTheGrid.Rows[i].FindControl("LblID")).Text + ",";
+    //            }
+    //            else
+    //            {
+    //                bIsAllCheckeD = false;
+    //            }
+    //        }
 
-        }
-        else
-        {
-            for (int i = 0; i < gvTheGrid.Rows.Count; i++)
-            {
-                bool ischeck = ((CheckBox)gvTheGrid.Rows[i].FindControl("chkDelete")).Checked;
-                if (ischeck)
-                {
-                    sCheck = sCheck + ((Label)gvTheGrid.Rows[i].FindControl("LblID")).Text + ",";
-                }
-            }
+    //    }
+    //    else
+    //    {
+    //        for (int i = 0; i < gvTheGrid.Rows.Count; i++)
+    //        {
+    //            bool ischeck = ((CheckBox)gvTheGrid.Rows[i].FindControl("chkDelete")).Checked;
+    //            if (ischeck)
+    //            {
+    //                sCheck = sCheck + ((Label)gvTheGrid.Rows[i].FindControl("LblID")).Text + ",";
+    //            }
+    //        }
 
-        }
+    //    }
 
-        if (bIsAllCheckeD)
-        {
-            trDeleteAllEvery.Visible = true;
-        }
-        else
-        {
-            trDeleteAllEvery.Visible = false;
-        }
+    //    if (bIsAllCheckeD)
+    //    {
+    //        trDeleteAllEvery.Visible = true;
+    //    }
+    //    else
+    //    {
+    //        trDeleteAllEvery.Visible = false;
+    //    }
 
-        if (_gvPager != null)
-        {
-            _gvPager.HideDelete = true;
-            _gvPager.HideUnDelete = false;
-            if (_strRecordRightID == Common.UserRoleType.Administrator
-                       || _strRecordRightID == Common.UserRoleType.GOD)
-            {
-                if (chkIsActive.Checked)
-                {
-                    _gvPager.HideParmanentDelete = false;
-                }
-            }
-            ShowHidePermanentDelete();
-        }
+    //    if (_gvPager != null)
+    //    {
+    //        _gvPager.HideDelete = true;
+    //        _gvPager.HideUnDelete = false;
+    //        if (_strRecordRightID == Common.UserRoleType.Administrator
+    //                   || _strRecordRightID == Common.UserRoleType.GOD)
+    //        {
+    //            if (chkIsActive.Checked)
+    //            {
+    //                _gvPager.HideParmanentDelete = false;
+    //            }
+    //        }
+    //        ShowHidePermanentDelete();
+    //    }
 
-        if (string.IsNullOrEmpty(sCheck))
-        {
-            ScriptManager.RegisterClientScriptBlock(gvTheGrid, typeof(Page), "message_alert", "alert('Please select a record.');", true);
-            return;
-        }
-
-
-        chkDelateAllEvery.Checked = false;
-
-        lblDeleteRestoreMessage.Text = "Are you sure you want to restore selected item(s)?";
-        chkDelateAllEvery.Text = "I would like to restore EVERY item in this table";
-        lblDeleteMessageNote.Visible = false;
-
-        hfParmanentDelete.Value = "no";
+    //    if (string.IsNullOrEmpty(sCheck))
+    //    {
+    //        ScriptManager.RegisterClientScriptBlock(gvTheGrid, typeof(Page), "message_alert", "alert('Please select a record.');", true);
+    //        return;
+    //    }
 
 
-        chkDelateAllEvery.Checked = false;
-        chkDeleteParmanent.Checked = false;
-        chkUndo.Checked = false;
+    //    chkDelateAllEvery.Checked = false;
 
-        trDeleteParmanent.Visible = false;
-        trUndo.Visible = false;
+    //    lblDeleteRestoreMessage.Text = "Are you sure you want to restore selected item(s)?";
+    //    chkDelateAllEvery.Text = "I would like to restore EVERY item in this table";
+    //    lblDeleteMessageNote.Visible = false;
 
-        if (_strRecordRightID == Common.UserRoleType.Administrator
-                       || _strRecordRightID == Common.UserRoleType.GOD)
-        {
-        }
-        else
-        {
-            trDeleteParmanent.Visible = false;
-            trUndo.Visible = false;
-        }
+    //    hfParmanentDelete.Value = "no";
 
 
-        trDeleteRestoreMessage.Visible = true;
-        trDeleteReason.Visible = false;
+    //    chkDelateAllEvery.Checked = false;
+    //    chkDeleteParmanent.Checked = false;
+    //    chkUndo.Checked = false;
 
-        mpeDeleteAll.Show();
+    //    trDeleteParmanent.Visible = false;
+    //    trUndo.Visible = false;
+
+    //    if (_strRecordRightID == Common.UserRoleType.Administrator
+    //                   || _strRecordRightID == Common.UserRoleType.GOD)
+    //    {
+    //    }
+    //    else
+    //    {
+    //        trDeleteParmanent.Visible = false;
+    //        trUndo.Visible = false;
+    //    }
 
 
-    }
+    //    trDeleteRestoreMessage.Visible = true;
+    //    trDeleteReason.Visible = false;
+
+    //    //mpeDeleteAll.Show();
 
 
-
-
-    protected void Pager_OnParmanenetDelAction(object sender, EventArgs e)
-    {
-
-        bool bIsAllCheckeD = false;
-
-        bool bHeaderChecked = ((CheckBox)gvTheGrid.HeaderRow.FindControl("chkAll")).Checked;
-        string sCheck = "";
-        if (bHeaderChecked)
-        {
-            //Ticket 1013
-            trUndo.Style.Add("display", "table-row");
-            //End
-
-            bIsAllCheckeD = true;
-            for (int i = 0; i < gvTheGrid.Rows.Count; i++)
-            {
-                bool ischeck = ((CheckBox)gvTheGrid.Rows[i].FindControl("chkDelete")).Checked;
-                if (ischeck)
-                {
-                    sCheck = sCheck + ((Label)gvTheGrid.Rows[i].FindControl("LblID")).Text + ",";
-                }
-                else
-                {
-                    bIsAllCheckeD = false;
-                }
-            }
-
-        }
-        else
-        {
-            for (int i = 0; i < gvTheGrid.Rows.Count; i++)
-            {
-                bool ischeck = ((CheckBox)gvTheGrid.Rows[i].FindControl("chkDelete")).Checked;
-                if (ischeck)
-                {
-                    sCheck = sCheck + ((Label)gvTheGrid.Rows[i].FindControl("LblID")).Text + ",";
-                }
-            }
-        }
+    //}
 
 
 
-        if (_gvPager != null)
-        {
-            _gvPager.HideDelete = true;
-            _gvPager.HideUnDelete = false;
-            _gvPager.HideParmanentDelete = false;
 
-            ShowHidePermanentDelete();
-        }
+    //protected void Pager_OnParmanenetDelAction(object sender, EventArgs e)
+    //{
 
-        if (string.IsNullOrEmpty(sCheck))
-        {
-            ScriptManager.RegisterClientScriptBlock(gvTheGrid, typeof(Page), "message_alert", "alert('Please select a record.');", true);
-            return;
-        }
+    //    bool bIsAllCheckeD = false;
 
-        trDeleteAllEvery.Visible = true;
-        chkDelateAllEvery.Checked = false;
+    //    bool bHeaderChecked = ((CheckBox)gvTheGrid.HeaderRow.FindControl("chkAll")).Checked;
+    //    string sCheck = "";
+    //    if (bHeaderChecked)
+    //    {
+    //        //Ticket 1013
+    //        trUndo.Style.Add("display", "table-row");
+    //        //End
 
-        lblDeleteRestoreMessage.Text = "Are you sure you want to PERMANENTLY delete the selected item(s)?";
-        chkDelateAllEvery.Text = "I would like to PERMANENTLY delete EVERY item in this table";
+    //        bIsAllCheckeD = true;
+    //        for (int i = 0; i < gvTheGrid.Rows.Count; i++)
+    //        {
+    //            bool ischeck = ((CheckBox)gvTheGrid.Rows[i].FindControl("chkDelete")).Checked;
+    //            if (ischeck)
+    //            {
+    //                sCheck = sCheck + ((Label)gvTheGrid.Rows[i].FindControl("LblID")).Text + ",";
+    //            }
+    //            else
+    //            {
+    //                bIsAllCheckeD = false;
+    //            }
+    //        }
 
-        hfParmanentDelete.Value = "yes";
-
-        chkDelateAllEvery.Checked = false;
-        chkDeleteParmanent.Checked = false;
-        chkUndo.Checked = false;
-
-
-        trDeleteParmanent.Visible = false;
-        trUndo.Visible = true;
-        if (bIsAllCheckeD)
-        {
-            trDeleteAllEvery.Visible = true;
-        }
-        else
-        {
-            trDeleteAllEvery.Visible = false;
-        }
+    //    }
+    //    else
+    //    {
+    //        for (int i = 0; i < gvTheGrid.Rows.Count; i++)
+    //        {
+    //            bool ischeck = ((CheckBox)gvTheGrid.Rows[i].FindControl("chkDelete")).Checked;
+    //            if (ischeck)
+    //            {
+    //                sCheck = sCheck + ((Label)gvTheGrid.Rows[i].FindControl("LblID")).Text + ",";
+    //            }
+    //        }
+    //    }
 
 
-        if (_strRecordRightID == Common.UserRoleType.Administrator
-                       || _strRecordRightID == Common.UserRoleType.GOD)
-        {
-        }
-        else
-        {
-            trDeleteParmanent.Visible = false;
-            trUndo.Visible = false;
-        }
 
-        mpeDeleteAll.Show();
+    //    if (_gvPager != null)
+    //    {
+    //        _gvPager.HideDelete = true;
+    //        _gvPager.HideUnDelete = false;
+    //        _gvPager.HideParmanentDelete = false;
 
-    }
+    //        ShowHidePermanentDelete();
+    //    }
+
+    //    if (string.IsNullOrEmpty(sCheck))
+    //    {
+    //        ScriptManager.RegisterClientScriptBlock(gvTheGrid, typeof(Page), "message_alert", "alert('Please select a record.');", true);
+    //        return;
+    //    }
+
+    //    trDeleteAllEvery.Visible = true;
+    //    chkDelateAllEvery.Checked = false;
+
+    //    lblDeleteRestoreMessage.Text = "Are you sure you want to PERMANENTLY delete the selected item(s)?";
+    //    chkDelateAllEvery.Text = "I would like to PERMANENTLY delete EVERY item in this table";
+
+    //    hfParmanentDelete.Value = "yes";
+
+    //    chkDelateAllEvery.Checked = false;
+    //    chkDeleteParmanent.Checked = false;
+    //    chkUndo.Checked = false;
+
+
+    //    trDeleteParmanent.Visible = false;
+    //    trUndo.Visible = true;
+    //    if (bIsAllCheckeD)
+    //    {
+    //        trDeleteAllEvery.Visible = true;
+    //    }
+    //    else
+    //    {
+    //        trDeleteAllEvery.Visible = false;
+    //    }
+
+
+    //    if (_strRecordRightID == Common.UserRoleType.Administrator
+    //                   || _strRecordRightID == Common.UserRoleType.GOD)
+    //    {
+    //    }
+    //    else
+    //    {
+    //        trDeleteParmanent.Visible = false;
+    //        trUndo.Visible = false;
+    //    }
+
+    //    mpeDeleteAll.Show();
+
+    //}
 
     protected void chkShowAdvancedOptions_OnCheckedChanged(Object sender, EventArgs args)
     {
         lnkReset_Click(null, null);
     }
 
-    protected void chkDeleteParmanent_OnCheckedChanged(Object sender, EventArgs args)
-    {
-        if (chkDeleteParmanent.Checked)
-        {
-            trUndo.Visible = false;
-        }
-        else
-        {
-            trUndo.Visible = true;
-        }
+    //protected void chkDeleteParmanent_OnCheckedChanged(Object sender, EventArgs args)
+    //{
+    //    if (chkDeleteParmanent.Checked)
+    //    {
+    //        trUndo.Visible = false;
+    //    }
+    //    else
+    //    {
+    //        trUndo.Visible = true;
+    //    }
 
-        mpeDeleteAll.Show();
-    }
+    //    mpeDeleteAll.Show();
+    //}
     protected void UnDeleteAction()
     {
+        bool bchkDelateAllEvery = false;
+        if (hfchkDelateAllEvery.Value != "")
+            bchkDelateAllEvery = bool.Parse(hfchkDelateAllEvery.Value);
 
         bool bAllChecked = true;
         string sCheck = "";
@@ -9442,7 +9209,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             }
         }
 
-        if (bAllChecked && chkDelateAllEvery.Checked == true)
+        if (bAllChecked && bchkDelateAllEvery)
         {
             DataTable dtAllRecordIDs;
 
@@ -9479,11 +9246,11 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
 
         BindTheGrid(_gvPager.StartIndex, gvTheGrid.PageSize);
-        _gvPager._gridView.PageIndex = _gvPager.PageIndex - 1;
-        if (_gvPager._gridView.Rows.Count == 0 && _gvPager._gridView.PageIndex > 0)
-        {
-            BindTheGrid(_gvPager.StartIndex - gvTheGrid.PageSize, gvTheGrid.PageSize);
-        }
+        //_gvPager._gridView.PageIndex = _gvPager.PageIndex - 1;
+        //if (_gvPager._gridView.Rows.Count == 0 && _gvPager._gridView.PageIndex > 0)
+        //{
+        //    BindTheGrid(_gvPager.StartIndex - gvTheGrid.PageSize, gvTheGrid.PageSize);
+        //}
 
     }
 
@@ -9493,13 +9260,31 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
     {
         try
         {
-            if (!string.IsNullOrEmpty(keys) && chkDeleteParmanent.Checked && chkUndo.Checked)
-            {
-                keys = keys + "-1";
+            bool bchkDelateAllEvery = false;
+            if (hfchkDelateAllEvery.Value != "")
+                bchkDelateAllEvery = bool.Parse(hfchkDelateAllEvery.Value);
 
-                Common.ExecuteText("DELETE [Record] WHERE RecordID IN(" + keys + ")");
-                return;
+            bool bchkDeleteParmanent = false;
+            if (hfchkDeleteParmanent.Value != "")
+                bchkDeleteParmanent = bool.Parse(hfchkDeleteParmanent.Value);
+
+            string strDeleteReason = "";
+
+            if (hftxtDeleteReason.Value != "")
+            {
+                strDeleteReason = hftxtDeleteReason.Value;
             }
+            bool bchkUndo = false;
+            if (hfchkUndo.Value != "")
+                bchkUndo = bool.Parse(hfchkUndo.Value);
+
+            //if (!string.IsNullOrEmpty(keys) && bchkDeleteParmanent && bchkUndo)
+            //{
+            //    keys = keys + "-1";
+
+            //    Common.ExecuteText("DELETE [Record] WHERE RecordID IN(" + keys + ")");
+            //    return;
+            //}
 
 
             if (!string.IsNullOrEmpty(keys))
@@ -9510,7 +9295,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
                 if (_bDeleteReason)
                 {
-                    Common.ExecuteText("Update [Record] SET IsActive=0,DeleteReason='" + txtDeleteReason.Text.Replace("'", "''") + "',LastUpdatedUserID=" + _ObjUser.UserID + " WHERE RecordID in (" + keys + ")");
+                    Common.ExecuteText("Update [Record] SET IsActive=0,DeleteReason='" + strDeleteReason.Replace("'", "''") + "',LastUpdatedUserID=" + _ObjUser.UserID + " WHERE RecordID in (" + keys + ")");
                 }
                 else
                 {
@@ -9613,7 +9398,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
                 //        //if (bHaveChilds)
                 //        //{
-                //        //    ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "Problem" + sTemp, "alert('This record (RecordID:" + sTemp + ") has associated child record(s), please delete those associated child record(s) first and then try again.');", true);
+                //        //    ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "Problem" + sTemp, "alert('This record (RecordID:" + sTemp + ") has associated child record(s), please delete those associated child record(s) first and then try again.');", true);
                 //        //    return;
                 //        //}
                 //        //else
@@ -9794,7 +9579,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
     //        //if (dtExportColumn.Rows.Count == 0)
     //        //{
-    //        //    ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "NoExportMSG", "alert('Sorry it is not possible to export this table because none of the fields have been marked for export. Please check the table configuration and try again');", true);
+    //        //    ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "NoExportMSG", "alert('Sorry it is not possible to export this table because none of the fields have been marked for export. Please check the table configuration and try again');", true);
     //        //    return;
     //        //}
 
@@ -10043,7 +9828,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
     //        if (bFoundHeader == false)
     //        {
-    //            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "NoExportMSG", "alert('Sorry it is not possible to export this table because none of the fields have been marked for export.Please select fields for export.');", true);
+    //            ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "NoExportMSG", "alert('Sorry it is not possible to export this table because none of the fields have been marked for export.Please select fields for export.');", true);
     //            return;
     //        }
     //        else
@@ -10592,50 +10377,6 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
     //    }
 
 
-    protected void rdbRecords_SelectedIndexChanged(Object sender, EventArgs e)
-    {
-        if (rdbRecords.SelectedValue == "d")
-        {
-            ddlExportFiletype.SelectedValue = "c";
-            ddlExportFiletype.Enabled = false;
-            ddlTemplate.Enabled = false;
-            chklstFields.Enabled = true;
-            hlExportTemplate.Visible = false;
-            hlExportTemplateNew.Visible = false;
-
-            chklstFields.Enabled = true;
-            chklstFields.Items.Clear();
-            DataTable dtColumns = TheDatabase.spBulkExportColumns((int)_theTable.TableID);
-
-            if (dtColumns != null)
-            {
-                foreach (DataRow dr in dtColumns.Rows)
-                {
-                    string strColumnText = dr["TableName"].ToString() + " " + dr["ColumnDisplayName"].ToString();
-
-                    ListItem liTemp = new ListItem(strColumnText, dr["ColumnID"].ToString());
-                    liTemp.Selected = true;
-                    //liTemp.Attributes.Add("DataValue", dr["SystemName"].ToString());
-                    chklstFields.Items.Add(liTemp);
-                }
-            }
-        }
-        else
-        {
-            if (hlExportTemplate.Visible == false)
-                ddlTemplate_SelectedIndexChanged(null, null);
-
-
-            ddlExportFiletype.Enabled = true;
-            ddlTemplate.Enabled = true;
-            chklstFields.Enabled = true;
-            hlExportTemplate.Visible = true;
-            hlExportTemplateNew.Visible = true;
-        }
-        mpeExportRecords.Show();
-    }
-
-
     protected void Pager_OnExportForExcel(object sender, EventArgs e)
     {
         ExportExcelorCSV(sender, e, "excel");
@@ -10723,7 +10464,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
 
             int iTN = 0;
-            gvTheGrid.PageIndex = 0;
+            //gvTheGrid.PageIndex = 0;
 
             string strOrderDirection = "DESC";
             string sOrder = GetDataKeyNames()[0];
@@ -10740,12 +10481,20 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                 sOrder = "DBGSystemRecordID";
             }
 
+            string rdbRecords = "a";
+            List<IDnText> chklstFields = null;
 
+            if(Session["ExportClass"]!=null)
+            {
+                ExportClass aExportClass = (ExportClass)Session["ExportClass"];
+                rdbRecords = aExportClass.strRecords;
+                chklstFields = aExportClass.objCheckBoxList;
 
-
+                Session["ExportClass"] = null;
+            }
 
             string strHeaderXML = "";
-            if (rdbRecords.SelectedValue == "a" && strExportType != "email")
+            if (rdbRecords == "a" && strExportType != "email")
             {
                 TextSearch = "";
                 _strNumericSearch = "";
@@ -10754,7 +10503,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             }
 
 
-            if ((rdbRecords.SelectedValue == "t" || rdbRecords.SelectedValue == "d") && strExportType != "email")
+            if ((rdbRecords == "t" || rdbRecords == "d") && strExportType != "email")
             {
                 TextSearch = "";
                 _strNumericSearch = "";
@@ -10773,7 +10522,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
                 }
 
-                if (string.IsNullOrEmpty(sCheck) && rdbRecords.SelectedValue == "t")
+                if (string.IsNullOrEmpty(sCheck) && rdbRecords == "t")
                 {
                     Session["tdbmsgpb"] = "Please select a record.";
                     //ScriptManager.RegisterClientScriptBlock(gvTheGrid, typeof(Page), "message_alert", "alert('Please select a record.');", true);
@@ -10781,13 +10530,13 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                 }
 
 
-                if (rdbRecords.SelectedValue == "t")
+                if (rdbRecords == "t")
                 {
                     sCheck = sCheck + "-1";
                     TextSearch = TextSearch + " AND Record.RecordID IN(" + sCheck + ")";
                 }
 
-                if (rdbRecords.SelectedValue == "d")
+                if (rdbRecords == "d")
                 {
                     if (sCheck != "")
                     {
@@ -10813,36 +10562,34 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
             bool bFoundHeader = false;
 
-            if (strExportType != "email" && rdbRecords.SelectedValue != "d")
+            if (strExportType != "email" && rdbRecords != "d")
             {
 
-                foreach (ListItem item in chklstFields.Items)
+                foreach (IDnText item in chklstFields)
                 {
-                    if (item.Selected)
-                    {
+                   
                         bFoundHeader = true;
                         break;
-                    }
+                    
                 }
 
                 if (bFoundHeader == false)
                 {
                     Session["tdbmsgpb"] = "Sorry it is not possible to export this table because none of the fields have been marked for export.Please select fields for export.";
-                    //ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "NoExportMSG", "alert('Sorry it is not possible to export this table because none of the fields have been marked for export.Please select fields for export.');", true);
+                    //ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "NoExportMSG", "alert('Sorry it is not possible to export this table because none of the fields have been marked for export.Please select fields for export.');", true);
                     return;
                 }
                 else
                 {
                     strHeaderXML = "<ExportXML>";
-                    foreach (ListItem item in chklstFields.Items)
+                    foreach (IDnText item in chklstFields)
                     {
-                        if (item.Selected)
-                        {
+                        
                             //oliver <begin> Ticket 1461
                             //strHeaderXML = strHeaderXML + "<Records>";
                             //oliver <end>
 
-                            Column theColumn = RecordManager.ets_Column_Details(int.Parse(item.Value));
+                            Column theColumn = RecordManager.ets_Column_Details(int.Parse(item.ID));
 
                             string strParentJoinColumnName = "";
                             string strChildJoinColumnName = "";
@@ -10882,7 +10629,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
                                 //Create export header for Date:
                                 strHeaderXML = strHeaderXML + "<Records>";
-                                strHeaderXML = strHeaderXML + "<ColumnID>" + item.Value + "</ColumnID>";
+                                strHeaderXML = strHeaderXML + "<ColumnID>" + item.ID + "</ColumnID>";
                                 strHeaderXML = strHeaderXML + "<DisplayText>" + System.Security.SecurityElement.Escape(item.Text) + "-Date" + "</DisplayText>";
                                 strHeaderXML = strHeaderXML + "<SystemName>" + theColumn.SystemName + "</SystemName>";
                                 strHeaderXML = strHeaderXML + "<FieldsToShow>" + System.Security.SecurityElement.Escape(strFieldsToShow) + "</FieldsToShow>";
@@ -10895,7 +10642,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
                                 //Create export header for Time:
                                 strHeaderXML = strHeaderXML + "<Records>";
-                                strHeaderXML = strHeaderXML + "<ColumnID>" + item.Value + "</ColumnID>";
+                                strHeaderXML = strHeaderXML + "<ColumnID>" + item.ID + "</ColumnID>";
                                 strHeaderXML = strHeaderXML + "<DisplayText>" + System.Security.SecurityElement.Escape(item.Text) + "-Time" + "</DisplayText>";
                                 strHeaderXML = strHeaderXML + "<SystemName>" + theColumn.SystemName + "</SystemName>";
                                 strHeaderXML = strHeaderXML + "<FieldsToShow>" + System.Security.SecurityElement.Escape(strFieldsToShow) + "</FieldsToShow>";
@@ -10913,7 +10660,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                             else
                             {
                                 strHeaderXML = strHeaderXML + "<Records>";
-                                strHeaderXML = strHeaderXML + "<ColumnID>" + item.Value + "</ColumnID>";
+                                strHeaderXML = strHeaderXML + "<ColumnID>" + item.ID + "</ColumnID>";
                                 strHeaderXML = strHeaderXML + "<DisplayText>" + System.Security.SecurityElement.Escape(item.Text) + "</DisplayText>";
                                 strHeaderXML = strHeaderXML + "<SystemName>" + theColumn.SystemName + "</SystemName>";
                                 strHeaderXML = strHeaderXML + "<FieldsToShow>" + System.Security.SecurityElement.Escape(strFieldsToShow) + "</FieldsToShow>";
@@ -10936,7 +10683,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                             //strHeaderXML = strHeaderXML + "<ColumnType>" + theColumn.ColumnType + "</ColumnType>";
 
                             //strHeaderXML = strHeaderXML + "</Records>";
-                        }
+                        
                     }
 
                     strHeaderXML = strHeaderXML + "</ExportXML>";
@@ -11018,7 +10765,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
             DataTable dt = new DataTable();
 
-            if (strExportType == "csv" && rdbRecords.SelectedValue == "d")
+            if (strExportType == "csv" && rdbRecords == "d")
                 strHeaderXML = "";
 
             //Is it a bulk export?
@@ -11026,7 +10773,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             string sReturnHeaderSQL = "";
             DataTable dtBulk = RecordManager.ets_Record_List(int.Parse(TableID.ToString()),
                        ddlEnteredBy.SelectedValue == "-1" ? null : (int?)int.Parse(ddlEnteredBy.SelectedValue),
-                       !chkIsActive.Checked,
+                       !chkShowDeletedRecords.Checked,
                        chkShowOnlyWarning.Checked == false ? null : (bool?)true,
                         null, null,
                          sOrder, strOrderDirection, 0, 10, ref iTN, ref _iTotalDynamicColumns, "SQLOnly", _strNumericSearch, TextSearch + TextSearchParent,
@@ -11036,7 +10783,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
 
 
-            if (strExportType == "csv" && rdbRecords.SelectedValue == "d")
+            if (strExportType == "csv" && rdbRecords == "d")
             {
                 HttpContext.Current.Response.Clear();
                 HttpContext.Current.Response.Buffer = true;
@@ -11045,15 +10792,11 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                 HttpContext.Current.Response.Charset = "";
                 HttpContext.Current.Response.ContentType = "text/csv";
                 string strSelectedColumnIDs = "";
-                foreach (ListItem item in chklstFields.Items)
+                foreach (IDnText item in chklstFields)
                 {
-                    if (item.Selected)
-                    {
-                        if (item.Selected)
-                        {
-                            strSelectedColumnIDs = strSelectedColumnIDs + item.Value + ",";
-                        }
-                    }
+                   
+                            strSelectedColumnIDs = strSelectedColumnIDs + item.ID + ",";
+                  
                 }
                 if (strSelectedColumnIDs != "")
                     strSelectedColumnIDs = strSelectedColumnIDs.Substring(0, strSelectedColumnIDs.Length - 1);
@@ -11142,7 +10885,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             {
                 dt = RecordManager.ets_Record_List(int.Parse(TableID.ToString()),
                        ddlEnteredBy.SelectedValue == "-1" ? null : (int?)int.Parse(ddlEnteredBy.SelectedValue),
-                       !chkIsActive.Checked,
+                       !chkShowDeletedRecords.Checked,
                        chkShowOnlyWarning.Checked == false ? null : (bool?)true,
                        null, null,
                          sOrder, strOrderDirection, 0, _gvPager.TotalRows, ref iTN, ref _iTotalDynamicColumns,
@@ -11154,7 +10897,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
                 dt = RecordManager.ets_Record_List(int.Parse(TableID.ToString()),
                        ddlEnteredBy.SelectedValue == "-1" ? null : (int?)int.Parse(ddlEnteredBy.SelectedValue),
-                       !chkIsActive.Checked,
+                       !chkShowDeletedRecords.Checked,
                        chkShowOnlyWarning.Checked == false ? null : (bool?)true,
                         null, null,
                          sOrder, strOrderDirection, 0, null, ref iTN, ref _iTotalDynamicColumns, "export", _strNumericSearch, TextSearch + TextSearchParent,
@@ -11181,7 +10924,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                         if (_dtRecordColums.Rows[i]["ColumnID"].ToString() == dtHeader.Rows[j]["ColumnID"].ToString())
                         {
 
-                            _dtRecordColums.Rows[i]["NameOnExport"] = dtHeader.Rows[j]["DisplayText"];
+                            _dtRecordColums.Rows[i]["Heading"] = dtHeader.Rows[j]["DisplayText"];
                         }
                     }
                 }
@@ -11274,13 +11017,13 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             {
                 for (int j = 0; j < dt.Columns.Count; j++)
                 {
-                    if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == dt.Columns[j].ColumnName)
+                    if (_dtRecordColums.Rows[i]["Heading"].ToString() == dt.Columns[j].ColumnName)
                     {
                         if (_dtRecordColums.Rows[i]["ShowTotal"].ToString().ToLower() == "true")
                         {
 
                             //drFooter[_dtRecordColums.Rows[i]["NameOnExport"].ToString()] = dt.Compute("SUM([" + _dtRecordColums.Rows[i]["NameOnExport"].ToString() + "])", "[" + _dtRecordColums.Rows[i]["NameOnExport"].ToString() + "]<>''");
-                            drFooter[_dtRecordColums.Rows[i]["NameOnExport"].ToString()] = CalculateTotalForAColumn(dt, dt.Columns[j].ColumnName, bool.Parse(_dtRecordColums.Rows[i]["IgnoreSymbols"].ToString().ToLower()));
+                            drFooter[_dtRecordColums.Rows[i]["Heading"].ToString()] = CalculateTotalForAColumn(dt, dt.Columns[j].ColumnName, bool.Parse(_dtRecordColums.Rows[i]["IgnoreSymbols"].ToString().ToLower()));
 
                         }
                     }
@@ -11294,7 +11037,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
             {
                 for (int j = dt.Columns.Count - 1; j >= 0; j--)
                 {
-                    if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == dt.Columns[j].ColumnName)
+                    if (_dtRecordColums.Rows[i]["Heading"].ToString() == dt.Columns[j].ColumnName)
                     {
                         if (_dtRecordColums.Rows[i]["OnlyForAdmin"].ToString().ToLower() == "1")
                         {
@@ -11338,7 +11081,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                     for (int j = 0; j < dt.Columns.Count; j++)
                     {
                         //DisplayTextSummary
-                        if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == dt.Columns[j].ColumnName)
+                        if (_dtRecordColums.Rows[i]["Heading"].ToString() == dt.Columns[j].ColumnName)
                         {
                             if (IsStandard(_dtRecordColums.Rows[i]["SystemName"].ToString()) == false)
                             {
@@ -11369,7 +11112,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                                      || _dtRecordColums.Rows[i]["ColumnType"].ToString() == "radiobutton")
                                      && _dtRecordColums.Rows[i]["DropdownValues"].ToString() != "")
                                 {
-                                    if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == dt.Columns[j].ColumnName)
+                                    if (_dtRecordColums.Rows[i]["Heading"].ToString() == dt.Columns[j].ColumnName)
                                     {
 
                                         if (dr[j].ToString() != "")
@@ -11403,14 +11146,22 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
                                 if (_dtRecordColums.Rows[i]["ColumnType"].ToString() == "time")
                                 {
-                                    if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == dt.Columns[j].ColumnName)
+                                    if (_dtRecordColums.Rows[i]["Heading"].ToString() == dt.Columns[j].ColumnName)
                                     {
 
                                         if (dr[j].ToString() != "")
                                         {
+                                            try
+                                            {
+                                                TimeSpan ts = TimeSpan.Parse(dr[j].ToString());
+                                                dr[j] = ts.ToString(@"hh\:mm");
+                                            }
+                                            catch
+                                            {
+                                                //
+                                            }
 
-                                            TimeSpan ts = TimeSpan.Parse(dr[j].ToString());
-                                            dr[j] = ts.ToString(@"hh\:mm");
+                                            
                                         }
                                     }
 
@@ -11510,7 +11261,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
                             if (_dtRecordColums.Rows[i]["ColumnType"].ToString() == "datetime")
                             {
-                                if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == dt.Columns[j].ColumnName)
+                                if (_dtRecordColums.Rows[i]["Heading"].ToString() == dt.Columns[j].ColumnName)
                                 {
                                     if (dr[j].ToString().Length > 15)
                                     {
@@ -11521,7 +11272,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
                             if (_dtRecordColums.Rows[i]["ColumnType"].ToString() == "date")
                             {
-                                if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == dt.Columns[j].ColumnName)
+                                if (_dtRecordColums.Rows[i]["Heading"].ToString() == dt.Columns[j].ColumnName)
                                 {
                                     if (dr[j].ToString().Length > 9)
                                     {
@@ -11551,7 +11302,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                                         }
                                         if (ColumnTypeSplit[1].ToLower() == "time")
                                         {
-                                            TimeSpan dtTime = TimeSpan.Parse(Convert.ToDateTime(dr[j]).ToString("hh:mm", CultureInfo.InvariantCulture));
+                                            TimeSpan dtTime = TimeSpan.Parse(Convert.ToDateTime(dr[j]).ToString("HH:mm", CultureInfo.InvariantCulture));
                                             dr[j] = dtTime.ToString(@"hh\:mm");
                                         }
                                     }
@@ -11701,7 +11452,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
     //        //if (dtExportColumn.Rows.Count == 0)
     //        //{
-    //        //    ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "NoExportMSG", "alert('Sorry it is not possible to export this table because none of the fields have been marked for export. Please check the table configuration and try again');", true);
+    //        //    ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "NoExportMSG", "alert('Sorry it is not possible to export this table because none of the fields have been marked for export. Please check the table configuration and try again');", true);
     //        //    return;
     //        //}
 
@@ -11894,7 +11645,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
     //        if (bFoundHeader == false)
     //        {
-    //            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "NoExportMSG", "alert('Sorry it is not possible to export this table because none of the fields have been marked for export.Please select fields for export.');", true);
+    //            ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "NoExportMSG", "alert('Sorry it is not possible to export this table because none of the fields have been marked for export.Please select fields for export.');", true);
     //            return;
     //        }
     //        else
@@ -12415,33 +12166,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
     //}
 
-    protected void PopulateYAxisBulk()
-    {
-
-        DataTable dtSCs = RecordManager.ets_Table_Columns_Summary(TableID, int.Parse(hfViewID.Value));
-
-        foreach (DataRow dr in dtSCs.Rows)
-        {
-            if (bool.Parse(dr["IsStandard"].ToString()) == false)
-            {
-                if (dr["ColumnType"].ToString() == "text" || dr["ColumnType"].ToString() == "checkbox"
-                    || dr["ColumnType"].ToString() == "number"
-                 || dr["ColumnType"].ToString() == "date" || dr["ColumnType"].ToString() == "datetime"
-                    || (dr["ColumnType"].ToString() == "dropdown" && dr["ParentColumnID"] == DBNull.Value))
-                {
-                    System.Web.UI.WebControls.ListItem aItem = new System.Web.UI.WebControls.ListItem(dr["Heading"].ToString(), dr["ColumnID"].ToString());
-
-                    ddlYAxisBulk.Items.Insert(ddlYAxisBulk.Items.Count, aItem);
-                }
-            }
-
-        }
-
-        System.Web.UI.WebControls.ListItem fItem = new System.Web.UI.WebControls.ListItem("-- None --", "");
-
-        ddlYAxisBulk.Items.Insert(0, fItem);
-
-    }
+    
 
 
     //protected void ddlFilterValue_SelectedIndexChanged(object sender, EventArgs e)
@@ -12607,9 +12332,14 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
     {
         try
         {
+            int? iGetNewSCid = SystemData.UserSearch_GetNewSCid(new UserSearch(null, _ObjUser.UserID, int.Parse(hfViewID.Value), "", null));
+            if (iGetNewSCid != null && iGetNewSCid > 0)
+            {
+                iSearchCriteriaID = (int)iGetNewSCid;
+            }
+
             SearchCriteria theSearchCriteria = SystemData.SearchCriteria_Detail(iSearchCriteriaID);
-
-
+            
             if (theSearchCriteria != null)
             {
 
@@ -12631,34 +12361,34 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
                 string strcbcSearchMain = xmlSC_Doc.FirstChild[cbcSearchMain.ID].InnerText;
 
-                if (strcbcSearchMain != "-1")
+                if (strcbcSearchMain != "-1" && strcbcSearchMain!="")
                 {
                     //PopulateSearchCriteriaCBCMain(int.Parse(strcbcSearchMain));
-                    PopulateSearchCriteriaCBC(int.Parse(strcbcSearchMain), cbcSearchMain);
+                    PopulateSearchCriteriaCBC(strcbcSearchMain, cbcSearchMain);
                 }
 
                 string strcbcSearch1 = xmlSC_Doc.FirstChild[cbcSearch1.ID].InnerText;
 
-                if (strcbcSearch1 != "-1")
+                if (strcbcSearch1 != "-1" && strcbcSearch1!="")
                 {
                     //PopulateSearchCriteriaCBC1(int.Parse(strcbcSearch1));
-                    PopulateSearchCriteriaCBC(int.Parse(strcbcSearch1), cbcSearch1);
+                    PopulateSearchCriteriaCBC(strcbcSearch1, cbcSearch1);
                 }
 
                 string strcbcSearch2 = xmlSC_Doc.FirstChild[cbcSearch2.ID].InnerText;
 
-                if (strcbcSearch2 != "-1")
+                if (strcbcSearch2 != "-1" && strcbcSearch2!="")
                 {
                     //PopulateSearchCriteriaCBC2(int.Parse(strcbcSearch2));
-                    PopulateSearchCriteriaCBC(int.Parse(strcbcSearch2), cbcSearch2);
+                    PopulateSearchCriteriaCBC(strcbcSearch2, cbcSearch2);
                 }
 
                 string strcbcSearch3 = xmlSC_Doc.FirstChild[cbcSearch3.ID].InnerText;
 
-                if (strcbcSearch3 != "-1")
+                if (strcbcSearch3 != "-1" && strcbcSearch3!="")
                 {
                     //PopulateSearchCriteriaCBC3(int.Parse(strcbcSearch3));
-                    PopulateSearchCriteriaCBC(int.Parse(strcbcSearch3), cbcSearch3);
+                    PopulateSearchCriteriaCBC(strcbcSearch3, cbcSearch3);
                 }
 
                 hfTextSearch.Value = xmlSC_Doc.FirstChild[hfTextSearch.ID].InnerText;
@@ -12674,8 +12404,10 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                 ddlUploadedBatch.Text = xmlSC_Doc.FirstChild[ddlUploadedBatch.ID].InnerText;
 
                 //ddlDropdownColumnSearch.Items.FindByValue(xmlDoc.FirstChild[ddlDropdownColumnSearch.ID].InnerText);
+                if (xmlSC_Doc.FirstChild[chkShowDeletedRecords.ID]!=null)
+                chkShowDeletedRecords.Checked = bool.Parse(xmlSC_Doc.FirstChild[chkShowDeletedRecords.ID].InnerText);
 
-                chkIsActive.Checked = bool.Parse(xmlSC_Doc.FirstChild[chkIsActive.ID].InnerText);
+
                 chkShowOnlyWarning.Checked = bool.Parse(xmlSC_Doc.FirstChild[chkShowOnlyWarning.ID].InnerText);
 
                 chkShowAdvancedOptions.Checked = bool.Parse(xmlSC_Doc.FirstChild[chkShowAdvancedOptions.ID].InnerText);
@@ -12879,19 +12611,15 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
 
 
-    protected void PopulateSearchCriteriaCBC(int iSearchCriteriaID, Pages_UserControl_ControlByColumn cbcX)
+    protected void PopulateSearchCriteriaCBC(string sSearchText, Pages_UserControl_ControlByColumn cbcX)
     {
         try
         {
-            SearchCriteria theSearchCriteria = SystemData.SearchCriteria_Detail(iSearchCriteriaID);
-
-
-            if (theSearchCriteria != null)
-            {
+           
 
                 System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
 
-                xmlDoc.Load(new StringReader(theSearchCriteria.SearchText));
+                xmlDoc.Load(new StringReader(sSearchText));
 
                 cbcX.ddlYAxisV = xmlDoc.FirstChild["ddlYAxisV"].InnerText;
                 cbcX.txtUpperLimitV = xmlDoc.FirstChild["txtUpperLimitV"].InnerText;
@@ -12909,7 +12637,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
                 //PopulateSearchParams();
 
 
-            }
+            
         }
         catch (Exception ex)
         {
@@ -12918,6 +12646,46 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
 
     }
+
+    //protected void PopulateSearchCriteriaCBC(int iSearchCriteriaID, Pages_UserControl_ControlByColumn cbcX)
+    //{
+    //    try
+    //    {
+    //        SearchCriteria theSearchCriteria = SystemData.SearchCriteria_Detail(iSearchCriteriaID);
+
+
+    //        if (theSearchCriteria != null)
+    //        {
+
+    //            System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
+
+    //            xmlDoc.Load(new StringReader(theSearchCriteria.SearchText));
+
+    //            cbcX.ddlYAxisV = xmlDoc.FirstChild["ddlYAxisV"].InnerText;
+    //            cbcX.txtUpperLimitV = xmlDoc.FirstChild["txtUpperLimitV"].InnerText;
+    //            cbcX.txtLowerLimitV = xmlDoc.FirstChild["txtLowerLimitV"].InnerText;
+    //            cbcX.hfTextSearchV = xmlDoc.FirstChild["hfTextSearchV"].InnerText;
+    //            cbcX.txtLowerDateV = xmlDoc.FirstChild["txtLowerDateV"].InnerText;
+    //            cbcX.txtUpperDateV = xmlDoc.FirstChild["txtUpperDateV"].InnerText;
+    //            cbcX.ddlDropdownColumnSearchV = xmlDoc.FirstChild["ddlDropdownColumnSearchV"].InnerText;
+    //            cbcX.txtSearchTextV = xmlDoc.FirstChild["txtSearchTextV"].InnerText;
+
+    //            if (xmlDoc.FirstChild["CompareOperator"] != null)
+    //                cbcX.CompareOperator = xmlDoc.FirstChild["CompareOperator"].InnerText;
+
+
+    //            //PopulateSearchParams();
+
+
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        lblMsg.Text = ex.Message;
+    //    }
+
+
+    //}
 
     //    protected void PopulateSearchCriteriaCBCMain(int iSearchCriteriaID)
     //    {
@@ -15724,7 +15492,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
     protected void PopulateTerminology()
     {
 
-        stgFieldToUpdate.InnerText = stgFieldToUpdate.InnerText.Replace("Field", SecurityManager.etsTerminology(Request.Path.Substring(Request.Path.LastIndexOf("/") + 1), "Field", "Field"));
+        //stgFieldToUpdate.InnerText = stgFieldToUpdate.InnerText.Replace("Field", SecurityManager.etsTerminology(Request.Path.Substring(Request.Path.LastIndexOf("/") + 1), "Field", "Field"));
 
         //lblLocations.Text = SecurityManager.etsTerminology( Request.Path.Substring(Request.Path.LastIndexOf("/")+1), lblLocations.Text, lblLocations.Text);
         //imgSchedule.ToolTip = SecurityManager.etsTerminology( Request.Path.Substring(Request.Path.LastIndexOf("/")+1), imgSchedule.ToolTip, imgSchedule.ToolTip);
@@ -15950,7 +15718,7 @@ public partial class Pages_UserControl_RecordList : System.Web.UI.UserControl
 
 //        if (dtExportColumn.Rows.Count == 0)
 //        {
-//            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "NoExportMSG", "alert('Sorry it is not possible to export this table because none of the fields have been marked for export. Please check the table configuration and try again');", true);
+//            ScriptManager.RegisterStartupScript(upMain, upMain.GetType(), "NoExportMSG", "alert('Sorry it is not possible to export this table because none of the fields have been marked for export. Please check the table configuration and try again');", true);
 //            return;
 //        }
 

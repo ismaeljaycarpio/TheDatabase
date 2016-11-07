@@ -90,9 +90,9 @@ public partial class Pages_Security_Usage : SecurePage
         try
         {
             int iTN = 0;
-           
-            
 
+
+            ViewState[gvTheGrid.ID + "PageIndex"] = (iStartIndex / gvTheGrid.PageSize) + 1;
             gvTheGrid.DataSource = SecurityManager.Usage_Select(null,
                 ddlAccount.Text=="-1"?null:(int?)int.Parse(ddlAccount.Text),
                 null, ddlCountBy.Text=="S"?(bool?)true:null,
@@ -106,6 +106,18 @@ public partial class Pages_Security_Usage : SecurePage
             gvTheGrid.DataBind();
             if (gvTheGrid.TopPagerRow != null)
                 gvTheGrid.TopPagerRow.Visible = true;
+
+
+            GridViewRow gvr = gvTheGrid.TopPagerRow;
+            if (gvr != null)
+                _gvPager = (Common_Pager)gvr.FindControl("Pager");
+            if (_gvPager!=null)
+            {
+                if (ViewState[gvTheGrid.ID + "PageIndex"] != null)
+                    _gvPager.PageIndex = int.Parse(ViewState[gvTheGrid.ID + "PageIndex"].ToString());
+                _gvPager.PageSize = gvTheGrid.PageSize;
+                _gvPager.TotalRows = iTN;
+            }
 
             if (ddlCountBy.Text == "S")
             {
@@ -201,7 +213,7 @@ public partial class Pages_Security_Usage : SecurePage
 
     protected void Pager_BindTheGridAgain(object sender, EventArgs e)
     {
-        BindTheGrid(_gvPager.StartIndex, _gvPager._gridView.PageSize);
+        BindTheGrid(_gvPager.StartIndex, _gvPager.PageSize);
     }
 
     protected void Pager_OnApplyFilter(object sender, EventArgs e)

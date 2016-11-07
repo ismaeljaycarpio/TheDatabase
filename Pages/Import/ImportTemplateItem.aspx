@@ -223,6 +223,7 @@
                                                 ErrorMessage="Import Template Name - Required"></asp:RequiredFieldValidator>
                                         </td>
                                     </tr>
+                                    
                                      <tr>
                                         <td align="right" style="width: 250px;">
                                             <strong>Help Text</strong>
@@ -263,6 +264,26 @@
                                             
                                         </td>
                                     </tr>
+                                     <tr>
+                                        <td align="right" style="width: 250px;">
+                                           
+                                        </td>
+                                        <td>
+                                            <asp:CheckBox runat="server" ID="chkIsImportPositional" TextAlign="Right"
+                                                 Text="Import Positional?" AutoPostBack="true" OnCheckedChanged="chkIsImportPositional_CheckedChanged" />
+                                        </td>
+                                    </tr>
+
+                                     <tr>
+                                        <td align="right" style="width: 250px;">
+                                            <strong>SP After Import</strong>
+                                        </td>
+                                        <td>
+                                            <asp:TextBox ID="txtSPAfterImport" runat="server" Width="250px" CssClass="NormalTextBox"></asp:TextBox>
+                                            
+                                        </td>
+                                    </tr>
+
                                      <tr>
                                         <td align="right" style="width: 250px;">
                                             <strong>Notes</strong>
@@ -324,7 +345,7 @@
                                         <td colspan="2">
 
                                             <div>
-                                                <asp:UpdateProgress class="ajax-indicator" ID="UpdateProgress1" runat="server" AssociatedUpdatePanelID="UpdatePanel1">
+                                               <%-- <asp:UpdateProgress class="ajax-indicator" ID="UpdateProgress1" runat="server" AssociatedUpdatePanelID="UpdatePanel1">
                                                     <ProgressTemplate>
                                                         <table style="width: 100%; text-align: center">
                                                             <tr>
@@ -334,7 +355,7 @@
                                                             </tr>
                                                         </table>
                                                     </ProgressTemplate>
-                                                </asp:UpdateProgress>
+                                                </asp:UpdateProgress>--%>
 
                                             <asp:UpdatePanel ID="UpdatePanel1" runat="server" UpdateMode="always">
                                                 <ContentTemplate>
@@ -403,9 +424,10 @@
                                                                         <asp:TemplateField HeaderText="Matching Field">
                                                                             <ItemTemplate>
                                                                                 <div style="padding-left: 10px;">
-                                                                                   <asp:DropDownList runat="server" ID="ddlParentImportColumnID" CssClass="NormalTextBox" ClientIDMode="Static"
-                                                                                    DataValueField="ColumnID" DataTextField="DisplayName" AutoPostBack="false">
-                                                                                </asp:DropDownList>
+                                                                                    <asp:DropDownList runat="server" ID="ddlParentImportColumnID" CssClass="NormalTextBox" ClientIDMode="Static"
+                                                                                        DataValueField="ColumnID" DataTextField="DisplayName" AutoPostBack="false">
+                                                                                    </asp:DropDownList>
+                                                                                    <%--<asp:CheckBox runat="server" ID="chkDoubleColumn" TextAlign="Right" Text="Two Fields" Visible="false" Checked="true" />--%>
                                                                                 </div>
                                                                             </ItemTemplate>
                                                                         </asp:TemplateField>
@@ -414,6 +436,13 @@
                                                                             <ItemTemplate>
                                                                                 <div style="padding-left: 10px;">
                                                                                     <asp:TextBox runat="server" ID="txtHeading" CssClass="NormalTextBox" Width="200px"></asp:TextBox>
+                                                                                </div>
+                                                                            </ItemTemplate>
+                                                                        </asp:TemplateField>
+                                                                         <asp:TemplateField HeaderText="Position" Visible="false">
+                                                                            <ItemTemplate>
+                                                                                <div style="padding-left: 10px;">
+                                                                                    <asp:TextBox runat="server" ID="txtPositionOnImport" CssClass="NormalTextBox" Width="50px"></asp:TextBox>
                                                                                 </div>
                                                                             </ItemTemplate>
                                                                         </asp:TemplateField>
@@ -434,7 +463,7 @@
                                                 <br />
                                                 <div runat="server" id="divEmptyAddImportTemplateItem" visible="false" style="padding-left: 20px;">
                                                     <asp:HyperLink runat="server" ID="hlAddImportTemplateItem" Style="text-decoration: none; color: Black;"
-                                                        CssClass="popuplinkVT">
+                                                        CssClass="popuplinkITI">
                                                     <asp:Image runat="server" ID="Image8" ImageUrl="~/App_Themes/Default/images/add-remove.png" />
                                                     No items have been added yet. <strong style="text-decoration: underline; color: Blue;">
                                                         Add new item now.</strong>
@@ -458,7 +487,7 @@
                               <asp:Button runat="server" ID="btnFileUploaded" ClientIDMode="Static" Style="display: none;"
                                      OnClick="btnFileUploaded_Click" />
                                <asp:HyperLink ID="hlAddImportTemplateItem2" ClientIDMode="Static" runat="server" NavigateUrl="~/DemoTips.aspx"
-                                    Style="display: none;"  CssClass="popuplinkVT"></asp:HyperLink>
+                                    Style="display: none;"  CssClass="popuplinkITI"></asp:HyperLink>
                             <br />
                         </asp:Panel>
                     </td>

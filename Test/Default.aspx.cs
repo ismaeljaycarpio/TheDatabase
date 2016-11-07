@@ -9,16 +9,21 @@ using System.Web.UI.WebControls;
 
 public partial class Test_Default : System.Web.UI.Page
 {
+
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
         {
             //lblMsg.Text = Request.PhysicalPath;
             //lnkRefresh_Click(null, null);
-            lblMsg.Text = Request.Url.Scheme;
+            //lblMsg.Text = Request.Url.Scheme;
+            for (int i = 0; i < Session.Contents.Count; i++)
+            {
+                lblMsg.Text = lblMsg.Text + Session.Keys[i] + " - " + Session[i] + "<br />";
+            }
+
         }
     }
-
 
     protected void lnkText_Click(object sender, EventArgs e)
     {

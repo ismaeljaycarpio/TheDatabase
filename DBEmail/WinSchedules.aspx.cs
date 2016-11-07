@@ -63,8 +63,6 @@ public partial class DBEmail_WinSchedules : System.Web.UI.Page
 
             //}
 
-
-
             try
             {
                 if (Request.QueryString["AutoImportRecords"] != null)
@@ -73,13 +71,35 @@ public partial class DBEmail_WinSchedules : System.Web.UI.Page
                         RegisterAsyncTask(new PageAsyncTask(AutoImportRecords_A));
                     return;//only run this method
                 }
-                else
+                else if (Request.QueryString["DataReminderEmail"] != null)
                 {
+                    RegisterAsyncTask(new PageAsyncTask(DataReminderEmail_A));
+                    return;
+                }
+                else if (Request.QueryString["BatchAutoProcessImport"] != null)
+                {
+                    RegisterAsyncTask(new PageAsyncTask(BatchAutoProcessImport_A));
+                    return;
+                }
+                else if (Request.QueryString["ReadIncomingEmails"] != null)
+                {
+                    RegisterAsyncTask(new PageAsyncTask(ReadIncomingEmails_A));
+                    return;
+                }
+            }
+            catch(Exception ex)
+            {
+                ErrorLog theErrorLog = new ErrorLog(null, " DBEmail -WinSchedules - " + Request.QueryString["DataReminderEmail"].ToString(), ex.Message, ex.StackTrace, DateTime.Now, Request.Path);
+                SystemData.ErrorLog_Insert(theErrorLog);
+            }
+
+            try
+            {
+                                
                     if (Application["ALSLive"] == null)
                         RegisterAsyncTask(new PageAsyncTask(AutoImportRecords_A));                
-                }
+                
                
-
             }
             catch (Exception ex)
             {
@@ -563,7 +583,7 @@ public partial class DBEmail_WinSchedules : System.Web.UI.Page
 
                                                 UploadManager.UploadCSV(iUserID, targetTable, messageH.Subject,
                                                     null, new Guid(parameters), strSamplesFolder,
-                                                    out strMsg, out iBatchID, "virtual", "", iAccountID, targetTable.IsDataUpdateAllowed, null, null);
+                                                    out strMsg, out iBatchID, "virtual", "", iAccountID, null, null, null);
 
                                                 strBatchIDs = strBatchIDs + iBatchID.ToString() + ",";
                                                 Batch oMapBatch = UploadManager.ets_Batch_Details(iBatchID);

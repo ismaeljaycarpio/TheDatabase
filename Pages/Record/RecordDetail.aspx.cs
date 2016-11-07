@@ -21,17 +21,18 @@ using System.Xml;
 public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 {
     Stack<string> _stackURL = new Stack<string>();
-    Stack<IDnText> _stackTabIndex = new Stack<IDnText>();
+    Stack<StackRoom> _stackTabIndex = new Stack<StackRoom>();
+    List<string> _lstTabIndexLink = new List<string>();
      Stack<IDnText> _stackTableTabID = new Stack<IDnText>();
-    
+     string _strDynamictabPart = "";
     bool _bShowExceedances = false;
     string _strWarningResults = "";
     string _strExceedanceResults = "";
     string _strInValidResults = "";
     //bool _bDataWarning = false;
     //bool _bDataExceedance = false;
-
-
+    bool _bHasListChild = false;
+    string _strSelectedtabLinkHF = "";
     string _strValidationError = "";
 
     string _strWarningEmailFullBody = "";
@@ -76,9 +77,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
     //private Panel[] divPanel;
     int _TabIndex = 0;
 
-    string _strActionMode = "view";
+    string _qsMode = "view";
     int _iRecordID;
     Record _theRecord = null;
+    string _strFirstTableJS = "";
     int _iNewRecordID = -1;
     Label[] _lbl;
     TextBox[] _txtValue;
@@ -160,26 +162,23 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
     int _iIsActiveIndex = -1;
     User _objUser;
     UserRole _theUserRole;
-    string _qsMode = "";
+    Role _theRole;
+    //string _qsMode = "";
     string _qsTableID = "";
     string _qsRecordID = "";
     Table _theTable;
     string _strRecordRightID = Common.UserRoleType.None;
     string _strURL;
 
-    Common_Pager _gvCL_Pager;
-    int _iCLColumnCount = 0;
-
-
-    int _iCLStartIndex = 0;
-    int _iCLMaxRows = 0;
-    int _iCLTN = 0;
+   
     //string _strSessionRoleType = "";
     int _iSessionAccountID = -1;
 
     int _iRowCount = 0;
 
     bool _bCancelSave = false;
+    bool _bVirtualPopulate = false;
+    bool _bShowChildTabsOnAdd = false;
     protected void Page_LoadComplete(object sender, EventArgs e)
     {
 
@@ -191,80 +190,84 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             }
         }
 
-        if (Session["RunSpeedLog"] != null)
-        {
-            SpeedLog theSpeedLog = new SpeedLog();
-            theSpeedLog.FunctionName = _theTable.TableName + " -Detail -  Page_LoadComplete ";
-            theSpeedLog.FunctionLineNumber = 33;
-            SecurityManager.AddSpeedLog(theSpeedLog);
-        }
+        //if (Session["RunSpeedLog"] != null)
+        //{
+        //    SpeedLog theSpeedLog = new SpeedLog();
+        //    theSpeedLog.FunctionName = _theTable.TableName + " -Detail -  Page_LoadComplete ";
+        //    theSpeedLog.FunctionLineNumber = 33;
+        //    SecurityManager.AddSpeedLog(theSpeedLog);
+        //}
 
         //oliver <begin> Ticket 1521
-        if (_qsMode != "add" && !IsPostBack)
-        {
-            switch (_theTable.ChangeHistoryType)
-            {
-                case "closed":                   
-          
-                case "":
-
-                    upChangeHistory.Visible = true;
-                    break;
-
-                case "open":
-
-                    if (!IsPostBack)
-                    {
-                        lnkShowHistory_Click(null, null);
-                    }
-                    break;
-
-                case "admin":
-                   
-                    if (SecurityManager.Role_Details((int)_theUserRole.RoleID).RoleType != null
-                        && ((SecurityManager.Role_Details((int)_theUserRole.RoleID).RoleType == "1")
-                        || (SecurityManager.Role_Details((int)_theUserRole.RoleID).RoleType == "2")))
-                    {
-                        upChangeHistory.Visible = true;
-                        lnkShowHistory.Visible = true;
-                      
-                    }
-                    break;
-
-                case "none":                    
-                    upChangeHistory.Visible = false;
-                      lnkShowHistory.Visible = false;
-                    lnkHideHistory.Visible = false;
-                    break;
-
-            }
-           
-        }
-        else
-        {
-            if (_qsMode == "add" && !IsPostBack)
-            {
-                lnkShowHistory.Visible = false;
-                lnkHideHistory.Visible = false;
-            }
-          
-        }
+       
       
         //oliver <end> Ticket 1521       
     }
 
 
+    protected void HistoryThings()
+    {
+        if (_qsMode != "add" && !IsPostBack)
+        {
+            switch (_theTable.ChangeHistoryType)
+            {
+                case "closed":
 
+                case "":
+
+                    lnkShowHistory.Visible = true;
+                    break;
+
+                case "open":
+                    lnkShowHistory.Visible = true;
+                    //if (!IsPostBack)
+                    //{
+                    //    lnkShowHistory_Click(null, null);
+                    //}
+                    break;
+
+                case "admin":
+
+                    if (SecurityManager.Role_Details((int)_theUserRole.RoleID).RoleType != null
+                        && ((SecurityManager.Role_Details((int)_theUserRole.RoleID).RoleType == "1")
+                        || (SecurityManager.Role_Details((int)_theUserRole.RoleID).RoleType == "2")))
+                    {
+                       
+                        lnkShowHistory.Visible = true;
+                       
+                    }
+                    break;
+
+                case "none":
+                 
+                    lnkShowHistory.Visible = false;
+                    
+                    break;
+
+            }
+
+        }
+        else
+        {
+            if (_qsMode == "add" && !IsPostBack)
+            {
+                lnkShowHistory.Visible = false;              
+            }
+
+        }
+
+    }
 
     protected override void OnSaveStateComplete(EventArgs e)
     {
-        if (Session["RunSpeedLog"] != null)
-        {
-            SpeedLog theSpeedLog = new SpeedLog();
-            theSpeedLog.FunctionName = _theTable.TableName + " -Detail - OnSaveStateComplete ";
-            theSpeedLog.FunctionLineNumber = 270;
-            SecurityManager.AddSpeedLog(theSpeedLog);
-        }
+        //if (Session["RunSpeedLog"] != null)
+        //{
+        //    SpeedLog theSpeedLog = new SpeedLog();
+        //    theSpeedLog.FunctionName = _theTable.TableName + " -Detail - OnSaveStateComplete ";
+        //    theSpeedLog.FunctionLineNumber = 270;
+        //    SecurityManager.AddSpeedLog(theSpeedLog);
+        //}
+      
     }
 
     protected override void OnPreInit(EventArgs e)
@@ -362,6 +365,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
     protected void Page_Init(object sender, EventArgs e)
     {
+    
 
 
         if (_iSessionAccountID == -1)
@@ -380,7 +384,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         _dtColumnsNotDetail = RecordManager.ets_Table_Columns_NotDetail(iTableID);
         _dtColumnsAll = RecordManager.ets_Table_Columns_All(iTableID);
 
-
+        _strDynamictabPart = lnkSaveClose.ClientID.Substring(0, lnkSaveClose.ClientID.Length - 12);
 
         SetCosmetic();
 
@@ -437,7 +441,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
        trX = new HtmlTableRow[_dtColumnsDetail.Rows.Count + 4];
         cell = new HtmlTableCell[(_dtColumnsDetail.Rows.Count + 4) * 2];
 
-        lblFristTabTableName.Text = _theTable.TableName;
+        //lblFristTabTableName.Text = _theTable.TableName;
 
         if (Request.QueryString["RecordID"] != null || _bCopyRecord == true)
         {
@@ -458,18 +462,26 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             _theRecord = RecordManager.ets_Record_Detail_Full(_iRecordID);
 
             //oliver <begin> Ticket 1476
-            lblRecordID.Text = _qsRecordID;
+            lblUIRecordID.Text = _qsRecordID;
             //oliver <end>
         }
         _dtDBTableTab = Common.DataTableFromText("SELECT * FROM TableTab WHERE TableID=" +
            _theTable.TableID.ToString() + " ORDER BY DisplayOrder");
+
+      
+        if (_qsMode == "add" && _theTable.ShowChildTabsOnAdd != null && (bool)_theTable.ShowChildTabsOnAdd)
+            _bShowChildTabsOnAdd = true;
+
+
         ManageTableTab();
         CreateDynamicControls();
         //ManageShowWhen();
 
         ManageCompareThings();
-        if (Request.QueryString["RecordID"] != null || _bCopyRecord == true)
-            MakeChildTables();
+       
+        MakeChildTables();
+       
+           
 
         
 
@@ -478,249 +490,235 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
   
     protected void MakeChildTables()
     {
-        DataTable dtCT = Common.DataTableFromText("SELECT * FROM TableChild WHERE ParentTableID=" + _qsTableID + " AND DetailPageType<>'not' ORDER BY DisplayOrder");
-
-        if (dtCT.Rows.Count > 0)
+      
+        bool bVerticalHeading = false;
+        if (_theTable.ShowTabVertically != null && (bool)_theTable.ShowTabVertically)
         {
-            oneCTList = new Pages_UserControl_RecordList[dtCT.Rows.Count];
-            oneCTDetail = new Pages_UserControl_DetailEdit[dtCT.Rows.Count];
+            bVerticalHeading = true;
+        }
 
-            //divPanel = new Panel[dtCT.Rows.Count];
-            TabPanel[] cTabPanel = new TabPanel[dtCT.Rows.Count];
-            int i = 0;
-            foreach (DataRow dr in dtCT.Rows)
+        string strDivHeadingClass = @"<style>
+                .DBGTab .heading_div_class
+                {
+                    display:inline-block;
+                }
+                </style>
+                ";
+
+        if (!IsPostBack)
+        {
+            if(bVerticalHeading==false)
             {
-                //check advanced security
-                string strChildTableRight = "2";
-                if ((bool)_theUserRole.IsAdvancedSecurity)
-                {
-                    DataTable dtUserTable = null;
+                ltTextStyles.Text = ltTextStyles.Text + strDivHeadingClass;
+            }
+        }
+          
 
-                    dtUserTable = SecurityManager.dbg_RoleTable_Select(null,
-                   int.Parse(dr["ChildTableID"].ToString()), _theUserRole.RoleID, null);
-                    if (dtUserTable.Rows.Count > 0)
+        Panel pnlHeading = new Panel();
+        pnlHeading.ID = _strDynamictabPart + "pnlHeading";
+        pnlHeading.ClientIDMode = ClientIDMode.Static;
+
+        if (bVerticalHeading)
+        {
+            pnlHeading.CssClass = "ajax__tab_header_verticalleft";
+        }
+        else
+        {
+            pnlHeading.CssClass = "ajax__tab_header";
+        }
+      
+
+
+        LinkButton lnkHeading = new LinkButton();
+        lnkHeading.ID = _strDynamictabPart + "lnkHeading";
+        lnkHeading.ClientIDMode = ClientIDMode.Static;
+        lnkHeading.Text = _theTable.TableName; //"Detail";
+        lnkHeading.Font.Bold = true;
+        lnkHeading.Attributes.Add("onclick", "ShowHideTables(" + pnlDetail.ID + ",this); return false");
+        lnkHeading.CssClass = "ajax__tab_tab";
+        _lstTabIndexLink.Add(lnkHeading.ID);
+        Panel pnlHeadingDivM = new Panel();
+        pnlHeadingDivM.ID = "div" + lnkHeading.ID;
+        pnlHeadingDivM.ClientIDMode = ClientIDMode.Static;
+        pnlHeadingDivM.CssClass = "heading_div_class";
+
+        Panel pnlHeadingDivMO = new Panel();
+        pnlHeadingDivMO.CssClass = "ajax__tab_outer";
+        Panel pnlHeadingDivMI = new Panel();
+        pnlHeadingDivMI.CssClass = "ajax__tab_inner";
+        pnlHeadingDivMI.Controls.Add(lnkHeading);
+
+        pnlHeadingDivMO.Controls.Add(pnlHeadingDivMI);
+        pnlHeadingDivM.Controls.Add(pnlHeadingDivMO);
+
+        pnlHeading.Controls.Add(pnlHeadingDivM);
+
+        bool bAddedChild = false;
+        if (Request.QueryString["RecordID"] != null || _bCopyRecord == true || _bShowChildTabsOnAdd)
+        {
+            DataTable dtCT = Common.DataTableFromText("SELECT * FROM TableChild WHERE ParentTableID=" + _qsTableID + " AND DetailPageType<>'not' ORDER BY DisplayOrder");
+           
+
+            if (dtCT.Rows.Count > 0)
+            {
+                oneCTList = new Pages_UserControl_RecordList[dtCT.Rows.Count];
+                oneCTDetail = new Pages_UserControl_DetailEdit[dtCT.Rows.Count];
+
+                int i = 0;
+
+                foreach (DataRow dr in dtCT.Rows)
+                {
+                    //check advanced security
+                    
+                    string strChildTableRight = "2";
+                    if ((bool)_theUserRole.IsAdvancedSecurity)
                     {
-                        strChildTableRight = dtUserTable.Rows[0]["RoleType"].ToString();
-                    }
+                        DataTable dtUserTable = null;
 
-                }
-                if (strChildTableRight == Common.UserRoleType.None) //none role
-                {
-                    continue;
-                }
-
-                //check show hide :-)
-                if (_qsMode != "add" && _theRecord != null)
-                {
-                    if (dr["HideColumnID"] != DBNull.Value && 
-                            dr["HideColumnValue"] != DBNull.Value && dr["HideOperator"] != DBNull.Value)
-                    {
-                        Column theHideColumn = RecordManager.ets_Column_Details(int.Parse(dr["HideColumnID"].ToString()));
-                        if (theHideColumn != null)
+                        dtUserTable = SecurityManager.dbg_RoleTable_Select(null,
+                       int.Parse(dr["ChildTableID"].ToString()), _theUserRole.RoleID, null);
+                        if (dtUserTable.Rows.Count > 0)
                         {
-                            string strThisHideColumnValue = RecordManager.GetRecordValue(ref _theRecord, theHideColumn.SystemName);
-                            string strHideColumnValue = "";
-                            bool bShowTab = false;
-                            if (strThisHideColumnValue != "")
-                            {
-
-                                strHideColumnValue = dr["HideColumnValue"].ToString();
-
-                                if (theHideColumn.ColumnType == "listbox")
-                                {
-                                    string[] strAllHideColumnValue = strHideColumnValue.Split(',');
-                                    if (dr["HideOperator"].ToString() == "contains")
-                                    {
-                                        string[] strAllThisHideCValue = strThisHideColumnValue.Split(',');
-
-
-                                        foreach (string eachHideValue in strAllHideColumnValue)
-                                        {
-                                            if (eachHideValue != "")
-                                            {
-                                                foreach (string eachThisValue in strAllThisHideCValue)
-                                                {
-                                                    if (eachThisValue != "")
-                                                    {
-                                                        if (eachHideValue == eachThisValue)
-                                                        {
-                                                            bShowTab = true;
-                                                            continue;
-
-                                                        }
-                                                    }
-                                                }
-
-                                            }
-                                        }
-                                    }
-
-                                    //or all
-
-                                    if (dr["HideOperator"].ToString() == "equals")
-                                    {
-                                        if (strHideColumnValue == strThisHideColumnValue)
-                                        {
-                                            bShowTab = true;
-                                        }
-                                    }
-
-                                }
-                                else
-                                {
-
-                                    if (theHideColumn.DropDownType == "value_text" && theHideColumn.DropdownValues != "")
-                                    {
-                                        strThisHideColumnValue = Common.GetTextFromValue(theHideColumn.DropdownValues, strThisHideColumnValue);
-                                    }
-                                    strThisHideColumnValue = strThisHideColumnValue.ToLower();
-                                    strHideColumnValue = strHideColumnValue.ToLower();
-                                    if (dr["HideOperator"].ToString() == "equals")
-                                    {
-                                        if (strHideColumnValue == strThisHideColumnValue)
-                                        {
-                                            bShowTab = true;
-                                        }
-                                    }
-                                    if (dr["HideOperator"].ToString() == "contains")
-                                    {
-                                        if (strThisHideColumnValue.IndexOf(strHideColumnValue) > -1)
-                                        {
-                                            bShowTab = true;
-                                        }
-                                    }
-
-                                }
-
-                            }
-
-
-
-                            if (bShowTab == false)
-                            {
-                                continue;
-                            }
-
-
+                            strChildTableRight = dtUserTable.Rows[0]["RoleType"].ToString();
                         }
 
                     }
-                }
-
-
-                string strCaption = dr["Description"].ToString();
-
-                if (strCaption == "")
-                {
-                    Table theTable = RecordManager.ets_Table_Details(int.Parse(dr["ChildTableID"].ToString()));
-
-                    if (theTable != null)
+                    if (strChildTableRight == Common.UserRoleType.None) //none role
                     {
-                        strCaption = theTable.TableName;
+                        continue;
                     }
 
-                }
-                strCaption = "<strong>" + strCaption + "</strong>";
-
-                if (dr["DetailPageType"].ToString() == "list")
-                {
-
-
-                    string strTextSearch = "";
-                    if (_qsRecordID != "")
-                    {
-                        DataTable dtTemp = Common.DataTableFromText("SELECT SystemName,ColumnID,ColumnType FROM [Column] WHERE LinkedParentColumnID IS NOT NULL AND (ColumnType='dropdown' OR ColumnType='listbox') AND   TableID=" + dr["ChildTableID"].ToString() + " AND TableTableID=" + _qsTableID);
-
-
-                        foreach (DataRow drCT in dtTemp.Rows)
-                        {
-
-                            Column theChildColumn = RecordManager.ets_Column_Details(int.Parse(drCT["ColumnID"].ToString()));
-                            Column theLinkedColumn = RecordManager.ets_Column_Details((int)theChildColumn.LinkedParentColumnID);
-                            Record theLinkedRecord = RecordManager.ets_Record_Detail_Full(int.Parse(_qsRecordID));
-                            string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
-                            strLinkedColumnValue = strLinkedColumnValue.Replace("'", "''");
-
-                            if (drCT["ColumnType"].ToString() == "dropdown")
-                            {
-                                if (strTextSearch == "")
-                                {
-                                    strTextSearch = " Record." + drCT["SystemName"].ToString() + "='" + strLinkedColumnValue + "' ";
-                                }
-                                else
-                                {
-                                    strTextSearch = strTextSearch + " OR " + " Record." + drCT["SystemName"].ToString() + "='" + strLinkedColumnValue + "' ";
-                                }
-                            }
-                            else
-                            {
-                                if (strTextSearch == "")
-                                {
-                                    strTextSearch = " CHARINDEX('," + _theRecord.RecordID.ToString() + ",' ,',' + Record." + drCT["SystemName"].ToString() + " + ',')>0";
-                                }
-                                else
-                                {
-                                    strTextSearch = strTextSearch + " OR " + " CHARINDEX('," + _theRecord.RecordID.ToString() + ",' ,',' + Record." + drCT["SystemName"].ToString() + " + ',')>0";
-                                }
-
-                            }
-
-                        }
-
-
-
-
-
-                    }
-                    //if (strTextSearch != "")
+                    ////check show hide :-)
+                    //if (_qsMode != "add" && _theRecord != null)
                     //{
-                    _TabIndex = _TabIndex + 1;
-                    oneCTList[i] = (Pages_UserControl_RecordList)LoadControl("~/Pages/UserControl/RecordList.ascx");
-                    oneCTList[i].TableID = int.Parse(dr["ChildTableID"].ToString());
-                    oneCTList[i].ID = "ctList" + i.ToString();
-                    oneCTList[i].DetailTabIndex = _TabIndex;
-                    oneCTList[i].ShowAddButton = bool.Parse(dr["ShowAddButton"].ToString());
-                    oneCTList[i].ShowEditButton = bool.Parse(dr["ShowEditButton"].ToString());
-                    oneCTList[i].PageType = "c";
+                    //    if (dr["HideColumnID"] != DBNull.Value &&
+                    //            dr["HideColumnValue"] != DBNull.Value && dr["HideOperator"] != DBNull.Value)
+                    //    {
+                    //        Column theHideColumn = RecordManager.ets_Column_Details(int.Parse(dr["HideColumnID"].ToString()));
+                    //        if (theHideColumn != null)
+                    //        {
+                    //            string strThisHideColumnValue = RecordManager.GetRecordValue(ref _theRecord, theHideColumn.SystemName);
+                    //            string strHideColumnValue = "";
+                    //            bool bShowTab = false;
+                    //            if (strThisHideColumnValue != "")
+                    //            {
 
-                    strTextSearch = " AND (" + (strTextSearch == "" ? "1=1" : strTextSearch) + ")";
-                    oneCTList[i].TextSearchParent = strTextSearch;
-                    cTabPanel[i] = new TabPanel();
+                    //                strHideColumnValue = dr["HideColumnValue"].ToString();
 
-                    cTabPanel[i].HeaderText = strCaption;
+                    //                if (theHideColumn.ColumnType == "listbox")
+                    //                {
+                    //                    string[] strAllHideColumnValue = strHideColumnValue.Split(',');
+                    //                    if (dr["HideOperator"].ToString() == "contains")
+                    //                    {
+                    //                        string[] strAllThisHideCValue = strThisHideColumnValue.Split(',');
 
-                    //divPanel[i] = new Panel();
 
-                    //divPanel[i].Controls.Add(oneCTList[i]);
-                    //cTabPanel[i].Controls.Add(divPanel[i]);
-                    cTabPanel[i].Controls.Add(oneCTList[i]);
-                    tabDetail.Tabs.Add(cTabPanel[i]);
+                    //                        foreach (string eachHideValue in strAllHideColumnValue)
+                    //                        {
+                    //                            if (eachHideValue != "")
+                    //                            {
+                    //                                foreach (string eachThisValue in strAllThisHideCValue)
+                    //                                {
+                    //                                    if (eachThisValue != "")
+                    //                                    {
+                    //                                        if (eachHideValue == eachThisValue)
+                    //                                        {
+                    //                                            bShowTab = true;
+                    //                                            continue;
+
+                    //                                        }
+                    //                                    }
+                    //                                }
+
+                    //                            }
+                    //                        }
+                    //                    }
+
+                    //                    //or all
+
+                    //                    if (dr["HideOperator"].ToString() == "equals")
+                    //                    {
+                    //                        if (strHideColumnValue == strThisHideColumnValue)
+                    //                        {
+                    //                            bShowTab = true;
+                    //                        }
+                    //                    }
+
+                    //                }
+                    //                else
+                    //                {
+
+                    //                    if (theHideColumn.DropDownType == "value_text" && theHideColumn.DropdownValues != "")
+                    //                    {
+                    //                        strThisHideColumnValue = Common.GetTextFromValue(theHideColumn.DropdownValues, strThisHideColumnValue);
+                    //                    }
+                    //                    strThisHideColumnValue = strThisHideColumnValue.ToLower();
+                    //                    strHideColumnValue = strHideColumnValue.ToLower();
+                    //                    if (dr["HideOperator"].ToString() == "equals")
+                    //                    {
+                    //                        if (strHideColumnValue == strThisHideColumnValue)
+                    //                        {
+                    //                            bShowTab = true;
+                    //                        }
+                    //                    }
+                    //                    if (dr["HideOperator"].ToString() == "contains")
+                    //                    {
+                    //                        if (strThisHideColumnValue.IndexOf(strHideColumnValue) > -1)
+                    //                        {
+                    //                            bShowTab = true;
+                    //                        }
+                    //                    }
+
+                    //                }
+
+                    //            }
+
+
+
+                    //            if (bShowTab == false)
+                    //            {
+                    //                continue;
+                    //            }
+
+
+                    //        }
+
+                    //    }
                     //}
 
 
-                }
-                else
-                {
-                   
-                    string strTextSearch = "";
+                    string strCaption = dr["Description"].ToString();
 
-                    string strSystemName = "";
-                    string strLinkedColume = "";
-                    if (_qsRecordID != "")
+                    if (strCaption == "")
                     {
-                        DataTable dtTemp = Common.DataTableFromText("SELECT SystemName,ColumnID,ColumnType FROM [Column] WHERE (ColumnType='dropdown' OR ColumnType='listbox') AND  TableID=" + dr["ChildTableID"].ToString() + " AND TableTableID=" + _qsTableID);
-                        foreach (DataRow drCT in dtTemp.Rows)
-                        {
-                            Column theChildColumn = RecordManager.ets_Column_Details(int.Parse(drCT["ColumnID"].ToString()));
-                            Column theLinkedColumn = RecordManager.ets_Column_Details((int)theChildColumn.LinkedParentColumnID);
-                            Record theLinkedRecord = RecordManager.ets_Record_Detail_Full(int.Parse(_qsRecordID));
-                            string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
+                        Table theTable = RecordManager.ets_Table_Details(int.Parse(dr["ChildTableID"].ToString()));
 
-                            if (strLinkedColumnValue != null)
+                        if (theTable != null)
+                        {
+                            strCaption = theTable.TableName;
+                        }
+
+                    }
+                    //strCaption = "<strong>" + strCaption + "</strong>";
+
+                    if (dr["DetailPageType"].ToString() == "list")
+                    {
+
+
+                        string strTextSearch = "";
+                        if (_qsRecordID != "")
+                        {
+                            DataTable dtTemp = Common.DataTableFromText("SELECT SystemName,ColumnID,ColumnType FROM [Column] WHERE LinkedParentColumnID IS NOT NULL AND (ColumnType='dropdown' OR ColumnType='listbox') AND   TableID=" + dr["ChildTableID"].ToString() + " AND TableTableID=" + _qsTableID);
+
+
+                            foreach (DataRow drCT in dtTemp.Rows)
                             {
+
+                                Column theChildColumn = RecordManager.ets_Column_Details(int.Parse(drCT["ColumnID"].ToString()));
+                                Column theLinkedColumn = RecordManager.ets_Column_Details((int)theChildColumn.LinkedParentColumnID);
+                                Record theLinkedRecord = RecordManager.ets_Record_Detail_Full(int.Parse(_qsRecordID));
+                                string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
                                 strLinkedColumnValue = strLinkedColumnValue.Replace("'", "''");
-                                strSystemName = drCT["SystemName"].ToString();
-                                strLinkedColume = strLinkedColumnValue;
 
                                 if (drCT["ColumnType"].ToString() == "dropdown")
                                 {
@@ -745,243 +743,1159 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                     }
 
                                 }
+
                             }
 
+
+
+
+
                         }
-                    }
-                    _TabIndex = _TabIndex + 1;
 
-                    oneCTDetail[i] = (Pages_UserControl_DetailEdit)LoadControl("~/Pages/UserControl/DetailEdit.ascx");
+                        _TabIndex = _TabIndex + 1;
+                        oneCTList[i] = (Pages_UserControl_RecordList)LoadControl("~/Pages/UserControl/RecordList.ascx");
+                        oneCTList[i].TableID = int.Parse(dr["ChildTableID"].ToString());
+                        oneCTList[i].ID = _strDynamictabPart + "ctList" + i.ToString();
+                        oneCTList[i].DetailTabIndex = _TabIndex;
+                        if(_bShowChildTabsOnAdd)
+                        {
+                            oneCTList[i].ShowAddButton = false;
+                            oneCTList[i].ShowEditButton = false;
+                        }
+                        else
+                        {
+                            oneCTList[i].ShowAddButton = bool.Parse(dr["ShowAddButton"].ToString());
+                            oneCTList[i].ShowEditButton = bool.Parse(dr["ShowEditButton"].ToString());
+                        }
+                       
+                        oneCTList[i].PageType = "c";
 
-                    oneCTDetail[i].ContentPage = "record";
-                    oneCTDetail[i].TableID = int.Parse(dr["ChildTableID"].ToString());
-                    oneCTDetail[i].ID = "ctDetail" + i.ToString();
-                    oneCTDetail[i].ShowAddButton = bool.Parse(dr["ShowAddButton"].ToString());
-                    oneCTDetail[i].ShowEditButton = bool.Parse(dr["ShowEditButton"].ToString());
-                    oneCTDetail[i].DetailTabIndex = _TabIndex;
-                    oneCTDetail[i].Mode = "view";
-                    // strTextSearch = " AND (" + strTextSearch + ")";
-                    if (dr["DetailPageType"].ToString() == "alone")
-                    {
-                        oneCTDetail[i].OnlyOneRecord = true;
-                        oneCTDetail[i].SystemName = strSystemName;
-                        oneCTDetail[i].LinkedColumnValue = strLinkedColume;
+                        strTextSearch = " AND (" + (strTextSearch == "" ? "1=2" : strTextSearch) + ")";
+                        oneCTList[i].TextSearchParent = strTextSearch;
+                        _bHasListChild = true;
 
+                        //cTabPanel[i] = new TabPanel();
+                        //cTabPanel[i].HeaderText = strCaption;
+                        //cTabPanel[i].Controls.Add(oneCTList[i]);
+                        //tabDetail.Tabs.Add(cTabPanel[i]);
+
+                        Panel pnlDetailD = new Panel();
+                        pnlDetailD.ID = _strDynamictabPart + "pnlDetail" + dr["ChildTableID"].ToString();
+                        pnlDetailD.ClientIDMode = ClientIDMode.Static;
+                        pnlDetailD.CssClass = "ajax__tab_panel";
+
+                        LinkButton lnkHeadingD = new LinkButton();
+                        lnkHeadingD.ID = _strDynamictabPart + "lnkHeading" + dr["ChildTableID"].ToString();
+                        lnkHeadingD.ClientIDMode = ClientIDMode.Static;
+                        lnkHeadingD.Text = strCaption; //"Detail";
+                        lnkHeadingD.Font.Bold = true;
+                        lnkHeadingD.Attributes.Add("onclick", "ShowHideTables(" + pnlDetailD.ID + ",this); return false");
+                        lnkHeadingD.CssClass = "ajax__tab_tab";
+                        _lstTabIndexLink.Add(lnkHeadingD.ID);
+                        Panel pnlHeadingDiv = new Panel();
+                        pnlHeadingDiv.ID = "div" + lnkHeadingD.ID;
+                        pnlHeadingDiv.ClientIDMode = ClientIDMode.Static;
+                        pnlHeadingDiv.CssClass = "heading_div_class";
+
+                        Panel pnlHeadingDivO = new Panel();
+                        pnlHeadingDivO.CssClass = "ajax__tab_outer";
+                        Panel pnlHeadingDivI = new Panel();
+                        pnlHeadingDivI.CssClass = "ajax__tab_inner";
+                        pnlHeadingDivI.Controls.Add(lnkHeadingD);
+
+                        pnlHeadingDivO.Controls.Add(pnlHeadingDivI);
+                        pnlHeadingDiv.Controls.Add(pnlHeadingDivO);
+                     
+                        pnlHeading.Controls.Add(pnlHeadingDiv);
+                   
+                        pnlDetailD.Controls.Add(oneCTList[i]);
+                        pnlAllTables.Controls.Add(pnlDetailD);
+                        bAddedChild = true;
                     }
                     else
                     {
-                        oneCTDetail[i].OnlyOneRecord = false;
-                    }
 
-                    oneCTDetail[i].TextSearch = strTextSearch;
+                        string strTextSearch = "";
 
-                    cTabPanel[i] = new TabPanel();
-
-                    cTabPanel[i].HeaderText = strCaption;
-                    cTabPanel[i].Controls.Add(oneCTDetail[i]);
-                    tabDetail.Tabs.Add(cTabPanel[i]);
-
-                }
-
-                i = i + 1;
-            }
-
-
-        }
-
-        //Message list
-        if (_qsMode != "add")
-        {
-            if ((_theTable.ShowSentEmails != null && (bool)_theTable.ShowSentEmails)
-            || (_theTable.ShowReceivedEmails != null && (bool)_theTable.ShowReceivedEmails))
-            {
-                oneMLList = new Pages_UserControl_MessageList();
-                oneMLList = (Pages_UserControl_MessageList)LoadControl("~/Pages/UserControl/MessageList.ascx");
-                oneMLList.ID = "mlList";
-                oneMLList.RecordID = _theRecord.RecordID;
-                TabPanel cTabPanel = new TabPanel();
-                cTabPanel.HeaderText = "<strong>Messages</strong>";
-                //cTabPanel.
-                cTabPanel.Controls.Add(oneMLList);
-                tabDetail.Tabs.Add(cTabPanel);
-            }
-        }
-
-
-
-    }
-
-
-
-    protected void grdProgressHisotry_RowDataBound(object sender, GridViewRowEventArgs e)
-    {
-        if (e.Row.RowType == DataControlRowType.DataRow)
-        {
-            _iRowCount = _iRowCount + 1;
-            string strWWWRoot = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath;
-            string strRootURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/App_Themes/Default/Images/";
-
-            string strEmpty = strRootURL + "empty.png";
-            string strComplete = strRootURL + "complete.png";
-            string strIncomplete = strRootURL + "incomplete.png";
-
-
-            DataTable dtFormSetGroup = Common.DataTableFromText("SELECT * FROM FormSetGroup WHERE ParentTableID=" + _qsTableID + " ORDER BY ColumnPosition");
-
-            if (dtFormSetGroup.Rows.Count > 0)
-            {
-
-                int i = 1;
-                foreach (DataRow drG in dtFormSetGroup.Rows)
-                {
-
-                    string strImageURL = strEmpty;
-                    string strWizardURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/FormSetWizard.aspx?SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString()
-                            + "&ParentTableID=" + Cryptography.Encrypt(_qsTableID)
-                            + "&ParentRecordID=" + Cryptography.Encrypt(_qsRecordID);
-
-
-                    FormSetGroup theFormSetGroup = FormSetManager.dbg_FormSetGroup_Detail(int.Parse(drG["FormSetGroupID"].ToString()));
-
-                    if (DataBinder.Eval(e.Row.DataItem, drG["FormSetGroupName"].ToString()) != DBNull.Value)
-                    {
-                        if (DataBinder.Eval(e.Row.DataItem, drG["FormSetGroupName"].ToString()) != "")
+                        string strSystemName = "";
+                        string strLinkedColume = "";
+                        if (_qsRecordID != "")
                         {
-                            int iFormSetID = int.Parse(DataBinder.Eval(e.Row.DataItem, drG["FormSetGroupName"].ToString()).ToString());
-                            HiddenField hf = e.Row.FindControl("hf" + i.ToString()) as HiddenField;
-                            HiddenField hfC = e.Row.FindControl("hfC" + i.ToString()) as HiddenField;
-
-                            hf.Value = iFormSetID.ToString();
-                            FormSet aFromSet = FormSetManager.dbg_FormSet_Detail(iFormSetID);
-
-                            if (aFromSet != null)
+                            DataTable dtTemp = Common.DataTableFromText("SELECT SystemName,ColumnID,ColumnType FROM [Column] WHERE (ColumnType='dropdown' OR ColumnType='listbox') AND  TableID=" + dr["ChildTableID"].ToString() + " AND TableTableID=" + _qsTableID);
+                            foreach (DataRow drCT in dtTemp.Rows)
                             {
-                                strWizardURL = strWizardURL + "&FormSetID=" + Cryptography.Encrypt(aFromSet.FormSetID.ToString());
-                                DataTable dtFromSetProgress = Common.DataTableFromText("SELECT * FROM FormSetProgress WHERE RecordID=" + _qsRecordID + " AND FormSetID=" + aFromSet.FormSetID.ToString());
-                                DataTable dtFromSetForm = Common.DataTableFromText("SELECT * FROM FormSetForm WHERE FormSetID=" + aFromSet.FormSetID.ToString() + "  ORDER BY DisplayOrder");
-                                int iCom = 0;
-                                if (dtFromSetProgress.Rows.Count > 0)
-                                {
+                                Column theChildColumn = RecordManager.ets_Column_Details(int.Parse(drCT["ColumnID"].ToString()));
+                                Column theLinkedColumn = RecordManager.ets_Column_Details((int)theChildColumn.LinkedParentColumnID);
+                                Record theLinkedRecord = RecordManager.ets_Record_Detail_Full(int.Parse(_qsRecordID));
+                                string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
 
-                                    if (dtFromSetProgress.Rows.Count == dtFromSetForm.Rows.Count)
+                                if (strLinkedColumnValue != null)
+                                {
+                                    strLinkedColumnValue = strLinkedColumnValue.Replace("'", "''");
+                                    strSystemName = drCT["SystemName"].ToString();
+                                    strLinkedColume = strLinkedColumnValue;
+
+                                    if (drCT["ColumnType"].ToString() == "dropdown")
                                     {
-                                        foreach (DataRow drFSP in dtFromSetProgress.Rows)
+                                        if (strTextSearch == "")
                                         {
-                                            if (drFSP["Completed"] == DBNull.Value)
-                                            {
-                                                strImageURL = strIncomplete;
-                                                break;
-                                            }
-                                            else
-                                            {
-                                                if ((bool)drFSP["Completed"] == false)
-                                                {
-                                                    strImageURL = strIncomplete;
-                                                    break;
-                                                }
-                                                else
-                                                {
-                                                    strImageURL = strComplete;
-                                                }
-                                            }
+                                            strTextSearch = " Record." + drCT["SystemName"].ToString() + "='" + strLinkedColumnValue + "' ";
+                                        }
+                                        else
+                                        {
+                                            strTextSearch = strTextSearch + " OR " + " Record." + drCT["SystemName"].ToString() + "='" + strLinkedColumnValue + "' ";
                                         }
                                     }
                                     else
                                     {
-                                        strImageURL = strIncomplete;
-
-
-                                    }
-
-                                }
-                                else
-                                {
-                                    strImageURL = strEmpty;
-                                }
-
-                                if (strImageURL == strEmpty)
-                                {
-                                    strWizardURL = strWizardURL + "&ps=0";
-                                }
-                                if (strImageURL == strIncomplete)
-                                {
-                                    //strWizardURL = strWizardURL + "&ps=1";
-                                    //iCom = 1;
-
-                                    DataTable dtProgreesFormIncomplete = Common.DataTableFromText(@"SELECT TOP 1 FormSetProgressID FROM FormSetProgress INNER JOIN FormSetForm
-                                        ON FormSetForm.FormSetFormID=FormSetProgress.FormSetFormID
-                                         WHERE RecordID=" + _qsRecordID + @" AND FormSetProgress.FormSetID=" + aFromSet.FormSetID.ToString() + @" AND 
-                                    (FormSetProgress.Completed is null OR FormSetProgress.Completed=0)  ORDER BY FormSetForm.DisplayOrder");
-
-                                    if (dtProgreesFormIncomplete.Rows.Count > 0)
-                                    {
-                                        FormSetProgress theFormSetProgress = FormSetManager.dbg_FormSetProgress_Detail(int.Parse((dtProgreesFormIncomplete.Rows[0][0].ToString())));
-
-                                        if (theFormSetProgress != null)
+                                        if (strTextSearch == "")
                                         {
-                                            FormSetForm theIncompleteFormSetForm = FormSetManager.dbg_FormSetForm_Detail((int)theFormSetProgress.FormSetFormID);
-                                            if (theIncompleteFormSetForm != null)
-                                            {
-                                                if (theIncompleteFormSetForm.IncompleteImage != "")
-                                                {
-                                                    strImageURL = strWWWRoot + theIncompleteFormSetForm.IncompleteImage;
-                                                }
-                                            }
-
+                                            strTextSearch = " CHARINDEX('," + _theRecord.RecordID.ToString() + ",' ,',' + Record." + drCT["SystemName"].ToString() + " + ',')>0";
                                         }
-                                    }
-
-
-
-                                    strWizardURL = strWizardURL + "&ps=1";
-                                    iCom = 1;
-
-                                }
-                                if (strImageURL == strComplete)
-                                {
-                                    strWizardURL = strWizardURL + "&ps=2";
-                                    iCom = 2;
-                                }
-
-                                hfC.Value = iCom.ToString();
-                                if (_iRowCount == 1 && i == 1)
-                                {
-                                    strWizardURL = strWizardURL + "&showparent=yes";
-                                }
-
-                                string strImagees = "<a href='" + strWizardURL + "'> <img src='" + strImageURL + "'/></a>";
-
-                                Label lbl = e.Row.FindControl("lbl" + i.ToString()) as Label;
-                                lbl.Text = strImagees + "&nbsp" + aFromSet.FormSetName;
-
-                                if ((bool)theFormSetGroup.Sequential)
-                                {
-                                    if (_iRowCount > 1)
-                                    {
-                                        GridViewRow gvPreRow = grdProgressHisotry.Rows[e.Row.RowIndex - 1];
-
-                                        HiddenField prehfC = gvPreRow.FindControl("hfC" + i.ToString()) as HiddenField;
-                                        if (prehfC != null)
+                                        else
                                         {
-                                            if (prehfC.Value != "2")
-                                            {
-                                                lbl.Text = "<img src='" + strImageURL + "'/>" + "&nbsp" + aFromSet.FormSetName;
-                                            }
+                                            strTextSearch = strTextSearch + " OR " + " CHARINDEX('," + _theRecord.RecordID.ToString() + ",' ,',' + Record." + drCT["SystemName"].ToString() + " + ',')>0";
                                         }
+
                                     }
                                 }
 
                             }
                         }
+                        _TabIndex = _TabIndex + 1;
+
+                        oneCTDetail[i] = (Pages_UserControl_DetailEdit)LoadControl("~/Pages/UserControl/DetailEdit.ascx");
+
+                        oneCTDetail[i].ContentPage = "record";
+                        oneCTDetail[i].TableID = int.Parse(dr["ChildTableID"].ToString());
+                        oneCTDetail[i].ID = _strDynamictabPart + "ctDetail" + i.ToString();
+                        if (_bShowChildTabsOnAdd)
+                        {
+                            oneCTDetail[i].ShowAddButton = false;
+                            oneCTDetail[i].ShowEditButton = false;
+                        }
+                        else
+                        {
+                            oneCTDetail[i].ShowAddButton = bool.Parse(dr["ShowAddButton"].ToString());
+                            oneCTDetail[i].ShowEditButton = bool.Parse(dr["ShowEditButton"].ToString());
+                        }
+                        
+                        oneCTDetail[i].DetailTabIndex = _TabIndex;
+                        oneCTDetail[i].Mode = "view";
+                        // strTextSearch = " AND (" + strTextSearch + ")";
+                        if (dr["DetailPageType"].ToString() == "alone")
+                        {
+                            oneCTDetail[i].OnlyOneRecord = true;
+                            oneCTDetail[i].SystemName = strSystemName;
+                            oneCTDetail[i].LinkedColumnValue = strLinkedColume;
+
+                        }
+                        else
+                        {
+                            oneCTDetail[i].OnlyOneRecord = false;
+                        }
+
+                        oneCTDetail[i].TextSearch = strTextSearch;
+
+                        //cTabPanel[i] = new TabPanel();
+
+                        //cTabPanel[i].HeaderText = strCaption;
+                        //cTabPanel[i].Controls.Add(oneCTDetail[i]);
+                        //tabDetail.Tabs.Add(cTabPanel[i]);
+                        Panel pnlDetailD = new Panel();
+                        pnlDetailD.ID = _strDynamictabPart + "pnlDetail" + dr["ChildTableID"].ToString();
+                        pnlDetailD.ClientIDMode = ClientIDMode.Static;
+                        pnlDetailD.CssClass = "ajax__tab_panel";
+
+                        LinkButton lnkHeadingD = new LinkButton();
+                        lnkHeadingD.ID = _strDynamictabPart + "lnkHeading" + dr["ChildTableID"].ToString();
+                        lnkHeadingD.ClientIDMode = ClientIDMode.Static;
+                        lnkHeadingD.Text = strCaption; //"Detail";
+                        lnkHeadingD.Font.Bold = true;
+                        lnkHeadingD.Attributes.Add("onclick", "ShowHideTables(" + pnlDetailD.ID + ",this); return false");
+                        lnkHeadingD.CssClass = "ajax__tab_tab";
+                        _lstTabIndexLink.Add(lnkHeadingD.ID);
+                        Panel pnlHeadingDiv = new Panel();
+                        pnlHeadingDiv.ID = "div" + lnkHeadingD.ID;
+                        pnlHeadingDiv.ClientIDMode = ClientIDMode.Static;
+                        pnlHeadingDiv.CssClass = "heading_div_class";
+
+                        Panel pnlHeadingDivO = new Panel();
+                        pnlHeadingDivO.CssClass = "ajax__tab_outer";
+                        Panel pnlHeadingDivI = new Panel();
+                        pnlHeadingDivI.CssClass = "ajax__tab_inner";
+                        pnlHeadingDivI.Controls.Add(lnkHeadingD);
+
+                        pnlHeadingDivO.Controls.Add(pnlHeadingDivI);
+                        pnlHeadingDiv.Controls.Add(pnlHeadingDivO);
+
+                       
+                        pnlHeading.Controls.Add(pnlHeadingDiv);
+
+                        //if (bVerticalHeading)
+                        //    pnlHeading.Controls.Add(new LiteralControl("<br/>"));
+
+
+                        pnlDetailD.Controls.Add(oneCTDetail[i]);
+                        pnlAllTables.Controls.Add(pnlDetailD);
+                        bAddedChild = true;
                     }
 
                     i = i + 1;
                 }
 
+
             }
+
+            //Message list
+            if (_qsMode != "add" || _bShowChildTabsOnAdd)
+            {
+                if ((_theTable.ShowSentEmails != null && (bool)_theTable.ShowSentEmails)
+                || (_theTable.ShowReceivedEmails != null && (bool)_theTable.ShowReceivedEmails))
+                {
+                    oneMLList = new Pages_UserControl_MessageList();
+                    oneMLList = (Pages_UserControl_MessageList)LoadControl("~/Pages/UserControl/MessageList.ascx");
+                    oneMLList.ID = _strDynamictabPart + "mlList";
+
+                    if (_theRecord!=null)
+                    {
+                        oneMLList.RecordID = _theRecord.RecordID;
+                    }
+                    else
+                    {
+                        oneMLList.RecordID = -1;
+                    }
+                  
+                    //TabPanel cTabPanel = new TabPanel();
+                    //cTabPanel.HeaderText = "<strong>Messages</strong>";
+                    ////cTabPanel.
+                    //cTabPanel.Controls.Add(oneMLList);
+                    //tabDetail.Tabs.Add(cTabPanel);
+
+                    Panel pnlDetailD = new Panel();
+                    pnlDetailD.ID = _strDynamictabPart + "pnlDetail" + "mlList";
+                    pnlDetailD.ClientIDMode = ClientIDMode.Static;
+                    pnlDetailD.CssClass = "ajax__tab_panel";
+
+
+                    LinkButton lnkHeadingD = new LinkButton();
+                    lnkHeadingD.ID = _strDynamictabPart + "lnkHeading" + "mlList";
+                    lnkHeadingD.ClientIDMode = ClientIDMode.Static;
+                    lnkHeadingD.Text = "Message"; //"Detail";
+                    lnkHeadingD.Font.Bold = true;
+                    lnkHeadingD.Attributes.Add("onclick", "ShowHideTables(" + pnlDetailD.ID + ",this); return false");
+                    lnkHeadingD.CssClass = "ajax__tab_tab";
+                    _lstTabIndexLink.Add(lnkHeadingD.ID);
+                    Panel pnlHeadingDiv = new Panel();
+                    pnlHeadingDiv.ID = "div" + lnkHeadingD.ID;
+                    pnlHeadingDiv.ClientIDMode = ClientIDMode.Static;
+                    pnlHeadingDiv.CssClass = "heading_div_class";
+
+                    Panel pnlHeadingDivO = new Panel();
+                    pnlHeadingDivO.CssClass = "ajax__tab_outer";
+                    Panel pnlHeadingDivI = new Panel();
+                    pnlHeadingDivI.CssClass = "ajax__tab_inner";
+                    pnlHeadingDivI.Controls.Add(lnkHeadingD);
+
+                    pnlHeadingDivO.Controls.Add(pnlHeadingDivI);
+                    pnlHeadingDiv.Controls.Add(pnlHeadingDivO);
+
+
+                    pnlHeading.Controls.Add(pnlHeadingDiv);
+
+                    pnlDetailD.Controls.Add(oneMLList);
+                    pnlAllTables.Controls.Add(pnlDetailD);
+                    bAddedChild = true;
+
+                }
+            }
+
+
         }
-     
+
+        
+       
+        // lblFristTabTableName.Visible = false;
+        if(bVerticalHeading)
+        {
+            pnlHeadingVer.Controls.Add(pnlHeading);
+            pnlHeadingHor.Visible = false;
+        }
+        else
+        {
+            pnlHeadingHor.Controls.Add(pnlHeading);
+            pnlHeadingVer.Visible = false;
+        }
+          
+        //pnlDetail.CssClass = "ajax__tab_panel";
+
+        if (bAddedChild)
+        {
+            //if (!IsPostBack)
+            //{
+                //txtCurrentSelectedTabLink.Text = lnkHeading.ID;
+                _strFirstTableJS = "ShowHideTables(" + pnlDetail.ID + "," + lnkHeading.ID + "); ";
+            //}
+                
+        }
+        else
+        {
+            pnlHeading.Enabled = false;
+        }
+            
+        
+
     }
+
+     protected void ShowHideChildTables(Record theRecord)
+    {
+        //check show hide :-)
+        //        if (Request.QueryString["RecordID"] != null || _bCopyRecord == true)
+       
+
+        if (Request.QueryString["RecordID"] != null || _bCopyRecord == true || _bShowChildTabsOnAdd)
+        {
+            DataTable dtCT = Common.DataTableFromText("SELECT * FROM TableChild WHERE ParentTableID=" + _qsTableID + " AND DetailPageType<>'not' ORDER BY DisplayOrder");
+                if (dtCT.Rows.Count > 0)
+                {
+                    foreach (DataRow dr in dtCT.Rows)
+                    {
+                        //check advanced security
+
+                        string strChildTableRight = "2";
+                        if ((bool)_theUserRole.IsAdvancedSecurity)
+                        {
+                            DataTable dtUserTable = null;
+
+                            dtUserTable = SecurityManager.dbg_RoleTable_Select(null,
+                           int.Parse(dr["ChildTableID"].ToString()), _theUserRole.RoleID, null);
+                            if (dtUserTable.Rows.Count > 0)
+                            {
+                                strChildTableRight = dtUserTable.Rows[0]["RoleType"].ToString();
+                            }
+
+                        }
+                        if (strChildTableRight == Common.UserRoleType.None) //none role
+                        {
+                            continue;
+                        }
+
+                        //_qsMode != "add" && 
+                        if (theRecord != null)
+                        {
+                            if (dr["HideColumnID"] != DBNull.Value &&
+                                    dr["HideColumnValue"] != DBNull.Value && dr["HideOperator"] != DBNull.Value)
+                            {
+                                Column theHideColumn = RecordManager.ets_Column_Details(int.Parse(dr["HideColumnID"].ToString()));
+                                if (theHideColumn != null)
+                                {
+                                    string strThisHideColumnValue = RecordManager.GetRecordValue(ref theRecord, theHideColumn.SystemName);
+                                    string strHideColumnValue = "";
+                                    bool bShowTab = false;
+                                    if (strThisHideColumnValue != "")
+                                    {
+
+                                        strHideColumnValue = dr["HideColumnValue"].ToString();
+
+                                        if (theHideColumn.ColumnType == "listbox")
+                                        {
+                                            string[] strAllHideColumnValue = strHideColumnValue.Split(',');
+                                            if (dr["HideOperator"].ToString() == "contains")
+                                            {
+                                                string[] strAllThisHideCValue = strThisHideColumnValue.Split(',');
+
+
+                                                foreach (string eachHideValue in strAllHideColumnValue)
+                                                {
+                                                    if (eachHideValue != "")
+                                                    {
+                                                        foreach (string eachThisValue in strAllThisHideCValue)
+                                                        {
+                                                            if (eachThisValue != "")
+                                                            {
+                                                                if (eachHideValue == eachThisValue)
+                                                                {
+                                                                    bShowTab = true;
+                                                                    continue;
+
+                                                                }
+                                                            }
+                                                        }
+
+                                                    }
+                                                }
+                                            }
+
+                                            //or all
+
+                                            if (dr["HideOperator"].ToString() == "equals")
+                                            {
+                                                if (strHideColumnValue == strThisHideColumnValue)
+                                                {
+                                                    bShowTab = true;
+                                                }
+                                            }
+
+                                        }
+                                        else
+                                        {
+
+                                            if (theHideColumn.DropDownType == "value_text" && theHideColumn.DropdownValues != "")
+                                            {
+                                                strThisHideColumnValue = Common.GetTextFromValue(theHideColumn.DropdownValues, strThisHideColumnValue);
+                                            }
+                                            strThisHideColumnValue = strThisHideColumnValue.ToLower();
+                                            strHideColumnValue = strHideColumnValue.ToLower();
+                                            if (dr["HideOperator"].ToString() == "equals")
+                                            {
+                                                if (strHideColumnValue == strThisHideColumnValue)
+                                                {
+                                                    bShowTab = true;
+                                                }
+                                            }
+                                            if (dr["HideOperator"].ToString() == "contains")
+                                            {
+                                                if (strThisHideColumnValue.IndexOf(strHideColumnValue) > -1)
+                                                {
+                                                    bShowTab = true;
+                                                }
+                                            }
+
+                                        }
+
+                                    }
+
+                                    Panel pnlTempD = null;
+                                    Panel pnlTempH = null;
+
+                                    if (divDynamic.FindControl(_strDynamictabPart + "pnlDetail" + dr["ChildTableID"].ToString()) != null)
+                                        pnlTempD = (Panel)divDynamic.FindControl(_strDynamictabPart + "pnlDetail" + dr["ChildTableID"].ToString());
+                                    if (divDynamic.FindControl("div"+_strDynamictabPart + "lnkHeading" + dr["ChildTableID"].ToString()) != null)
+                                        pnlTempH = (Panel)divDynamic.FindControl("div" + _strDynamictabPart + "lnkHeading" + dr["ChildTableID"].ToString());
+
+                                    if (bShowTab == false)
+                                    {
+                                        if (pnlTempD != null)
+                                            pnlTempD.Visible = false;
+                                        if (pnlTempH != null)
+                                            pnlTempH.Visible = false;
+                                    }
+                                    else
+                                    {
+                                        if (pnlTempD != null)
+                                            pnlTempD.Visible = true;
+                                        if (pnlTempH != null)
+                                            pnlTempH.Visible = true;
+                                    }
+
+
+                                }
+
+                            }
+                        }
+                    }
+                   
+                }
+
+        }
+       
+    }
+//    protected void ShowHideChildTables()
+//    {
+
+//        bool bVerticalHeading = false;
+//        if (_theTable.ShowTabVertically != null && (bool)_theTable.ShowTabVertically)
+//        {
+//            bVerticalHeading = true;
+//        }
+
+//        string strDivHeadingClass = @"<style>
+//                .DBGTab .heading_div_class
+//                {
+//                    display:inline-block;
+//                }
+//                </style>
+//                ";
+
+//        if (!IsPostBack)
+//        {
+//            if (bVerticalHeading == false)
+//            {
+//                ltTextStyles.Text = ltTextStyles.Text + strDivHeadingClass;
+//            }
+//        }
+
+
+//        Panel pnlHeading = new Panel();
+//        pnlHeading.ID = _strDynamictabPart + "pnlHeading";
+//        pnlHeading.ClientIDMode = ClientIDMode.Static;
+
+//        if (bVerticalHeading)
+//        {
+//            pnlHeading.CssClass = "ajax__tab_header_verticalleft";
+//        }
+//        else
+//        {
+//            pnlHeading.CssClass = "ajax__tab_header";
+//        }
+
+
+
+//        LinkButton lnkHeading = new LinkButton();
+//        lnkHeading.ID = _strDynamictabPart + "lnkHeading";
+//        lnkHeading.ClientIDMode = ClientIDMode.Static;
+//        lnkHeading.Text = _theTable.TableName; //"Detail";
+//        lnkHeading.Font.Bold = true;
+//        lnkHeading.Attributes.Add("onclick", "ShowHideTables(" + pnlDetail.ID + ",this); return false");
+//        lnkHeading.CssClass = "ajax__tab_tab";
+//        _lstTabIndexLink.Add(lnkHeading.ID);
+//        Panel pnlHeadingDivM = new Panel();
+//        pnlHeadingDivM.ID = "div" + lnkHeading.ID;
+//        pnlHeadingDivM.ClientIDMode = ClientIDMode.Static;
+//        pnlHeadingDivM.CssClass = "heading_div_class";
+
+//        Panel pnlHeadingDivMO = new Panel();
+//        pnlHeadingDivMO.CssClass = "ajax__tab_outer";
+//        Panel pnlHeadingDivMI = new Panel();
+//        pnlHeadingDivMI.CssClass = "ajax__tab_inner";
+//        pnlHeadingDivMI.Controls.Add(lnkHeading);
+
+//        pnlHeadingDivMO.Controls.Add(pnlHeadingDivMI);
+//        pnlHeadingDivM.Controls.Add(pnlHeadingDivMO);
+
+//        pnlHeading.Controls.Add(pnlHeadingDivM);
+
+//        bool bAddedChild = false;
+//        if (Request.QueryString["RecordID"] != null || _bCopyRecord == true)
+//        {
+//            DataTable dtCT = Common.DataTableFromText("SELECT * FROM TableChild WHERE ParentTableID=" + _qsTableID + " AND DetailPageType<>'not' ORDER BY DisplayOrder");
+
+
+//            if (dtCT.Rows.Count > 0)
+//            {
+//                oneCTList = new Pages_UserControl_RecordList[dtCT.Rows.Count];
+//                oneCTDetail = new Pages_UserControl_DetailEdit[dtCT.Rows.Count];
+
+//                int i = 0;
+
+//                foreach (DataRow dr in dtCT.Rows)
+//                {
+//                    //check advanced security
+
+
+
+//                    string strChildTableRight = "2";
+//                    if ((bool)_theUserRole.IsAdvancedSecurity)
+//                    {
+//                        DataTable dtUserTable = null;
+
+//                        dtUserTable = SecurityManager.dbg_RoleTable_Select(null,
+//                       int.Parse(dr["ChildTableID"].ToString()), _theUserRole.RoleID, null);
+//                        if (dtUserTable.Rows.Count > 0)
+//                        {
+//                            strChildTableRight = dtUserTable.Rows[0]["RoleType"].ToString();
+//                        }
+
+//                    }
+//                    if (strChildTableRight == Common.UserRoleType.None) //none role
+//                    {
+//                        continue;
+//                    }
+
+//                    //check show hide :-)
+//                    if (_qsMode != "add" && _theRecord != null)
+//                    {
+//                        if (dr["HideColumnID"] != DBNull.Value &&
+//                                dr["HideColumnValue"] != DBNull.Value && dr["HideOperator"] != DBNull.Value)
+//                        {
+//                            Column theHideColumn = RecordManager.ets_Column_Details(int.Parse(dr["HideColumnID"].ToString()));
+//                            if (theHideColumn != null)
+//                            {
+//                                string strThisHideColumnValue = RecordManager.GetRecordValue(ref _theRecord, theHideColumn.SystemName);
+//                                string strHideColumnValue = "";
+//                                bool bShowTab = false;
+//                                if (strThisHideColumnValue != "")
+//                                {
+
+//                                    strHideColumnValue = dr["HideColumnValue"].ToString();
+
+//                                    if (theHideColumn.ColumnType == "listbox")
+//                                    {
+//                                        string[] strAllHideColumnValue = strHideColumnValue.Split(',');
+//                                        if (dr["HideOperator"].ToString() == "contains")
+//                                        {
+//                                            string[] strAllThisHideCValue = strThisHideColumnValue.Split(',');
+
+
+//                                            foreach (string eachHideValue in strAllHideColumnValue)
+//                                            {
+//                                                if (eachHideValue != "")
+//                                                {
+//                                                    foreach (string eachThisValue in strAllThisHideCValue)
+//                                                    {
+//                                                        if (eachThisValue != "")
+//                                                        {
+//                                                            if (eachHideValue == eachThisValue)
+//                                                            {
+//                                                                bShowTab = true;
+//                                                                continue;
+
+//                                                            }
+//                                                        }
+//                                                    }
+
+//                                                }
+//                                            }
+//                                        }
+
+//                                        //or all
+
+//                                        if (dr["HideOperator"].ToString() == "equals")
+//                                        {
+//                                            if (strHideColumnValue == strThisHideColumnValue)
+//                                            {
+//                                                bShowTab = true;
+//                                            }
+//                                        }
+
+//                                    }
+//                                    else
+//                                    {
+
+//                                        if (theHideColumn.DropDownType == "value_text" && theHideColumn.DropdownValues != "")
+//                                        {
+//                                            strThisHideColumnValue = Common.GetTextFromValue(theHideColumn.DropdownValues, strThisHideColumnValue);
+//                                        }
+//                                        strThisHideColumnValue = strThisHideColumnValue.ToLower();
+//                                        strHideColumnValue = strHideColumnValue.ToLower();
+//                                        if (dr["HideOperator"].ToString() == "equals")
+//                                        {
+//                                            if (strHideColumnValue == strThisHideColumnValue)
+//                                            {
+//                                                bShowTab = true;
+//                                            }
+//                                        }
+//                                        if (dr["HideOperator"].ToString() == "contains")
+//                                        {
+//                                            if (strThisHideColumnValue.IndexOf(strHideColumnValue) > -1)
+//                                            {
+//                                                bShowTab = true;
+//                                            }
+//                                        }
+
+//                                    }
+
+//                                }
+
+
+
+//                                if (bShowTab == false)
+//                                {
+//                                    continue;
+//                                }
+
+
+//                            }
+
+//                        }
+//                    }
+
+
+//                    string strCaption = dr["Description"].ToString();
+
+//                    if (strCaption == "")
+//                    {
+//                        Table theTable = RecordManager.ets_Table_Details(int.Parse(dr["ChildTableID"].ToString()));
+
+//                        if (theTable != null)
+//                        {
+//                            strCaption = theTable.TableName;
+//                        }
+
+//                    }
+//                    //strCaption = "<strong>" + strCaption + "</strong>";
+
+//                    if (dr["DetailPageType"].ToString() == "list")
+//                    {
+
+
+//                        string strTextSearch = "";
+//                        if (_qsRecordID != "")
+//                        {
+//                            DataTable dtTemp = Common.DataTableFromText("SELECT SystemName,ColumnID,ColumnType FROM [Column] WHERE LinkedParentColumnID IS NOT NULL AND (ColumnType='dropdown' OR ColumnType='listbox') AND   TableID=" + dr["ChildTableID"].ToString() + " AND TableTableID=" + _qsTableID);
+
+
+//                            foreach (DataRow drCT in dtTemp.Rows)
+//                            {
+
+//                                Column theChildColumn = RecordManager.ets_Column_Details(int.Parse(drCT["ColumnID"].ToString()));
+//                                Column theLinkedColumn = RecordManager.ets_Column_Details((int)theChildColumn.LinkedParentColumnID);
+//                                Record theLinkedRecord = RecordManager.ets_Record_Detail_Full(int.Parse(_qsRecordID));
+//                                string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
+//                                strLinkedColumnValue = strLinkedColumnValue.Replace("'", "''");
+
+//                                if (drCT["ColumnType"].ToString() == "dropdown")
+//                                {
+//                                    if (strTextSearch == "")
+//                                    {
+//                                        strTextSearch = " Record." + drCT["SystemName"].ToString() + "='" + strLinkedColumnValue + "' ";
+//                                    }
+//                                    else
+//                                    {
+//                                        strTextSearch = strTextSearch + " OR " + " Record." + drCT["SystemName"].ToString() + "='" + strLinkedColumnValue + "' ";
+//                                    }
+//                                }
+//                                else
+//                                {
+//                                    if (strTextSearch == "")
+//                                    {
+//                                        strTextSearch = " CHARINDEX('," + _theRecord.RecordID.ToString() + ",' ,',' + Record." + drCT["SystemName"].ToString() + " + ',')>0";
+//                                    }
+//                                    else
+//                                    {
+//                                        strTextSearch = strTextSearch + " OR " + " CHARINDEX('," + _theRecord.RecordID.ToString() + ",' ,',' + Record." + drCT["SystemName"].ToString() + " + ',')>0";
+//                                    }
+
+//                                }
+
+//                            }
+
+
+
+
+
+//                        }
+
+//                        _TabIndex = _TabIndex + 1;
+//                        oneCTList[i] = (Pages_UserControl_RecordList)LoadControl("~/Pages/UserControl/RecordList.ascx");
+//                        oneCTList[i].TableID = int.Parse(dr["ChildTableID"].ToString());
+//                        oneCTList[i].ID = _strDynamictabPart + "ctList" + i.ToString();
+//                        oneCTList[i].DetailTabIndex = _TabIndex;
+//                        oneCTList[i].ShowAddButton = bool.Parse(dr["ShowAddButton"].ToString());
+//                        oneCTList[i].ShowEditButton = bool.Parse(dr["ShowEditButton"].ToString());
+//                        oneCTList[i].PageType = "c";
+
+//                        strTextSearch = " AND (" + (strTextSearch == "" ? "1=1" : strTextSearch) + ")";
+//                        oneCTList[i].TextSearchParent = strTextSearch;
+//                        _bHasListChild = true;
+
+//                        //cTabPanel[i] = new TabPanel();
+//                        //cTabPanel[i].HeaderText = strCaption;
+//                        //cTabPanel[i].Controls.Add(oneCTList[i]);
+//                        //tabDetail.Tabs.Add(cTabPanel[i]);
+
+//                        Panel pnlDetailD = new Panel();
+//                        pnlDetailD.ID = _strDynamictabPart + "pnlDetail" + dr["ChildTableID"].ToString();
+//                        pnlDetailD.ClientIDMode = ClientIDMode.Static;
+//                        pnlDetailD.CssClass = "ajax__tab_panel";
+
+//                        LinkButton lnkHeadingD = new LinkButton();
+//                        lnkHeadingD.ID = _strDynamictabPart + "lnkHeading" + dr["ChildTableID"].ToString();
+//                        lnkHeadingD.ClientIDMode = ClientIDMode.Static;
+//                        lnkHeadingD.Text = strCaption; //"Detail";
+//                        lnkHeadingD.Font.Bold = true;
+//                        lnkHeadingD.Attributes.Add("onclick", "ShowHideTables(" + pnlDetailD.ID + ",this); return false");
+//                        lnkHeadingD.CssClass = "ajax__tab_tab";
+//                        _lstTabIndexLink.Add(lnkHeadingD.ID);
+//                        Panel pnlHeadingDiv = new Panel();
+//                        pnlHeadingDiv.ID = "div" + lnkHeadingD.ID;
+//                        pnlHeadingDiv.ClientIDMode = ClientIDMode.Static;
+//                        pnlHeadingDiv.CssClass = "heading_div_class";
+
+//                        Panel pnlHeadingDivO = new Panel();
+//                        pnlHeadingDivO.CssClass = "ajax__tab_outer";
+//                        Panel pnlHeadingDivI = new Panel();
+//                        pnlHeadingDivI.CssClass = "ajax__tab_inner";
+//                        pnlHeadingDivI.Controls.Add(lnkHeadingD);
+
+//                        pnlHeadingDivO.Controls.Add(pnlHeadingDivI);
+//                        pnlHeadingDiv.Controls.Add(pnlHeadingDivO);
+
+//                        pnlHeading.Controls.Add(pnlHeadingDiv);
+
+//                        pnlDetailD.Controls.Add(oneCTList[i]);
+//                        pnlAllTables.Controls.Add(pnlDetailD);
+//                        bAddedChild = true;
+//                    }
+//                    else
+//                    {
+
+//                        string strTextSearch = "";
+
+//                        string strSystemName = "";
+//                        string strLinkedColume = "";
+//                        if (_qsRecordID != "")
+//                        {
+//                            DataTable dtTemp = Common.DataTableFromText("SELECT SystemName,ColumnID,ColumnType FROM [Column] WHERE (ColumnType='dropdown' OR ColumnType='listbox') AND  TableID=" + dr["ChildTableID"].ToString() + " AND TableTableID=" + _qsTableID);
+//                            foreach (DataRow drCT in dtTemp.Rows)
+//                            {
+//                                Column theChildColumn = RecordManager.ets_Column_Details(int.Parse(drCT["ColumnID"].ToString()));
+//                                Column theLinkedColumn = RecordManager.ets_Column_Details((int)theChildColumn.LinkedParentColumnID);
+//                                Record theLinkedRecord = RecordManager.ets_Record_Detail_Full(int.Parse(_qsRecordID));
+//                                string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
+
+//                                if (strLinkedColumnValue != null)
+//                                {
+//                                    strLinkedColumnValue = strLinkedColumnValue.Replace("'", "''");
+//                                    strSystemName = drCT["SystemName"].ToString();
+//                                    strLinkedColume = strLinkedColumnValue;
+
+//                                    if (drCT["ColumnType"].ToString() == "dropdown")
+//                                    {
+//                                        if (strTextSearch == "")
+//                                        {
+//                                            strTextSearch = " Record." + drCT["SystemName"].ToString() + "='" + strLinkedColumnValue + "' ";
+//                                        }
+//                                        else
+//                                        {
+//                                            strTextSearch = strTextSearch + " OR " + " Record." + drCT["SystemName"].ToString() + "='" + strLinkedColumnValue + "' ";
+//                                        }
+//                                    }
+//                                    else
+//                                    {
+//                                        if (strTextSearch == "")
+//                                        {
+//                                            strTextSearch = " CHARINDEX('," + _theRecord.RecordID.ToString() + ",' ,',' + Record." + drCT["SystemName"].ToString() + " + ',')>0";
+//                                        }
+//                                        else
+//                                        {
+//                                            strTextSearch = strTextSearch + " OR " + " CHARINDEX('," + _theRecord.RecordID.ToString() + ",' ,',' + Record." + drCT["SystemName"].ToString() + " + ',')>0";
+//                                        }
+
+//                                    }
+//                                }
+
+//                            }
+//                        }
+//                        _TabIndex = _TabIndex + 1;
+
+//                        oneCTDetail[i] = (Pages_UserControl_DetailEdit)LoadControl("~/Pages/UserControl/DetailEdit.ascx");
+
+//                        oneCTDetail[i].ContentPage = "record";
+//                        oneCTDetail[i].TableID = int.Parse(dr["ChildTableID"].ToString());
+//                        oneCTDetail[i].ID = _strDynamictabPart + "ctDetail" + i.ToString();
+//                        oneCTDetail[i].ShowAddButton = bool.Parse(dr["ShowAddButton"].ToString());
+//                        oneCTDetail[i].ShowEditButton = bool.Parse(dr["ShowEditButton"].ToString());
+//                        oneCTDetail[i].DetailTabIndex = _TabIndex;
+//                        oneCTDetail[i].Mode = "view";
+//                        // strTextSearch = " AND (" + strTextSearch + ")";
+//                        if (dr["DetailPageType"].ToString() == "alone")
+//                        {
+//                            oneCTDetail[i].OnlyOneRecord = true;
+//                            oneCTDetail[i].SystemName = strSystemName;
+//                            oneCTDetail[i].LinkedColumnValue = strLinkedColume;
+
+//                        }
+//                        else
+//                        {
+//                            oneCTDetail[i].OnlyOneRecord = false;
+//                        }
+
+//                        oneCTDetail[i].TextSearch = strTextSearch;
+
+//                        //cTabPanel[i] = new TabPanel();
+
+//                        //cTabPanel[i].HeaderText = strCaption;
+//                        //cTabPanel[i].Controls.Add(oneCTDetail[i]);
+//                        //tabDetail.Tabs.Add(cTabPanel[i]);
+//                        Panel pnlDetailD = new Panel();
+//                        pnlDetailD.ID = _strDynamictabPart + "pnlDetail" + dr["ChildTableID"].ToString();
+//                        pnlDetailD.ClientIDMode = ClientIDMode.Static;
+//                        pnlDetailD.CssClass = "ajax__tab_panel";
+
+//                        LinkButton lnkHeadingD = new LinkButton();
+//                        lnkHeadingD.ID = _strDynamictabPart + "lnkHeading" + dr["ChildTableID"].ToString();
+//                        lnkHeadingD.ClientIDMode = ClientIDMode.Static;
+//                        lnkHeadingD.Text = strCaption; //"Detail";
+//                        lnkHeadingD.Font.Bold = true;
+//                        lnkHeadingD.Attributes.Add("onclick", "ShowHideTables(" + pnlDetailD.ID + ",this); return false");
+//                        lnkHeadingD.CssClass = "ajax__tab_tab";
+//                        _lstTabIndexLink.Add(lnkHeadingD.ID);
+//                        Panel pnlHeadingDiv = new Panel();
+//                        pnlHeadingDiv.ID = "div" + lnkHeadingD.ID;
+//                        pnlHeadingDiv.ClientIDMode = ClientIDMode.Static;
+//                        pnlHeadingDiv.CssClass = "heading_div_class";
+
+//                        Panel pnlHeadingDivO = new Panel();
+//                        pnlHeadingDivO.CssClass = "ajax__tab_outer";
+//                        Panel pnlHeadingDivI = new Panel();
+//                        pnlHeadingDivI.CssClass = "ajax__tab_inner";
+//                        pnlHeadingDivI.Controls.Add(lnkHeadingD);
+
+//                        pnlHeadingDivO.Controls.Add(pnlHeadingDivI);
+//                        pnlHeadingDiv.Controls.Add(pnlHeadingDivO);
+
+
+//                        pnlHeading.Controls.Add(pnlHeadingDiv);
+
+//                        //if (bVerticalHeading)
+//                        //    pnlHeading.Controls.Add(new LiteralControl("<br/>"));
+
+
+//                        pnlDetailD.Controls.Add(oneCTDetail[i]);
+//                        pnlAllTables.Controls.Add(pnlDetailD);
+//                        bAddedChild = true;
+//                    }
+
+//                    i = i + 1;
+//                }
+
+
+//            }
+
+//            //Message list
+//            if (_qsMode != "add")
+//            {
+//                if ((_theTable.ShowSentEmails != null && (bool)_theTable.ShowSentEmails)
+//                || (_theTable.ShowReceivedEmails != null && (bool)_theTable.ShowReceivedEmails))
+//                {
+//                    oneMLList = new Pages_UserControl_MessageList();
+//                    oneMLList = (Pages_UserControl_MessageList)LoadControl("~/Pages/UserControl/MessageList.ascx");
+//                    oneMLList.ID = _strDynamictabPart + "mlList";
+//                    oneMLList.RecordID = _theRecord.RecordID;
+//                    //TabPanel cTabPanel = new TabPanel();
+//                    //cTabPanel.HeaderText = "<strong>Messages</strong>";
+//                    ////cTabPanel.
+//                    //cTabPanel.Controls.Add(oneMLList);
+//                    //tabDetail.Tabs.Add(cTabPanel);
+
+//                    Panel pnlDetailD = new Panel();
+//                    pnlDetailD.ID = _strDynamictabPart + "pnlDetail" + "mlList";
+//                    pnlDetailD.ClientIDMode = ClientIDMode.Static;
+//                    pnlDetailD.CssClass = "ajax__tab_panel";
+
+
+//                    LinkButton lnkHeadingD = new LinkButton();
+//                    lnkHeadingD.ID = _strDynamictabPart + "lnkHeading" + "mlList";
+//                    lnkHeadingD.ClientIDMode = ClientIDMode.Static;
+//                    lnkHeadingD.Text = "Message"; //"Detail";
+//                    lnkHeadingD.Font.Bold = true;
+//                    lnkHeadingD.Attributes.Add("onclick", "ShowHideTables(" + pnlDetailD.ID + ",this); return false");
+//                    lnkHeadingD.CssClass = "ajax__tab_tab";
+//                    _lstTabIndexLink.Add(lnkHeadingD.ID);
+//                    Panel pnlHeadingDiv = new Panel();
+//                    pnlHeadingDiv.ID = "div" + lnkHeadingD.ID;
+//                    pnlHeadingDiv.ClientIDMode = ClientIDMode.Static;
+//                    pnlHeadingDiv.CssClass = "heading_div_class";
+
+//                    Panel pnlHeadingDivO = new Panel();
+//                    pnlHeadingDivO.CssClass = "ajax__tab_outer";
+//                    Panel pnlHeadingDivI = new Panel();
+//                    pnlHeadingDivI.CssClass = "ajax__tab_inner";
+//                    pnlHeadingDivI.Controls.Add(lnkHeadingD);
+
+//                    pnlHeadingDivO.Controls.Add(pnlHeadingDivI);
+//                    pnlHeadingDiv.Controls.Add(pnlHeadingDivO);
+
+
+//                    pnlHeading.Controls.Add(pnlHeadingDiv);
+
+//                    pnlDetailD.Controls.Add(oneMLList);
+//                    pnlAllTables.Controls.Add(pnlDetailD);
+//                    bAddedChild = true;
+
+//                }
+//            }
+
+
+//        }
+
+
+
+//        // lblFristTabTableName.Visible = false;
+//        if (bVerticalHeading)
+//        {
+//            pnlHeadingVer.Controls.Add(pnlHeading);
+//            pnlHeadingHor.Visible = false;
+//        }
+//        else
+//        {
+//            pnlHeadingHor.Controls.Add(pnlHeading);
+//            pnlHeadingVer.Visible = false;
+//        }
+
+//        //pnlDetail.CssClass = "ajax__tab_panel";
+
+//        if (bAddedChild)
+//        {
+//            //if (!IsPostBack)
+//            //{
+//            //txtCurrentSelectedTabLink.Text = lnkHeading.ID;
+//            _strFirstTableJS = "ShowHideTables(" + pnlDetail.ID + "," + lnkHeading.ID + "); ";
+//            //}
+
+//        }
+//        else
+//        {
+//            pnlHeading.Enabled = false;
+//        }
+
+
+
+//    }
+     protected void CommonChangeEvent(object sender, EventArgs e)
+    {
+         try
+         {
+             string strValue = "";
+             Column theColumn = null;
+             switch (sender.GetType().Name)
+             {
+                 case "DropDownList":
+                     DropDownList ddlDropDownList = (DropDownList)sender;
+                     if (ddlDropDownList != null)
+                     {
+                         strValue = ddlDropDownList.SelectedValue;
+                         if (ddlDropDownList.Attributes["ColumnID"].ToString() != "")
+                             theColumn = RecordManager.ets_Column_Details(int.Parse(ddlDropDownList.Attributes["ColumnID"].ToString()));
+                     }
+                     break;
+                 case "TextBox":
+                     TextBox txtTextBox = (TextBox)sender;
+                     if(txtTextBox!=null)
+                     {
+                         strValue = txtTextBox.Text.Trim();
+                         if (txtTextBox.Attributes["ColumnID"].ToString() != "")
+                             theColumn = RecordManager.ets_Column_Details(int.Parse(txtTextBox.Attributes["ColumnID"].ToString()));
+
+                     }
+                     break;
+                 //case "CheckBox":
+                 //    CheckBox chkCheckBox = (CheckBox)sender;
+
+                 //    break;
+                 //case "RadioButtonList":
+                 //    RadioButtonList radioRadioButtonList = (RadioButtonList)sender;
+                 //    break;
+                
+             }
+
+             int? iRecordID=null;
+             if(_qsMode!="add")
+                 iRecordID=_iRecordID;
+             string strMessage = "";
+             if (theColumn != null && !string.IsNullOrEmpty(theColumn.ControlValueChangeService))
+             {
+                 ColumnChangeService theColumnChangeService = JSONField.GetTypedObject<ColumnChangeService>(theColumn.ControlValueChangeService);
+
+                 string xmlUpdatedRecord = "";
+                 string xmlRecord = "";
+
+                 if (theColumnChangeService != null && !string.IsNullOrEmpty(theColumnChangeService.SPName))
+                 {
+                   
+                     _bCancelSave = true;
+                     PerformSave();
+
+                     if (ViewState["vRecord"] != null)
+                         xmlRecord = TheDatabase.RecordToXML((Record)ViewState["vRecord"], _dtColumnsAll);
+
+
+                     strMessage = TheDatabase.SP_ControlValueChangeService(theColumnChangeService.SPName, (_qsMode == "add") ? true : false,
+                         iRecordID, _objUser.UserID,
+                        _theTable.TableID, xmlRecord, ref xmlUpdatedRecord);
+
+
+                     if (xmlUpdatedRecord != "")
+                     {
+                         _dtRecordedetail = TheDatabase.XMLtoDataTableDetail(xmlUpdatedRecord,_theTable.TableID);                        
+                         PopulateRecord();
+                     }
+
+                 }
+                 if (theColumnChangeService != null && !string.IsNullOrEmpty(theColumnChangeService.DotNetMethod))
+                 {
+                    
+                     _bCancelSave = true;
+                     PerformSave();
+                     Record theRecord = null;
+                     if (ViewState["vRecord"] != null)
+                     {
+                         theRecord = (Record)ViewState["vRecord"];
+                     }
+                     //xmlRecord = TheDatabase.RecordToXML((Record)ViewState["vRecord"], _dtColumnsDetail);
+
+                     List<object> roList = new List<object>();
+                     List<object> ObjList = new List<object>();
+                     ObjList.Add(theRecord);
+                     ObjList.Add(_objUser);
+
+
+                     roList = CustomMethod.DotNetMethod(theColumnChangeService.DotNetMethod, ObjList);
+
+                     if (roList != null)
+                     {
+                         foreach (object obj in roList)
+                         {
+                             if (obj.GetType().Name == "DataTable")
+                             {
+
+                                 _dtRecordedetail = (DataTable)obj;
+
+                             }
+                             if (obj.GetType().Name == "string")
+                             {
+
+                                 strMessage = (string)obj;
+
+                             }
+                         }
+                         if (_dtRecordedetail != null)
+                         {
+                             _bCancelSave = true;
+                             PopulateRecord();
+                         }
+                     }
+
+
+                 }
+                 if (theColumnChangeService != null && !string.IsNullOrEmpty(theColumnChangeService.AfterValueChange))
+                 {
+                     if (theColumnChangeService.AfterValueChange == "save")
+                     {
+                         lnkSaveClose_Click(null, null);
+                     }
+                     if (theColumnChangeService.AfterValueChange == "show_hide_child_tabs"
+                         && (_qsMode!="add" || _bShowChildTabsOnAdd))
+                     {
+
+
+                         _bCancelSave = true;
+                         PerformSave();
+                         Record theRecord = _theRecord;
+                         if (ViewState["vRecord"] != null)
+                         {
+                             theRecord = (Record)ViewState["vRecord"];
+                         }
+                         if (theRecord!=null)
+                            ShowHideChildTables(theRecord);
+                     }
+                 }
+                 if (theColumnChangeService != null && !string.IsNullOrEmpty(strMessage) && !string.IsNullOrEmpty(theColumnChangeService.MessageType))
+                 {
+                     if (theColumnChangeService.MessageType == "js")
+                     {
+                         ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "themaColumnChangeService_MessageType" + _strDynamictabPart + theColumn.ColumnID.ToString(), "alert('" + Server.HtmlEncode(strMessage) + "');", true);
+
+                     }
+                     else
+                     {
+                         Session["tdbmsgpb"] = strMessage;
+                     }
+                 }
+
+
+                 
+
+
+             }
+         }
+         catch(Exception ex)
+         {
+             //
+         }
+    }
+ 
 
     protected void LB_SPRun_Click(object sender, EventArgs e)
     {
@@ -993,26 +1907,83 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             {
                 if (theButton.CommandArgument != "")
                 {
+                    bool bNewTab = false;
                     Column theColumn = RecordManager.ets_Column_Details(int.Parse(theButton.CommandArgument));
                     ColumnButtonInfo theButtonInfo = JSONField.GetTypedObject<ColumnButtonInfo>(theColumn.ButtonInfo);
+                    string strURL = Request.RawUrl;
 
-                    if (_iRecordID > 0)
+                    if (!string.IsNullOrEmpty(theButtonInfo.OnClick))
                     {
-                        if (PerformSave())
+                        
+                        if (theButtonInfo.OnClick == "StayCurrent" || theButtonInfo.OnClick == "Goback")
                         {
-                            RecordManager.RunSPForRecord(theButtonInfo.SPToRun,
-                                _iRecordID, (int)_objUser.UserID);
-                            if ( string.IsNullOrEmpty( theButtonInfo.OpenLink))
+                            if (theButtonInfo.OnClick == "StayCurrent" )
                             {
-                                 Response.Redirect(Request.RawUrl, false);
+                                strURL = Request.RawUrl;
+                                if(_qsMode == "add" )
+                                {
+                                    strURL = GetEditURLAfterAdd();
+                                }
                             }
                             else
                             {
-                                Response.Redirect(theButtonInfo.OpenLink, false);
+                                strURL=hlBack.NavigateUrl;
                             }
-                           
                         }
+                        else
+                        {
+                            //if (!string.IsNullOrEmpty(theButtonInfo.AdditionalParams))                           
 
+                            if (theButtonInfo.OnClick == "AddChild")
+                            {
+                                if (theButtonInfo.ChildTableID != null)
+                                {
+                                    strURL = "RecordDetail.aspx?mode="+Cryptography.Encrypt("add")+"&tabindex=0&parentRecordid=[RecordID]&TableID="+Cryptography.Encrypt(theButtonInfo.ChildTableID.ToString())+"&SearchCriteriaID="+Cryptography.Encrypt("-1");
+                                   
+                                }
+
+                            }
+                            else
+                            {
+                                if (!string.IsNullOrEmpty(theButtonInfo.Link))
+                                {
+                                    strURL = theButtonInfo.Link;
+                                    if (theButtonInfo.OnClick == "NewTab")
+                                    {
+                                        bNewTab = true;
+                                    }
+                                }                                
+                            }
+                        }
+                    }
+
+
+
+
+                    if (_iRecordID > 0)
+                    {
+                        strURL = strURL.Replace("[RecordID]", Cryptography.Encrypt(_iRecordID.ToString()));
+                        if (PerformSave())
+                        {
+
+                            if (!string.IsNullOrEmpty(theButtonInfo.SPToRun))
+                             RecordManager.RunSPForRecord(theButtonInfo.SPToRun,
+                                _iRecordID, (int)_objUser.UserID);
+
+                            if(bNewTab)
+                            {
+                                Response.Write("<script type='text/javascript'>");
+                                Response.Write("window.open('" + strURL + "','_blank');");
+                                Response.Write("</script>");
+                            }
+                            else
+                            {
+                                Response.Redirect(strURL, false);
+                            }
+                            
+                           
+                          
+                        }
                     }
                     else
                     {
@@ -1020,30 +1991,50 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         {
                             if (_iRecordID > 0)
                             {
-                                RecordManager.RunSPForRecord(theButtonInfo.SPToRun,
-                                 _iRecordID, (int)_objUser.UserID);
-                                if (string.IsNullOrEmpty(theButtonInfo.OpenLink))
+                                strURL = strURL.Replace("[RecordID]", Cryptography.Encrypt(_iRecordID.ToString()));
+
+                                if (!string.IsNullOrEmpty(theButtonInfo.SPToRun))
+                                    RecordManager.RunSPForRecord(theButtonInfo.SPToRun,
+                                     _iRecordID, (int)_objUser.UserID);
+
+
+                                if (theButtonInfo.ChildTableID != null && _stackURL!=null)
                                 {
-                                    Response.Redirect(GetEditURLAfterAdd(), false);
+                                    string strEditURL = GetEditURLAfterAdd();
+                                    //_stackURL = (Stack<string>)Session["stackURL"];
+                                    if (URLinThisStack(strEditURL) == false && UrlHasAdd(strEditURL) == false)
+                                    {
+                                        if (_stackURL.Count==0)
+                                            _stackURL.Push(hlBack.NavigateUrl.Replace("//Pages", "/Pages"));//1st List
+
+                                        _stackURL.Push(strEditURL);
+                                        Session["stackURL"] = _stackURL;
+                                    }
+                                    
+
+                                }
+
+                                if (bNewTab)
+                                {
+                                    Response.Write("<script type='text/javascript'>");
+                                    Response.Write("window.open('" + strURL + "','_blank');");
+                                    Response.Write("</script>");
                                 }
                                 else
                                 {
-                                    Response.Redirect(theButtonInfo.OpenLink, false);
+                                    Response.Redirect(strURL, false);
                                 }
                                 
                             }
-
                         }
-
                     }
-
                 }
             }
-
         }
-        catch
+        catch(Exception ex)
         {
-            //
+            ErrorLog theErrorLog = new ErrorLog(null, "Button Column type click ", ex.Message, ex.StackTrace, DateTime.Now, Request.RawUrl);
+            SystemData.ErrorLog_Insert(theErrorLog);
         }
 
         //ResetTabs();
@@ -1057,50 +2048,50 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
     }
 
-    protected void ResetTabs()
-    {
-        if (_bTableTabYes)
-        {
-            string strTableTabLink = "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTab";
-            if (hfCurrentSelectedTabLink.Value != "")
-            {
-                strTableTabLink = hfCurrentSelectedTabLink.Value;
-            }
-            //if (lblCurrentSelectedTabLink.Text != "")
-            //{
-            //    strTableTabLink = lblCurrentSelectedTabLink.Text;
-            //}
-            for (int t = 0; t < _dtDBTableTab.Rows.Count; t++)
-            {
-                string strPanelID = "";
-                string strLnk = "";
-                if (("ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTab" == strTableTabLink))
-                {
-                    strPanelID = pnlDetailTab.ClientID;
-                    strLnk = "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTab";
-                }
-                if (("ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTabD" + _dtDBTableTab.Rows[t]["TableTabID"].ToString() == strTableTabLink))
-                {
-                    strPanelID = _pnlDetailTabD[t].ClientID;
-                    strLnk = "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTabD" + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
-                }               
+    //protected void ResetTabs()
+    //{
+    //    if (_bTableTabYes)
+    //    {
+    //        string strTableTabLink =_strDynamictabPart+ "lnkDetialTab";
+    //        if (txtCurrentSelectedTabLink.Text != "")
+    //        {
+    //            strTableTabLink = txtCurrentSelectedTabLink.Text;
+    //        }
+    //        //if (lblCurrentSelectedTabLink.Text != "")
+    //        //{
+    //        //    strTableTabLink = lblCurrentSelectedTabLink.Text;
+    //        //}
+    //        for (int t = 0; t < _dtDBTableTab.Rows.Count; t++)
+    //        {
+    //            string strPanelID = "";
+    //            string strLnk = "";
+    //            if ((_strDynamictabPart+"lnkDetialTab" == strTableTabLink))
+    //            {
+    //                strPanelID = pnlDetailTab.ID;
+    //                strLnk =_strDynamictabPart+ "lnkDetialTab";
+    //            }
+    //            if ((_strDynamictabPart+"lnkDetialTabD" + _dtDBTableTab.Rows[t]["TableTabID"].ToString() == strTableTabLink))
+    //            {
+    //                strPanelID = _pnlDetailTabD[t].ID;
+    //                strLnk =_strDynamictabPart+ "lnkDetialTabD" + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
+    //            }               
 
-                if (strPanelID != "")
-                {
-                    if (strLnk != "")
-                    {
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab2", "ShowHideMainDivs(" + strPanelID + "," + strLnk + ");", true);
+    //            if (strPanelID != "")
+    //            {
+    //                if (strLnk != "")
+    //                {
+    //                    ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "ShowHideMainDivsTableTab2", "ShowHideMainDivs(" + strPanelID + "," + strLnk + ");", true);
                        
-                    }
-                    else if (strTableTabLink != "")
-                    {
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab3", "ShowHideMainDivs(" + strPanelID + "," + strTableTabLink + ");", true);
+    //                }
+    //                else if (strTableTabLink != "")
+    //                {
+    //                    ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "ShowHideMainDivsTableTab3", "ShowHideMainDivs(" + strPanelID + "," + strTableTabLink + ");", true);
                        
-                    }
-                }               
-            }
-        }
-    }
+    //                }
+    //            }               
+    //        }
+    //    }
+    //}
 
     protected void GetRoleRight()
     {
@@ -1163,7 +2154,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         {
             if (_theTable.TabColour != "")
             {
-                ltTextStyles.Text = @"<style> .DBGTab .ajax__tab_inner{ background-color: #" + _theTable.TabColour
+                ltTextStyles.Text =ltTextStyles.Text + @"<style> .DBGTab .ajax__tab_inner{ background-color: #" + _theTable.TabColour
                     + @";} .DBGTab .ajax__tab_outer{ background-color: #" + _theTable.TabColour + @";}</style>";
             }
 
@@ -1174,7 +2165,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                               {
                                color:#FFFFFF;
                               }
-                              #ctl00_HomeContentPlaceHolder_lblHeaderName
+                              #lblHeaderName
                               {
                                  color:#FFFFFF;
                               }
@@ -1336,12 +2327,13 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         if (t == 0)
                         {
                             LinkButton lnkDetialTab = new LinkButton();
-                            lnkDetialTab.ID = "lnkDetialTab";
+                            lnkDetialTab.ID =_strDynamictabPart + "lnkDetialTab";
+                            lnkDetialTab.ClientIDMode = ClientIDMode.Static;
                             lnkDetialTab.Text = _dtDBTableTab.Rows[t]["TabName"].ToString(); //"Detail";
                             lnkDetialTab.Font.Bold = true;
-                            lnkDetialTab.Attributes.Add("onclick", "ShowHideMainDivs(" + pnlDetailTab.ClientID + ",this); return false");
-
-                            lnkDetialTab.CssClass = "TablLinkClass";
+                            lnkDetialTab.Attributes.Add("onclick", "ShowHideMainDivs(" + pnlDetailTab.ID + ",this); return false");
+                            lnkDetialTab.Style.Add("font-weight", "bold");
+                            lnkDetialTab.CssClass = "maintablinkclass";
 
                             if (strColour != "")
                             {
@@ -1357,26 +2349,28 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         {
 
                             _pnlDetailTabD[t] = new Panel();
-                            _pnlDetailTabD[t].ID = "pnlDetailTabD" + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
-                            _pnlDetailTabD[t].CssClass = "showhidedivs";
+                            _pnlDetailTabD[t].ID = _strDynamictabPart + "pnlDetailTabD" + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
+                            _pnlDetailTabD[t].ClientIDMode = ClientIDMode.Static;
+                            _pnlDetailTabD[t].CssClass = "eachtabletab";
 
 
                             LinkButton lnkDetialTabD = new LinkButton();
-                            lnkDetialTabD.ID = "lnkDetialTabD" + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
+                            lnkDetialTabD.ID = _strDynamictabPart + "lnkDetialTabD" + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
+                            lnkDetialTabD.ClientIDMode = ClientIDMode.Static;
                             lnkDetialTabD.Text = _dtDBTableTab.Rows[t]["TabName"].ToString();
-                            lnkDetialTabD.OnClientClick = "ShowHideMainDivs(" + "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + _pnlDetailTabD[t].ClientID + ",this); return false";
-                            lnkDetialTabD.CssClass = "TablLinkClass";
-
+                            lnkDetialTabD.OnClientClick = "ShowHideMainDivs(" + _pnlDetailTabD[t].ID + ",this); return false";
+                            lnkDetialTabD.CssClass = "maintablinkclass";
+                            lnkDetialTabD.Style.Add("font-weight", "normal");
                             if (strColour != "")
                             {
                                 lnkDetialTabD.Style.Add("color", "#" + strColour);
                             }
-
+                            _pnlDetailTabD[t].Style.Add("display", "none");
                             if (Common.IsIn(_dtDBTableTab.Rows[t]["TableTabID"].ToString(), strHiddenTableTabID))
                             {
-                                _pnlDetailTabD[t].CssClass = "showhidedivs_hide";
+                                _pnlDetailTabD[t].CssClass = "eachtabletab_hide";
 
-                                _pnlDetailTabD[t].Style.Add("display", "none");
+                                //_pnlDetailTabD[t].Style.Add("display", "none");
                                 lnkDetialTabD.Style.Add("display", "none");
                             }
                             pnlTabHeading.Controls.Add(lnkDetialTabD);
@@ -1393,21 +2387,28 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             _tblMainD[t].Rows.Add(hrTemp);
 
                             _tblLeftD[t] = new HtmlTable();
-                            _tblLeftD[t].ID = "tblLeftD" + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
+                            _tblLeftD[t].ID = _strDynamictabPart + "tblLeftD" + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
+                            _tblLeftD[t].ClientIDMode = ClientIDMode.Static;
                             cellLeft.Controls.Add(_tblLeftD[t]);
 
                             _tblRightD[t] = new HtmlTable();
-                            _tblRightD[t].ID = "tblRightD" + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
+                            _tblRightD[t].ID = _strDynamictabPart + "tblRightD" + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
+                            _tblRightD[t].ClientIDMode = ClientIDMode.Static;
                             cellRight.Controls.Add(_tblRightD[t]);
                             
                             _pnlDetailTabD[t].Controls.Add(_tblMainD[t]);
 
-                            pnlMain.Controls.Add(_pnlDetailTabD[t]);
+                            pnlEachTable.Controls.Add(_pnlDetailTabD[t]);
 
                         }
                     }
-                   
 
+                    HiddenField hfSelectedTab = new HiddenField();
+                    hfSelectedTab.ID = "hfSelectedTab_main";
+                    hfSelectedTab.ClientIDMode = ClientIDMode.Static;
+                    hfSelectedTab.Value = _strDynamictabPart + "lnkDetialTab";
+                    _strSelectedtabLinkHF = hfSelectedTab.ID;
+                    pnlEachTable.Controls.Add(hfSelectedTab);
                 }
             }
         
@@ -1424,7 +2425,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             bDisplayRight = bool.Parse(_dtColumnsDetail.Rows[i]["DisplayRight"].ToString());
 
             _lbl[i] = new Label();
-            _lbl[i].ID = "lbl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();                     
+            _lbl[i].ID = _strDynamictabPart + "lbl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+            _lbl[i].ClientIDMode = ClientIDMode.Static; 
 
             cell[i * 2] = new HtmlTableCell();
 
@@ -1459,33 +2461,38 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 case "datetimerecorded":
 
                     _txtValue[i] = new TextBox();
-                    _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _txtValue[i].ID = _strDynamictabPart + "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _txtValue[i].ClientIDMode = ClientIDMode.Static;
                     _txtValue[i].Width = 100;
                     _txtValue[i].AutoCompleteType = AutoCompleteType.Disabled;
                     _txtValue[i].CssClass = "NormalTextBox";
 
                     _ibValue[i] = new ImageButton();
-                    _ibValue[i].ID = "ib" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _ibValue[i].ID = _strDynamictabPart + "ib" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _ibValue[i].ClientIDMode = ClientIDMode.Static;
                     _ibValue[i].ImageUrl = "~/Images/Calendar.png";
                     _ibValue[i].Style.Add("padding-left", "3px");
                     _ibValue[i].CausesValidation = false;
                     _ibValue[i].Visible = false;                   
 
                     _ceDateTimeRecorded[i] = new AjaxControlToolkit.CalendarExtender();
-                    _ceDateTimeRecorded[i].ID = "ceDateTimeRecorded";
+                    _ceDateTimeRecorded[i].ID = _strDynamictabPart + "ceDateTimeRecorded";
+                    _ceDateTimeRecorded[i].ClientIDMode = ClientIDMode.Static;
                     _ceDateTimeRecorded[i].TargetControlID = _txtValue[i].ID;
                     _ceDateTimeRecorded[i].Format = "dd/MM/yyyy";
                     _ceDateTimeRecorded[i].PopupButtonID = _ibValue[i].ID;
                     _ceDateTimeRecorded[i].FirstDayOfWeek = FirstDayOfWeek.Monday;
 
                     _twmValue[i] = new TextBoxWatermarkExtender();
-                    _twmValue[i].ID = "twm" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _twmValue[i].ID = _strDynamictabPart + "twm" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _twmValue[i].ClientIDMode = ClientIDMode.Static;
                     _twmValue[i].TargetControlID = _txtValue[i].ID;
                     _twmValue[i].WatermarkText = "dd/mm/yyyy";
                     _twmValue[i].WatermarkCssClass = "MaskText";
 
                     _rvDate[i] = new RangeValidator();
-                    _rvDate[i].ID = "rvDate" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _rvDate[i].ID = _strDynamictabPart + "rvDate" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _rvDate[i].ClientIDMode = ClientIDMode.Static;
                     _rvDate[i].Display = ValidatorDisplay.None;
                     _rvDate[i].ControlToValidate = _txtValue[i].ID;
                     _rvDate[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "- Date is invalid.";
@@ -1498,26 +2505,30 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "datetime")
                     {
                         _lblTime[i] = new Label();
-                        _lblTime[i].ID = "lblTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _lblTime[i].ID = _strDynamictabPart + "lblTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _lblTime[i].ClientIDMode = ClientIDMode.Static;
                         _lblTime[i].Text = "  Time ";
                         _lblTime[i].Font.Bold = true;
 
                         _txtTime[i] = new TextBox();
-                        _txtTime[i].ID = "txtTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtTime[i].ID = _strDynamictabPart + "txtTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtTime[i].ClientIDMode = ClientIDMode.Static;
                         _txtTime[i].Width = 80;
                         _txtTime[i].AutoCompleteType = AutoCompleteType.Disabled;
                         _txtTime[i].CssClass = "NormalTextBox";
                        
                         _meeTime[i] = new AjaxControlToolkit.MaskedEditExtender();
-                        _meeTime[i].ID = "meeTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-                        _meeTime[i].TargetControlID = _txtTime[i].ClientID; //"ctl00_HomeContentPlaceHolder_txtTime";
+                        _meeTime[i].ID = _strDynamictabPart + "meeTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _meeTime[i].ClientIDMode = ClientIDMode.Static;
+                        _meeTime[i].TargetControlID = _txtTime[i].ID; //"txtTime";
                         _meeTime[i].AutoCompleteValue = "00:00";
                         _meeTime[i].Mask = "99:99";
                         _meeTime[i].MaskType = MaskedEditType.Time;
 
                         _cvTime[i] = new CustomValidator();
-                        _cvTime[i].ID = "cvTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-                        _cvTime[i].ControlToValidate = _txtTime[i].ClientID;  //"ctl00_HomeContentPlaceHolder_txtTime";
+                        _cvTime[i].ID = _strDynamictabPart + "cvTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _cvTime[i].ClientIDMode = ClientIDMode.Static;
+                        _cvTime[i].ControlToValidate = _txtTime[i].ID;  //"txtTime";
                         _cvTime[i].ClientValidationFunction = "CheckMyText";
                         _cvTime[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "- hh:mm format (24 hrs) please!";
                         _cvTime[i].Display = ValidatorDisplay.None;
@@ -1544,9 +2555,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     {
 
                         _rfvValue[i] = new RequiredFieldValidator();
-                        _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _rfvValue[i].ID = _strDynamictabPart + "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _rfvValue[i].ClientIDMode = ClientIDMode.Static;
                         _rfvValue[i].Display = ValidatorDisplay.None;//
-                        _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
+                        _rfvValue[i].ControlToValidate = _txtValue[i].ID;
                         _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                         
                         cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
@@ -1564,7 +2576,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 case "recordid":
 
                     _txtValue[i] = new TextBox();
-                    _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _txtValue[i].ID = _strDynamictabPart + "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _txtValue[i].ClientIDMode = ClientIDMode.Static;
                     _txtValue[i].Width = 198;
                     _txtValue[i].Enabled = false;
                     _txtValue[i].CssClass = "NormalTextBox";                 
@@ -1575,7 +2588,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 case "isactive":
 
                     _chkIsActive = new CheckBox();
-                    _chkIsActive.ID = "chkIsActive";
+                    _chkIsActive.ID = _strDynamictabPart + "chkIsActive";
+                    _chkIsActive.ClientIDMode = ClientIDMode.Static;
                     _chkIsActive.CssClass = "NormalTextBox";                    
                     _iIsActiveIndex = i;                  
                    
@@ -1586,7 +2600,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 case "notes":
 
                     _txtValue[i] = new TextBox();
-                    _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _txtValue[i].ID = _strDynamictabPart + "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _txtValue[i].ClientIDMode = ClientIDMode.Static;
                     _txtValue[i].Width = 270; //30*9
                     _txtValue[i].Height = 54; //18 * 3
                     _txtValue[i].TextMode = TextBoxMode.MultiLine;
@@ -1598,9 +2613,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     {
 
                         _rfvValue[i] = new RequiredFieldValidator();
-                        _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _rfvValue[i].ID = _strDynamictabPart + "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _rfvValue[i].ClientIDMode = ClientIDMode.Static;
                         _rfvValue[i].Display = ValidatorDisplay.None;
-                        _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
+                        _rfvValue[i].ControlToValidate = _txtValue[i].ID;
                         _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                         cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
 
@@ -1612,7 +2628,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 case "tableid":
 
                     _txtValue[i] = new TextBox();
-                    _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _txtValue[i].ID = _strDynamictabPart + "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _txtValue[i].ClientIDMode = ClientIDMode.Static;
                     _txtValue[i].Width = 198;
                     _txtValue[i].Enabled = false;
                     _txtValue[i].CssClass = "NormalTextBox";                   
@@ -1626,7 +2643,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 case "enteredby":
 
                     _ddlEnteredBy = new DropDownList();
-                    _ddlEnteredBy.ID = "ddlEnteredBy";
+                    _ddlEnteredBy.ID = _strDynamictabPart + "ddlEnteredBy";
+                    _ddlEnteredBy.ClientIDMode = ClientIDMode.Static;
                     _ddlEnteredBy.DataValueField = "UserID";
                     _ddlEnteredBy.DataTextField = "FirstName";
                     _ddlEnteredBy.CssClass = "NormalTextBox";
@@ -1643,7 +2661,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "date")
                     {
                         _txtValue[i] = new TextBox();
-                        _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ID = _strDynamictabPart + "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ClientIDMode = ClientIDMode.Static;
                         _txtValue[i].Width = 100;
                         _txtValue[i].AutoCompleteType = AutoCompleteType.Disabled;
                         _txtValue[i].CssClass = "NormalTextBox";
@@ -1651,28 +2670,32 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
                         _ibValue[i] = new ImageButton();
-                        _ibValue[i].ID = "ib" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _ibValue[i].ID = _strDynamictabPart + "ib" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _ibValue[i].ClientIDMode = ClientIDMode.Static;
                         _ibValue[i].ImageUrl = "~/Images/Calendar.png";
                         _ibValue[i].Style.Add("padding-left", "3px");
                         _ibValue[i].CausesValidation = false;
 
                        
                         _ceDateTimeRecorded[i] = new AjaxControlToolkit.CalendarExtender();
-                        _ceDateTimeRecorded[i].ID = "ceDateTimeRecorded" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _ceDateTimeRecorded[i].ID = _strDynamictabPart + "ceDateTimeRecorded" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _ceDateTimeRecorded[i].ClientIDMode = ClientIDMode.Static;
                         _ceDateTimeRecorded[i].TargetControlID = _txtValue[i].ID;
                         _ceDateTimeRecorded[i].Format = "dd/MM/yyyy";
                         _ceDateTimeRecorded[i].PopupButtonID = _ibValue[i].ID;
                         _ceDateTimeRecorded[i].FirstDayOfWeek = FirstDayOfWeek.Monday;
 
                         _twmValue[i] = new TextBoxWatermarkExtender();
-                        _twmValue[i].ID = "twm" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _twmValue[i].ID = _strDynamictabPart + "twm" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _twmValue[i].ClientIDMode = ClientIDMode.Static;
                         _twmValue[i].TargetControlID = _txtValue[i].ID;
                         _twmValue[i].WatermarkText = "dd/mm/yyyy";
                         _twmValue[i].WatermarkCssClass = "MaskText";
 
 
                         _rvDate[i] = new RangeValidator();
-                        _rvDate[i].ID = "rvDate" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _rvDate[i].ID = _strDynamictabPart + "rvDate" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _rvDate[i].ClientIDMode = ClientIDMode.Static;
                         _rvDate[i].ControlToValidate = _txtValue[i].ID;
                         _rvDate[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "- Date is invalid.";
                         _rvDate[i].Type = ValidationDataType.Date;
@@ -1692,9 +2715,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         {
                             //_txtValue[i].Text = DateTime.Now.Day.ToString("00") + "/" + DateTime.Now.Month.ToString("00") + "/" + DateTime.Now.Year.ToString();
                             _rfvValue[i] = new RequiredFieldValidator();
-                            _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _rfvValue[i].ID = _strDynamictabPart + "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _rfvValue[i].ClientIDMode = ClientIDMode.Static;
                             _rfvValue[i].Display = ValidatorDisplay.None;
-                            _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
+                            _rfvValue[i].ControlToValidate = _txtValue[i].ID;
                             _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
 
@@ -1708,22 +2732,25 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "time")
                     {
                         _txtValue[i] = new TextBox();
-                        _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ID = _strDynamictabPart + "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ClientIDMode = ClientIDMode.Static;
                         _txtValue[i].Width = 100;
                         _txtValue[i].AutoCompleteType = AutoCompleteType.Disabled;
                         _txtValue[i].CssClass = "NormalTextBox";
 
                      
                         _meeTime[i] = new AjaxControlToolkit.MaskedEditExtender();
-                        _meeTime[i].ID = "meeTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-                        _meeTime[i].TargetControlID = _txtValue[i].ClientID; //"ctl00_HomeContentPlaceHolder_txtTime";
+                        _meeTime[i].ID = _strDynamictabPart + "meeTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _meeTime[i].ClientIDMode = ClientIDMode.Static;
+                        _meeTime[i].TargetControlID = _txtValue[i].ID; //"txtTime";
                         _meeTime[i].AutoCompleteValue = "00:00"; //"00:00:00"
                         _meeTime[i].Mask = "99:99"; //99:99:99
                         _meeTime[i].MaskType = MaskedEditType.Time;
 
                         _cvTime[i] = new CustomValidator();
-                        _cvTime[i].ID = "cvTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-                        _cvTime[i].ControlToValidate = _txtValue[i].ClientID;  //"ctl00_HomeContentPlaceHolder_txtTime";
+                        _cvTime[i].ID = _strDynamictabPart + "cvTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _cvTime[i].ClientIDMode = ClientIDMode.Static;
+                        _cvTime[i].ControlToValidate = _txtValue[i].ID;  //"txtTime";
                         _cvTime[i].ClientValidationFunction = "CheckMyText";
                         _cvTime[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "- hh:mm format (24 hrs) please!";//hh:mm:ss
                         _cvTime[i].Display = ValidatorDisplay.None;
@@ -1735,9 +2762,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m")
                         {
                             _rfvValue[i] = new RequiredFieldValidator();
-                            _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _rfvValue[i].ID = _strDynamictabPart + "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _rfvValue[i].ClientIDMode = ClientIDMode.Static;
                             _rfvValue[i].Display = ValidatorDisplay.None;
-                            _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
+                            _rfvValue[i].ControlToValidate = _txtValue[i].ID;
                             _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
 
@@ -1756,13 +2784,15 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "datetime")
                     {
                         _txtValue[i] = new TextBox();
-                        _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ID = _strDynamictabPart + "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ClientIDMode = ClientIDMode.Static;
                         _txtValue[i].Width = 100;
                         _txtValue[i].AutoCompleteType = AutoCompleteType.Disabled;
                         _txtValue[i].CssClass = "NormalTextBox";
 
                         _ibValue[i] = new ImageButton();
-                        _ibValue[i].ID = "ib" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _ibValue[i].ID = _strDynamictabPart + "ib" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _ibValue[i].ClientIDMode = ClientIDMode.Static;
                         _ibValue[i].ImageUrl = "~/Images/Calendar.png";
                         _ibValue[i].AlternateText = "Click to show calendar";
                         _ibValue[i].Style.Add("padding-left", "3px");
@@ -1770,21 +2800,24 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         
 
                         _ceDateTimeRecorded[i] = new AjaxControlToolkit.CalendarExtender();
-                        _ceDateTimeRecorded[i].ID = "ceDateTimeRecorded" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _ceDateTimeRecorded[i].ID = _strDynamictabPart + "ceDateTimeRecorded" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _ceDateTimeRecorded[i].ClientIDMode = ClientIDMode.Static;
                         _ceDateTimeRecorded[i].TargetControlID = _txtValue[i].ID;
                         _ceDateTimeRecorded[i].Format = "dd/MM/yyyy";
                         _ceDateTimeRecorded[i].PopupButtonID = _ibValue[i].ID;
                         _ceDateTimeRecorded[i].FirstDayOfWeek = FirstDayOfWeek.Monday;
 
                         _twmValue[i] = new TextBoxWatermarkExtender();
-                        _twmValue[i].ID = "twm" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _twmValue[i].ID = _strDynamictabPart + "twm" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _twmValue[i].ClientIDMode = ClientIDMode.Static;
                         _twmValue[i].TargetControlID = _txtValue[i].ID;
                         _twmValue[i].WatermarkText = "dd/mm/yyyy";
                         _twmValue[i].WatermarkCssClass = "MaskText";
 
 
                         _rvDate[i] = new RangeValidator();
-                        _rvDate[i].ID = "rvDate" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _rvDate[i].ID = _strDynamictabPart + "rvDate" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _rvDate[i].ClientIDMode = ClientIDMode.Static;
                         _rvDate[i].Display = ValidatorDisplay.None;
                         _rvDate[i].ControlToValidate = _txtValue[i].ID;
                         _rvDate[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "- Date is invalid";
@@ -1796,27 +2829,31 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
                         _lblTime[i] = new Label();
-                        _lblTime[i].ID = "lblTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _lblTime[i].ID = _strDynamictabPart + "lblTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _lblTime[i].ClientIDMode = ClientIDMode.Static;
                         _lblTime[i].Text = "  Time ";
                         _lblTime[i].Font.Bold = true;
 
                         _txtTime[i] = new TextBox();
-                        _txtTime[i].ID = "txtTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtTime[i].ID = _strDynamictabPart + "txtTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtTime[i].ClientIDMode = ClientIDMode.Static;
                         _txtTime[i].Width = 80;
                         _txtTime[i].AutoCompleteType = AutoCompleteType.Disabled;
                         _txtTime[i].CssClass = "NormalTextBox";
 
                         
                         _meeTime[i] = new AjaxControlToolkit.MaskedEditExtender();
-                        _meeTime[i].ID = "meeTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-                        _meeTime[i].TargetControlID = _txtTime[i].ClientID; //"ctl00_HomeContentPlaceHolder_txtTime";
+                        _meeTime[i].ID = _strDynamictabPart + "meeTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _meeTime[i].ClientIDMode = ClientIDMode.Static;
+                        _meeTime[i].TargetControlID = _txtTime[i].ID; //"txtTime";
                         _meeTime[i].AutoCompleteValue = "00:00";
                         _meeTime[i].Mask = "99:99";
                         _meeTime[i].MaskType = MaskedEditType.Time;
 
                         _cvTime[i] = new CustomValidator();
-                        _cvTime[i].ID = "cvTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-                        _cvTime[i].ControlToValidate = _txtTime[i].ClientID;  //"ctl00_HomeContentPlaceHolder_txtTime";
+                        _cvTime[i].ID = _strDynamictabPart + "cvTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _cvTime[i].ClientIDMode = ClientIDMode.Static;
+                        _cvTime[i].ControlToValidate = _txtTime[i].ID;  //"txtTime";
                         _cvTime[i].ClientValidationFunction = "CheckMyText";
                         _cvTime[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "- hh:mm format (24 hrs) please!";
                         _cvTime[i].Display = ValidatorDisplay.None;
@@ -1839,9 +2876,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         {
                           
                             _rfvValue[i] = new RequiredFieldValidator();
-                            _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _rfvValue[i].ID = _strDynamictabPart + "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _rfvValue[i].ClientIDMode = ClientIDMode.Static;
                             _rfvValue[i].Display = ValidatorDisplay.None;
-                            _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
+                            _rfvValue[i].ControlToValidate = _txtValue[i].ID;
                             _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
 
@@ -1865,7 +2903,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "button")
                     {
                         _lnkValue[i] = new LinkButton();
-                        _lnkValue[i].ID = "lnk" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _lnkValue[i].ID = _strDynamictabPart + "lnk" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _lnkValue[i].ClientIDMode = ClientIDMode.Static;
                         _lnkValue[i].ClientIDMode = ClientIDMode.Static;
                         _lnkValue[i].CausesValidation = true;
                        
@@ -1878,23 +2917,23 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     {
 
                         _fuValue[i] = new FileUpload();
-                        _fuValue[i].ID = "fu" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _fuValue[i].ID = _strDynamictabPart + "fu" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _fuValue[i].ClientIDMode = ClientIDMode.Static;
                         _hfValue[i] = new HiddenField();
-                        _hfValue[i].ID = "hf" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _hfValue[i].ID = _strDynamictabPart + "hf" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _hfValue[i].ClientIDMode = ClientIDMode.Static;
 
                         _hfValue2[i] = new HiddenField();
-                        _hfValue2[i].ID = "hf2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _hfValue2[i].ID = _strDynamictabPart + "hf2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _hfValue2[i].ClientIDMode = ClientIDMode.Static;
 
 
                         _lblValue[i] = new Label();
-                        _lblValue[i].ID = "lblV" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _lblValue[i].ID = _strDynamictabPart + "lblV" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _lblValue[i].ClientIDMode = ClientIDMode.Static;
 
                         _pnlDIV[i] = new Panel();
-                        _pnlDIV[i].ID = "pnl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _pnlDIV[i].ID = _strDynamictabPart + "pnl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _pnlDIV[i].ClientIDMode = ClientIDMode.Static;
 
                        
@@ -1919,17 +2958,17 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
                         _fuValue2[i] = new FileUpload();
-                        _fuValue2[i].ID = "fu2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _fuValue2[i].ID = _strDynamictabPart + "fu2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _fuValue2[i].ClientIDMode = ClientIDMode.Static;
                         _bNeedFullPostback = true;
                         
                         cell[(i * 2) + 1].Controls.Add(_fuValue2[i]);
 
                         _lnkValue[i] = new LinkButton();
-                        _lnkValue[i].ID = "lnk" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _lnkValue[i].ID = _strDynamictabPart + "lnk" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _lnkValue[i].Text = "Use basic version";
                         _lnkValue[i].CausesValidation = false;
-                        _lnkValue[i].OnClientClick = "UserBasic" + i.ToString() + "(); return false";
+                        _lnkValue[i].OnClientClick = "UserBasic" + _strDynamictabPart+ i.ToString() + "(); return false";
                         _lnkValue[i].ClientIDMode = ClientIDMode.Static;
 
                         cell[(i * 2) + 1].Controls.Add(new LiteralControl("</br>"));
@@ -1941,15 +2980,16 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         {
 
                             _rfvValue[i] = new RequiredFieldValidator();
-                            _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _rfvValue[i].ID = _strDynamictabPart + "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _rfvValue[i].ClientIDMode = ClientIDMode.Static;
                             _rfvValue[i].Display = ValidatorDisplay.None;//
-                            _rfvValue[i].ControlToValidate = _fuValue[i].ClientID;
+                            _rfvValue[i].ControlToValidate = _fuValue[i].ID;
                             _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
 
                             cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
 
-                            strUserBasicMandatory = @"ValidatorEnable(document.getElementById('ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + _rfvValue[i].ID.ToString() + "'), false);";
+                            strUserBasicMandatory = @"ValidatorEnable(document.getElementById('" + _rfvValue[i].ID + "'), false);";
 
                         }
 
@@ -1957,7 +2997,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         string strJSBasicUPload = @" 
                                 var y = document.getElementById('" + _fuValue2[i].ID + @"');
                                 y.style.display = 'none';
-                                function UserBasic" + i.ToString() + @"() {
+                                function UserBasic" + _strDynamictabPart+ i.ToString() + @"() {
                                 var y = document.getElementById('" + _fuValue2[i].ID + @"');
                                 y.style.display = 'block'; 
                                 document.getElementById('" + _hfValue2[i].ID + @"').value='yes';" + strUserBasicMandatory + @"
@@ -1978,7 +3018,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                     y.style.display = 'none';        
                                 }
                                 else {
-                                  UserBasic" + i.ToString() + @"();
+                                  UserBasic" +_strDynamictabPart+ i.ToString() + @"();
                                    y = document.getElementById('" + _lblValue[i].ID + @"');
                                     y.style.display = 'block';
                                 }
@@ -1987,7 +3027,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
 
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "strJSBasicUPload" + i.ToString(), strJSBasicUPload, true);
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "strJSBasicUPload" + _strDynamictabPart+ i.ToString(), strJSBasicUPload, true);
 
 
                         string strValidatorT = "";
@@ -1995,8 +3035,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m"
                 && _rfvValue[i] != null)
                         {
-                            strValidatorT = "ValidatorEnable(document.getElementById('ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + _rfvValue[i].ID.ToString() + "'), true);";
-                            strValidatorF = "ValidatorEnable(document.getElementById('ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + _rfvValue[i].ID.ToString() + "'), false);";
+                            strValidatorT = "ValidatorEnable(document.getElementById('" + _rfvValue[i].ID + "'), true);";
+                            strValidatorF = "ValidatorEnable(document.getElementById('" + _rfvValue[i].ID + "'), false);";
 
                             if (Request.QueryString["RecordID"] != null)
                             {
@@ -2004,8 +3044,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             }
                         }
 
-                        string strScriptPath = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Handler.ashx";
-
+                        string strScriptPath = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "Pages/Record/Handler.ashx";
+                        //string strScriptPath ="/Handler.ashx";
                         if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image")
                         {
                             string strMaxHeight = "50";
@@ -2021,11 +3061,12 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             + " <img style=\"padding-bottom:7px; max-height:"
                             + strMaxHeight + "px;\" id=\"img" + _hfValue[i].ID + "\"  />" + "</a><br/>";
 
+                            
                            string strFUJS =  @" $(document).ready(function () {
-                                        $('#" + _fuValue[i].ID + @"').uploadify({
-                                            'uploader': '../Document/uploadify/uploadify.swf',
+                                        $('#" + _fuValue[i].ID + @"').uploadify({                                            
                                             'script': '" + strScriptPath + @"',
-                                            'cancelImg': '../Document/uploadify/cancel.png',
+                                           'uploader': '../Document/uploadify/uploadify.swf',
+                                             'cancelImg': '../Document/uploadify/cancel.png',
                                             'auto': true,
                                             'multi': false,
                                             'fileDesc': 'Files',
@@ -2078,18 +3119,18 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                           
                                     });";
 
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "uploadfile" + i.ToString(), strFUJS, true);
+                           ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "uploadfile" + _strDynamictabPart + i.ToString(), strFUJS, true);
                         }
                         else
                         {
                             string strInnerHTML = "<img  title=\"Remove this file\" style=\"cursor:pointer;\"  id=\"dimg" + _hfValue[i].ID + "\" src=\"" + Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath
                                + "/App_Themes/Default/Images/icon_delete.gif\" />";
-
+                           
                           string  strFUJS = @" $(document).ready(function () {
-                                        $('#" + _fuValue[i].ID + @"').uploadify({
-                                            'uploader': '../Document/uploadify/uploadify.swf',
+                                        $('#" + _fuValue[i].ID + @"').uploadify({                                            
                                             'script': '" + strScriptPath + @"',
-                                            'cancelImg': '../Document/uploadify/cancel.png',
+                                          'uploader': '../Document/uploadify/uploadify.swf',
+                                          'cancelImg': '../Document/uploadify/cancel.png',
                                             'auto': true,
                                             'multi': false,
                                             'fileDesc': 'Files',
@@ -2134,7 +3175,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                     });";
 
 
-                          ScriptManager.RegisterStartupScript(this, this.GetType(), "uploadimage" + i.ToString(), strFUJS, true);
+                          ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "uploadimage" + _strDynamictabPart + i.ToString(), strFUJS, true);
                         }
 
                         
@@ -2158,7 +3199,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "table")
                             {
                                 _txtValue[i] = new TextBox();
-                                _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                _txtValue[i].ID = _strDynamictabPart + "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                 _txtValue[i].Width = 198;
                                 _txtValue[i].CssClass = "NormalTextBox";
                                 _txtValue[i].ClientIDMode = ClientIDMode.Static;
@@ -2168,7 +3209,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 
 
                                 _hfValue[i] = new HiddenField();
-                                _hfValue[i].ID = "hf" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                _hfValue[i].ID = _strDynamictabPart + "hf" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                 _hfValue[i].ClientIDMode = ClientIDMode.Static;
 
                                 HtmlTable tblQuickLink = new HtmlTable();
@@ -2199,8 +3240,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                     if (_dtColumnsDetail.Rows[i]["QuickAddLink"].ToString().ToLower() == "true")
                                     {
                                         _hlValue[i] = new HyperLink();
-                                        _hlValue[i].ID = "hl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-                                       
+                                        _hlValue[i].ID = _strDynamictabPart + "hl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                        _hlValue[i].ClientIDMode = ClientIDMode.Static;
                                         cellQL2.Controls.Add(new LiteralControl("&nbsp;"));
                                         cellQL2.Controls.Add(_hlValue[i]);
                                     }
@@ -2212,8 +3253,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                         || _dtColumnsDetail.Rows[i]["ShowViewLink"].ToString().ToLower() == "both")
                                     {
                                         _hlValue2[i] = new HyperLink();
-                                        _hlValue2[i].ID = "hl2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-                                        
+                                        _hlValue2[i].ID = _strDynamictabPart + "hl2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                        _hlValue2[i].ClientIDMode = ClientIDMode.Static;
                                         cellQL3.Controls.Add(new LiteralControl("&nbsp;"));
                                         cellQL3.Controls.Add(_hlValue2[i]);
 
@@ -2226,9 +3267,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 {
 
                                     _rfvValue[i] = new RequiredFieldValidator();
-                                    _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                    _rfvValue[i].ID = _strDynamictabPart + "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                    _rfvValue[i].ClientIDMode = ClientIDMode.Static;
                                     _rfvValue[i].Display = ValidatorDisplay.None;
-                                    _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
+                                    _rfvValue[i].ControlToValidate = _txtValue[i].ID;
                                     _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
 
@@ -2237,11 +3279,11 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 }
 
                                 string strAutoDDJS = @" $(function () {
-                                $(""#" + _txtValue[i].ID.ToString() + @""").autocomplete({
+                                $(""#" + _txtValue[i].ID + @""").autocomplete({
                                     source: function (request, response) {
                                         $.ajax({
                                             url: ""../../CascadeDropdown.asmx/GetDisplayColumns"",
-                                            data: ""{'Columnid':'" + _dtColumnsDetail.Rows[i]["ColumnID"].ToString() + @"', 'search': '"" + request.term + ""' }"",
+                                            data: ""{'Columnid':'" + _dtColumnsDetail.Rows[i]["ColumnID"].ToString() + @"', 'search': '"" + request.term.replace(/'/g, ""\\'"") + ""' }"",
                                             dataType: ""json"",
                                             type: ""POST"",
                                             contentType: ""application/json; charset=utf-8"",
@@ -2262,10 +3304,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                 minLength: 1,
                                                 select: function (event, ui) {
                                                     if (ui.item.id == null) {
-                                                        document.getElementById('" + _hfValue[i].ID.ToString() + @"').value = '';
+                                                        document.getElementById('" + _hfValue[i].ID + @"').value = '';
                                                     }
                                                     else {
-                                                        document.getElementById('" + _hfValue[i].ID.ToString() + @"').value = ui.item.id;
+                                                        document.getElementById('" + _hfValue[i].ID + @"').value = ui.item.id;
                                                     }
                                                 }
                                             });
@@ -2275,7 +3317,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                                 if (_qsMode != "view")
                                 {
-                                    ScriptManager.RegisterStartupScript(this, this.GetType(), "AutoCompleteJS" + i.ToString(), strAutoDDJS, true);
+                                    ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "AutoCompleteJS" + _strDynamictabPart+ i.ToString(), strAutoDDJS, true);
                                 }
                             }
 
@@ -2287,7 +3329,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             {
                                 //this is drop down
                                 _ddlValue[i] = new DropDownList();
-                                _ddlValue[i].ID = "ddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                _ddlValue[i].ID = _strDynamictabPart + "ddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                _ddlValue[i].ClientIDMode = ClientIDMode.Static;
                                 _ddlValue[i].Width = 198;
                                 _ddlValue[i].CssClass = "NormalTextBox";
                                
@@ -2326,8 +3369,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                     if (_dtColumnsDetail.Rows[i]["QuickAddLink"].ToString().ToLower() == "true")
                                     {
                                         _hlValue[i] = new HyperLink();
-                                        _hlValue[i].ID = "hl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-                                       
+                                        _hlValue[i].ID = _strDynamictabPart + "hl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                        _hlValue[i].ClientIDMode = ClientIDMode.Static;
                                         cellQL2.Controls.Add(new LiteralControl("&nbsp;"));
                                         cellQL2.Controls.Add(_hlValue[i]);
                                     }
@@ -2339,8 +3382,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                         || _dtColumnsDetail.Rows[i]["ShowViewLink"].ToString().ToLower() == "both")
                                     {
                                         _hlValue2[i] = new HyperLink();
-                                        _hlValue2[i].ID = "hl2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-                                        
+                                        _hlValue2[i].ID = _strDynamictabPart + "hl2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                        _hlValue2[i].ClientIDMode = ClientIDMode.Static;
                                         cellQL3.Controls.Add(new LiteralControl("&nbsp;"));
                                         cellQL3.Controls.Add(_hlValue2[i]);
 
@@ -2351,9 +3394,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 {
 
                                     _rfvValue[i] = new RequiredFieldValidator();
-                                    _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                    _rfvValue[i].ID = _strDynamictabPart + "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                    _rfvValue[i].ClientIDMode = ClientIDMode.Static;
                                     _rfvValue[i].Display = ValidatorDisplay.None;
-                                    _rfvValue[i].ControlToValidate = _ddlValue[i].ClientID;
+                                    _rfvValue[i].ControlToValidate = _ddlValue[i].ID;
                                     _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
 
@@ -2368,25 +3412,28 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             //filterted table
 
                             _ddlValue2[i] = new DropDownList();
-                            _ddlValue2[i].ID = "ddl2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _ddlValue2[i].ID = _strDynamictabPart + "ddl2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _ddlValue2[i].ClientIDMode = ClientIDMode.Static;
                             _ddlValue2[i].Width = 198;
                             _ddlValue2[i].CssClass = "NormalTextBox";
                             //_ddlValue2[i].ClientIDMode = ClientIDMode.Static;
 
                            
                             _ddlValue[i] = new DropDownList();
-                            _ddlValue[i].ID = "ddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _ddlValue[i].ID = _strDynamictabPart + "ddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _ddlValue[i].ClientIDMode = ClientIDMode.Static;
                             _ddlValue[i].Width = 198;
                             _ddlValue[i].CssClass = "NormalTextBox";
                             //_ddlValue[i].ClientIDMode = ClientIDMode.Static;
 
 
                             _ccddl[i] = new CascadingDropDown();
-                            _ccddl[i].ID = "ccddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _ccddl[i].ID = _strDynamictabPart + "ccddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _ccddl[i].ClientIDMode = ClientIDMode.Static;
                             //_ccddl[i].ClientIDMode = ClientIDMode.Static;
                             _ccddl[i].Category = _dtColumnsDetail.Rows[i]["ColumnID"].ToString() + "," + _dtColumnsDetail.Rows[i]["ParentColumnID"].ToString();
                             _ccddl[i].TargetControlID = _ddlValue[i].ID;
-                            _ccddl[i].ParentControlID = "ddl2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _ccddl[i].ParentControlID = _strDynamictabPart + "ddl2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
 
                             _ccddl[i].ServicePath = "~/CascadeDropdown.asmx";
                             _ccddl[i].ServiceMethod = "GetFilteredData"; //filtered
@@ -2421,9 +3468,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             {
 
                                 _rfvValue[i] = new RequiredFieldValidator();
-                                _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                _rfvValue[i].ID = _strDynamictabPart + "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                _rfvValue[i].ClientIDMode = ClientIDMode.Static;
                                 _rfvValue[i].Display = ValidatorDisplay.None;
-                                _rfvValue[i].ControlToValidate = _ddlValue[i].ClientID;
+                                _rfvValue[i].ControlToValidate = _ddlValue[i].ID;
                                 _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                                 cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
 
@@ -2438,8 +3486,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         _radioList[i] = new RadioButtonList();
                         _radioList[i].RepeatDirection = System.Web.UI.WebControls.RepeatDirection.Horizontal;
                         _radioList[i].RepeatLayout = RepeatLayout.Flow;
-                        _radioList[i].ID = "radio" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-
+                        _radioList[i].ID = _strDynamictabPart + "radio" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _radioList[i].ClientIDMode = ClientIDMode.Static;
                      
                         if (_dtColumnsDetail.Rows[i]["VerticalList"] != DBNull.Value)
                         {
@@ -2468,9 +3516,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         {
 
                             _rfvValue[i] = new RequiredFieldValidator();
-                            _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _rfvValue[i].ID = _strDynamictabPart + "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _rfvValue[i].ClientIDMode = ClientIDMode.Static;
                             _rfvValue[i].Display = ValidatorDisplay.None;
-                            _rfvValue[i].ControlToValidate = _radioList[i].ClientID;
+                            _rfvValue[i].ControlToValidate = _radioList[i].ID;
                             _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
 
@@ -2487,18 +3536,18 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         //cell[(i * 2) + 1] = new HtmlTableCell();
 
                         _hfValue[i] = new HiddenField();
-                        _hfValue[i].ID = "hf" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _hfValue[i].ID = _strDynamictabPart + "hf" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _hfValue[i].ClientIDMode = ClientIDMode.Static;
 
                        
                         _hfValue2[i] = new HiddenField();
-                        _hfValue2[i].ID = "hf2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _hfValue2[i].ID = _strDynamictabPart + "hf2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _hfValue2[i].ClientIDMode = ClientIDMode.Static;
 
                         
 
                         _hfValue3[i] = new HiddenField();
-                        _hfValue3[i].ID = "hf3" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _hfValue3[i].ID = _strDynamictabPart + "hf3" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _hfValue3[i].ClientIDMode = ClientIDMode.Static;
                       
 
@@ -2521,7 +3570,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
                         if (bShowMap)
-                            cell[(i * 2) + 1].Controls.Add(new LiteralControl("<div align='left' id='map" + i.ToString() + "' style='width: " + strMapWidth + "px; height: " + strMapHeight + "px; margin-top: 10px;'></div>"));
+                            cell[(i * 2) + 1].Controls.Add(new LiteralControl("<div align='left' id='map" + _strDynamictabPart + i.ToString() + "' style='width: " + strMapWidth + "px; height: " + strMapHeight + "px; margin-top: 10px;'></div>"));
 
                         if (_dtColumnsDetail.Rows[i]["ShowTotal"] != DBNull.Value)
                         {
@@ -2533,7 +3582,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 cell[(i * 2) + 1].Controls.Add(new LiteralControl("Address:&nbsp;"));
                                 //cell[(i * 2) + 1].Controls.Add(new LiteralControl("Search Address: <input type='text' value='' id='searchbox" + i.ToString() + "' style='width: 280px; height: 18px; font-size: 12px;' >"));
                                 _txtValue2[i] = new TextBox();
-                                _txtValue2[i].ID = "searchbox" + i.ToString();
+                                _txtValue2[i].ID = "searchbox" + _strDynamictabPart  +i.ToString();
                                 _txtValue2[i].Width = 280;
                                 _txtValue2[i].CssClass = "NormalTextBox";
                                 _txtValue2[i].ClientIDMode = ClientIDMode.Static;
@@ -2543,15 +3592,15 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 if (bShowMap)
                                 {
                                     strSearchAddressJS = @"                                                   
-                                                        function showAddress" + i.ToString() + @"() {                                                      
+                                                        function showAddress" + _strDynamictabPart  +i.ToString() + @"() {                                                      
 
-                                                        var address = document.getElementById('searchbox" + i.ToString() + @"').value;         
+                                                        var address = document.getElementById('searchbox" + _strDynamictabPart + i.ToString() + @"').value;         
                                                         var geocoder = new google.maps.Geocoder();
                                                         geocoder.geocode({ 'address': address }, function (results, status) {
                                                             if (status == google.maps.GeocoderStatus.OK) {
                                                                 results[0].geometry.location;
                                                                 var b = new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
-                                                                map" + i.ToString() + @".setCenter(b);
+                                                               map" + _strDynamictabPart + i.ToString() + @".setCenter(b);
 
                                                             } else {
                                                                 alert('Google Maps had some trouble finding ' + address + '.');
@@ -2561,14 +3610,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                                                    ";
 
-                                    //ScriptManager.RegisterStartupScript(this, this.GetType(), "SearchAddressJS" + i.ToString(), strSearchAddressJS, true);
+                                    //ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "SearchAddressJS" + i.ToString(), strSearchAddressJS, true);
 
                                     cell[(i * 2) + 1].Controls.Add(new LiteralControl("&nbsp;"));
                                     _lnkValue[i] = new LinkButton();
-                                    _lnkValue[i].ID = "lnk" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                    _lnkValue[i].ID = _strDynamictabPart + "lnk" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                     _lnkValue[i].Text = "Search";
                                     _lnkValue[i].CausesValidation = false;
-                                    _lnkValue[i].OnClientClick = "showAddress" + i.ToString() + "(); return false";
+                                    _lnkValue[i].OnClientClick = "showAddress" + _strDynamictabPart + i.ToString() + "(); return false";
                                     _lnkValue[i].ClientIDMode = ClientIDMode.Static;
 
                                     cell[(i * 2) + 1].Controls.Add(_lnkValue[i]);
@@ -2581,9 +3630,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                         else
                                         {
                                             _rfvValue[i] = new RequiredFieldValidator();
-                                            _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                            _rfvValue[i].ID = _strDynamictabPart + "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                            _rfvValue[i].ClientIDMode = ClientIDMode.Static;
                                             _rfvValue[i].Display = ValidatorDisplay.None;//
-                                            _rfvValue[i].ControlToValidate = _txtValue2[i].ClientID;
+                                            _rfvValue[i].ControlToValidate = _txtValue2[i].ID;
                                             _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
 
@@ -2595,14 +3645,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
                                     strShowAddress = @"$(function () {
-                                                $('#searchbox" + i.ToString() + @"').autocomplete({
+                                                $('#searchbox" + _strDynamictabPart + i.ToString() + @"').autocomplete({
 
                                                     source: function (request, response) {
 
-                                                        if (geocoder == null) {
-                                                            geocoder = new google.maps.Geocoder();
+                                                        if (geocoder" + _strDynamictabPart + i.ToString() + @" == null) {
+                                                            geocoder" + _strDynamictabPart + i.ToString() + @" = new google.maps.Geocoder();
                                                         }
-                                                        geocoder.geocode({ 'address': request.term }, function (results, status) {
+                                                        geocoder" + _strDynamictabPart + i.ToString() + @".geocode({ 'address': request.term }, function (results, status) {
                                                             if (status == google.maps.GeocoderStatus.OK) {
 
                                                                 var searchLoc = results[0].geometry.location;
@@ -2611,7 +3661,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                                 var latlng = new google.maps.LatLng(lat, lng);
                                                                 var bounds = results[0].geometry.bounds;
 
-                                                                geocoder.geocode({ 'latLng': latlng }, function (results1, status1) {
+                                                                geocoder" + _strDynamictabPart + i.ToString() + @".geocode({ 'latLng': latlng }, function (results1, status1) {
                                                                     if (status1 == google.maps.GeocoderStatus.OK) {
                                                                         if (results1[1]) {
                                                                             response($.map(results1, function (loc) {
@@ -2633,7 +3683,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                         var bounds = ui.item.bounds;
 
                                                         if (bounds) {
-                                                            map" + i.ToString() + @".fitBounds(bounds);
+                                                            map" + _strDynamictabPart + i.ToString() + @".fitBounds(bounds);
                                                         }
                                                     }
                                                 });
@@ -2655,7 +3705,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 cell[(i * 2) + 1].Controls.Add(new LiteralControl("<br/>"));
                                 cell[(i * 2) + 1].Controls.Add(new LiteralControl("Latitude:&nbsp;"));
                                 _txtValue[i] = new TextBox();
-                                _txtValue[i].ID = "txtLat" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                _txtValue[i].ID = _strDynamictabPart + "txtLat" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+
                                 _txtValue[i].Width = 145;
                                 _txtValue[i].CssClass = "NormalTextBox";
                                 _txtValue[i].ClientIDMode = ClientIDMode.Static;
@@ -2664,7 +3715,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 cell[(i * 2) + 1].Controls.Add(new LiteralControl("&nbsp;&nbsp;Longitude:&nbsp;"));
 
                                 _txtTime[i] = new TextBox();
-                                _txtTime[i].ID = "txtLong" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                _txtTime[i].ID = _strDynamictabPart + "txtLong" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                                 _txtTime[i].Width = 145;
                                 _txtTime[i].CssClass = "NormalTextBox";
                                 _txtTime[i].ClientIDMode = ClientIDMode.Static;
@@ -2675,18 +3726,20 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                     if (_rfvValue[i] == null)
                                     {
                                         _rfvValue[i] = new RequiredFieldValidator();
-                                        _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                        _rfvValue[i].ID = _strDynamictabPart + "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                        _rfvValue[i].ClientIDMode = ClientIDMode.Static;
                                         _rfvValue[i].Display = ValidatorDisplay.None;//
-                                        _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
+                                        _rfvValue[i].ControlToValidate = _txtValue[i].ID;
                                         _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "-Latitude is Mandatory.";
 
 
                                         cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
 
                                         _rfvValue2[i] = new RequiredFieldValidator();
-                                        _rfvValue2[i].ID = "rfv2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                        _rfvValue2[i].ID = _strDynamictabPart + "rfv2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                        _rfvValue2[i].ClientIDMode = ClientIDMode.Static;
                                         _rfvValue2[i].Display = ValidatorDisplay.None;//
-                                        _rfvValue2[i].ControlToValidate = _txtTime[i].ClientID;
+                                        _rfvValue2[i].ControlToValidate = _txtTime[i].ID;
                                         _rfvValue2[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "-Longitude is Mandatory.";
 
 
@@ -2695,10 +3748,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 }
                                 if (bShowMap)
                                 {
-                                    strShowLatLong = @"  var txtLatitude = document.getElementById('" + _txtValue[i].ClientID.ToString() + @"');
-                                            txtLatitude.value = map" + i.ToString() + @".getCenter().lat();
-                                            var txtLongitude = document.getElementById('" + _txtTime[i].ClientID.ToString() + @"');
-                                            txtLongitude.value = map" + i.ToString() + @".getCenter().lng(); ";
+                                    strShowLatLong = @"  var txtLatitude" + _strDynamictabPart + i.ToString() + @" = document.getElementById('" + _txtValue[i].ID + @"');
+                                            txtLatitude" + _strDynamictabPart + i.ToString() + @".value = map" + _strDynamictabPart + i.ToString() + @".getCenter().lat();
+                                            var txtLongitude" + _strDynamictabPart + i.ToString() + @" = document.getElementById('" + _txtTime[i].ID + @"');
+                                            txtLongitude" + _strDynamictabPart + i.ToString() + @".value = map" + _strDynamictabPart + i.ToString() + @".getCenter().lng(); ";
                                 }
                             }
                         }
@@ -2707,32 +3760,31 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         if (bShowMap)
                         {
 
-                            string strMapJS = @"//$(document).ready(function () {
+                            string strMapJS = @"
 
-                                         var mapOptions = {
-                                                zoom:parseFloat(document.getElementById('" + _hfValue3[i].ClientID.ToString() + @"').value),
+                                         var mapOptions" + _strDynamictabPart + i.ToString() + @" = {
+                                                zoom:parseFloat(document.getElementById('" + _hfValue3[i].ID + @"').value),
                                                 mapTypeId: google.maps.MapTypeId.ROADMAP,scrollwheel: false,
-                                                center: new google.maps.LatLng(document.getElementById('" + _hfValue[i].ClientID.ToString() + @"').value, document.getElementById('" + _hfValue2[i].ClientID.ToString() + @"').value)          
+                                                center: new google.maps.LatLng(document.getElementById('" + _hfValue[i].ID + @"').value, document.getElementById('" + _hfValue2[i].ID + @"').value)          
                                             };
-                                     var map" + i.ToString() + @" = new google.maps.Map(document.getElementById('map" + i.ToString() + @"'), mapOptions);
-                                     var geocoder = new google.maps.Geocoder();" + strShowAddress + @"
+                                     var map" + _strDynamictabPart + i.ToString() + @" = new google.maps.Map(document.getElementById('map" + _strDynamictabPart + i.ToString() + @"'), mapOptions" + _strDynamictabPart + i.ToString() + @");
+                                     var geocoder" + _strDynamictabPart + i.ToString() + @" = new google.maps.Geocoder();" + strShowAddress + @"
 
-                                     google.maps.event.addListener(map" + i.ToString() + @", 'center_changed', function () {
-                                            document.getElementById('" + _hfValue[i].ClientID.ToString() + @"').value = map" + i.ToString() + @".getCenter().lat();
-                                            document.getElementById('" + _hfValue2[i].ClientID.ToString() + @"').value = map" + i.ToString() + @".getCenter().lng();
+                                     google.maps.event.addListener(map" + _strDynamictabPart + i.ToString() + @", 'center_changed', function () {
+                                            document.getElementById('" + _hfValue[i].ID + @"').value = map" + _strDynamictabPart + i.ToString() + @".getCenter().lat();
+                                            document.getElementById('" + _hfValue2[i].ID + @"').value = map" + _strDynamictabPart + i.ToString() + @".getCenter().lng();
                                                   " + strShowLatLong + @" 
                                         });
 
-                                    google.maps.event.addListener(map" + i.ToString() + @", 'zoom_changed', function () {
-                                                    document.getElementById('" + _hfValue3[i].ClientID.ToString() + @"').value = map" + i.ToString() + @".getZoom();
+                                    google.maps.event.addListener(map" + _strDynamictabPart + i.ToString() + @", 'zoom_changed', function () {
+                                                    document.getElementById('" + _hfValue3[i].ID + @"').value = map" + _strDynamictabPart + i.ToString() + @".getZoom();
 
                                                 });
-                                        " + strSearchAddressJS + @"
-                                   // });
+                                        " + strSearchAddressJS + @"                                 
 
                                     ";
 
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "AutoCompleteJS" + i.ToString(), strMapJS, true);
+                            ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "AutoCompleteJS" + _strDynamictabPart  +i.ToString(), strMapJS, true);
                         }                       
 
 
@@ -2740,8 +3792,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "checkbox")
                     {
                         _chkValue[i] = new CheckBox();
-                        _chkValue[i].ID = "chk" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();                      
-                       
+                        _chkValue[i].ID = _strDynamictabPart + "chk" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _chkValue[i].ClientIDMode = ClientIDMode.Static;
                         cell[(i * 2) + 1].Controls.Add(_chkValue[i]);
                     }
 
@@ -2750,7 +3802,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     {
 
                         _htmValue[i] = new WYSIWYGEditor();
-                        _htmValue[i].ID = "htm" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _htmValue[i].ID = _strDynamictabPart + "htm" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _htmValue[i].ClientIDMode = ClientIDMode.Static;
                         _htmValue[i].AssetManager = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Editor/assetmanager/assetmanager.aspx";
                         _htmValue[i].ButtonFeatures = new string[] { "FullScreen", "XHTMLFullSource", "RemoveFormat", "Undo", "Redo", "|", "Paragraph", "FontName", "FontSize", "|", "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyFull", "Bold", "Italic", "Underline", "Hyperlink" };
                         _htmValue[i].scriptPath = "../../Editor/scripts/";
@@ -2775,7 +3828,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     {
                         _lbl[i].Visible = false;
                         _lblValue[i] = new Label();
-                        _lblValue[i].ID = "lblV" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _lblValue[i].ID = _strDynamictabPart + "lblV" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _lblValue[i].ClientIDMode = ClientIDMode.Static;
                         cell[(i * 2) + 1].Controls.Add(_lblValue[i]);
                     }
 
@@ -2783,7 +3837,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         && _dtColumnsDetail.Rows[i]["DateCalculationType"].ToString() == "")
                     {
                         _lstValue[i] = new ListBox();
-                        _lstValue[i].ID = "lst" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _lstValue[i].ID = _strDynamictabPart + "lst" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _lstValue[i].ClientIDMode = ClientIDMode.Static;
                         _lstValue[i].SelectionMode = ListSelectionMode.Multiple;
                         _lstValue[i].Style.Add("min-width", "198px");
                         _lstValue[i].Style.Add("min-height", "100px");
@@ -2796,9 +3851,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         {
 
                             _rfvValue[i] = new RequiredFieldValidator();
-                            _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _rfvValue[i].ID = _strDynamictabPart + "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _rfvValue[i].ClientIDMode = ClientIDMode.Static;
                             _rfvValue[i].Display = ValidatorDisplay.None;
-                            _rfvValue[i].ControlToValidate = _lstValue[i].ClientID;
+                            _rfvValue[i].ControlToValidate = _lstValue[i].ID;
                             _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                             cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
 
@@ -2810,7 +3866,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         && _dtColumnsDetail.Rows[i]["DateCalculationType"].ToString() == "checkbox")
                     {
                         _cblValue[i] = new CheckBoxList();
-                        _cblValue[i].ID = "cbl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();                      
+                        _cblValue[i].ID = _strDynamictabPart + "cbl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _cblValue[i].ClientIDMode = ClientIDMode.Static;
                         _cblValue[i].Style.Add("display", "block");
                         _cblValue[i].Style.Add("overflow", "auto");                     
                         _cblValue[i].Style.Add("min-width", "198px");
@@ -2826,14 +3883,15 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         {
 
                             _cusvValue[i] = new CustomValidator();
-                            _cusvValue[i].ID = "cusv" + _dtColumnsDetail.Rows[i]["SystemName"];
+                            _cusvValue[i].ID = _strDynamictabPart + "cusv" + _dtColumnsDetail.Rows[i]["SystemName"];
+                            _cusvValue[i].ClientIDMode = ClientIDMode.Static;
                             _cusvValue[i].Display = ValidatorDisplay.None;//
                             _cusvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
-                            string strJSCustomValidation = @" function ValidateCheckBoxList" + i.ToString() + @"(sender, args) {
+                            string strJSCustomValidation = @" function ValidateCheckBoxList" + _strDynamictabPart + i.ToString() + @"(sender, args) {
                                 try
                                 {
-                                    var checkBoxList  = document.getElementById('ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + _cblValue[i].ID + @"');
+                                    var checkBoxList  = document.getElementById('" + _cblValue[i].ID + @"');
                                     var checkboxes  = checkBoxList.getElementsByTagName('input');
                                      var isValid = false;
                                     for (var i = 0; i < checkboxes.length; i++) {
@@ -2851,9 +3909,9 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 }
                             }";
                             //_cusvValue[i].ControlToValidate = _cblValue[i].ID;
-                            _cusvValue[i].ClientValidationFunction = "ValidateCheckBoxList" + i.ToString();
+                            _cusvValue[i].ClientValidationFunction = "ValidateCheckBoxList" + _strDynamictabPart + i.ToString();
                             cell[(i * 2) + 1].Controls.Add(_cusvValue[i]);
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "jsValidateCheckBoxList" + i.ToString(), strJSCustomValidation, true);
+                            ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "jsValidateCheckBoxList" + _strDynamictabPart + i.ToString(), strJSCustomValidation, true);
                             
 
                         }
@@ -2868,7 +3926,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     {
                         _ddlValue[i] = new DropDownList();
                         _ddlValue[i].Width = 198;
-                        _ddlValue[i].ID = "ddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _ddlValue[i].ID = _strDynamictabPart + "ddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _ddlValue[i].ClientIDMode = ClientIDMode.Static;
                         _ddlValue[i].CssClass = "NormalTextBox";                                               
 
                         _pnlDIV[i] = new Panel();
@@ -2887,9 +3946,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         {
 
                             _rfvValue[i] = new RequiredFieldValidator();
-                            _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _rfvValue[i].ID = _strDynamictabPart + "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _rfvValue[i].ClientIDMode = ClientIDMode.Static;
                             _rfvValue[i].Display = ValidatorDisplay.None;
-                            _rfvValue[i].ControlToValidate = _ddlValue[i].ClientID;
+                            _rfvValue[i].ControlToValidate = _ddlValue[i].ID;
                             _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
                             cell[(i * 2) + 1].Controls.Add(_rfvValue[i]);
                         }
@@ -2905,7 +3965,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "calculation")
                     {
                         _txtValue[i] = new TextBox();
-                        _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ID = _strDynamictabPart + "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ClientIDMode = ClientIDMode.Static;
                         _txtValue[i].Width = 198;
                         _txtValue[i].CssClass = "NormalTextBox";
                         _txtValue[i].ToolTip = "Calculated value - will be refreshed on save.";
@@ -2913,7 +3974,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
                         _ibValue[i] = new ImageButton();
-                        _ibValue[i].ID = "ib" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _ibValue[i].ID = _strDynamictabPart + "ib" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _ibValue[i].ClientIDMode = ClientIDMode.Static;
                         _ibValue[i].ImageUrl = "~/Pages/Pager/Images/refresh.png";
                         _ibValue[i].Style.Add("padding-left", "5px");
                         _ibValue[i].Style.Add("width", "12px");
@@ -2936,7 +3998,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         || _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "number")
                     {
                         _txtValue[i] = new TextBox();
-                        _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ID = _strDynamictabPart + "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ClientIDMode = ClientIDMode.Static;
                         _txtValue[i].Width = 198;
                         _txtValue[i].CssClass = "NormalTextBox";
 
@@ -2962,10 +4025,11 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             _txtValue[i].AutoPostBack = false;                           
 
                             _lblValue[i] = new Label();
-                            _lblValue[i].ID = "lblV" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-
+                            _lblValue[i].ID = _strDynamictabPart + "lblV" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _lblValue[i].ClientIDMode = ClientIDMode.Static;
                             _seValue[i] = new SliderExtender();
-                            _seValue[i].ID = "se" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _seValue[i].ID = _strDynamictabPart + "se" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _seValue[i].ClientIDMode = ClientIDMode.Static;
                             _seValue[i].BehaviorID = _txtValue[i].ID;
                             _seValue[i].TargetControlID = _txtValue[i].ID;
                             _seValue[i].BoundControlID = _lblValue[i].ID;
@@ -2995,13 +4059,13 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             if (_dtColumnsDetail.Rows[i]["TextType"] != DBNull.Value)
                             {
 
-                                if (_dtColumnsDetail.Rows[i]["TextType"].ToString() != ""
-                                    && _dtColumnsDetail.Rows[i]["TextType"].ToString() != "readonly")
+                                if (_dtColumnsDetail.Rows[i]["TextType"].ToString() != "")
                                 {
                                     _revValue[i] = new RegularExpressionValidator();
-                                    _revValue[i].ID = "rev" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                    _revValue[i].ID = _strDynamictabPart + "rev" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                    _revValue[i].ClientIDMode = ClientIDMode.Static;
                                     _revValue[i].Display = ValidatorDisplay.None;
-                                    _revValue[i].ControlToValidate = _txtValue[i].ClientID;
+                                    _revValue[i].ControlToValidate = _txtValue[i].ID;
                                    
 
                                     switch (_dtColumnsDetail.Rows[i]["TextType"].ToString().ToLower())
@@ -3025,34 +4089,35 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                                         case "link":
                                             _hlValue[i] = new HyperLink();
-                                            _hlValue[i].ID = "hl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                            _hlValue[i].ID = _strDynamictabPart + "hl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                            _hlValue[i].ClientIDMode = ClientIDMode.Static;
                                             _hlValue[i].Target = "_blank";
                                           
                                             cell[(i * 2) + 1].Controls.Add(new LiteralControl("&nbsp"));
                                             cell[(i * 2) + 1].Controls.Add(_hlValue[i]);
 
-                                            string strJSLink = @"$('#ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + _txtValue[i].ID + @"').keypress(function () {
-                                                 var strURL=document.getElementById('ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + _txtValue[i].ID + @"').value;
+                                            string strJSLink = @"$('#" + _txtValue[i].ID + @"').keypress(function () {
+                                                 var strURL=document.getElementById('" + _txtValue[i].ID + @"').value;
 	                                                if (strURL.indexOf('http')==-1)
                                                             {
                                                             strURL='http://' + strURL;
                                                             }
-                                                            document.getElementById('ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + _hlValue[i].ID + @"').href =strURL;
+                                                            document.getElementById('" + _hlValue[i].ID + @"').href =strURL;
 
                                                    });
-                                                        $('#ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + _txtValue[i].ID + @"').change(function () {
-                                                                var strURL=document.getElementById('ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + _txtValue[i].ID + @"').value;
+                                                        $('#" + _txtValue[i].ID + @"').change(function () {
+                                                                var strURL=document.getElementById('" + _txtValue[i].ID + @"').value;
 	                                                            if (strURL.indexOf('http')==-1)
                                                                         {
                                                                         strURL='http://' + strURL;
                                                                         }
-                                                                        document.getElementById('ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + _hlValue[i].ID + @"').href =strURL;
+                                                                        document.getElementById('" + _hlValue[i].ID + @"').href =strURL;
 
                                                                 });
 
 
                                                         ";
-                                            ScriptManager.RegisterStartupScript(this, this.GetType(), "linkURL" + i.ToString(), strJSLink, true);
+                                            ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "linkURL" + _strDynamictabPart + i.ToString(), strJSLink, true);
 
                                             _revValue[i].ValidationExpression = TextTypeRegEx.link;
                                             break;
@@ -3107,15 +4172,17 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 if (_dtColumnsDetail.Rows[i]["NumberType"].ToString() != "8")
                                 {
                                     _revValue[i] = new RegularExpressionValidator();
-                                    _revValue[i].ID = "rev" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                    _revValue[i].ID = _strDynamictabPart + "rev" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                    _revValue[i].ClientIDMode = ClientIDMode.Static;
                                     _revValue[i].Display = ValidatorDisplay.None;
-                                    _revValue[i].ControlToValidate = _txtValue[i].ClientID;
+                                    _revValue[i].ControlToValidate = _txtValue[i].ID;
                                     _revValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "- Numeric value please!";
                                     _revValue[i].ValidationExpression = @"(^-?\d{1,20}\.$)|(^-?\d{1,20}$)|(^-?\d{0,20}\.\d{1,15}$)";
 
                                     _ftbExt[i] = new FilteredTextBoxExtender();
-                                    _ftbExt[i].ID = "ftb" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-                                    _ftbExt[i].TargetControlID = _txtValue[i].ClientID;
+                                    _ftbExt[i].ID = _strDynamictabPart + "ftb" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                    _ftbExt[i].ClientIDMode = ClientIDMode.Static;
+                                    _ftbExt[i].TargetControlID = _txtValue[i].ID;
                                     _ftbExt[i].FilterType = FilterTypes.Custom;
                                     _ftbExt[i].FilterMode = FilterModes.ValidChars;
                                     _ftbExt[i].ValidChars = "-.0123456789";
@@ -3142,8 +4209,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                                     _txtValue[i].Visible = false;
                                     _lblValue[i] = new Label();
-                                    _lblValue[i].ID = "lblV" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-                                    //_lblValue[i].ClientIDMode = ClientIDMode.Static;
+                                    _lblValue[i].ID = _strDynamictabPart + "lblV" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                    _lblValue[i].ClientIDMode = ClientIDMode.Static;
 
                                     cell[(i * 2) + 1].Controls.Add(_lblValue[i]);
 
@@ -3158,9 +4225,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         {
 
                             _rfvValue[i] = new RequiredFieldValidator();
-                            _rfvValue[i].ID = "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _rfvValue[i].ID = _strDynamictabPart + "rfv" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _rfvValue[i].ClientIDMode = ClientIDMode.Static;
                             _rfvValue[i].Display = ValidatorDisplay.None;
-                            _rfvValue[i].ControlToValidate = _txtValue[i].ClientID;
+                            _rfvValue[i].ControlToValidate = _txtValue[i].ID;
                             _rfvValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + " is Mandatory.";
 
 
@@ -3168,6 +4236,11 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                         }
                     }
+
+
+
+
+
 
                     break;
             }
@@ -3177,7 +4250,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
             trX[i] = new HtmlTableRow();
 
-
+            trX[i].ID = _strDynamictabPart + "trX" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+            trX[i].ClientIDMode = ClientIDMode.Static;
             trX[i].Cells.Add(cell[i * 2]);
             trX[i].Cells.Add(cell[(i * 2) + 1]);
 
@@ -3252,8 +4326,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             {
 
                                 _ccddl[i] = new CascadingDropDown();
-                                _ccddl[i].ID = "ccddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-
+                                _ccddl[i].ID = _strDynamictabPart + "ccddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                _ccddl[i].ClientIDMode = ClientIDMode.Static;
                                 _ccddl[i].Category = _dtColumnsDetail.Rows[i]["ColumnID"].ToString() + "," + _dtColumnsDetail.Rows[i]["FilterParentColumnID"].ToString();
                                 _ccddl[i].TargetControlID = _ddlValue[i].ID;
 
@@ -3282,6 +4356,223 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
         }
 
+        try
+        {
+           
+            //upDetailDynamic.
+//            for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
+//            {
+//                if (_dtColumnsDetail.Rows[i]["ControlValueChangeService"] != DBNull.Value && _dtColumnsDetail.Rows[i]["ControlValueChangeService"].ToString() != "")
+//                {
+//                    ColumnChangeService theColumnChangeService = JSONField.GetTypedObject<ColumnChangeService>(_dtColumnsDetail.Rows[i]["ControlValueChangeService"].ToString());
+//                    if(theColumnChangeService!=null)
+//                    {
+//                        bool bPostBackEvent = false;
+                      
+//                        if(!string.IsNullOrEmpty(theColumnChangeService.SPName)
+//                            || !string.IsNullOrEmpty(theColumnChangeService.DotNetMethod))
+//                        {
+//                            bPostBackEvent = true;
+//                        }
+
+
+//                        string strEventName = "";
+//                        string strEventHeader = "";
+//                        string strControlName = "";
+
+//                         if(!string.IsNullOrEmpty(theColumnChangeService.ControlEvent))
+//                         {
+//                             strEventName = theColumnChangeService.ControlEvent;
+//                         }
+
+
+//                        if (Common.IsIn(_dtColumnsDetail.Rows[i]["ColumnType"].ToString(), "text,number,date,time")
+//                        || (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "dropdown" &&
+//                            _dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "table"))
+//                        {
+//                            if (_txtValue[i] != null)
+//                            {
+//                                if (bPostBackEvent)
+//                                {
+//                                    _txtValue[i].TextChanged += new EventHandler(CommonChangeEvent);
+//                                    _txtValue[i].AutoPostBack = true;
+//                                    _txtValue[i].Attributes.Add("ColumnID", _dtColumnsDetail.Rows[i]["ColumnID"].ToString());
+
+//                                    AsyncPostBackTrigger aAsyncPostBackTrigger = new AsyncPostBackTrigger();                                  
+//                                    aAsyncPostBackTrigger.ControlID = _txtValue[i].ID;
+//                                    //aAsyncPostBackTrigger.EventName = "CommonChangeEvent";
+//                                    upDetailDynamic.Triggers.Add(aAsyncPostBackTrigger);
+
+//                                }
+
+//                                if (!string.IsNullOrEmpty(theColumnChangeService.JavaScriptFunction))
+//                                {
+//                                    if (strEventName == "")
+//                                        strEventName = "blur";
+//                                    strControlName = _txtValue[i].ID; 
+                                    
+//                                }
+                                    
+
+//                            }
+//                        }
+//                        if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "dropdown" &&
+//                                _dtColumnsDetail.Rows[i]["DropDownType"].ToString() != "table")
+//                        {
+//                            if (_ddlValue[i] != null)
+//                            {
+//                                if (bPostBackEvent)
+//                                {
+//                                    _ddlValue[i].SelectedIndexChanged += new EventHandler(CommonChangeEvent);
+
+//                                    //if(IsPostBack)
+//                                    //_ddlValue[i].AutoPostBack = true;
+//                                    _ddlValue[i].Attributes.Add("ColumnID", _dtColumnsDetail.Rows[i]["ColumnID"].ToString());
+//                                    AsyncPostBackTrigger aAsyncPostBackTrigger = new AsyncPostBackTrigger();
+//                                    aAsyncPostBackTrigger.ControlID = _ddlValue[i].ID;
+//                                    upDetailDynamic.Triggers.Add(aAsyncPostBackTrigger);
+
+//                                    //PostBackTrigger aPostBackTrigger = new PostBackTrigger();
+//                                    //aPostBackTrigger.ControlID = _ddlValue[i].ID;
+//                                    //upDetailDynamic.Triggers.Add(aPostBackTrigger);
+
+
+//                                    _hfValue3[i] = new HiddenField();
+//                                    _hfValue3[i].ID = _strDynamictabPart + "hf3" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+//                                    _hfValue3[i].ClientIDMode = ClientIDMode.Static;
+
+//                                    string strddlposbackJS = @"
+//                                            $(document).ready(function () {
+//                                                   // $('#" + _hfValue3[i].ID + @"').value=$('#" + _ddlValue[i].ID + @"').val();
+//                                                   $('#" + _ddlValue[i].ID + @"').blur(function(){
+//                                                            try
+//                                                            {
+//                                                               // var sOld=$('#" + _hfValue3[i].ID + @"').value;
+//                                                               // var sNew=$('#" + _ddlValue[i].ID + @"').val();
+//                                                                //if( sOld!=sNew )
+//                                                                //{
+//                                                                    __doPostBack('ctl00$HomeContentPlaceHolder$ctl00_HomeContentPlaceHolder_ddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString() + @"','');
+//                                                                //}
+//                                                            }
+//                                                            catch(err)
+//                                                            {
+//                                                                //
+//                                                            }
+//
+//                                                    });
+//                                                }); 
+//
+//                                            ";
+
+//                                    //_ddlValue[i].Attributes.Add("onchange", "javascript:var hfPostback=document.getElementById('hfPostback'); if (hfPostback.value=='1') { __doPostBack('ctl00$HomeContentPlaceHolder$ctl00_HomeContentPlaceHolder_ddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString() + "','')}");
+//                                    //javascript:setTimeout('__doPostBack(\'ctl00$HomeContentPlaceHolder$ctl00_HomeContentPlaceHolder_ddlV003\',\'\')', 0)
+//                                    ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "dropdownPostback" + _strDynamictabPart + i.ToString(), strddlposbackJS, true);
+
+//                                }
+
+//                                if (!string.IsNullOrEmpty(theColumnChangeService.JavaScriptFunction))
+//                                {
+//                                    if (strEventName == "")
+//                                        strEventName = "change";
+//                                    if (bPostBackEvent)
+//                                        strEventName = "blur";
+//                                    strControlName = _ddlValue[i].ID; 
+//                                }
+                                    
+//                            }
+//                        }
+//                        if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "radiobutton")
+//                        {
+//                            if (_radioList[i] != null)
+//                            {
+//                                if (bPostBackEvent)
+//                                {
+//                                    _radioList[i].SelectedIndexChanged += new EventHandler(CommonChangeEvent);
+//                                    _radioList[i].AutoPostBack = true;
+//                                    _radioList[i].Attributes.Add("ColumnID", _dtColumnsDetail.Rows[i]["ColumnID"].ToString());
+
+//                                    AsyncPostBackTrigger aAsyncPostBackTrigger = new AsyncPostBackTrigger();
+//                                    aAsyncPostBackTrigger.ControlID = _radioList[i].ID;
+//                                    //aAsyncPostBackTrigger.EventName = "CommonChangeEvent";
+//                                    upDetailDynamic.Triggers.Add(aAsyncPostBackTrigger);
+
+//                                }
+
+//                                if (!string.IsNullOrEmpty(theColumnChangeService.JavaScriptFunction))
+//                                {
+//                                    if (strEventName == "")
+//                                        strEventName = "change";
+//                                    strControlName = _radioList[i].ID; 
+                                   
+//                                }
+//                            }
+//                        }
+//                        if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "checkbox")
+//                        {
+//                            if (_chkValue[i] != null)
+//                            {
+//                                if (bPostBackEvent)
+//                                {
+//                                    _chkValue[i].CheckedChanged += new EventHandler(CommonChangeEvent);
+//                                    _chkValue[i].AutoPostBack = true;
+//                                    _chkValue[i].Attributes.Add("ColumnID", _dtColumnsDetail.Rows[i]["ColumnID"].ToString());
+
+//                                    AsyncPostBackTrigger aAsyncPostBackTrigger = new AsyncPostBackTrigger();
+//                                    aAsyncPostBackTrigger.ControlID = _chkValue[i].ID;
+//                                    //aAsyncPostBackTrigger.EventName = "CommonChangeEvent";
+//                                    upDetailDynamic.Triggers.Add(aAsyncPostBackTrigger);
+
+//                                }
+
+//                                if (!string.IsNullOrEmpty(theColumnChangeService.JavaScriptFunction))
+//                                {
+//                                    if (strEventName == "")
+//                                        strEventName = "click";
+//                                    strControlName = _chkValue[i].ID;                                      
+//                                }
+//                            }
+//                        }
+
+//                        if (!string.IsNullOrEmpty(theColumnChangeService.JavaScriptFunction) && strControlName!="")
+//                        {
+
+//                            strEventHeader = strEventHeader = "$('#" + strControlName + @"')."+strEventName+"(function(){";
+//                            string strEventMehod = @"
+//                                      
+//                                                $(document).ready(function () {
+//                                                    " + strEventHeader+ @"
+//                                                            try
+//                                                            {
+//                                                                " + theColumnChangeService.JavaScriptFunction + @"
+//                                                            }
+//                                                            catch(err)
+//                                                            {
+//                                                                //
+//                                                            }
+//
+//                                                    });
+//                                                }); 
+//                                        
+//
+//                                            ";
+
+
+//                            ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "JavaScriptFunction" + _strDynamictabPart + i.ToString(), strEventMehod, true);
+
+//                        }
+//                    }                    
+//                }
+//            }
+
+
+
+
+        }
+        catch
+        {
+            //
+        }
+        
 
 
         _lblWarningResults = new Label();
@@ -3482,13 +4773,13 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     upDetailDynamic.Triggers.Add(trigger3);
 
 
-                    if (Page.MasterPageFile.ToLower().IndexOf("rrp") > -1)
-                    {
-                        PostBackTrigger trigger4 = new PostBackTrigger();
-                        trigger4.ControlID = tabDetail.ID;
-                        upDetailDynamic.Triggers.Add(trigger4);
+                    //if (Page.MasterPageFile.ToLower().IndexOf("rrp") > -1)
+                    //{
+                    //    PostBackTrigger trigger4 = new PostBackTrigger();
+                    //    trigger4.ControlID = tabDetail.ID;
+                    //    upDetailDynamic.Triggers.Add(trigger4);
 
-                    }
+                    //}
                 }
             }
             catch
@@ -3505,34 +4796,127 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             SearchCriteria theSearchCriteria = SystemData.SearchCriteria_Detail(int.Parse(Cryptography.Decrypt(Request.QueryString["SearchCriteriaID"].ToString())));
             if (theSearchCriteria != null)
             {
+                //try
+                //{
+                //    System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
+
+                //    xmlDoc.Load(new StringReader(theSearchCriteria.SearchText));
+                   
+
+                //    string strReturnSQL = "";
+                //    int iPreRecordID = -1;
+                //    int iNextRecordID = -1;
+
+                //    if (xmlDoc.FirstChild["strReturnSQL"] != null)
+                //        strReturnSQL = xmlDoc.FirstChild["strReturnSQL"].InnerText;
+                //    string strMaxRowNum = "";
+                //    if (strReturnSQL!="")
+                //        strMaxRowNum= Common.GetValueFromSQL(@"SELECT MAX(RowNum) FROM (" + strReturnSQL + @")  FullResult");
+
+                //    if (strReturnSQL != "" && strMaxRowNum != "" && int.Parse(strMaxRowNum) > 1)
+                //    {
+                //        string strCurrentRowNum = Common.GetValueFromSQL(@"SELECT RowNum FROM (" + strReturnSQL + @")  FullResult  WHERE DBGSystemRecordID=" + _qsRecordID);
+
+                //        if (strCurrentRowNum != "")
+                //        {
+                //            if (int.Parse(strCurrentRowNum) > 1)
+                //            {
+                //                string strPreRecordID = Common.GetValueFromSQL(@"SELECT DBGSystemRecordID FROM (" + strReturnSQL + @")  FullResult  WHERE RowNum=" + (int.Parse(strCurrentRowNum) - 1).ToString());
+                //                if (strPreRecordID != "")
+                //                    iPreRecordID = int.Parse(strPreRecordID);
+                //            }
+                //            else
+                //            {
+                //                if (strMaxRowNum != "")
+                //                {
+                //                    string strMaxRecordID = Common.GetValueFromSQL(@"SELECT DBGSystemRecordID FROM (" + strReturnSQL + @")  FullResult WHERE RowNum=" + strMaxRowNum);
+                //                    if (strMaxRecordID != "")
+                //                        iPreRecordID = int.Parse(strMaxRecordID);
+                //                }
+                //            }
+
+                //            if (int.Parse(strCurrentRowNum) < int.Parse(strMaxRowNum))
+                //            {
+                //                string strNextRecordID = Common.GetValueFromSQL(@"SELECT DBGSystemRecordID FROM (" + strReturnSQL + @")  FullResult  WHERE RowNum=" + (int.Parse(strCurrentRowNum) + 1).ToString());
+                //                if (strNextRecordID != "")
+                //                    iNextRecordID = int.Parse(strNextRecordID);
+
+                //            }
+                //            else
+                //            {
+                //                string strMinRecordID = Common.GetValueFromSQL(@"SELECT DBGSystemRecordID FROM (" + strReturnSQL + @")  FullResult WHERE RowNum=1");
+                //                if (strMinRecordID != "")
+                //                    iNextRecordID = int.Parse(strMinRecordID);
+                //            }
+                //        }
+                //    }
+                //    else
+                //    {
+                //        tblNavigateRecords.Visible = false;
+                //    }
+
+
+                //    //make the URL
+
+                //    string strRawURL = GetStackRawURL();
+                //    strRawURL = Common.GetUpdatedFullURLRemoveQueryString(strRawURL, "stackhault");
+                //    strRawURL = Common.GetUpdatedFullURLWithQueryString(strRawURL, "stackhault", "y");
+
+                //    string strPreRawURL = strRawURL.Replace("&Recordid=" + Cryptography.Encrypt(_qsRecordID.ToString()), "&Recordid=" + Cryptography.Encrypt(iPreRecordID.ToString()));
+                //    string strNextRawURL = strRawURL.Replace("&Recordid=" + Cryptography.Encrypt(_qsRecordID.ToString()), "&Recordid=" + Cryptography.Encrypt(iNextRecordID.ToString()));
+
+                //    if (iPreRecordID != -1)
+                //    {                       
+                //        hlNavigatePrev.NavigateUrl = strPreRawURL;
+                //    }                   
+
+                //    if (iNextRecordID != -1)
+                //    {                      
+                //        hlNavigateNext.NavigateUrl = strNextRawURL;
+                //    }
+                   
+
+                //}
+                //catch
+                //{
+                //    //
+                //}
+            }
+            else
+            {
+                tblNavigateRecords.Visible = false;
+
+            }
+        }
+        else
+        {
+            tblNavigateRecords.Visible = false;
+        }
+    }
+
+    protected void PopulatePreNavigation()
+    {
+        if (Request.QueryString["SearchCriteriaID"] != null && (bool)_theTable.NavigationArrows)
+        {
+            SearchCriteria theSearchCriteria = SystemData.SearchCriteria_Detail(int.Parse(Cryptography.Decrypt(Request.QueryString["SearchCriteriaID"].ToString())));
+            if (theSearchCriteria != null)
+            {
                 try
                 {
                     System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
 
                     xmlDoc.Load(new StringReader(theSearchCriteria.SearchText));
-                    //string strddlEnteredBy = xmlDoc.FirstChild["ddlEnteredBy"].InnerText;
-                    //string strchkIsActive = xmlDoc.FirstChild["chkIsActive"].InnerText;
-                    //string strchkShowOnlyWarning = xmlDoc.FirstChild["chkShowOnlyWarning"].InnerText;
-                    //string sOrder = xmlDoc.FirstChild["sOrder"].InnerText;
-                    //string strOrderDirection = xmlDoc.FirstChild["strOrderDirection"].InnerText;
-                    //string strNumericSearch = "";// xmlDoc.FirstChild["_strNumericSearch"].InnerText;
-                    //string TextSearch = xmlDoc.FirstChild["TextSearch"].InnerText;
-                    //string TextSearchParent = xmlDoc.FirstChild["TextSearchParent"].InnerText;
-                    //string strDateFrom = xmlDoc.FirstChild["txtDateFrom"].InnerText;
-                    //string strDateTo = xmlDoc.FirstChild["txtDateTo"].InnerText;
-                    //string sParentColumnSortSQL = xmlDoc.FirstChild["sParentColumnSortSQL"].InnerText;
-                    //string strViewName = xmlDoc.FirstChild["_strViewName"].InnerText;
-                    //string strViewID = xmlDoc.FirstChild["strViewID"].InnerText;
+                  
 
                     string strReturnSQL = "";
                     int iPreRecordID = -1;
-                    int iNextRecordID = -1;
+                  
 
                     if (xmlDoc.FirstChild["strReturnSQL"] != null)
                         strReturnSQL = xmlDoc.FirstChild["strReturnSQL"].InnerText;
                     string strMaxRowNum = "";
-                    if (strReturnSQL!="")
-                        strMaxRowNum= Common.GetValueFromSQL(@"SELECT MAX(RowNum) FROM (" + strReturnSQL + @")  FullResult");
+                    if (strReturnSQL != "")
+                        strMaxRowNum = Common.GetValueFromSQL(@"SELECT MAX(RowNum) FROM (" + strReturnSQL + @")  FullResult");
 
                     if (strReturnSQL != "" && strMaxRowNum != "" && int.Parse(strMaxRowNum) > 1)
                     {
@@ -3555,6 +4939,66 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                         iPreRecordID = int.Parse(strMaxRecordID);
                                 }
                             }
+
+                           
+                        }
+                    }
+                  
+
+                    //make the URL
+
+                    string strRawURL = GetStackRawURL();
+                    strRawURL = Common.GetUpdatedFullURLRemoveQueryString(strRawURL, "stackhault");
+                    strRawURL = Common.GetUpdatedFullURLWithQueryString(strRawURL, "stackhault", "y");
+
+                    string strPreRawURL = strRawURL.Replace("&Recordid=" + Cryptography.Encrypt(_qsRecordID.ToString()), "&Recordid=" + Cryptography.Encrypt(iPreRecordID.ToString()));
+                    //string strNextRawURL = strRawURL.Replace("&Recordid=" + Cryptography.Encrypt(_qsRecordID.ToString()), "&Recordid=" + Cryptography.Encrypt(iNextRecordID.ToString()));
+
+                    if (iPreRecordID != -1)
+                    {
+                        hlNavigatePrev.NavigateUrl = strPreRawURL;
+                    }
+
+
+                }
+                catch
+                {
+                    //
+                }
+            }
+          
+        }
+     
+    }
+    protected void PopulateNextNavigation()
+    {
+        if (Request.QueryString["SearchCriteriaID"] != null && (bool)_theTable.NavigationArrows)
+        {
+            SearchCriteria theSearchCriteria = SystemData.SearchCriteria_Detail(int.Parse(Cryptography.Decrypt(Request.QueryString["SearchCriteriaID"].ToString())));
+            if (theSearchCriteria != null)
+            {
+                try
+                {
+                    System.Xml.XmlDocument xmlDoc = new System.Xml.XmlDocument();
+
+                    xmlDoc.Load(new StringReader(theSearchCriteria.SearchText));
+                   
+
+                    string strReturnSQL = "";                   
+                    int iNextRecordID = -1;
+
+                    if (xmlDoc.FirstChild["strReturnSQL"] != null)
+                        strReturnSQL = xmlDoc.FirstChild["strReturnSQL"].InnerText;
+                    string strMaxRowNum = "";
+                    if (strReturnSQL != "")
+                        strMaxRowNum = Common.GetValueFromSQL(@"SELECT MAX(RowNum) FROM (" + strReturnSQL + @")  FullResult");
+
+                    if (strReturnSQL != "" && strMaxRowNum != "" && int.Parse(strMaxRowNum) > 1)
+                    {
+                        string strCurrentRowNum = Common.GetValueFromSQL(@"SELECT RowNum FROM (" + strReturnSQL + @")  FullResult  WHERE DBGSystemRecordID=" + _qsRecordID);
+
+                        if (strCurrentRowNum != "")
+                        {                          
 
                             if (int.Parse(strCurrentRowNum) < int.Parse(strMaxRowNum))
                             {
@@ -3583,38 +5027,24 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     strRawURL = Common.GetUpdatedFullURLRemoveQueryString(strRawURL, "stackhault");
                     strRawURL = Common.GetUpdatedFullURLWithQueryString(strRawURL, "stackhault", "y");
 
-                    string strPreRawURL = strRawURL.Replace("&Recordid=" + Cryptography.Encrypt(_qsRecordID.ToString()), "&Recordid=" + Cryptography.Encrypt(iPreRecordID.ToString()));
                     string strNextRawURL = strRawURL.Replace("&Recordid=" + Cryptography.Encrypt(_qsRecordID.ToString()), "&Recordid=" + Cryptography.Encrypt(iNextRecordID.ToString()));
-
-                    if (iPreRecordID != -1)
-                    {                       
-                        hlNavigatePrev.NavigateUrl = strPreRawURL;
-                    }                   
+                                      
 
                     if (iNextRecordID != -1)
-                    {                      
+                    {
                         hlNavigateNext.NavigateUrl = strNextRawURL;
                     }
-                   
+
 
                 }
                 catch
                 {
                     //
                 }
-            }
-            else
-            {
-                tblNavigateRecords.Visible = false;
-
-            }
+            }          
         }
-        else
-        {
-            tblNavigateRecords.Visible = false;
-        }
+       
     }
-
     protected void AddQuickDone()
     {
         if (!IsPostBack && Session["quickdone"] != null && Session["controlvalue"] != null)
@@ -3641,8 +5071,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     if (strDropDownType == "table")
                     {
                         string str_hfValue = xmlDoc.FirstChild["_hfValue"].InnerText;
-                        TextBox txtP = (TextBox)pnlMain.FindControl(strControl);
-                        HiddenField _hfValue = (HiddenField)pnlMain.FindControl(str_hfValue);
+                        TextBox txtP = (TextBox)pnlEachTable.FindControl(strControl);
+                        HiddenField _hfValue = (HiddenField)pnlEachTable.FindControl(str_hfValue);
 
 
                         try
@@ -3729,7 +5159,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         string strLinkedColumnValue = RecordManager.GetRecordValue(ref theLinkedRecord, theLinkedColumn.SystemName);
 
 
-                        DropDownList ddlP = (DropDownList)pnlMain.FindControl(strControl);
+                        DropDownList ddlP = (DropDownList)pnlEachTable.FindControl(strControl);
                         ddlP.SelectedValue = strLinkedColumnValue;
                     }
                 }
@@ -3743,9 +5173,255 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         }
     }
 
+    protected void ManageControlValueChangeService()
+    {
+        try
+        {
+
+            for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
+            {
+                if (_dtColumnsDetail.Rows[i]["ControlValueChangeService"] != DBNull.Value && _dtColumnsDetail.Rows[i]["ControlValueChangeService"].ToString() != "")
+                {
+                    ColumnChangeService theColumnChangeService = JSONField.GetTypedObject<ColumnChangeService>(_dtColumnsDetail.Rows[i]["ControlValueChangeService"].ToString());
+                    if (theColumnChangeService != null)
+                    {
+                        bool bPostBackEvent = false;
+
+                        if (!string.IsNullOrEmpty(theColumnChangeService.SPName)
+                            || !string.IsNullOrEmpty(theColumnChangeService.DotNetMethod))
+                        {
+                            bPostBackEvent = true;
+                            ViewState["ColumnChangeService"] = "yes";
+                        }
+                        else
+                        {
+                            if(!string.IsNullOrEmpty(theColumnChangeService.AfterValueChange))
+                            {
+                                if (theColumnChangeService.AfterValueChange == "save")
+                                {
+                                     bPostBackEvent = true;
+                                     ViewState["ColumnChangeService"] = "yes";
+                                }
+                                if (theColumnChangeService.AfterValueChange == "show_hide_child_tabs"
+                                         && (_qsMode != "add" || _bShowChildTabsOnAdd))
+                                {
+                                    bPostBackEvent = true;
+                                    ViewState["ColumnChangeService"] = "yes";
+                                }
+                            }
+                        }
+
+                        string strEventName = "";
+                        string strEventHeader = "";
+                        string strControlName = "";
+
+                        if (!string.IsNullOrEmpty(theColumnChangeService.ControlEvent))
+                        {
+                            strEventName = theColumnChangeService.ControlEvent;
+                        }
+
+
+                        if (Common.IsIn(_dtColumnsDetail.Rows[i]["ColumnType"].ToString(), "text,number,date,time")
+                        || (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "dropdown" &&
+                            _dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "table"))
+                        {
+                            if (_txtValue[i] != null)
+                            {
+                                if (bPostBackEvent)
+                                {
+                                    _txtValue[i].TextChanged += new EventHandler(CommonChangeEvent);
+                                    _txtValue[i].AutoPostBack = true;
+                                    _txtValue[i].Attributes.Add("ColumnID", _dtColumnsDetail.Rows[i]["ColumnID"].ToString());
+
+                                    //AsyncPostBackTrigger aAsyncPostBackTrigger = new AsyncPostBackTrigger();
+                                    //aAsyncPostBackTrigger.ControlID = _txtValue[i].ID;
+                                    //aAsyncPostBackTrigger.EventName = "TextChanged";
+                                    //upDetailDynamic.Triggers.Add(aAsyncPostBackTrigger);
+
+                                }
+
+                                if (!string.IsNullOrEmpty(theColumnChangeService.JavaScriptFunction))
+                                {
+                                    if (strEventName == "")
+                                        strEventName = "blur";
+                                    strControlName = _txtValue[i].ID;
+
+                                }
+
+
+                            }
+                        }
+                        if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "dropdown" &&
+                                _dtColumnsDetail.Rows[i]["DropDownType"].ToString() != "table")
+                        {
+                            if (_ddlValue[i] != null)
+                            {
+                                if (bPostBackEvent)
+                                {
+                                    _ddlValue[i].SelectedIndexChanged += new EventHandler(CommonChangeEvent);
+                                    _ddlValue[i].AutoPostBack = true;
+                                    _ddlValue[i].Attributes.Add("ColumnID", _dtColumnsDetail.Rows[i]["ColumnID"].ToString());
+                                    //AsyncPostBackTrigger aAsyncPostBackTrigger = new AsyncPostBackTrigger();
+                                    //aAsyncPostBackTrigger.ControlID = _ddlValue[i].ID;
+                                    //aAsyncPostBackTrigger.EventName = "SelectedIndexChanged";
+                                    //upDetailDynamic.Triggers.Add(aAsyncPostBackTrigger);
+
+                                    //PostBackTrigger aPostBackTrigger = new PostBackTrigger();
+                                    //aPostBackTrigger.ControlID = _ddlValue[i].ID;
+                                    //upDetailDynamic.Triggers.Add(aPostBackTrigger);
+
+
+                                    //                                _hfValue3[i] = new HiddenField();
+                                    //                                _hfValue3[i].ID = _strDynamictabPart + "hf3" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                    //                                _hfValue3[i].ClientIDMode = ClientIDMode.Static;
+
+                                    //                                string strddlposbackJS = @"
+                                    //                                            $(document).ready(function () {
+                                    //                                                   // $('#" + _hfValue3[i].ID + @"').value=$('#" + _ddlValue[i].ID + @"').val();
+                                    //                                                   $('#" + _ddlValue[i].ID + @"').blur(function(){
+                                    //                                                            try
+                                    //                                                            {
+                                    //                                                               // var sOld=$('#" + _hfValue3[i].ID + @"').value;
+                                    //                                                               // var sNew=$('#" + _ddlValue[i].ID + @"').val();
+                                    //                                                                //if( sOld!=sNew )
+                                    //                                                                //{
+                                    //                                                                    __doPostBack('ctl00$HomeContentPlaceHolder$ctl00_HomeContentPlaceHolder_ddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString() + @"','');
+                                    //                                                                //}
+                                    //                                                            }
+                                    //                                                            catch(err)
+                                    //                                                            {
+                                    //                                                                //
+                                    //                                                            }
+                                    //
+                                    //                                                    });
+                                    //                                                }); 
+                                    //
+                                    //                                            ";
+
+                                    //_ddlValue[i].Attributes.Add("onchange", "javascript:var hfPostback=document.getElementById('hfPostback'); if (hfPostback.value=='1') { __doPostBack('ctl00$HomeContentPlaceHolder$ctl00_HomeContentPlaceHolder_ddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString() + "','')}");
+                                    //javascript:setTimeout('__doPostBack(\'ctl00$HomeContentPlaceHolder$ctl00_HomeContentPlaceHolder_ddlV003\',\'\')', 0)
+                                    //ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "dropdownPostback" + _strDynamictabPart + i.ToString(), strddlposbackJS, true);
+
+                                }
+
+                                if (!string.IsNullOrEmpty(theColumnChangeService.JavaScriptFunction))
+                                {
+                                    if (strEventName == "")
+                                        strEventName = "change";
+                                    if (bPostBackEvent)
+                                        strEventName = "blur";
+                                    strControlName = _ddlValue[i].ID;
+                                }
+
+                            }
+                        }
+                        if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "radiobutton")
+                        {
+                            if (_radioList[i] != null)
+                            {
+                                if (bPostBackEvent)
+                                {
+                                    _radioList[i].SelectedIndexChanged += new EventHandler(CommonChangeEvent);
+                                    _radioList[i].AutoPostBack = true;
+                                    _radioList[i].Attributes.Add("ColumnID", _dtColumnsDetail.Rows[i]["ColumnID"].ToString());
+
+                                    //AsyncPostBackTrigger aAsyncPostBackTrigger = new AsyncPostBackTrigger();
+                                    //aAsyncPostBackTrigger.ControlID = _radioList[i].ID;
+                                    //aAsyncPostBackTrigger.EventName = "SelectedIndexChanged";
+                                    //upDetailDynamic.Triggers.Add(aAsyncPostBackTrigger);
+
+                                }
+
+                                if (!string.IsNullOrEmpty(theColumnChangeService.JavaScriptFunction))
+                                {
+                                    if (strEventName == "")
+                                        strEventName = "change";
+                                    if (bPostBackEvent)
+                                        strEventName = "blur";
+
+                                    strControlName = _radioList[i].ID;
+
+                                }
+                            }
+                        }
+                        if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "checkbox")
+                        {
+                            if (_chkValue[i] != null)
+                            {
+                                if (bPostBackEvent)
+                                {
+                                    _chkValue[i].CheckedChanged += new EventHandler(CommonChangeEvent);
+                                    _chkValue[i].AutoPostBack = true;
+                                    _chkValue[i].Attributes.Add("ColumnID", _dtColumnsDetail.Rows[i]["ColumnID"].ToString());
+
+                                    //AsyncPostBackTrigger aAsyncPostBackTrigger = new AsyncPostBackTrigger();
+                                    //aAsyncPostBackTrigger.ControlID = _chkValue[i].ID;
+                                    //aAsyncPostBackTrigger.EventName = "CheckedChanged";
+                                    //upDetailDynamic.Triggers.Add(aAsyncPostBackTrigger);
+
+                                }
+
+                                if (!string.IsNullOrEmpty(theColumnChangeService.JavaScriptFunction))
+                                {
+                                    if (strEventName == "")
+                                        strEventName = "click";
+                                    if (bPostBackEvent)
+                                        strEventName = "blur";
+
+                                    strControlName = _chkValue[i].ID;
+                                }
+                            }
+                        }
+
+                        if (!string.IsNullOrEmpty(theColumnChangeService.JavaScriptFunction) && strControlName != "")
+                        {
+
+                            strEventHeader = strEventHeader = "$('#" + strControlName + @"')." + strEventName + "(function(){";
+                            string strEventMehod = @"
+                                      
+                                                $(document).ready(function () {
+                                                    " + strEventHeader + @"
+                                                            try
+                                                            {
+                                                                " + theColumnChangeService.JavaScriptFunction + @"
+                                                            }
+                                                            catch(err)
+                                                            {
+                                                                //
+                                                            }
+
+                                                    });
+                                                }); 
+                                        
+
+                                            ";
+
+                            ViewState["JavaScriptFunction" + _strDynamictabPart + i.ToString()] = strEventMehod;
+                            ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "JavaScriptFunction" + _strDynamictabPart + i.ToString(), strEventMehod, true);
+
+                        }
+                    }
+                }
+            }
+
+
+
+
+
+        }
+        catch
+        {
+            //
+        }
+    }
     protected void PopulateDynamicControls()
     {
         int iTN = 0;
+
+       
+
+
+
 
         for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
         {
@@ -4124,11 +5800,12 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             ColumnButtonInfo theButtonInfo = JSONField.GetTypedObject<ColumnButtonInfo>(_dtColumnsDetail.Rows[i]["ButtonInfo"].ToString());
                             if (theButtonInfo != null)
                             {
-                                if (!string.IsNullOrEmpty(theButtonInfo.SPToRun))
-                                {
-                                    bVisible = true;
+                                bVisible = true;
+                                //if (!string.IsNullOrEmpty(theButtonInfo.SPToRun))
+                                //{
+                                   
                                     _lnkValue[i].CommandArgument = _dtColumnsDetail.Rows[i]["ColumnID"].ToString(); //theButtonInfo.SPToRun;
-                                }
+                                //}
 
                                 if (!string.IsNullOrEmpty(theButtonInfo.ImageFullPath))
                                 {
@@ -4220,12 +5897,12 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                " <mode>" + HttpUtility.HtmlEncode(Request.QueryString["mode"].ToString()) + "</mode>" +
                                                " <TableID>" + HttpUtility.HtmlEncode(Request.QueryString["TableID"].ToString()) + "</TableID>" +
                                                " <SearchCriteriaID>" + HttpUtility.HtmlEncode(Request.QueryString["SearchCriteriaID"].ToString()) + "</SearchCriteriaID>" +
-                                               " <control>" + HttpUtility.HtmlEncode(_txtValue[i].ID.ToString()) + "</control>" +
+                                               " <control>" + HttpUtility.HtmlEncode(_txtValue[i].ID) + "</control>" +
                                                 " <TableTableID>" + HttpUtility.HtmlEncode(_dtColumnsDetail.Rows[i]["TableTableID"].ToString()) + "</TableTableID>" +
                                                  " <DisplayColumn>" + HttpUtility.HtmlEncode(_dtColumnsDetail.Rows[i]["DisplayColumn"].ToString()) + "</DisplayColumn>" +
                                                   " <LinkedParentColumnID>" + HttpUtility.HtmlEncode(_dtColumnsDetail.Rows[i]["LinkedParentColumnID"].ToString()) + "</LinkedParentColumnID>" +
                                                   " <DropDownType>" + HttpUtility.HtmlEncode(_dtColumnsDetail.Rows[i]["DropDownType"].ToString()) + "</DropDownType>" +
-                                                  " <_hfValue>" + HttpUtility.HtmlEncode(_hfValue[i].ID.ToString()) + "</_hfValue>" +
+                                                  " <_hfValue>" + HttpUtility.HtmlEncode(_hfValue[i].ID) + "</_hfValue>" +
                                                   " <RecordID>" + HttpUtility.HtmlEncode(Request.QueryString["RecordID"] == null ? "-1" : Request.QueryString["RecordID"].ToString()) + "</RecordID>" +
                                               "</root>";
                                         //
@@ -4297,7 +5974,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                 " <mode>" + HttpUtility.HtmlEncode(Request.QueryString["mode"].ToString()) + "</mode>" +
                                                 " <TableID>" + HttpUtility.HtmlEncode(Request.QueryString["TableID"].ToString()) + "</TableID>" +
                                                 " <SearchCriteriaID>" + HttpUtility.HtmlEncode(Request.QueryString["SearchCriteriaID"].ToString()) + "</SearchCriteriaID>" +
-                                                " <control>" + HttpUtility.HtmlEncode(_ddlValue[i].ID.ToString()) + "</control>" +
+                                                " <control>" + HttpUtility.HtmlEncode(_ddlValue[i].ID) + "</control>" +
                                                  " <TableTableID>" + HttpUtility.HtmlEncode(_dtColumnsDetail.Rows[i]["TableTableID"].ToString()) + "</TableTableID>" +
                                                  " <DisplayColumn>" + HttpUtility.HtmlEncode(_dtColumnsDetail.Rows[i]["DisplayColumn"].ToString()) + "</DisplayColumn>" +
                                                  " <LinkedParentColumnID>" + HttpUtility.HtmlEncode(_dtColumnsDetail.Rows[i]["LinkedParentColumnID"].ToString()) + "</LinkedParentColumnID>" +
@@ -4979,15 +6656,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             if (_dtColumnsDetail.Rows[i]["TextType"] != DBNull.Value)
                             {
 
-                                if (_dtColumnsDetail.Rows[i]["TextType"].ToString() == "readonly")
-                                {
-                                    if (_txtValue[i] != null)
-                                        _txtValue[i].Enabled = false;
+                                //if (_dtColumnsDetail.Rows[i]["TextType"].ToString() == "readonly")
+                                //{
+                                //    if (_txtValue[i] != null)
+                                //        _txtValue[i].Enabled = false;
 
-                                }
+                                //}
 
-                                if (_dtColumnsDetail.Rows[i]["TextType"].ToString() != ""
-                                    && _dtColumnsDetail.Rows[i]["TextType"].ToString() != "readonly")
+                                if (_dtColumnsDetail.Rows[i]["TextType"].ToString() != "")
                                 {
                                     
                                     _revValue[i].ErrorMessage = _dtColumnsDetail.Rows[i]["DisplayTextDetail"].ToString() + "- Invalid!";
@@ -5166,6 +6842,13 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     }
                 }
             }
+
+            if (_dtColumnsDetail.Rows[i]["IsReadOnly"] != DBNull.Value
+                && _dtColumnsDetail.Rows[i]["IsReadOnly"].ToString().ToLower() == "true")
+            {
+                TheDatabase.SetEnabled(trX[i], false);
+            }
+
         }
 
         if (!IsPostBack)
@@ -5383,7 +7066,20 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
     protected void PopulateRecord()
     {
-        if (Request.QueryString["RecordID"] != null || _bCopyRecord == true)
+        if (!IsPostBack && _qsRecordID!="")
+        {
+            lnkShowHistory.NavigateUrl = "~/Pages/Record/RecordHistory.aspx?id=" + _qsRecordID;
+            lnkWordWxport.NavigateUrl = "~/Pages/Record/WordExport.aspx?id=" + _qsRecordID;
+            string strCount=Common.GetValueFromSQL(@"SELECT COUNT(DocTemplateID) FROM DocTemplate INNER JOIN DataRetriever
+                            ON DocTemplate.DataRetrieverID=DataRetriever.DataRetrieverID
+                            WHERE TableID="+ _theRecord.TableID.ToString());
+             if(strCount!="" && int.Parse(strCount)>0 )
+             {
+                 divWordExport.Visible = true;
+             }
+        }
+
+        if (Request.QueryString["RecordID"] != null || _bCopyRecord == true || _bCancelSave)
         {
 
             if (_theTable != null && _bCopyRecord == false)
@@ -5676,8 +7372,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                       $('#" + _lblValue[i].ID + @"').html(''); 
                                             });";
 
-                            ViewState["filedelete" + i.ToString()] = strTempJS;
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "filedelete" + i.ToString(), strTempJS, true);
+                            ViewState["filedelete" + _strDynamictabPart + i.ToString()] = strTempJS;
+                            ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "filedelete" + _strDynamictabPart + i.ToString(), strTempJS, true);
                         }
                     }
 
@@ -5730,8 +7426,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                      document.getElementById('" + _hfValue[i].ID + @"').value='';
                                                       $('#" + _lblValue[i].ID + @"').html(''); 
                                             });";
-                            ViewState["imagedelete" + i.ToString()] = strTempJS;
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "imagedelete" + i.ToString(), strTempJS, true);
+                            ViewState["imagedelete" + _strDynamictabPart + i.ToString()] = strTempJS;
+                            ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "imagedelete" + _strDynamictabPart + i.ToString(), strTempJS, true);
                         }
                     }
 
@@ -6355,8 +8051,130 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         }
        
     }
-    
-    
+
+//    protected void PopulateRecordJS()
+//    {
+//        if (Request.QueryString["RecordID"] != null || _bCopyRecord == true)
+//        {
+                      
+           
+         
+
+           
+//            for (int i = 0; i < _dtRecordedetail.Columns.Count; i++)
+//            {
+
+//                if (i == _iEnteredByIndex)
+//                {
+//                    if (_bCopyRecord)
+//                        continue;
+                  
+//                }
+//                else if (i == _iIsActiveIndex)
+//                {
+//                    if (_bCopyRecord)
+//                        continue;
+                   
+
+//                }
+//                else if (i == _iDateTimeRecorded)
+//                {
+//                    if (_bCopyRecord)
+//                        continue;                  
+
+//                }
+//                else if (i == _iTableIndex)
+//                {
+//                    //
+//                }
+//                else if (_dtRecordedetail.Columns[i].ColumnName.ToLower() == "warningresults")
+//                {
+//                    if (_bCopyRecord)
+//                        continue;
+                  
+//                }
+//                else if (_dtRecordedetail.Columns[i].ColumnName.ToLower() == "validationresults")
+//                {
+//                    //do nothing
+//                    if (_bCopyRecord)
+//                        continue;                   
+//                }
+//                else
+//                {
+
+//                    if (_bCopyRecord == true)
+//                    {
+//                        if (_dtColumnsDetail.Rows[i]["AllowCopy"] == null
+//                            || (_dtColumnsDetail.Rows[i]["AllowCopy"] != null &&
+//                            (_dtColumnsDetail.Rows[i]["AllowCopy"].ToString() == "" || (bool)_dtColumnsDetail.Rows[i]["AllowCopy"] == false)))
+//                        {
+//                            continue;
+//                        }
+
+//                    }
+
+
+//                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "file" &&
+//                        _dtRecordedetail.Rows[0][i].ToString() != "")
+//                    {
+
+//                        if (_qsMode == "view")
+//                        {
+//                            _fuValue[i].Visible = false;
+//                        }
+//                        else
+//                        {
+                         
+
+//                            string strTempJS = @"  document.getElementById('dimg" + _hfValue[i].ID + @"').addEventListener('click', function (e) {
+//                                                     document.getElementById('" + _hfValue[i].ID + @"').value='';
+//                                                      $('#" + _lblValue[i].ID + @"').html(''); 
+//                                            });";
+
+//                            ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "filedelete" + _strDynamictabPart + i.ToString(), strTempJS, true);
+//                        }
+//                    }
+
+                   
+//                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image" &&
+//                        _dtRecordedetail.Rows[0][i].ToString() != "")
+//                    {
+//                        string strMaxHeight = "50";
+//                        if (_dtColumnsDetail.Rows[i]["TextHeight"] != DBNull.Value)
+//                        {
+//                            strMaxHeight = _dtColumnsDetail.Rows[i]["TextHeight"].ToString();
+//                        }
+
+                     
+
+//                        if (_qsMode == "view")
+//                        {
+//                            _fuValue[i].Visible = false;
+//                        }
+//                        else
+//                        {
+
+//                            string strTempJS = @"  document.getElementById('dimg" + _hfValue[i].ID + @"').addEventListener('click', function (e) {
+//                                                     document.getElementById('" + _hfValue[i].ID + @"').value='';
+//                                                      $('#" + _lblValue[i].ID + @"').html(''); 
+//                                            });";
+//                            ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "imagedelete" + _strDynamictabPart + i.ToString(), strTempJS, true);
+//                        }
+//                    }                 
+                    
+                   
+
+                   
+
+//                }
+//            }
+//            // END OF Populate record
+
+
+
+//        }
+
+//    }
     protected void ManageCompareThings()
     {
         for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
@@ -6417,7 +8235,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         || _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "time")
                     {
                         _cusvValue[i] = new CustomValidator();
-                        _cusvValue[i].ID = "cusv" + _dtColumnsDetail.Rows[i]["SystemName"];
+                        _cusvValue[i].ID = _strDynamictabPart + "cusv" + _dtColumnsDetail.Rows[i]["SystemName"];
+                        _cusvValue[i].ClientIDMode = ClientIDMode.Static;
                         _cusvValue[i].ErrorMessage = "Comparison error:" + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + " " + Common.CompareOperatorErrorMsg(_dtColumnsDetail.Rows[i]["CompareOperator"].ToString()) + " ";
 
 
@@ -6439,12 +8258,12 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                     if (_dtColumnsDetail.Rows[j]["ColumnType"].ToString() == "time")
                                     {
                                         if (_txtValue[j] != null)
-                                            strControlToCompare = _txtValue[j].ClientID;
+                                            strControlToCompare = _txtValue[j].ID;
                                     }
                                     else
                                     {
                                         if (_txtTime[j] != null)
-                                            strControlToCompare = _txtTime[j].ClientID;
+                                            strControlToCompare = _txtTime[j].ID;
                                     }
                                 }
 
@@ -6453,11 +8272,11 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                             if (strControlToCompare != "")
                             {
-                                string strJSCustomValidation = @" function compareTime" + i.ToString() + @"(sender, args) {
+                                string strJSCustomValidation = @" function compareTime" + _strDynamictabPart + i.ToString() + @"(sender, args) {
                                 try
                                 {
                                     var start = document.getElementById('" + strControlToCompare + @"');
-                                    var end = document.getElementById('" + _txtValue[i].ClientID + @"');
+                                    var end = document.getElementById('" + _txtValue[i].ID + @"');
 
                                     if(start.value.trim()=='' || end.value.trim()=='')
                                     { args.IsValid=true; }
@@ -6488,9 +8307,9 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 }
                             }";
 
-                                _cusvValue[i].ClientValidationFunction = "compareTime" + i.ToString();
+                                _cusvValue[i].ClientValidationFunction = "compareTime" + _strDynamictabPart + i.ToString();
                                 cell[(i * 2) + 1].Controls.Add(_cusvValue[i]);
-                                ScriptManager.RegisterStartupScript(this, this.GetType(), "JSCustomValidation" + i.ToString(), strJSCustomValidation, true);
+                                ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "JSCustomValidation" + _strDynamictabPart + i.ToString(), strJSCustomValidation, true);
 
                             }
 
@@ -6501,7 +8320,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             //this is date and time
 
                             _cvValue[i] = new CompareValidator();
-                            _cvValue[i].ID = "cv" + _dtColumnsDetail.Rows[i]["SystemName"];
+                            _cvValue[i].ID = _strDynamictabPart + "cv" + _dtColumnsDetail.Rows[i]["SystemName"];
+                            _cvValue[i].ClientIDMode = ClientIDMode.Static;
                             _cvValue[i].ErrorMessage = "";
                             _cvValue[i].Type = ValidationDataType.Date;
 
@@ -6553,8 +8373,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                     _cusvValue[i].ErrorMessage = _cusvValue[i].ErrorMessage + _dtColumnsDetail.Rows[j]["DisplayName"].ToString();
                                     if (_txtValue[j] != null && _txtTime[j] != null)
                                     {
-                                        strControlToCompareDate = _txtValue[j].ClientID;
-                                        strControlToCompareTime = _txtTime[j].ClientID;
+                                        strControlToCompareDate = _txtValue[j].ID;
+                                        strControlToCompareTime = _txtTime[j].ID;
 
                                         if (_txtValue[j] != null)
                                             _cvValue[i].ControlToCompare = _txtValue[j].ID;
@@ -6575,13 +8395,13 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                             if (strControlToCompareDate != "" && strControlToCompareTime != "")
                             {
-                                string strJSCustomValidation = @" function compareTime" + i.ToString() + @"(sender, args) {
+                                string strJSCustomValidation = @" function compareTime" + _strDynamictabPart + i.ToString() + @"(sender, args) {
                                 try
                                 {
                                     var startD = document.getElementById('" + strControlToCompareDate + @"');
                                     var startT = document.getElementById('" + strControlToCompareTime + @"');
-                                    var endD = document.getElementById('" + _txtValue[i].ClientID + @"');
-                                    var endT = document.getElementById('" + _txtTime[i].ClientID + @"');                             
+                                    var endD = document.getElementById('" + _txtValue[i].ID + @"');
+                                    var endT = document.getElementById('" + _txtTime[i].ID + @"');                             
                                     //alert(startD.value);alert(endD.value);
                                     if(startD.value.trim()=='' || endD.value.trim()=='' || startD.value.trim()=='dd/mm/yyyy' || endD.value.trim()=='dd/mm/yyyy')
                                         { args.IsValid=true; }
@@ -6598,13 +8418,13 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 }
                             }";
 
-                                _cusvValue[i].ClientValidationFunction = "compareTime" + i.ToString();
+                                _cusvValue[i].ClientValidationFunction = "compareTime" + _strDynamictabPart + i.ToString();
                                 cell[(i * 2) + 1].Controls.Add(_cusvValue[i]);
 
                                 if (_cvValue[i].ControlToCompare != "" && _cvValue[i].ControlToValidate != "")
                                     cell[(i * 2) + 1].Controls.Add(_cvValue[i]);
 
-                                ScriptManager.RegisterStartupScript(this, this.GetType(), "JSCustomValidation" + i.ToString(), strJSCustomValidation, true);
+                                ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "JSCustomValidation" + _strDynamictabPart + i.ToString(), strJSCustomValidation, true);
 
                             }
 
@@ -6626,7 +8446,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     else
                     {
                         _cvValue[i] = new CompareValidator();
-                        _cvValue[i].ID = "cv" + _dtColumnsDetail.Rows[i]["SystemName"];
+                        _cvValue[i].ID = _strDynamictabPart + "cv" + _dtColumnsDetail.Rows[i]["SystemName"];
+                        _cvValue[i].ClientIDMode = ClientIDMode.Static;
                         _cvValue[i].ErrorMessage = "Comparison error:" + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + " " + Common.CompareOperatorErrorMsg(_dtColumnsDetail.Rows[i]["CompareOperator"].ToString()) + " ";
 
                         switch (_dtColumnsDetail.Rows[i]["ColumnType"].ToString())
@@ -6760,7 +8581,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     if (strComparisonValue != "")
                     {
                         _cusvValue[i] = new CustomValidator();
-                        _cusvValue[i].ID = "cusv" + _dtColumnsDetail.Rows[i]["SystemName"];
+                        _cusvValue[i].ID = _strDynamictabPart + "cusv" + _dtColumnsDetail.Rows[i]["SystemName"];
+                        _cusvValue[i].ClientIDMode = ClientIDMode.Static;
                         _cusvValue[i].ErrorMessage = "Comparison error:" + _dtColumnsDetail.Rows[i]["DisplayName"].ToString() + " " + Common.CompareOperatorErrorMsg(_dtColumnsDetail.Rows[i]["CompareOperator"].ToString()) + " ";
 
                         string strJSCustomValidation = "";
@@ -6771,50 +8593,50 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         if (_ddlValue[i] != null)
                         {
                             _cusvValue[i].ControlToValidate = _ddlValue[i].ID;
-                            strControlToValidateClientID = _ddlValue[i].ClientID;
+                            strControlToValidateClientID = _ddlValue[i].ID;
                         }
 
                         if (_ddlValue2[i] != null)
                         {
                             _cusvValue[i].ControlToValidate = _ddlValue2[i].ID;
-                            strControlToValidateClientID = _ddlValue2[i].ClientID;
+                            strControlToValidateClientID = _ddlValue2[i].ID;
                         }
                         if (_chkValue[i] != null)
                         {
                             _cusvValue[i].ControlToValidate = _chkValue[i].ID;
-                            strControlToValidateClientID = _chkValue[i].ClientID;
+                            strControlToValidateClientID = _chkValue[i].ID;
                         }
                         if (_lstValue[i] != null)
                         {
                             _cusvValue[i].ControlToValidate = _lstValue[i].ID;
-                            strControlToValidateClientID = _lstValue[i].ClientID;
+                            strControlToValidateClientID = _lstValue[i].ID;
                         }
                         if (_cblValue[i] != null)
                         {
                             _cusvValue[i].ControlToValidate = _cblValue[i].ID; //??
-                            strControlToValidateClientID = _cblValue[i].ClientID;
+                            strControlToValidateClientID = _cblValue[i].ID;
                         }
                         if (_radioList[i] != null)
                         {
                             _cvValue[i].ControlToValidate = _radioList[i].ID;
-                            strControlToValidateClientID = _radioList[i].ClientID;
+                            strControlToValidateClientID = _radioList[i].ID;
                         }
                         if (_lstValue[i] != null)
                         {
                             _cvValue[i].ControlToValidate = _lstValue[i].ID;
-                            strControlToValidateClientID = _lstValue[i].ClientID;
+                            strControlToValidateClientID = _lstValue[i].ID;
                         }
                         if (_txtValue[i] != null && _txtTime[i] == null)
                         {
                             _cusvValue[i].ControlToValidate = _txtValue[i].ID;
-                            strControlToValidateClientID = _txtValue[i].ClientID;
+                            strControlToValidateClientID = _txtValue[i].ID;
                         }
 
 
                         if (_txtTime[i] != null)
                         {
                             _cusvValue[i].ControlToValidate = _txtTime[i].ID;
-                            strControlToValidateClientID = _txtTime[i].ClientID;
+                            strControlToValidateClientID = _txtTime[i].ID;
                         }
 
                         if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "time")
@@ -6827,11 +8649,11 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                             }
 
-                            strJSCustomValidation = @" function compareTime" + i.ToString() + @"(sender, args) {
+                            strJSCustomValidation = @" function compareTime" + _strDynamictabPart + i.ToString() + @"(sender, args) {
                                     try
                                     {
                                          var start = '" + strComparisonValue + @"';
-                                        var end = document.getElementById('" + _txtValue[i].ClientID + @"');
+                                        var end = document.getElementById('" + _txtValue[i].ID + @"');
 
 
                                      if(start.trim()=='' || end.value.trim()=='')
@@ -6868,12 +8690,12 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         }
                         else if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "datetime")
                         {
-                            strJSCustomValidation = @" function compareTime" + i.ToString() + @"(sender, args) {
+                            strJSCustomValidation = @" function compareTime" + _strDynamictabPart + i.ToString() + @"(sender, args) {
                                 try
                                 {
                                     var startDT = '" + strComparisonValue + @"';
-                                    var endD = document.getElementById('" + _txtValue[i].ClientID + @"');
-                                    var endT = document.getElementById('" + _txtTime[i].ClientID + @"'); //alert('called'); 
+                                    var endD = document.getElementById('" + _txtValue[i].ID + @"');
+                                    var endT = document.getElementById('" + _txtTime[i].ID + @"'); //alert('called'); 
                                     if(startDT.trim()=='' || endD.value.trim()=='' || endD.value.trim()=='dd/mm/yyyy')
                                         { args.IsValid=true; }
                                     else
@@ -6893,11 +8715,11 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         }
                         else if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "date")
                         {
-                            strJSCustomValidation = @" function compareTime" + i.ToString() + @"(sender, args) {
+                            strJSCustomValidation = @" function compareTime" + _strDynamictabPart + i.ToString() + @"(sender, args) {
                                 try
                                 {
                                     var startDT = '" + strComparisonValue + @"';
-                                    var endD = document.getElementById('" + _txtValue[i].ClientID + @"');
+                                    var endD = document.getElementById('" + _txtValue[i].ID + @"');
                                     if(startDT.trim()=='' || endD.value.trim()=='' || endD.value.trim()=='dd/mm/yyyy')
                                         { args.IsValid=true; }
                                     else
@@ -6917,7 +8739,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         }
                         else if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "number" || _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "calculation")
                         {
-                            strJSCustomValidation = @" function compareTime" + i.ToString() + @"(sender, args) {
+                            strJSCustomValidation = @" function compareTime" + _strDynamictabPart + i.ToString() + @"(sender, args) {
                                 try
                                 {
                                     var startDT = " + strComparisonValue + @";
@@ -6938,7 +8760,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         }
                         else
                         {
-                            strJSCustomValidation = @" function compareTime" + i.ToString() + @"(sender, args) {
+                            strJSCustomValidation = @" function compareTime" + _strDynamictabPart + i.ToString() + @"(sender, args) {
                                 try
                                 {
                                     var startDT = " + strComparisonValue + @";
@@ -6962,9 +8784,9 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
 
-                        _cusvValue[i].ClientValidationFunction = "compareTime" + i.ToString();
+                        _cusvValue[i].ClientValidationFunction = "compareTime" + _strDynamictabPart + i.ToString();
                         cell[(i * 2) + 1].Controls.Add(_cusvValue[i]);
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "JSCustomValidation" + i.ToString(), strJSCustomValidation, true);
+                        ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "JSCustomValidation" + _strDynamictabPart + i.ToString(), strJSCustomValidation, true);
 
                     }
 
@@ -7015,18 +8837,18 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 if (bHide)
                 {
 
-                    trX[i].ID = "trX" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-                    ViewState["trX_ID" + i.ToString()] = trX[i].ID;
-                    string targetID = "#ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + trX[i].ID;
-                    string strOnlyAdminJS = @"$('" + targetID + @"').fadeOut();";
+                    //trX[i].ID = _strDynamictabPart + "trX" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    //ViewState["trX_ID" + _strDynamictabPart + i.ToString()] = trX[i].ID;
+                    string targetID = "#" + trX[i].ID;
+                    string strOnlyAdminJS = @"$('" + targetID + @"').hide();";
 
                     if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m"
                         && _rfvValue[i] != null)
                     {
-                        strOnlyAdminJS = strOnlyAdminJS + "ValidatorEnable(document.getElementById('" + _rfvValue[i].ClientID.ToString() + "'), false);";
+                        strOnlyAdminJS = strOnlyAdminJS + "ValidatorEnable(document.getElementById('" + _rfvValue[i].ID + "'), false);";
                     }
-                    ViewState["ShowHideAdmin" + i.ToString()] = strOnlyAdminJS;
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideAdmin" + i.ToString(), strOnlyAdminJS, true);
+                    ViewState["ShowHideAdmin" + _strDynamictabPart + i.ToString()] = strOnlyAdminJS;
+                    ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "ShowHideAdmin" + _strDynamictabPart + i.ToString(), strOnlyAdminJS, true);
 
                 }
 
@@ -7040,9 +8862,9 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
             if (dtShowWhen.Rows.Count > 0)
             {
-                trX[i].ID = "trX" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-                ViewState["trX_ID" + i.ToString()] = trX[i].ID;
-                string strTargetTRID = "#ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + trX[i].ID;
+                //trX[i].ID = _strDynamictabPart + "trX" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                //ViewState["trX_ID" + _strDynamictabPart + i.ToString()] = trX[i].ID;//?
+                string strTargetTRID = "#" + trX[i].ID;
 
 
                 string strAllDriverValue = "";
@@ -7056,8 +8878,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 string strBeforeShowHideFunction = "";
                 if (_dtColumnsDetail.Rows[i]["Importance"].ToString() == "m" && _rfvValue[i] != null)
                 {
-                    strValidatorT = "ValidatorEnable(document.getElementById('" + _rfvValue[i].ClientID.ToString() + "'), true);";
-                    strValidatorF = "ValidatorEnable(document.getElementById('" + _rfvValue[i].ClientID.ToString() + "'), false);";
+                    strValidatorT = "ValidatorEnable(document.getElementById('" + _rfvValue[i].ID + "'), true);";
+                    strValidatorF = "ValidatorEnable(document.getElementById('" + _rfvValue[i].ID + "'), false);";
                 }
 
 
@@ -7071,10 +8893,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         {
                             if (drSW["HideColumnID"].ToString() == _dtColumnsDetail.Rows[m]["ColumnID"].ToString() && trX[m] != null)
                             {
-                                trX[m].ID = "trX" + _dtColumnsDetail.Rows[m]["SystemName"].ToString();
-                                ViewState["trX_ID" + m.ToString()] = trX[m].ID;
-                                string strEachDriverID = "#ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_";
-                                string strControlClientIDPrefix = "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_";
+                                //trX[m].ID = _strDynamictabPart + "trX" + _dtColumnsDetail.Rows[m]["SystemName"].ToString();
+                                //ViewState["trX_ID" + _strDynamictabPart + m.ToString()] = trX[m].ID;
+                                string strEachDriverID = "#" +_strDynamictabPart ;
+                                
                                 string strEachHideColumnValue = HttpUtility.JavaScriptStringEncode(drSW["HideColumnValue"].ToString()); //drSW["HideColumnValue"].ToString().Replace("'","\\'");
                                 string strEachHideOperator = "";
 
@@ -7110,23 +8932,52 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                     }
                                 }
 
+                                bool bAutoPostBack = false;
                                 if (_ddlValue[m] != null)
+                                {
                                     strEachDriverID = strEachDriverID + "ddl" + _dtColumnsDetail.Rows[m]["SystemName"].ToString();
+                                    if (_ddlValue[m].AutoPostBack)
+                                        bAutoPostBack = true;
+                                }                                    
 
                                 if (_txtValue[m] != null)
+                                {
                                     strEachDriverID = strEachDriverID + "txt" + _dtColumnsDetail.Rows[m]["SystemName"].ToString();
+                                    if (_txtValue[m].AutoPostBack)
+                                        bAutoPostBack = true;
+                                }                                   
 
                                 if (_chkValue[m] != null)
+                                {
                                     strEachDriverID = strEachDriverID + "chk" + _dtColumnsDetail.Rows[m]["SystemName"].ToString();
+                                    if (_chkValue[m].AutoPostBack)
+                                        bAutoPostBack = true;
+                                }
+                                   
 
                                 if (_lstValue[m] != null)
+                                {
                                     strEachDriverID = strEachDriverID + "lst" + _dtColumnsDetail.Rows[m]["SystemName"].ToString();
+                                    if (_lstValue[m].AutoPostBack)
+                                        bAutoPostBack = true;
+                                }
+                                    
 
                                 if (_cblValue[m] != null)
+                                {
                                     strEachDriverID = strEachDriverID + "cbl" + _dtColumnsDetail.Rows[m]["SystemName"].ToString();
+                                    if (_cblValue[m].AutoPostBack)
+                                        bAutoPostBack = true;
+                                }
+                                    
 
                                 if (_radioList[m] != null)
+                                {
                                     strEachDriverID = strEachDriverID + "radio" + _dtColumnsDetail.Rows[m]["SystemName"].ToString();
+                                    if (_radioList[m].AutoPostBack)
+                                        bAutoPostBack = true;
+                                }
+                                   
 
                                 bool bUseCommonCode = false;
 
@@ -7142,7 +8993,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                         strVariableDeclare = " var ";
                                     }
                                     strEachDriverID = strEachDriverID + "_";
-                                    strBeforeShowHideFunction = strBeforeShowHideFunction + "$('" + strTargetTRID + "').fadeOut(); " + strValidatorF;
+                                    strBeforeShowHideFunction = strBeforeShowHideFunction + "$('" + strTargetTRID + "').hide(); " + strValidatorF;
                                     string strDriverIDMain = strEachDriverID;
 
 
@@ -7153,20 +9004,29 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                                     strAllLogic = strAllLogic + strEachPreJoinOperator + " (strEachValue" + m.ToString() + @" " + strEachHideOperator + @" '" + strEachHideColumnValue + "') ";
 
-                                    for (int n = 0; n < _radioList[m].Items.Count; n++)
+                                    if(bAutoPostBack)
                                     {
-                                        strEachDriverID = strDriverIDMain + n.ToString();
-                                        strAllDriverTrigger = strAllDriverTrigger + @"                                           
-                                           
+                                        strAllDriverTrigger = strAllDriverTrigger + @"                                         
+                                                    ShowHideFunction" + _strDynamictabPart + i.ToString() + @"();
+                                                    ";
+                                    }
+                                    else
+                                    {
+                                        for (int n = 0; n < _radioList[m].Items.Count; n++)
+                                        {
+                                            strEachDriverID = strDriverIDMain + n.ToString();
+                                            strAllDriverTrigger = strAllDriverTrigger + @"                                          
                                                   $('" + strEachDriverID + @"').change(function (e) {
-                                                    ShowHideFunction" + i.ToString() + @"();
+                                                    ShowHideFunction" + _strDynamictabPart + i.ToString() + @"();
                                                 }); ";
 
-                                        if (_radioList[m].SelectedIndex == n)
-                                        {
-                                            strAllDriverTrigger = strAllDriverTrigger + "$('" + strEachDriverID + "').trigger('change');";
+                                            if (_radioList[m].SelectedIndex == n)
+                                            {
+                                                strAllDriverTrigger = strAllDriverTrigger + "$('" + strEachDriverID + "').trigger('change');";
+                                            }
                                         }
                                     }
+                                    
                                 }
                                 else if (_chkValue[m] != null)
                                 {
@@ -7193,7 +9053,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
                                         strAllDriverValue = strAllDriverValue + @"
-                                                            $('" + strTargetTRID + @"').fadeOut();" + strValidatorF + @"
+                                                            $('" + strTargetTRID + @"').hide();" + strValidatorF + @"
                                                             var bShow" + m.ToString() + @"=false;
                                                             var strHideValues" + m.ToString() + @"='" + strEachHideColumnValue + @"';
                                                             if(strHideValues" + m.ToString() + @"==null || strHideValues" + m.ToString() + @"=='')
@@ -7239,14 +9099,24 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                             strAllLogic = strAllLogic + strEachPreJoinOperator + " (bShow" + m.ToString() + @"==false) ";
                                         }
 
+                                        if (bAutoPostBack)
+                                        {
+                                            strAllDriverTrigger = strAllDriverTrigger + @"
+                                                              ShowHideFunction" + _strDynamictabPart + i.ToString() + @"();
+                                                ";
 
-                                        strAllDriverTrigger = strAllDriverTrigger + @"
+                                        }
+                                        else
+                                        {
+                                            strAllDriverTrigger = strAllDriverTrigger + @"
                                                      $('" + strDriverGroupID + @"').change(function (e) {
-                                                              ShowHideFunction" + i.ToString() + @"();
+                                                              ShowHideFunction" + _strDynamictabPart + i.ToString() + @"();
                                                         });
                                                         $('" + strDriverGroupID + @"').trigger('change');  
                                                 ";
 
+                                        }
+                                        
 
                                     }
                                     else
@@ -7265,7 +9135,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                     {
                                         strAllDriverValue = strAllDriverValue + @"
 
-                                                            $('" + strTargetTRID + @"').fadeOut();" + strValidatorF + @"
+                                                            $('" + strTargetTRID + @"').hide();" + strValidatorF + @"
                                                             var bShow" + m.ToString() + @"=false;
                                                             var strHideValues" + m.ToString() + @"='" + strEachHideColumnValue + @"';
                                                             if(strHideValues" + m.ToString() + @"==null || strHideValues" + m.ToString() + @"=='')
@@ -7348,13 +9218,22 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
                                     }
-
-                                    strAllDriverTrigger = strAllDriverTrigger + @"
+                                    if(bAutoPostBack)
+                                    {
+                                        strAllDriverTrigger = strAllDriverTrigger + @"
+                                                              ShowHideFunction" + _strDynamictabPart + i.ToString() + @"();
+                                                ";
+                                    }
+                                    else
+                                    {
+                                        strAllDriverTrigger = strAllDriverTrigger + @"
                                                      $('" + strDriverGroupID + @"').click(function (e) {
-                                                              ShowHideFunction" + i.ToString() + @"();
+                                                              ShowHideFunction" + _strDynamictabPart + i.ToString() + @"();
                                                         });
                                                         $('" + strDriverGroupID + @"').trigger('click');  
                                                 ";
+                                    }
+                                   
                                 }
                                 else
                                 {
@@ -7368,12 +9247,23 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 if (bUseCommonCode)
                                 {
 
-                                    strAllDriverTrigger = strAllDriverTrigger + @"
+                                    if(bAutoPostBack)
+                                    {
+                                        strAllDriverTrigger = strAllDriverTrigger + @"
+                                                              ShowHideFunction" + _strDynamictabPart + i.ToString() + @"();
+                                                ";
+                                    }
+                                    else
+                                    {
+                                        strAllDriverTrigger = strAllDriverTrigger + @"
                                                      $('" + strDriverGroupID + @"').change(function (e) {
-                                                              ShowHideFunction" + i.ToString() + @"();
+                                                              ShowHideFunction" + _strDynamictabPart + i.ToString() + @"();
                                                         });
                                                         $('" + strDriverGroupID + @"').trigger('change');  
                                                 ";
+                                    }
+
+                                    
                                     if (strEachHideOperator != "")
                                     {
                                         if (strEachHideOperator == "contains")
@@ -7416,7 +9306,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                 else if (strCY == "datetime")
                                                 {
                                                     string strDateLogic = @" var strHideColumnValue" + m.ToString() + @"='" + strEachHideColumnValue + @"';
-                                                                                  var time1" + m.ToString() + @"= document.getElementById('" + strControlClientIDPrefix + _txtTime[m].ID + @"');
+                                                                                  var time1" + m.ToString() + @"= document.getElementById('" + _txtTime[m].ID + @"');
                                                                                   var t1" + m.ToString() + @"=time1" + m.ToString() + @".value;
                                                                                   if(t1" + m.ToString() + @"==''){t1" + m.ToString() + @"='00:00'};
                                                                                   var d1" + m.ToString() + @" =new Date(strEachValue" + m.ToString() + @".replace( /(\d{2})\/(\d{2})\/(\d{4})/, '$2/$1/$3') + ' ' + t1" + m.ToString() + @" );
@@ -7430,12 +9320,24 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
                                                     //add time trigger too
-                                                    strAllDriverTrigger = strAllDriverTrigger + @"
-                                                                 $('#" + strControlClientIDPrefix + _txtTime[m].ID + @"').change(function (e) {
-                                                                          ShowHideFunction" + i.ToString() + @"();
-                                                                    });
-                                                                    $('#" + strControlClientIDPrefix + _txtTime[m].ID + @"').trigger('change');  
+
+                                                    if(bAutoPostBack)
+                                                    {
+                                                        strAllDriverTrigger = strAllDriverTrigger + @"
+                                                                          ShowHideFunction" + _strDynamictabPart + i.ToString() + @"();
                                                             ";
+                                                    }
+                                                    else
+                                                    {
+                                                        strAllDriverTrigger = strAllDriverTrigger + @"
+                                                                 $('#" + _txtTime[m].ID + @"').change(function (e) {
+                                                                          ShowHideFunction" + _strDynamictabPart + i.ToString() + @"();
+                                                                    });
+                                                                    $('#" + _txtTime[m].ID + @"').trigger('change');  
+                                                            ";
+                                                    }
+
+                                                   
 
                                                     if (_cvTime[m] != null)
                                                         _cvTime[m].Enabled = false;
@@ -7516,15 +9418,16 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                             $(document).ready(function () {
                                                  try { 
                                                                " + strBeforeShowHideFunction + @"
-                                                        function  ShowHideFunction" + i.ToString() + @"()
+                                                        function  ShowHideFunction" + _strDynamictabPart + i.ToString() + @"()
                                                             {
                                                                 try { 
                                                                                                                 " + strAllDriverValue + @"
                                                                             if (" + strAllLogic + @") {
-                                                                               $('" + strTargetTRID + @"').stop(true,true); $('" + strTargetTRID + @"').fadeIn();" + strValidatorT + @"
+                                                                               //$('" + strTargetTRID + @"').stop(true,true); 
+                                                                                $('" + strTargetTRID + @"').show();" + strValidatorT + @"
                                                                             }
                                                                             else {
-                                                                                $('" + strTargetTRID + @"').fadeOut();" + strValidatorF + @"
+                                                                                $('" + strTargetTRID + @"').hide();" + strValidatorF + @"
                                                                             }
 
                                                                     }
@@ -7541,8 +9444,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                         }
                                                     });
                                         ";
-                    ViewState["strShowHideFunction" + i.ToString()] = strShowHideFunction;
-                    ScriptManager.RegisterStartupScript(this, this.GetType(), "strShowHideFunction" + i.ToString(), strShowHideFunction, true);
+                    ViewState["strShowHideFunction" + _strDynamictabPart + i.ToString()] = strShowHideFunction;
+                    ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "strShowHideFunction" + _strDynamictabPart + i.ToString(), strShowHideFunction, true);
                 }
             }
         }
@@ -7558,63 +9461,174 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                   trX[i].Style.Add("vertical-align", "top");
               }
 
-              if (ViewState["trX_ID" + i.ToString()] != null)
-                  trX[i].ID = ViewState["trX_ID" + i.ToString()].ToString();
+              //if (ViewState["trX_ID" + i.ToString()] != null)
+              //    trX[i].ID = ViewState["trX_ID" + i.ToString()].ToString();
 
-              if( ViewState["ShowHideAdmin" + i.ToString()]!=null)
+              if (ViewState["ShowHideAdmin" + _strDynamictabPart + i.ToString()] != null)
               {
-                  ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideAdmin" + i.ToString(), ViewState["ShowHideAdmin" + i.ToString()].ToString(), true);
-              }
-
-              if (ViewState["strShowHideFunction" + i.ToString()] != null)
-              {
-                  ScriptManager.RegisterStartupScript(this, this.GetType(), "strShowHideFunction" + i.ToString(), ViewState["strShowHideFunction" + i.ToString()].ToString(), true);
-              }
-              if( ViewState["filedelete" + i.ToString()]!=null)
-              {
-                  ScriptManager.RegisterStartupScript(this, this.GetType(), "filedelete" + i.ToString(), ViewState["filedelete" + i.ToString()].ToString(), true);
-              }
-              if (ViewState["imagedelete" + i.ToString()] != null)
-              {
-                  ScriptManager.RegisterStartupScript(this, this.GetType(), "imagedelete" + i.ToString(), ViewState["imagedelete" + i.ToString()].ToString(), true);
+                  ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "ShowHideAdmin" + _strDynamictabPart + i.ToString(), ViewState["ShowHideAdmin" + _strDynamictabPart + i.ToString()].ToString(), true);
               }
 
-             
+              if (ViewState["strShowHideFunction" + _strDynamictabPart + i.ToString()] != null)
+              {
+                  ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "strShowHideFunction" + _strDynamictabPart + i.ToString(), ViewState["strShowHideFunction" + _strDynamictabPart + i.ToString()].ToString(), true);
+              }
+              if (ViewState["JavaScriptFunction" + _strDynamictabPart + i.ToString()] != null)
+              {
+                  ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "JavaScriptFunction" + _strDynamictabPart + i.ToString(), ViewState["JavaScriptFunction" + _strDynamictabPart + i.ToString()].ToString(), true);
+              }
+
+              if (ViewState["filedelete" + _strDynamictabPart + i.ToString()] != null)
+              {
+                  ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "filedelete" + _strDynamictabPart + i.ToString(), ViewState["filedelete" + _strDynamictabPart + i.ToString()].ToString(), true);
+              }
+              if (ViewState["imagedelete" + _strDynamictabPart + i.ToString()] != null)
+              {
+                  ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "imagedelete" + _strDynamictabPart + i.ToString(), ViewState["imagedelete" + _strDynamictabPart + i.ToString()].ToString(), true);
+              }
+
+              
           }
-
+          //PopulateRecordJS();
     }
     protected void Page_Load(object sender, EventArgs e)
     {
+       
+       if(IsPostBack)
+       {         
+           hfPostback.Value = "1";
+       }
+       else
+       {
+           hfRecordAddEditView.Value = _qsMode;
+           hfRecordTableID.Value = _theTable.TableID.ToString();
+
+           if(_theUserRole!=null)
+           {
+               _theRole = SecurityManager.Role_Details((int)_theUserRole.RoleID);
+               if (_theRole != null)
+                   hfUserRoleName.Value = _theRole.RoleName;
+           }
+       }
+
         //int iTemp=0;
         //_objUser = (User)Session["User"];
+
+        string strCommonJS = @"  function ShowHideTables(divSelected, lnk) {
+                                try
+                                {
+//                                    if (divSelected == null)
+//                                        {
+//                                              divSelected = document.getElementById(divSelected); 
+//                                        }
+//                                        if (lnk == null)
+//                                        {
+//                                              lnk = document.getElementById(lnk); 
+//                                        }
+                                    if (divSelected == null)
+                                    {
+                                        return;
+                                    }
+                                     if ($('.heading_div_class') != null && lnk != null) {
+                                        $('.heading_div_class').removeClass('ajax__tab_active');
+                                    }
+                                    if (lnk != null) {
+                                         $('.ajax__tab_panel').hide();
+                                        //  hfCurrentSelectedTabLink.value = lnk.id;  
+                                       $('#div'+lnk.id).addClass('ajax__tab_active');                                                 
+                                    }
+                                    $(divSelected).show();
+                                    //divSelected.style.display = 'block';
+                                     if(divSelected.id=='" + pnlDetail.ID + @"')
+                                    {
+                                        $('#divMainSaveEditAddetc').fadeIn();
+                                        $('#divChangeHistory').fadeIn();  $('#divHistory').fadeIn();
+                                    }
+                                    else
+                                    {
+                                       $('#divMainSaveEditAddetc').fadeOut();
+                                        $('#divChangeHistory').fadeOut();$('#divHistory').fadeOut();
+                                    }
+
+                            }
+                            catch(err)
+                            {
+                            }
+                        }";
         if(_bTableTabYes)
         {
-            string strCommonJS = @"  function ShowHideMainDivs(divSelected, lnk) {
-            //var hfCurrentSelectedTabLink = document.getElementsByName('hfCurrentSelectedTabLink');
-            $('.showhidedivs_hide').hide();
-            if (divSelected == null)
+
+            string strSelectedTab = "";
+            if (_strSelectedtabLinkHF!="")
             {
-                return;
-            }
-            if (lnk != null) {
-                document.getElementsByName('hfCurrentSelectedTabLink').value = lnk.id;    
-                 $('#lblCurrentSelectedTabLink').text(document.getElementsByName('hfCurrentSelectedTabLink').value);
-            }
-            $('.showhidedivs').hide();
-            divSelected.style.display = 'block';
-            if ($('.TablLinkClass') != null && lnk != null) {
-                $('.TablLinkClass').css('font-weight', 'normal');
-            }
-            if (lnk != null) {
-                lnk.style.fontWeight = 'bold';
+                strSelectedTab= @"
+
+                                 var hfCurrentSelectedTabLink = document.getElementById('"+_strSelectedtabLinkHF+ @"'); 
+                                if(hfCurrentSelectedTabLink!=null)
+                                    {
+                                        hfCurrentSelectedTabLink.value = lnk.id.toString();                                    
+                                    }         
+                                ";
             }
 
-        }";
+            strCommonJS =strCommonJS+ @"  function ShowHideMainDivs(divSelected, lnk) {
+                            $('.eachtabletab_hide').hide();
+                            if (divSelected == null)
+                            {
+                                return;
+                            }
+                            if (lnk != null) {
+                                  "+strSelectedTab+@"                                                          
+                            }
+                            $('.eachtabletab').hide();
+                            divSelected.style.display = 'block';
+                            if ($('.maintablinkclass') != null && lnk != null) {
+                                $('.maintablinkclass').css('font-weight', 'normal');
+                            }
+                            if (lnk != null) {
+                                lnk.style.fontWeight = 'bold';
+                            }
+                        }
+                       
+                ";
 
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "strCommonJS", strCommonJS, true);
+            if(_strSelectedtabLinkHF!="" && pnlEachTable.FindControl(_strSelectedtabLinkHF)!=null)
+            {
 
+                HiddenField hfSelectedTab = (HiddenField)pnlEachTable.FindControl(_strSelectedtabLinkHF);
+
+                if (hfSelectedTab.Value!="")
+                {
+                    strCommonJS = strCommonJS + @"
+                        $('#" + hfSelectedTab.Value + @"').trigger('click');";  
+                }
+                
+            }
+           
+           
         }
        
+      
+        string strFancy = @"
+                $(function () {
+                    $("".popuplinkCH"").fancybox({
+                        scrolling: 'auto',
+                        type: 'iframe',    
+                        width: 1000,
+                        height: 800,                       
+                        titleShow: false
+                    });
+                });
+                $(function () {
+                    $("".popuplinkWE"").fancybox({
+                        scrolling: 'auto',
+                        type: 'iframe',                            
+                        titleShow: false
+                    });
+                });
+            ";
+
+        ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "Pages_Record_RecordDetail_FancyBox", strFancy, true);
 
         if (_iSessionAccountID == -1)
         {
@@ -7625,8 +9639,13 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         }
 
         _strURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.RawUrl;
+
+       
+
         if(!IsPostBack)
         {
+            CreateValidWarningDataTable();
+            ManageControlValueChangeService();
             ManageShowWhen();
             PopulateTable();
             PopulateDynamicControls();           
@@ -7635,12 +9654,29 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                {
                    PopulateRecord();
                }
+            if(_qsMode=="add")
+            {
+                //if(_theTable.ShowChildTabsOnAdd!=null && (bool)_theTable.ShowChildTabsOnAdd)
+                //{
+                    _bCancelSave = true;
+                    PerformSave();
+                    Record theRecord = _theRecord;
+                    if (ViewState["vRecord"] != null)
+                    {
+                        theRecord = (Record)ViewState["vRecord"];
+                    }
+                    if (theRecord != null)
+                        ShowHideChildTables(theRecord);
+                //}
+                
+            }
+            else
+            {
+                ShowHideChildTables(_theRecord);
+            }
+               
         }
-        else
-        {
-            OtherJSCode();
-        }
-
+             
         _strSaveAndStay = SystemData.SystemOption_ValueByKey_Account("SaveAndStay", _iSessionAccountID, int.Parse(_qsTableID));
         if (_strSaveAndStay == "")
             _strSaveAndStay = SystemData.SystemOption_ValueByKey_Account("SaveAndStay", null, int.Parse(_qsTableID));
@@ -7660,7 +9696,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
         if (!IsPostBack)
         {
-            CreateValidWarningDataTable();
+            //CreateValidWarningDataTable();
 
             DoPrintThings();
             FlashCheck();
@@ -7673,38 +9709,15 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             AddQuickDone();
                        
 
-            if (Request.QueryString["mode"] != null)
+            if(_qsMode=="add")
             {
-                if (_qsMode != "add")
-                {
-                    tblChangeHistory.Visible = true;
-                    //check if it has DocTemplate records
-                    if (_qsTableID != "")
-                    {
-                        DataTable dtTemp = Common.DataTableFromText(@"
-                            SELECT DocTemplateID,SPName,FileName FROM DocTemplate INNER JOIN DataRetriever
-                            ON DocTemplate.DataRetrieverID=DataRetriever.DataRetrieverID
-                            WHERE TableID=" + _qsTableID);
-
-                        if (dtTemp.Rows.Count > 0)
-                        {
-                            divWordExport.Visible = true;
-                            ddlDataRetriever.DataSource = dtTemp;
-                            ddlDataRetriever.DataBind();
-                        }
-                        else
-                        {
-                            divWordExport.Visible = false;
-                        }
-                    }
-                }
+                divWordExport.Visible = false;
             }
         }
         else
         {
 
         }
-
         // checking action mode
         if (Request.QueryString["mode"] == null)
         {
@@ -7712,13 +9725,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         }
         else
         {
-            //_qsMode = Cryptography.Decrypt(Request.QueryString["mode"]);
-
             if (_qsMode == "add" ||
                 _qsMode == "view" ||
                 _qsMode == "edit")
-            {
-                _strActionMode = _qsMode;
+            {                
 
                 if (Request.QueryString["RecordID"] != null)
                 {                 
@@ -7732,30 +9742,21 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             rfvReasonForChange.Enabled = true;
                             stgReasonForChange.InnerText = "Reason for change*";
                             stgReasonForChange.Style.Add("color", "red");
-                            lnkNavigateNext.OnClientClick = "ValidatorEnable(document.getElementById('" + rfvReasonForChange.ClientID.ToString() + "'), false);" + "return true;";
+                            lnkNavigateNext.OnClientClick = "ValidatorEnable(document.getElementById('" + rfvReasonForChange.ID + "'), false);" + "return true;";
                             lnkNavigatePrev.OnClientClick = lnkNavigateNext.OnClientClick;
-                            //lnkSaveClose.OnClientClick = "ValidatorEnable(document.getElementById('" + rfvReasonForChange.ClientID.ToString() + "'), true);" + "return true;";
+                            //lnkSaveClose.OnClientClick = "ValidatorEnable(document.getElementById('" + rfvReasonForChange.ID + "'), true);" + "return true;";
                         }
 
                         if (_theTable.ReasonChangeType == "none" || _theTable.ReasonChangeType == "")
                         {
                             trReasonForChange.Visible = false;
-                        }                        
-
-                        if (Session["GridPageSize"] != null && Session["GridPageSize"].ToString() != "")
-                        {
-                            gvChangedLog.PageSize = int.Parse(Session["GridPageSize"].ToString());
-                        }
-
+                        } 
                     }
 
-                    GridViewRow gvrCL = gvChangedLog.TopPagerRow;
-                    if (gvrCL != null)
-                        _gvCL_Pager = (Common_Pager)gvrCL.FindControl("CL_Pager");
-
+                 
                     if (!IsPostBack)
                     {
-                        tabDetail.OnClientActiveTabChanged = "ClientActiveTabChangedEdit";
+                        //tabDetail.OnClientActiveTabChanged = "ClientActiveTabChangedEdit";
                     }
 
                 }
@@ -7774,12 +9775,12 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
                     lnkShowHistory.Visible = false;
-                    lnkHideHistory.Visible = false;
+                  
 
                     if (!IsPostBack)
                     {
                         //tabDetail.AutoPostBack = true;
-                        tabDetail.OnClientActiveTabChanged = "ClientActiveTabChanged";
+                        //tabDetail.OnClientActiveTabChanged = "ClientActiveTabChanged";
                     }
                 }
             }
@@ -7792,29 +9793,23 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         // checking permission
 
 
-        string strTitle = _theTable.TableName + _strActionMode;
+        string strTitle = _theTable.TableName + _qsMode;
        
-        if (_theTable.ShowTabVertically != null)
-        {
-            if ((bool)_theTable.ShowTabVertically)
-            {
-                tabDetail.UseVerticalStripPlacement = true;
-            }
-        }
+        
 
         if (!IsPostBack)
         {
             if (_qsMode != "view" && _stValidator_TF != "")
             {
                 ViewState["stValidator_TF"] = _stValidator_TF;
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "stValidator_TF", _stValidator_TF, true);
+                ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "stValidator_TF", _stValidator_TF, true);
             }
           
         }
         else
         {
             if (ViewState["stValidator_TF"] != null)
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "stValidator_TF", ViewState["stValidator_TF"].ToString(), true);
+                ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "stValidator_TF", ViewState["stValidator_TF"].ToString(), true);
 
         }            
         
@@ -7848,10 +9843,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         }
 
         
-        switch (_strActionMode.ToLower())
+        switch (_qsMode.ToLower())
         {
             case "add":
-                trTab.Visible = false;
+                lnkShowHistory.Visible = false;
                 strTitle = "Add " + _theTable.TableName;
                 break;
 
@@ -7862,7 +9857,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 {
                     if ((bool)_theUserRole.IsAdvancedSecurity)
                     {
-                        if (_strRecordRightID == Common.UserRoleType.EditRecordSite || _strRecordRightID == Common.UserRoleType.AddEditRecord)
+                        if (_strRecordRightID == Common.UserRoleType.AddEditRecord)
                         {
                             divEdit.Visible = true;
                             hlEditLink.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordDetail.aspx?mode=" + Cryptography.Encrypt("edit") + "&TableID=" + Request.QueryString["TableID"].ToString() + "&Recordid=" + Request.QueryString["RecordID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
@@ -7896,7 +9891,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                     }
                     catch (Exception ex)
                     {
-
+                        //
 
                     }
 
@@ -7915,7 +9910,6 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 if (!IsPostBack)
                 {
                     Record theRecord = RecordManager.ets_Record_Detail_Full(_iRecordID);
-                    //txtReasonForChange.Text = theRecord.ChangeReason;
                 }
 
                 break;
@@ -7930,17 +9924,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         Title = strTitle;
         lblTitle.Text = strTitle;
 
-        string strFancy = @"$(function () {
-            $("".popuplink"").fancybox({
-                scrolling: 'auto',
-                type: 'iframe',
-                width: 600,
-                height: 650,
-                titleShow: false
-            });
-        });";
-
-        ScriptManager.RegisterStartupScript(this, this.GetType(), "FancyBox", strFancy, true);
+       
 
 
         if (Request.QueryString["onlyback"] != null)
@@ -7950,21 +9934,33 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
         }
         bool bstackTabIndexUsed = false;
-        if (!IsPostBack && _strActionMode.ToLower()!="add" && _stackURL!=null && _stackURL.Count>0)
+        if (!IsPostBack && _qsMode.ToLower()!="add" && _stackURL!=null && _stackURL.Count>0)
         {
-            if (_stackTabIndex != null && _stackTabIndex.Count > 0 && ((IDnText)_stackTabIndex.Peek()).Text == Request.Url.AbsoluteUri.Replace("//Pages", "/Pages"))   //if (Session["tabindex"] != null && Request.QueryString["tabindex"]==null)
+            if (_stackTabIndex != null && _stackTabIndex.Count > 0 && ((StackRoom)_stackTabIndex.Peek()).Text == Request.Url.AbsoluteUri.Replace("//Pages", "/Pages"))   //if (Session["tabindex"] != null && Request.QueryString["tabindex"]==null)
             {
                 try
                 {
-                    tabDetail.ActiveTabIndex = int.Parse(((IDnText)_stackTabIndex.Peek()).ID); //int.Parse(Session["tabindex"].ToString());
-                    bstackTabIndexUsed = true;
+                    //tabDetail.ActiveTabIndex = int.Parse(((IDnText)_stackTabIndex.Peek()).ID); //int.Parse(Session["tabindex"].ToString());
+                    if(_lstTabIndexLink!=null && _lstTabIndexLink.Count>0 )
+                    {
+                        int iTabIndex = int.Parse(((StackRoom)_stackTabIndex.Peek()).ID);
+                        string strLinkID = _lstTabIndexLink[iTabIndex];
+                        if (((LinkButton)divDynamic.FindControl(strLinkID)).Visible)
+                        {
+                            _strFirstTableJS = " $('#" + strLinkID + @"').trigger('click'); ";
+                            bstackTabIndexUsed = true;
+                        }
+                        
+                    }
+
+                   
                 }
                 catch (Exception ex)
                 {
                     //
                 }
                 //Session["tabindex"] = null;
-                _stackTabIndex.Pop();
+                _stackTabIndex.Pop();   
                 Session["stackTabIndex"] = _stackTabIndex;
                 Session["viewtabindex"] = null;
             }           
@@ -7973,7 +9969,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             {
                 try
                 {
-                    tabDetail.ActiveTabIndex = int.Parse(Session["viewtabindex"].ToString());
+                    //tabDetail.ActiveTabIndex = int.Parse(Session["viewtabindex"].ToString());
+                    if (_lstTabIndexLink != null && _lstTabIndexLink.Count > 0)
+                    {
+                        int iTabIndex = int.Parse(Session["viewtabindex"].ToString());
+                        string strLinkID = _lstTabIndexLink[iTabIndex];
+                        _strFirstTableJS = " $('#" + strLinkID + @"').trigger('click'); ";
+                        bstackTabIndexUsed = true;
+                    }
                 }
                 catch
                 {
@@ -7982,63 +9985,371 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 Session["viewtabindex"] = null;                
             }
                        
-            if (tabDetail.ActiveTabIndex > 0)
-            {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "ActiveTabIndex", "$('#divMainSaveEditAddetc').fadeOut();", true);
-            }
         }
 
         //is it ok? process Tab
         if (!IsPostBack && Request.QueryString["tabindex"] != null && bstackTabIndexUsed==false)
         {
-            //Session["tabindex"] = Request.QueryString["tabindex"].ToString();
-            IDnText aIDnText = new IDnText(Request.QueryString["tabindex"].ToString(), hlBack.NavigateUrl.Replace("//Pages","/Pages"));
-            if (_stackTabIndex.Contains(aIDnText)==false)
+            StackRoom aStackRoom = new StackRoom(Request.QueryString["tabindex"].ToString(), hlBack.NavigateUrl.Replace("//Pages", "/Pages"));
+            if (_stackTabIndex.Contains(aStackRoom) == false)
             {
-                _stackTabIndex.Push(aIDnText);
+                _stackTabIndex.Push(aStackRoom);
                 Session["stackTabIndex"] = _stackTabIndex;
             }                
         }
-
-
-        if(_bTableTabYes)
+        //_qsMode != "add" && 
+        if (_strFirstTableJS != "")
         {
-            if (!IsPostBack)
-            {
-                string strTableTabLink = "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTab";
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab1", "ShowHideMainDivs(" + pnlDetailTab.ClientID + "," + strTableTabLink + ");", true);
-            }
-            else
-            {
-                ResetTabs();
-            }
+            strCommonJS = strCommonJS + _strFirstTableJS;
         }
-       
+        ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "strCommonJS", strCommonJS, true);
+
       
-
-
-    }
-
-    protected void getLastUpdatedInfo()
-    {
-        if (_theRecord != null)
+        HistoryThings();
+        if (IsPostBack)
         {
-            lblCreatedBy.Text = RecordManager.GetUserDisplayName("[Name]", Convert.ToString(_theRecord.EnteredBy));
-            lblDateCreated.Text = _theRecord.DateAdded.ToString();
+            OtherJSCode();
 
-            if (_theRecord.LastUpdatedUserID != null)
+            if (ViewState["ColumnChangeService"] != null)
             {
-                lblUpdatedBy.Text = RecordManager.GetUserDisplayName("[Name]", Convert.ToString(_theRecord.LastUpdatedUserID));
-                lblDateUpdated.Text = _theRecord.DateUpdated.ToString();
+                if ((Request.Params["__EVENTTARGET"] != null) && (Request.Params["__EVENTTARGET"].ToString().IndexOf("ctl00$HomeContentPlaceHolder$ctl00_HomeContentPlaceHolder") > -1))
+                {
+                    string strControl = Request.Params["__EVENTTARGET"].ToString().Replace("ctl00$HomeContentPlaceHolder$", "");
+                    if (divDynamic.FindControl(strControl) != null)
+                        CommonChangeEvent(divDynamic.FindControl(strControl), null);
+                }
             }
-
-            lblUpdatedBy.Visible = (lblUpdatedBy.Text.Trim() != "");
-            lblUpdatedByText.Visible = (lblUpdatedBy.Text.Trim() != "");
-
-            lblDateUpdated.Visible = (lblUpdatedBy.Text.Trim() != "");
-            lblDateUpdatedText.Visible = (lblUpdatedBy.Text.Trim() != "");
         }
     }
+    protected void Page_PreRender(object sender, EventArgs e)
+    {
+       
+
+        if(_bHasListChild)
+        {
+            string strMouseoverBC = "76BAF2";
+            string strCheckedBC = "96FFFF";
+            string strAlterBC1 = "ffffff";
+            string strAlterBC2 = "DCF2F0";
+
+            if (this.Page.MasterPageFile != null && this.Page.MasterPageFile.ToLower().IndexOf("rrp") > -1)
+            {
+                strMouseoverBC = "D3D9EA";
+                strCheckedBC = "D3E8E4";
+                strAlterBC2 = "ECECED";
+
+            }
+
+
+
+
+
+            string strMainListJS = "";
+
+           
+                strMainListJS = @"
+                         function MouseEvents(objRef, evt) {
+                                    var checkbox = objRef.getElementsByTagName('input')[0];
+
+
+
+                                    if (evt.type == 'mouseover') {
+                                        objRef.style.backgroundColor = '#" + strMouseoverBC + @"';
+                                        objRef.style.cursor = 'pointer';
+                                    }
+                                    else {          
+
+                                        if (checkbox != null && checkbox.checked) {
+                                            objRef.style.backgroundColor = '#" + strCheckedBC + @"';
+                                        }
+                                        else if (evt.type == 'mouseout') {
+                                            if (objRef.rowIndex % 2 == 0) {
+                                                //Alternating Row Color
+                                                objRef.style.backgroundColor = '#" + strAlterBC1 + @"';
+                                            }
+                                            else {
+                                                objRef.style.backgroundColor = '#" + strAlterBC2 + @"';
+                                            }
+                                        }
+                                    }
+                                }
+                               function toggleAndOr(t, hf) {
+                                        if (t.text == 'and') {
+                                            t.text = 'or';
+                                        } else {
+                                            t.text = 'and';
+                                        }
+                                        document.getElementById(hf).value = t.text;
+                                    }
+
+                                      function CreateFile() {
+
+                                            document.getElementById('btnEmail').click();
+
+                                        }
+
+
+                                function Check_Click(objRef) {
+                                    //Get the Row based on checkbox
+                                    var row = objRef.parentNode.parentNode;
+                                    if (objRef.checked) {
+                                        //If checked change color to Aqua
+                                        row.style.backgroundColor = '#" + strCheckedBC + @"';
+                                    }
+                                    else {
+                                        //If not checked change back to original color
+                                        if (row.rowIndex % 2 == 0) {
+                                            //Alternating Row Color
+                                            row.style.backgroundColor = '#" + strAlterBC1 + @"';
+
+                                        }
+                                        else {
+                                            row.style.backgroundColor = '#" + strAlterBC2 + @"';
+                                        }
+                                    }
+
+                                    //Get the reference of GridView
+                                    var GridView = row.parentNode;
+         
+                                    //Get all input elements in Gridview
+                                    var inputList = GridView.getElementsByTagName('input');
+                                     var tblHR = document.getElementById('ctl00_HomeContentPlaceHolder_rlOne_gvTheGridHR');
+                                     var headerCheckBox;
+                                    for (var i = 0; i < inputList.length; i++) {
+                                        //The First element is the Header Checkbox
+                                        if(headerCheckBox==null && inputList[i].type == 'checkbox')
+                                         headerCheckBox = inputList[i];
+
+                                        //Based on all or none checkboxes
+                                        //are checked check/uncheck Header Checkbox
+                                        var checked = true;
+                                        if(tblHR==null)
+                                        {
+                                            if (inputList[i].type == 'checkbox' && inputList[i] != headerCheckBox) {
+                                                        if (!inputList[i].checked) {
+                                                            checked = false;
+                                                            break;
+                                                        }
+                                                    }
+                                        }
+                                        else
+                                        {
+                                            if (inputList[i].type == 'checkbox') {
+                                                        if (!inputList[i].checked) {
+                                                            checked = false;
+                                                            break;
+                                                        }
+                                                    }
+                                        }
+
+           
+                                    }
+                                     if(tblHR==null)
+                                        {
+                                            if(headerCheckBox!=null)
+                                                {
+                                                     headerCheckBox.checked = checked;
+                                                }
+            
+                                        }
+        
+                                    if (objRef.checked==false)
+                                        {
+                                            if(tblHR==null && headerCheckBox!=null)
+                                            {
+                                                headerCheckBox.checked=false;
+                   
+                                            } 
+                                            else
+                                            {
+                                                 //var tbl = document.getElementById('ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid');
+                                                  if(tblHR!=null)
+                                                        {
+                                                            var chkAll =  document.getElementById('ctl00_HomeContentPlaceHolder_rlOne_gvTheGrid_ctl02_chkAll');
+                                                            if(chkAll!=null)
+                                                            {
+                                                                chkAll.checked=false;
+                                                                //alert(chkAll.id);
+                                                            }
+                                                        }         
+                                            }                  
+                                        }
+
+                                }
+
+                                function checkAll(objRef) {
+                                    var GridView = objRef.parentNode.parentNode.parentNode;
+                                    var inputList = GridView.getElementsByTagName('input');
+                            //alert(inputList.length);
+                                    for (var i = 0; i < inputList.length; i++) {
+                                        //Get the Cell To find out ColumnIndex
+                                        var row = inputList[i].parentNode.parentNode;
+                                        if (inputList[i].type == 'checkbox' && objRef != inputList[i]) {
+                                            if (objRef.checked) {
+                                                //If the header checkbox is checked
+                                                //check all checkboxes
+                                                //and highlight all rows
+                                                row.style.backgroundColor = '#" + strCheckedBC + @"';
+                                                inputList[i].checked = true;
+                                            }
+                                            else {
+                                                //If the header checkbox is checked
+                                                //uncheck all checkboxes
+                                                //and change rowcolor back to original 
+                                                if (row.rowIndex % 2 == 0) {
+                                                    //Alternating Row Color
+                                                    row.style.backgroundColor = '#" + strAlterBC1 + @"';
+
+                                                }
+                                                else {
+                                                    row.style.backgroundColor = '#" + strAlterBC2 + @"';
+                                                }
+                                                inputList[i].checked = false;
+                                            }
+                                        }
+                                    }
+                                }                           
+
+                              function SelectAllCheckboxes(spanChk) {
+
+                                        // alert($(spanChk).attr('id'));
+                                        checkAll(spanChk);
+                                        var GridView = spanChk.parentNode.parentNode.parentNode;
+
+                                        //alert($(GridView).attr('id'));
+                                        // alert(GridView.id);
+
+                                        var inputList = GridView.getElementsByTagName('input');
+                                        for (var i = 0; i < inputList.length; i++) {
+                                            var row = inputList[i].parentNode.parentNode;
+                                            if (inputList[i].type == 'checkbox' && spanChk != inputList[i]) {
+                                                if (spanChk.checked) {
+                                                    inputList[i].checked = true;
+                                                }
+                                                else {
+                                                    inputList[i].checked = false;
+                                                }
+                                            }
+
+                                        }
+                                    }
+
+                            ";
+
+
+                ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "strMainListJS", strMainListJS, true);
+
+
+        }
+
+        if (IsPostBack)
+        {
+            try
+            {
+                for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
+                {
+                    if (_hfValue2[i] != null && _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "file")
+                    {
+                        if (_hfValue2[i].Value != "")
+                        {
+                            ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "UserBasicPostFile" + i.ToString(), "UserBasic" + i.ToString() + @"();", true);
+
+                            if (_rfvValue[i] != null)
+                            {
+                                ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "UserBasicPostFileV" + i.ToString(), "ValidatorEnable(document.getElementById('" + _rfvValue[i].ID + "'), false);", true);
+                            }
+                        }
+                    }
+                    if (_hfValue2[i] != null && _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image")
+                    {
+                        if (_hfValue2[i].Value != "")
+                        {
+                            ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "UserBasicPostImage" + i.ToString(), "UserBasic" + i.ToString() + @"();", true);
+
+                            if (_rfvValue[i] != null)
+                            {
+                                ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "UserBasicPostImageV" + i.ToString(), "ValidatorEnable(document.getElementById('" + _rfvValue[i].ID + "'), false);", true);
+                            }
+                        }
+                    }
+
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "file" &&
+                        _hfValue[i] != null && _qsMode != "view"
+                        && _hfValue2[i] != null)
+                    {
+                        if (_hfValue[i].Value != "" && _hfValue2[i].Value == "")
+                        {
+
+                            string strFilePath = Cryptography.Encrypt(_strFilesLocation + "/UserFiles/AppFiles/" + _hfValue[i].Value);
+                            string strFileName = Cryptography.Encrypt(_hfValue[i].Value.Substring(37));
+
+                            _lblValue[i].Text = "<a target='_blank' href='" + Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Security/Filedownload.aspx?FilePath="
+                                + strFilePath + "&FileName=" + strFileName + "'>" +
+                                  _hfValue[i].Value.Substring(37) + "</a>";
+
+
+
+
+                            _lblValue[i].Text = "<img  title=\"Remove this file\" style=\"cursor:pointer;\"  id=\"dimg" + _hfValue[i].ID + "\" src=\"" + Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath
+                               + "/App_Themes/Default/Images/icon_delete.gif\" />" + _lblValue[i].Text;
+
+//                            string strTempJS = @"  document.getElementById('dimg" + _hfValue[i].ID + @"').addEventListener('click', function (e) {
+//                                                             document.getElementById('" + _hfValue[i].ID + @"').value='';
+//                                                              $('#" + _lblValue[i].ID + @"').html(''); 
+//                                                    });";
+
+//                            ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "filedelete2" + i.ToString(), strTempJS, true);
+
+
+                        }
+                    }
+                    if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image" &&
+                        _hfValue[i] != null && _qsMode != "view"
+                        && _hfValue2[i] != null)
+                    {
+                        if (_hfValue[i].Value != "" && _hfValue2[i].Value == "")
+                        {
+                            string strMaxHeight = "50";
+                            if (_dtColumnsDetail.Rows[i]["TextHeight"] != DBNull.Value)
+                            {
+                                strMaxHeight = _dtColumnsDetail.Rows[i]["TextHeight"].ToString();
+                            }
+
+                            string strFilePath = _strFilesLocation + "/UserFiles/AppFiles/"
+                                    + _hfValue[i].Value;
+                            _lblValue[i].Text = "<a target='_blank' href='" + strFilePath + "'>"
+                                + "<img style='padding-bottom:7px; max-height:" + strMaxHeight + "px;' alt='" + _hfValue[i].Value.Substring(37)
+                                + "' src='" + strFilePath + "' title='" + _hfValue[i].Value.Substring(37) + "'  />" + "</a><br/>";
+
+
+                            _lblValue[i].Text = "<img title=\"Remove this image\" style=\"cursor:pointer;\"  id=\"dimg" + _hfValue[i].ID + "\" src=\"" + Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath
+                               + "/App_Themes/Default/Images/icon_delete.gif\" />" + _lblValue[i].Text;
+
+
+//                            string strTempJS = @"  document.getElementById('dimg" + _hfValue[i].ID + @"').addEventListener('click', function (e) {
+//                                                             document.getElementById('" + _hfValue[i].ID + @"').value='';
+//                                                              $('#" + _lblValue[i].ID + @"').html(''); 
+//                                                    });";
+
+                            //ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "imagedelete2" + i.ToString(), strTempJS, true);
+
+
+                        }
+                    }
+
+                }
+            }
+            catch
+            {
+                //
+            }
+
+        }
+
+
+
+    }
+ 
 
     protected void AddDataNotification(Record newRecord)
     {
@@ -8319,128 +10630,93 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
     }
     
 
-    protected void tabDetail_ActiveTabChanged(object sender, EventArgs e)
-    {
-        if (tabDetail.ActiveTabIndex != 0)
-        {
-            if (PerformSave())
-            {
-                Response.Redirect(GetEditURLAfterAdd(), false);
-            }
-            else
-            {
-                tabDetail.ActiveTabIndex = 0;
-            }
-        }
-    }
+    //protected void tabDetail_ActiveTabChanged(object sender, EventArgs e)
+    //{
+    //    if (tabDetail.ActiveTabIndex != 0)
+    //    {
+    //        if (PerformSave())
+    //        {
+    //            Response.Redirect(GetEditURLAfterAdd(), false);
+    //        }
+    //        else
+    //        {
+    //            tabDetail.ActiveTabIndex = 0;
+    //        }
+    //    }
+    //}
 
-    protected void lnkWordWxport_Click(object sender, EventArgs e)
-    {
-        if (ddlDataRetriever.Items.Count == 1)
-        {
-            lnkWordExportOK_Click(null, null);
-        }
-        else
-        {
+    //protected void lnkWordWxport_Click(object sender, EventArgs e)
+    //{
+    //    if (ddlDataRetriever.Items.Count == 1)
+    //    {
+    //        lnkWordExportOK_Click(null, null);
+    //    }
+    //    else
+    //    {
 
-            mpeModalWordExport.Show();
-        }
-    }
+    //        mpeModalWordExport.Show();
+    //    }
+    //}
 
-    protected void lnkWordExportOK_Click(object sender, EventArgs e)
-    {
-
-        //
-
-        try
-        {
-            string strError = "";
-            if (ddlDataRetriever.SelectedItem != null)
-            {
-
-
-                DocTemplate theDocTemplate = DocumentManager.dbg_DocTemplate_Detail(int.Parse(ddlDataRetriever.SelectedValue));
-
-                DataRetriever theDataRetriever = DocumentManager.dbg_DataRetriever_Detail((int)theDocTemplate.DataRetrieverID);
-
-                DataTable dtRecordInfo = DocumentManager.DataRetrieverSP(null, _iRecordID, theDataRetriever.SPName);
-                //string strFolder = "DocTemplates";
-
-
-                //oliver <begin> Ticket 1451
-                string sTableName = Common.GetValueFromSQL("SELECT TableName FROM [Table] WHERE TableID=" + theDataRetriever.TableID.ToString());
-                string[] sFileSplitter = theDocTemplate.FileUniqueName.ToString().Split('.');
-                string sFileExt = sFileSplitter[sFileSplitter.Length - 1].ToString();
-                string sFileName = sTableName + "_" + _iRecordID.ToString() + "." + sFileExt;
-
-                string strFileToCopy = Server.MapPath("Temp\\" + theDocTemplate.FileUniqueName);
-                string strNewCopy = Server.MapPath("DocTemplates\\" + sFileName);
-
-                if (System.IO.File.Exists(strNewCopy))
-                    System.IO.File.Delete(strNewCopy);
-
-                if (System.IO.File.Exists(Server.MapPath("Temp\\" + sFileName)))
-                    System.IO.File.Delete(Server.MapPath("Temp\\" + sFileName));
-
-                if (!System.IO.File.Exists(strFileToCopy))
-                {
-                    if (System.IO.File.Exists(Server.MapPath("DocTemplates\\" + theDocTemplate.FileUniqueName)))
-                    {
-                        System.IO.File.Copy(Server.MapPath("DocTemplates\\" + theDocTemplate.FileUniqueName), strFileToCopy);
-                    }
-                }
-
-                System.IO.File.Copy(strFileToCopy, strNewCopy);
-                System.IO.File.Copy(strFileToCopy, Server.MapPath("Temp\\" + sFileName));
-                Common.GenerateWORDDoc2(Server.MapPath("Temp\\" + sFileName), dtRecordInfo, out strError);
-                //oliver <end> Ticket 1451
-                
-               
-                mpeModalWordExport.Hide();
-
-                //oliver <begin> Ticket 1451
-                Page.Response.Redirect(Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/Temp/" + sFileName, false);
-                //oliver <end>
-            }
-            mpeModalWordExport.Hide();
-        }
-        catch (Exception ex)
-        {
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "Problem", "alert('This template file type is not supported, please use .docx format file.');", true);
-        }
-
-    }
+  
 
     protected void lnkSaveAndStay_Click(object sender, EventArgs e)
     {
-        if (_strActionMode.ToLower() == "add")
+        if (_qsMode.ToLower() == "add")
         {
             _theTable.ShowEditAfterAdd = true;
 
         }
 
-        if (_strActionMode.ToLower() == "edit")
+        if (_qsMode.ToLower() == "edit")
         {
             _bRedirect = false;
         }
 
         lnkSaveClose_Click(null, null);
-        //ScriptManager.RegisterStartupScript(this, this.GetType(), "SaveAndStay", "alert('Record Saved.');", true);
+        //ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "SaveAndStay", "alert('Record Saved.');", true);
     }
+
+//    protected void SaticJS()
+//    {
+//        string strShowHideMainDivs = @"  function ShowHideMainDivs(divSelected, lnk) {
+//            //var hfCurrentSelectedTabLink = document.getElementsByName('hfCurrentSelectedTabLink');
+//            $('.showhidedivs_hide').hide();
+//            if (divSelected == null)
+//            {
+//                return;
+//            }
+//            if (lnk != null) {
+//                document.getElementsByName('hfCurrentSelectedTabLink').value = lnk.id;    
+//                 $('#lblCurrentSelectedTabLink').text(document.getElementsByName('hfCurrentSelectedTabLink').value);
+//            }
+//            $('.showhidedivs').hide();
+//            divSelected.style.display = 'block';
+//            if ($('.maintablinkclass') != null && lnk != null) {
+//                $('.maintablinkclass').css('font-weight', 'normal');
+//            }
+//            if (lnk != null) {
+//                lnk.style.fontWeight = 'bold';
+//            }
+//
+//        }";
+
+
+//    }
     private void StackProcess()
     {      
         try
         {
 
             if (Session["stackTabIndex"] != null)
-                _stackTabIndex = (Stack<IDnText>)Session["stackTabIndex"];
+                _stackTabIndex = (Stack<StackRoom>)Session["stackTabIndex"];
             
             if (Session["stackURL"]!=null)
                 _stackURL = (Stack<string>)Session["stackURL"];
             //stack process
-            if (Request.QueryString["stackhault"] != null || _strActionMode.ToLower()=="add")
+            if (Request.QueryString["stackhault"] != null || _qsMode.ToLower()=="add")
             {
-                if (_stackURL!=null && _stackURL.Count > 0)
+                if (_stackURL != null && _stackURL.Count > 0 )
                 {
                     hlBack.NavigateUrl = _stackURL.Peek();
                 }   
@@ -8456,11 +10732,12 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
            
             if (Request.UrlReferrer != null)
             {
-                if (Request.UrlReferrer.AbsoluteUri.IndexOf("DocGen/EachRecordTable.aspx") > -1)
+                //if (Request.UrlReferrer.AbsoluteUri.IndexOf("DocGen/EachRecordTable.aspx") > -1)
+                if (Request.UrlReferrer.AbsoluteUri.IndexOf("Record/RecordList.aspx") == -1)
                 {
                     Session["stackURL"] = null;
                     Session["stackTabIndex"] = null;
-                    BuildFreshStack("~/Default.aspx");
+                    BuildFreshStack(Request.UrlReferrer.AbsoluteUri);
                     return;
                 }
             }
@@ -8482,8 +10759,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                 if (_stackURL.Count > 0)
                 {
                     string strRawURL = GetStackRawURL();
-                    if (URLinThisStack(strRawURL) == false)
-                    {
+                    if (URLinThisStack(strRawURL) == false && UrlHasAdd(strRawURL)==false)
+                    {                       
                             hlBack.NavigateUrl = _stackURL.Peek();
                             _stackURL.Push(strRawURL);                    
                     }
@@ -8498,7 +10775,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             {
                                 bool bRemove2ndOne = true;
 
-                                if (Request.UrlReferrer != null && Request.UrlReferrer.AbsoluteUri.IndexOf("mode="+Cryptography.Encrypt("add"))>-1)
+                                if (Request.UrlReferrer != null && UrlHasAdd(Request.UrlReferrer.ToString()) == true)
                                 {
                                     bRemove2ndOne = false;
                                 }
@@ -8508,11 +10785,15 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             }
                                 
                         }
-                           
-                        if (_stackURL.Count > 0)
-                            hlBack.NavigateUrl = _stackURL.Peek();
+                        if(UrlHasAdd(strRawURL)==false  )
+                        {
 
-                        _stackURL.Push(strRawURL);                 
+                            if (_stackURL.Count > 0)
+                                hlBack.NavigateUrl = _stackURL.Peek();
+
+                            _stackURL.Push(strRawURL);    
+                        }
+                                    
                     }
 
                     
@@ -8561,13 +10842,25 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
        else
        {
            //
-
+           //if (strRawURL.IndexOf("mode=" + Cryptography.Encrypt("add")) > -1 || strRawURL.IndexOf("mode=" + Server.UrlEncode(Cryptography.Encrypt("add"))) > -1)
+           //    return true;
        }
 
        return bReturn;
     }
+
+    protected bool UrlHasAdd(string sUrl)
+   {
+       if (sUrl.IndexOf("mode=" + Cryptography.Encrypt("add")) > -1 || sUrl.IndexOf("mode=" + Server.UrlEncode(Cryptography.Encrypt("add"))) > -1)
+           return true;
+
+       return false;
+   }
     protected void BuildFreshStack(string strBaseURL)
     {
+        if (UrlHasAdd(strBaseURL))
+            strBaseURL = "";
+
         if (strBaseURL=="")
         {
             hlBack.NavigateUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Record/RecordList.aspx?TableID=" + Request.QueryString["TableID"].ToString() + "&SearchCriteriaID=" + Request.QueryString["SearchCriteriaID"].ToString();
@@ -8583,7 +10876,11 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
         _stackURL = new Stack<string>();
         _stackURL.Push(hlBack.NavigateUrl.Replace("//Pages","/Pages"));//1st List
-        _stackURL.Push(GetStackRawURL());//2nd Detail
+
+        string str2nd = GetStackRawURL();
+        if (UrlHasAdd(str2nd)==false)
+            _stackURL.Push(GetStackRawURL());//2nd Detail
+        
         Session["stackURL"] = _stackURL;
         
            
@@ -8608,10 +10905,15 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
                 string strURL = GetStackRawURL();
-                strURL = strURL.Replace("mode=" + Cryptography.Encrypt("edit").Replace("=", "%3d"), "mode=" + Cryptography.Encrypt("add").Replace("=", "%3d"));
-                strURL = strURL.Replace("mode=" + Cryptography.Encrypt("view").Replace("=", "%3d"), "mode=" + Cryptography.Encrypt("add").Replace("=", "%3d"));
-                strURL = strURL.Replace("&Recordid=" + Cryptography.Encrypt(_qsRecordID).Replace("=", "%3d"), "");
-                       
+                //strURL = Server.UrlDecode(strURL);
+                strURL = strURL.Replace("mode=" + Cryptography.Encrypt("edit"), "mode=" + Cryptography.Encrypt("add"));
+                strURL = strURL.Replace("mode=" + Cryptography.Encrypt("view"), "mode=" + Cryptography.Encrypt("add"));
+
+                strURL = strURL.Replace("mode=" + Server.UrlEncode(Cryptography.Encrypt("edit")), "mode=" + Server.UrlEncode(Cryptography.Encrypt("add")));
+                strURL = strURL.Replace("mode=" + Server.UrlEncode(Cryptography.Encrypt("view")), "mode=" + Server.UrlEncode(Cryptography.Encrypt("add")));
+
+                strURL = strURL.Replace("&Recordid=" + Cryptography.Encrypt(_qsRecordID), "");
+                //strURL = Server.UrlEncode(strURL);       
                 Response.Redirect(strURL, true);
             }
         }
@@ -8634,7 +10936,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         {
             if (PerformSave())
             {
-                if (_strActionMode.ToLower() == "add")
+                if (_qsMode.ToLower() == "add")
                 {
                     if (_bPrivate == false)
                     {
@@ -8796,8 +11098,9 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         {
             if (PerformSave())
             {
-
-                Response.Redirect(hlNavigatePrev.NavigateUrl, false);
+                PopulatePreNavigation();
+                if (hlNavigatePrev.NavigateUrl!="")
+                 Response.Redirect(hlNavigatePrev.NavigateUrl, true);
             }
         }
         catch
@@ -8809,39 +11112,42 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
     protected string GetEditURLAfterAdd()
     {
-        string strEditURL =Request.RawUrl;
+        string strEditURL =Request.Url.AbsoluteUri;
         if(_stackURL!=null && _stackURL.Count>0)
         {
             strEditURL = _stackURL.Peek();
            
         }
+        //strEditURL = Server.UrlDecode(strEditURL);
         strEditURL = strEditURL.Replace("mode=" + Cryptography.Encrypt("add"), "mode=" + Cryptography.Encrypt("edit"));
-        strEditURL = strEditURL + "&Recordid=" + Cryptography.Encrypt(_iNewRecordID.ToString());      
+        strEditURL = strEditURL.Replace("mode=" + Server.UrlEncode(Cryptography.Encrypt("add")), "mode=" + Server.UrlEncode(Cryptography.Encrypt("edit")));
+        strEditURL = strEditURL + "&Recordid=" + Cryptography.Encrypt(_iNewRecordID.ToString());
+        //strEditURL = Server.UrlEncode(strEditURL);
         Session["CopyRecordID"] = null;
         return strEditURL;
     }
 
 
-    protected void lnkShowHistory_Click(object sender, EventArgs e)
-    {
-        lnkHideHistory.Visible = true;
-        trTab.Visible = true;
-        lnkShowHistory.Visible = false;
+    //protected void lnkShowHistory_Click(object sender, EventArgs e)
+    //{
+    //    lnkHideHistory.Visible = true;
+    //    trGvChangedLog.Visible = true;
+    //    lnkShowHistory.Visible = false;
 
-        if (_qsRecordID != "")
-        {
-            TheDatabaseS.spAuditRawToAudit(int.Parse(_qsRecordID));
+    //    if (_qsRecordID != "")
+    //    {
+    //        TheDatabaseS.spAuditRawToAudit(int.Parse(_qsRecordID));
 
-            BindTheChangedLogGrid(0, gvChangedLog.PageSize);
-        }
-    }
+    //        BindTheChangedLogGrid(0, gvChangedLog.PageSize);
+    //    }
+    //}
 
-    protected void lnkHideHistory_Click(object sender, EventArgs e)
-    {
-        lnkShowHistory.Visible = true;
-        lnkHideHistory.Visible = false;
-        trTab.Visible = false;
-    }
+    //protected void lnkHideHistory_Click(object sender, EventArgs e)
+    //{
+    //    lnkShowHistory.Visible = true;
+    //    lnkHideHistory.Visible = false;
+    //    trGvChangedLog.Visible = false;
+    //}
 
     protected void lnkNavigateNext_Click(object sender, EventArgs e)
     {
@@ -8849,8 +11155,9 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         {
             if (PerformSave())
             {
-
-                Response.Redirect(hlNavigateNext.NavigateUrl, false);
+                PopulateNextNavigation();
+                if (hlNavigateNext.NavigateUrl!="")
+                    Response.Redirect(hlNavigateNext.NavigateUrl, true);
             }
         }
         catch
@@ -8868,6 +11175,13 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
     }
 
+    protected void btnSaveRecord_Click(object sender, EventArgs e)
+    {
+        ViewState["SaveCaller"] = "save";
+        lnkSaveClose_Click(null, null);
+
+    }
+
     protected void lnkSave_Click(object sender, EventArgs e)
     {
 
@@ -8877,7 +11191,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             {
                 lblMsg.Text = "Successfully saved!";
                 lblMsg.ForeColor = System.Drawing.Color.Green;
-                if (_strActionMode.ToLower() == "add")
+                if (_qsMode.ToLower() == "add")
                 {
                     Response.Redirect(hlEditLink.NavigateUrl, false);
                     return;
@@ -9096,7 +11410,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
             if (IsUserInputOK())
             {
 
-                switch (_strActionMode.ToLower())
+                switch (_qsMode.ToLower())
                 {
                     case "add":
 
@@ -9104,7 +11418,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         if (SecurityManager.IsRecordsExceeded(_iSessionAccountID))
                         {
                             Session["DoNotAllow"] = "true";
-                            ScriptManager.RegisterStartupScript(this, this.GetType(), "DoNotAllow", "alert('" + Common.RecordExceededMessage.Replace("'", "''") + "');", true);
+                            ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "DoNotAllow", "alert('" + Common.RecordExceededMessage.Replace("'", "''") + "');", true);
 
                             return false;
                         }
@@ -9324,7 +11638,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                            && (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "values"
                            || _dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "value_text"))
                                 {
-                                    if (_ddlValue[i] != null && _ddlValue[i].SelectedIndex != null && _ddlValue[i].SelectedIndex != 0)
+                                    if (_ddlValue[i] != null && _ddlValue[i].SelectedItem != null && _ddlValue[i].SelectedIndex != 0)
                                     {
                                         strValue = _ddlValue[i].Text;
                                     }
@@ -9687,7 +12001,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                         try
                         {
-                            for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
+                            for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)// disable server side comparison
                             {
                                 string strValue1 = "";
                                 strValue1 = RecordManager.GetRecordValue(ref newRecord, _dtColumnsDetail.Rows[i]["SystemName"].ToString());
@@ -9701,7 +12015,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
                                 if (_dtColumnsDetail.Rows[i]["CompareColumnID"] != DBNull.Value
-                    && _dtColumnsDetail.Rows[i]["CompareOperator"] != DBNull.Value && strValue1.Length > 0)
+                    && _dtColumnsDetail.Rows[i]["CompareOperator"] != DBNull.Value && strValue1.Length > 0 && _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "calculation")
                                 {
                                     bool bValidationCanIgnore = false;
                                     string sCanignore = "no";
@@ -10018,7 +12332,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         if (TheDatabase.IsRecordDuplicate(newRecord, strUniqueColumnIDSys, strUniqueColumnID2Sys,-1))
                         {
                             lblMsg.Text = "Duplicate Record!";
-                            return false;
+                            if (bPeformSave)
+                                return false;
                         }
                      
                         //check AutoCreateUser
@@ -10032,8 +12347,9 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 if (dtUsers.Rows.Count > 0 && strEmail.Trim() != "")
                                 {
                                     lblMsg.Text = "A user has this email(" + strEmail + ") address, please try another email address.";
-                                    //ScriptManager.RegisterStartupScript(this, this.GetType(), "Problem", "alert('A user has this email(" + strEmail + ") address, please try another email address.');", true);
-                                    return false;
+                                    //ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "Problem", "alert('A user has this email(" + strEmail + ") address, please try another email address.');", true);
+                                    if (bPeformSave)
+                                        return false;
                                 }
                             }
                         }
@@ -10080,7 +12396,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             spnIgnoreTick.Visible = false;
                             gvValidWarningGrid.DataSource = dtValidWarning;
                             gvValidWarningGrid.DataBind();
-                            return false;
+                            if (bPeformSave)
+                                return false;
                         }
                         else
                         {
@@ -10089,7 +12406,11 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
                         if (bPeformSave == false)
+                        {
+                            ViewState["vRecord"] = newRecord;
                             return false;
+                        }
+                          
 
 
 
@@ -10746,7 +13067,9 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         if (TheDatabase.IsRecordDuplicate(editRecord, strUniqueColumnIDSys, strUniqueColumnID2Sys,(int)editRecord.RecordID))
                         {
                             lblMsg.Text = "Duplicate Record!";
-                            return false;
+                            if (bPeformSave)
+                                return false;
+                            
                         }
 
 
@@ -10777,7 +13100,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                         try
                         {
-                            for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
+                            for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++) //dis
                             {
                                 string strValue1 = "";
                                 strValue1 = RecordManager.GetRecordValue(ref editRecord, _dtColumnsDetail.Rows[i]["SystemName"].ToString());
@@ -11124,7 +13447,8 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                             spnIgnoreTick.Visible = false;
                             gvValidWarningGrid.DataSource = dtValidWarning;
                             gvValidWarningGrid.DataBind();
-                            return false;
+                            if (bPeformSave)
+                                return false;
                         }
                         else
                         {
@@ -11132,7 +13456,11 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                         }
 
                         if (bPeformSave == false)
+                        {
+                            ViewState["vRecord"] = editRecord;
                             return false;
+                        }
+                           
 
 
                         int iIsUpdated = RecordManager.ets_Record_Update(editRecord, true);
@@ -11325,10 +13653,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
     }
 
 
-    protected void CL_Pager_BindTheGridAgain(object sender, EventArgs e)
-    {
-        BindTheChangedLogGrid(_gvCL_Pager.StartIndex, _gvCL_Pager._gridView.PageSize);
-    }
+  
 
     protected void btnReloadMe_Click(object sender, EventArgs e)
     {
@@ -11337,210 +13662,14 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
     }
 
 
-    protected void CL_Pager_BindTheGridToExport(object sender, EventArgs e)
-    {
-        _gvCL_Pager.ExportFileName = "Record Change Log ";
-        BindTheChangedLogGrid(0, _gvCL_Pager.TotalRows);
-    }
-    protected void CL_Pager_OnApplyFilter(object sender, EventArgs e)
-    {
-        //_gvCL_Pager.ExportFileName = "Sensor Change Log";
-        BindTheChangedLogGrid(0, gvChangedLog.PageSize);
-    }
-    protected void CL_Pager_OnExportForCSV(object sender, EventArgs e)
-    {
-
-        gvChangedLog.AllowPaging = false;
-        BindTheChangedLogGrid(0, _gvCL_Pager.TotalRows);
-
-
-
-        Response.Clear();
-        Response.Buffer = true;
-        Response.AddHeader("content-disposition",
-        "attachment;filename=RecordChangedLog.csv");
-        Response.Charset = "";
-        Response.ContentType = "text/csv";
-
-        StringWriter sw = new StringWriter();
-        HtmlTextWriter hw = new HtmlTextWriter(sw);
-        DataTable dtTemp = (DataTable)gvChangedLog.DataSource;
-
-        int iColCount = dtTemp.Columns.Count;
-        for (int i = 0; i < iColCount - 1; i++)
-        {
-            if (string.IsNullOrEmpty(dtTemp.Columns[i].ColumnName))
-            {
-            }
-            else
-            {
-                sw.Write(dtTemp.Columns[i].ColumnName);
-                if (i < iColCount - 1)
-                {
-                    sw.Write(",");
-                }
-            }
-        }
-
-        sw.Write(sw.NewLine);
-
-        // Now write all the rows.
-        foreach (DataRow dr in dtTemp.Rows)
-        {
-
-            for (int i = 0; i < iColCount - 1; i++)
-            {
-                if (string.IsNullOrEmpty(dtTemp.Columns[i].ColumnName))
-                {
-                }
-                else
-                {
-
-
-                    if (!Convert.IsDBNull(dr[i]))
-                    {
-                        sw.Write("\"" + dr[i].ToString() + "\"");
-                    }
-
-
-
-
-                    if (i < iColCount - 1)
-                    {
-                        sw.Write(",");
-                    }
-                }
-            }
-            sw.Write(sw.NewLine);
-        }
-        sw.Close();
-
-
-        Response.Output.Write(sw.ToString());
-        Response.Flush();
-        Response.End();
-    }
-
-
-    protected void BindTheChangedLogGrid(int iStartIndex, int iMaxRows)
-    {
-        try
-        {
-            int iTN = 0;
-
-            getLastUpdatedInfo();
-
-            gvChangedLog.DataSource = RecordManager.Record_Audit_Summary(
-                   (int)_iRecordID, iStartIndex, iMaxRows, ref  iTN);
-
-            gvChangedLog.VirtualItemCount = iTN;
-
-            _iCLColumnCount = 4;
-
-            _iCLStartIndex = iStartIndex;
-            _iCLMaxRows = iMaxRows;
-            _iCLTN = iTN;
-
-
-
-            gvChangedLog.DataBind();
-            if (gvChangedLog.TopPagerRow != null)
-                gvChangedLog.TopPagerRow.Visible = true;
-            GridViewRow gvr = gvChangedLog.TopPagerRow;
-            if (gvr != null)
-            {
-                _gvCL_Pager = (Common_Pager)gvr.FindControl("CL_Pager");
-
-            }
-
-            if (_theTable.ReasonChangeType == "none" || _theTable.ReasonChangeType == "")
-            {
-                gvChangedLog.Columns[4].Visible = false;
-            }
-
-
-        }
-        catch (Exception ex)
-        {
-            ErrorLog theErrorLog = new ErrorLog(null, "Record Detail Change Log", ex.Message, ex.StackTrace, DateTime.Now, Request.Path);
-            SystemData.ErrorLog_Insert(theErrorLog);
-            lblMsg.Text = ex.Message;
-        }
-    }
+   
 
     public override void VerifyRenderingInServerForm(Control control)
     {
         return;
     }
 
-    protected void gvChangedLog_PreRender(object sender, EventArgs e)
-    {
-        GridView grid = (GridView)sender;
-        if (grid != null)
-        {
-            GridViewRow pagerRow = (GridViewRow)grid.TopPagerRow;
-            if (pagerRow != null)
-            {
-                pagerRow.Visible = true;
-            }
-        }
-    }
-    protected void gvChangedLog_RowDataBound(object sender, GridViewRowEventArgs e)
-    {
-        try
-        {
-
-
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
-
-                HyperLink hlView = (HyperLink)e.Row.FindControl("hlView");
-                DateTime dtUpdateDate = Convert.ToDateTime(DataBinder.Eval(e.Row.DataItem, "DateAdded"));
-                hlView.NavigateUrl = "AuditDetail.aspx?UpdatedDate=" + Server.UrlEncode(dtUpdateDate.ToString("yyyy-MM-dd HH:mm:ss.fff")) + "&RecordID=" + _iRecordID.ToString();
-
-                string strColumnList = DataBinder.Eval(e.Row.DataItem, "ColumnList").ToString();
-                string[] arrColumnList = strColumnList.Split(',');
-
-                Label lblColumnList = (Label)e.Row.FindControl("lblColumnList");
-
-                if (arrColumnList.Length > 3)
-                {
-                    //get first 3 names
-                    int i = 0;
-                    string strThreeeColumns = "";
-                    foreach (string aColumn in arrColumnList)
-                    {
-                        if (i == 0)
-                            strThreeeColumns = aColumn;
-
-                        if (i == 1)
-                            strThreeeColumns = strThreeeColumns + "," + aColumn;
-
-                        if (i == 2)
-                            strThreeeColumns = strThreeeColumns + " and " + aColumn;
-
-                        i = i + 1;
-
-                        if (i == 3)
-                            break;
-                    }
-
-                    lblColumnList.Text = arrColumnList.Length + " fields including " + strThreeeColumns;
-
-                }
-                else
-                {
-                    lblColumnList.Text = strColumnList;
-                }
-            }
-
-        }
-        catch (Exception ex)
-        {
-            lblMsg.Text = ex.Message;
-        }
-    }
-
+  
 
 
 
@@ -11549,38 +13678,38 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
 
 
-public class DynamicTemplateField : ITemplate
-{
+//public class DynamicTemplateField : ITemplate
+//{
 
-    int iCount;
-    public DynamicTemplateField(int i)
-    {
-        iCount = i;
-    }
+//    int iCount;
+//    public DynamicTemplateField(int i)
+//    {
+//        iCount = i;
+//    }
 
-    public void InstantiateIn(Control container)
-    {
-        //define the control to be added
-        Label lbl = new Label();
-        lbl.ID = "lbl" + iCount.ToString();
+//    public void InstantiateIn(Control container)
+//    {
+//        //define the control to be added
+//        Label lbl = new Label();
+//        lbl.ID = "lbl" + iCount.ToString();
 
-        HiddenField hf = new HiddenField();
-        hf.ID = "hf" + iCount.ToString();
+//        HiddenField hf = new HiddenField();
+//        hf.ID = "hf" + iCount.ToString();
 
-        HiddenField hfC = new HiddenField();
-        hfC.ID = "hfC" + iCount.ToString();
+//        HiddenField hfC = new HiddenField();
+//        hfC.ID = "hfC" + iCount.ToString();
 
-        container.Controls.Add(lbl);
-        container.Controls.Add(hf);
+//        container.Controls.Add(lbl);
+//        container.Controls.Add(hf);
 
-        container.Controls.Add(hfC);
+//        container.Controls.Add(hfC);
 
-        container.Controls.Add(new LiteralControl("&nbsp&nbsp&nbsp&nbsp"));
+//        container.Controls.Add(new LiteralControl("&nbsp&nbsp&nbsp&nbsp"));
 
 
 
-    }
-}
+//    }
+//}
 
 
 
@@ -11595,11 +13724,11 @@ public class DynamicTemplateField : ITemplate
 //                    {
 //                        if (_hfValue2[i].Value != "")
 //                        {
-//                            ScriptManager.RegisterStartupScript(this, this.GetType(), "UserBasicPostFile" + i.ToString(), "UserBasic" + i.ToString() + @"();", true);
+//                            ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "UserBasicPostFile" + i.ToString(), "UserBasic" + i.ToString() + @"();", true);
 
 //                            if (_rfvValue[i] != null)
 //                            {
-//                                ScriptManager.RegisterStartupScript(this, this.GetType(), "UserBasicPostFileV" + i.ToString(), "ValidatorEnable(document.getElementById('ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + _rfvValue[i].ID.ToString() + "'), false);", true);
+//                                ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "UserBasicPostFileV" + i.ToString(), "ValidatorEnable(document.getElementById('" + _rfvValue[i].ID + "'), false);", true);
 //                            }
 //                        }
 //                    }
@@ -11607,11 +13736,11 @@ public class DynamicTemplateField : ITemplate
 //                    {
 //                        if (_hfValue2[i].Value != "")
 //                        {
-//                            ScriptManager.RegisterStartupScript(this, this.GetType(), "UserBasicPostImage" + i.ToString(), "UserBasic" + i.ToString() + @"();", true);
+//                            ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "UserBasicPostImage" + i.ToString(), "UserBasic" + i.ToString() + @"();", true);
 
 //                            if (_rfvValue[i] != null)
 //                            {
-//                                ScriptManager.RegisterStartupScript(this, this.GetType(), "UserBasicPostImageV" + i.ToString(), "ValidatorEnable(document.getElementById('ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_" + _rfvValue[i].ID.ToString() + "'), false);", true);
+//                                ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "UserBasicPostImageV" + i.ToString(), "ValidatorEnable(document.getElementById('" + _rfvValue[i].ID + "'), false);", true);
 //                            }
 //                        }
 //                    }
@@ -11641,7 +13770,7 @@ public class DynamicTemplateField : ITemplate
 //                                                      $('#" + _lblValue[i].ID + @"').html(''); 
 //                                            });";
 
-//                            ScriptManager.RegisterStartupScript(this, this.GetType(), "filedelete2" + i.ToString(), strTempJS, true);
+//                            ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "filedelete2" + i.ToString(), strTempJS, true);
 
 
 //                        }
@@ -11674,7 +13803,7 @@ public class DynamicTemplateField : ITemplate
 //                                                      $('#" + _lblValue[i].ID + @"').html(''); 
 //                                            });";
 
-//                            ScriptManager.RegisterStartupScript(this, this.GetType(), "imagedelete2" + i.ToString(), strTempJS, true);
+//                            ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "imagedelete2" + i.ToString(), strTempJS, true);
 
 
 //                        }
@@ -11699,7 +13828,7 @@ public class DynamicTemplateField : ITemplate
   //          {
   //              if (hfCurrentSelectedTabLink.Value == "")
   //              {
-  //                  ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsOnlyOne", "ShowHideMainDivs(" + pnlDetailTab.ClientID + ");", true);
+  //                  ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "ShowHideMainDivsOnlyOne", "ShowHideMainDivs(" + pnlDetailTab.ID + ");", true);
   //              }
   //              else
   //              {
@@ -11712,7 +13841,7 @@ public class DynamicTemplateField : ITemplate
   //                  {
 
   //                  }
-  //                  ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab", "ShowHideMainDivs(" + strPanelID + "," + hfCurrentSelectedTabLink.Value + ");", true);
+  //                  ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "ShowHideMainDivsTableTab", "ShowHideMainDivs(" + strPanelID + "," + hfCurrentSelectedTabLink.Value + ");", true);
 
   //              }
   //          }
@@ -11723,7 +13852,7 @@ public class DynamicTemplateField : ITemplate
 
   //                  string strPanelID = "";
   //                  string strLnk = "";
-  //                  string strTableTabLink = "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTabD" + Request.QueryString["TableTabID"].ToString();
+  //                  string strTableTabLink = "lnkDetialTabD" + Request.QueryString["TableTabID"].ToString();
   //                  if (hfCurrentSelectedTabLink.Value != "")
   //                  {
   //                      strTableTabLink = hfCurrentSelectedTabLink.Value;
@@ -11733,13 +13862,13 @@ public class DynamicTemplateField : ITemplate
   //                  {
   //                      if (t == 0)
   //                      {
-  //                          strPanelID = pnlDetailTab.ClientID;
-  //                          strLnk = "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTab";
+  //                          strPanelID = pnlDetailTab.ID;
+  //                          strLnk = "lnkDetialTab";
   //                      }
   //                      else
   //                      {
-  //                          strPanelID = _pnlDetailTabD[t].ClientID;
-  //                          strLnk = "ctl00_HomeContentPlaceHolder_tabDetail_tpDetail_lnkDetialTabD" + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
+  //                          strPanelID = _pnlDetailTabD[t].ID;
+  //                          strLnk = "lnkDetialTabD" + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
   //                      }
   //                  }
 
@@ -11748,12 +13877,12 @@ public class DynamicTemplateField : ITemplate
 
   //                      if (strLnk != "")
   //                      {
-  //                          ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab", "ShowHideMainDivs(" + strPanelID + "," + strLnk + ");", true);
+  //                          ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "ShowHideMainDivsTableTab", "ShowHideMainDivs(" + strPanelID + "," + strLnk + ");", true);
 
   //                      }
   //                      else if (strTableTabLink != "")
   //                      {
-  //                          ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideMainDivsTableTab", "ShowHideMainDivs(" + strPanelID + "," + strTableTabLink + ");", true);
+  //                          ScriptManager.RegisterStartupScript(upDetailDynamic, upDetailDynamic.GetType(), "ShowHideMainDivsTableTab", "ShowHideMainDivs(" + strPanelID + "," + strTableTabLink + ");", true);
 
   //                      }
 

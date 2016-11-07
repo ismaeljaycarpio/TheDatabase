@@ -6,7 +6,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="HomeContentPlaceHolder" Runat="Server">
      
      
-      <asp:UpdateProgress class="ajax-indicator-full" ID="UpdateProgress3" runat="server" AssociatedUpdatePanelID="upCommon">
+      <%--<asp:UpdateProgress class="ajax-indicator-full" ID="UpdateProgress3" runat="server" AssociatedUpdatePanelID="upCommon">
         <ProgressTemplate>
             <table style="width:100%;  height:100%; text-align: center;" >
                 <tr valign="middle">
@@ -17,7 +17,7 @@
                 </tr>
             </table>
         </ProgressTemplate>
-    </asp:UpdateProgress>
+    </asp:UpdateProgress>--%>
     
     <br /> 
 

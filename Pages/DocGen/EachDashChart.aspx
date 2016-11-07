@@ -10,6 +10,7 @@
 
 </head>
 <body style="background-image:none; background-color:#ffffff;">
+     <%--<script type="text/javascript" src="<%=ResolveUrl("~/Script/jquery-1.11.3.min.js")%>"></script>--%>
 <script type="text/javascript" src="<%=ResolveUrl("~/script/jquery.js")%>"></script>
     <form id="form1" runat="server">
      <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true" >

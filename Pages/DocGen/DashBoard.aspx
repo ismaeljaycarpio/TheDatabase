@@ -236,6 +236,12 @@ CodeFile="DashBoard.aspx.cs" Inherits="DocGen.Document.DashBoard" %>
     <link href="<%=ResolveUrl("~/Styles/jquery-ui-1.7.3.custom.css")%>" rel="stylesheet" type="text/css" />     
     <script type="text/javascript" src="<%=ResolveUrl("~/Script/jquery-ui-1.9.2.custom.min.js")%>"></script>
     <%--<asp:Label runat="server" ID="lblTopTitle" CssClass="TopTitle" Text="Edit Report"></asp:Label>--%>
+    <%-- <link href="<%=ResolveUrl("~/Styles/jquery-ui-1.11.3.min.css")%>" rel="stylesheet"
+        type="text/css" />
+      <script type="text/javascript" src="<%=ResolveUrl("~/Styles/jquery-ui-1.11.3.min.js")%>"></script> --%>
+
+
+
     <br />
     <span class="failureNotification">
         <asp:Literal ID="ErrorMessage" runat="server"></asp:Literal>

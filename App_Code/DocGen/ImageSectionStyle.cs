@@ -104,18 +104,28 @@ namespace DocGen.DAL
         public string ImageFullPath { get; set; }
         public string WarningMessage { get; set; }
 
-        public string OpenLink { get; set; }
-
+        public string OnClick { get; set; }
+        public int? ChildTableID { get; set; }
+        public string AdditionalParams { get; set; }
+        public string Link { get; set; }
     }
     [Serializable]
     public class ChartDashBoard : JSONField
     {
         public int RecentNumber { get; set; }
         public string RecentPeriod { get; set; }
-
-
     }
 
+    [Serializable]
+    public class ColumnChangeService : JSONField
+    {
+        public string ControlEvent { get; set; }
+        public string SPName { get; set; }
+        public string DotNetMethod { get; set; }
+        public string JavaScriptFunction { get; set; }
+        public string MessageType { get; set; }
+        public string AfterValueChange { get; set; }
+    }
 
     [Serializable]
     public class OfflineTaskParameters : JSONField

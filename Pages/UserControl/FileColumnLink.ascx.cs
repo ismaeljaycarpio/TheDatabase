@@ -10,6 +10,7 @@ public partial class Pages_UserControl_FileColumnLink : System.Web.UI.UserContro
 {
     public int? TableID { get; set; }
     public List<string> lstFileColumn { get; set; }
+    public bool IsImportPositional { get; set; }
     DataTable _dtTableColumns;
     Table _theTable;
     int _iFileColumn = 0;
@@ -21,6 +22,7 @@ public partial class Pages_UserControl_FileColumnLink : System.Web.UI.UserContro
             DataTable dtLinkedColumn = new DataTable();
             dtLinkedColumn.Columns.Add("FileColumn");
             dtLinkedColumn.Columns.Add("ColumnID");
+            dtLinkedColumn.Columns.Add("FileColumnPosition");
             dtLinkedColumn.AcceptChanges();
 
             for (int i = 0; i < gvTheGrid.Rows.Count; i++)
@@ -30,9 +32,10 @@ public partial class Pages_UserControl_FileColumnLink : System.Web.UI.UserContro
                 if (ddlColumn != null && ddlColumn.SelectedItem != null && ddlColumn.SelectedValue != "")
                 {
                     Label lblFileColumn = (Label)gvTheGrid.Rows[i].FindControl("lblFileColumn");
+                    Label lblPositionOnImport = (Label)gvTheGrid.Rows[i].FindControl("lblPositionOnImport");
                     if(lblFileColumn!=null && lblFileColumn.Text!="")
                     {
-                        dtLinkedColumn.Rows.Add(lblFileColumn.Text, ddlColumn.SelectedValue);
+                        dtLinkedColumn.Rows.Add(lblFileColumn.Text, ddlColumn.SelectedValue, lblPositionOnImport.Text);
                     }
                     
                 }
@@ -132,7 +135,7 @@ public partial class Pages_UserControl_FileColumnLink : System.Web.UI.UserContro
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
             Label lblFileColumn = (Label)e.Row.FindControl("lblFileColumn");
-
+            Label lblPositionOnImport = (Label)e.Row.FindControl("lblPositionOnImport");
             if (lstFileColumn[_iFileColumn]!="")
                 lblFileColumn.Text =lstFileColumn[_iFileColumn];
 
@@ -143,6 +146,7 @@ public partial class Pages_UserControl_FileColumnLink : System.Web.UI.UserContro
 
 
             _iFileColumn = _iFileColumn + 1;
+            lblPositionOnImport.Text = _iFileColumn.ToString();
         }
     }
 

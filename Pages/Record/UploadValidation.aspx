@@ -60,7 +60,7 @@
                                 </td>
                                 <td align="left">
                                     <div style="width: 40px; height: 40px;">
-                                        <asp:UpdateProgress class="ajax-indicator" ID="UpdateProgress1" runat="server">
+                                        <%--<asp:UpdateProgress class="ajax-indicator" ID="UpdateProgress1" runat="server">
                                             <ProgressTemplate>
                                                 <table style="width: 100%; text-align: center">
                                                     <tr>
@@ -70,7 +70,7 @@
                                                     </tr>
                                                 </table>
                                             </ProgressTemplate>
-                                        </asp:UpdateProgress>
+                                        </asp:UpdateProgress>--%>
                                     </div>
                                 </td>
                             </tr>
@@ -147,7 +147,7 @@
                                                                         <asp:Label runat="server" ID="lblIsImported"></asp:Label>
                                                                     </td>
                                                                     <td>
-                                                                        <table runat="server" id="tblAllowDataUpdate" visible="false">
+                                                                        <%--<table runat="server" id="tblAllowDataUpdate" visible="false">
                                                                             <tr>
                                                                                 <td></td>
                                                                                 <td align="right" style="padding-left: 20px;">
@@ -159,7 +159,7 @@
 
                                                                             </tr>
 
-                                                                        </table>
+                                                                        </table>--%>
 
                                                                     </td>
 
@@ -177,13 +177,13 @@
                                                                     </td>
                                                                    
                                                                     <td style="padding-left:10px;">
-                                                                        <asp:Label runat="server" ID="lblWarning" ForeColor="Blue" Text="Warnings: 0" Font-Bold="true"></asp:Label>
+                                                                        <asp:Label runat="server" ID="lblWarning" ForeColor="Blue" Text="Valid with Warnings: 0" Font-Bold="true"></asp:Label>
                                                                     </td>
-                                                                   
+                                                                   <!-- 
                                                                     <td style="padding-left:10px;" runat="server" id="tdExceedance">
                                                                         <asp:Label runat="server" ID="lblExceedance" ForeColor="Orange" Text="Exceedances: 0" Font-Bold="true"></asp:Label>
                                                                     </td>
-                                                                   
+                                                                   -->
                                                                     <td style="padding-left:10px;">
                                                                         <asp:Label runat="server" ID="lblInvalidData" ForeColor="Red" Text="Invalid Data: 0"
                                                                             Font-Bold="true"></asp:Label>
@@ -268,7 +268,7 @@
                                 </div>
                             </div>
                             <div style="background-color: Green; font-size: 14px; width: 100%; color: White;">
-                                <strong id="stValid" name="stValid">Valid Data</strong>
+                                <strong id="stValid" name="stValid">Valid with Warnings</strong>
                             </div>
                             <div>
                                 <dbg:dbgGridView ID="gvTheGrid" runat="server" GridLines="Both" CssClass="gridview"
@@ -299,7 +299,7 @@
                             </div>
                             <br />
                             <div style="background-color: Blue; font-size: 14px; width: 100%; color: White;">
-                                <strong id="stWarnings" name="stWarnings">Valid Data with Warnings</strong>
+                                <strong id="stWarnings" name="stWarnings">Valid with Warnings</strong>
                                 <asp:Image runat="server" ImageUrl="~/Images/warning.png" AlternateText="This data will be imported"
                                     ToolTip="This data will be imported" />
                             </div>

@@ -1044,7 +1044,7 @@ public class CascadeDropdown : System.Web.Services.WebService {
 //                    TableID=" + theColumn.TableTableID.ToString() + " " + strWhere + " and CAST(" + strFirstSystemName + @" AS VARCHAR) like '%" + search.Replace("'", "''") + @"%'");
 
 
-                DataTable dtData = Common.spGetLinkedRecordIDnDisplayText(theColumn.DisplayColumn, (int)theColumn.TableTableID, 100, strWhere, search.Replace("'", "''"));
+                DataTable dtData = Common.spGetLinkedRecordIDnDisplayText(theColumn.DisplayColumn, (int)theColumn.TableTableID, 100, strWhere, search);
 
                 foreach (DataRow dr in dtData.Rows)
                 {

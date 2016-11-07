@@ -162,7 +162,7 @@ public partial class Pages_Record_Batches :SecurePage
                    dtDateTo= dtDateTo.Value.AddHours(23).AddMinutes(59);
                 }
             }
-
+            ViewState[gvTheGrid.ID + "PageIndex"] = (iStartIndex / gvTheGrid.PageSize) + 1;
             gvTheGrid.DataSource = UploadManager.ets_Batch_Select(null,
                int.Parse(ddlTable.SelectedValue) == -1 ? null : (int?)int.Parse(ddlTable.SelectedValue),
                "", "", txtSearch.Text.Replace("'", "''"),
@@ -184,6 +184,11 @@ public partial class Pages_Record_Batches :SecurePage
             {
                 _gvPager = (Common_Pager)gvr.FindControl("Pager");
                 //_gvPager.AddURL = GetAddURL();
+                if (ViewState[gvTheGrid.ID + "PageIndex"] != null)
+                    _gvPager.PageIndex = int.Parse(ViewState[gvTheGrid.ID + "PageIndex"].ToString());
+
+                _gvPager.PageSize = gvTheGrid.PageSize;
+                _gvPager.TotalRows = iTN;
             }
 
 
@@ -331,7 +336,7 @@ public partial class Pages_Record_Batches :SecurePage
 
     protected void Pager_BindTheGridAgain(object sender, EventArgs e)
     {
-        BindTheGrid(_gvPager.StartIndex, _gvPager._gridView.PageSize);
+        BindTheGrid(_gvPager.StartIndex, _gvPager.PageSize);
     }
 
     protected void Pager_OnApplyFilter(object sender, EventArgs e)

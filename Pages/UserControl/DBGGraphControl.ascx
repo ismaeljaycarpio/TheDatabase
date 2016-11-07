@@ -119,14 +119,14 @@
 
 <asp:ScriptManagerProxy ID="ScriptManagerProxy1" runat="server">
 </asp:ScriptManagerProxy>
-<asp:UpdateProgress class="ajax-indicator" ID="UpdateProgress1" runat="server" AssociatedUpdatePanelID="UpdatePanel1">
+<%--<asp:UpdateProgress class="ajax-indicator" ID="UpdateProgress1" runat="server" AssociatedUpdatePanelID="UpdatePanel1">
     <ProgressTemplate>
         <div style="position: absolute; visibility: visible; border: none; z-index: 100; width: 100%; height: 100%; background: #999; filter: alpha(opacity=80); -moz-opacity: .8; opacity: .8;">
             <asp:Image Style="top: 48%; left: 42%; position: relative;" runat="server" ID="imgAjax"
                 ImageUrl="~/Images/ajax.gif" AlternateText="Processing..." />
         </div>
     </ProgressTemplate>
-</asp:UpdateProgress>
+</asp:UpdateProgress>--%>
 <asp:UpdatePanel ID="UpdatePanel1" runat="server">
     <ContentTemplate>
         <asp:Panel ID="Panel1" runat="server">

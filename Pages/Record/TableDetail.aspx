@@ -17,6 +17,10 @@
     <link href="<%=ResolveUrl("~/Styles/jquery-ui-1.7.3.custom.css")%>" rel="stylesheet"
         type="text/css" />
     <script type="text/javascript" src="<%=ResolveUrl("~/Script/jquery-ui-1.9.2.custom.min.js")%>"></script>
+   <%--  <link href="<%=ResolveUrl("~/Styles/jquery-ui-1.11.3.min.css")%>" rel="stylesheet"
+        type="text/css" />
+      <script type="text/javascript" src="<%=ResolveUrl("~/Styles/jquery-ui-1.11.3.min.js")%>"></script> --%>
+
     <style type="text/css">
         .gridview_header_freeze
         {
@@ -91,16 +95,16 @@
         }
 
 //        function ShowHistory() {
-//            $("#divHistory").fadeIn();
-//            $("#lnkShowHistory").fadeOut();
-//            $("#lnkHideHistory").fadeIn();
+//            $("#divHistory").show();
+//            $("#lnkShowHistory").hide();
+//            $("#lnkHideHistory").show();
 
 //        }
 
 //        function HideHistory() {
-//            $("#divHistory").fadeOut();
-//            $("#lnkShowHistory").fadeIn();
-//            $("#lnkHideHistory").fadeOut();
+//            $("#divHistory").hide();
+//            $("#lnkShowHistory").show();
+//            $("#lnkHideHistory").hide();
 
 //        }
 
@@ -196,99 +200,98 @@
             var sTemplateCategory = $('#hfTemplateCategory').val();
 
             if (sTemplateCategory == 'import') {
-                $("#divTemplateImport").fadeIn();
-                $("#divTemplateExport").fadeOut();
-                $("#divTemplateWordMerge").fadeOut();               
+                $("#divTemplateImport").show();
+                $("#divTemplateExport").hide();
+                $("#divTemplateWordMerge").hide();               
             }
 
             if (sTemplateCategory == 'export') {
-                $("#divTemplateImport").fadeOut();
-                $("#divTemplateExport").fadeIn();
-                $("#divTemplateWordMerge").fadeOut();
+                $("#divTemplateImport").hide();
+                $("#divTemplateExport").show();
+                $("#divTemplateWordMerge").hide();
             }
 
             if (sTemplateCategory == 'word') {
-                $("#divTemplateImport").fadeOut();
-                $("#divTemplateExport").fadeOut();
-                $("#divTemplateWordMerge").fadeIn();
+                $("#divTemplateImport").hide();
+                $("#divTemplateExport").hide();
+                $("#divTemplateWordMerge").show();
             }
 
             var sCatergory = $('#hfCategory').val();
             if (sCatergory == 'display') {
-                $("#divDisplay").fadeIn();
-                $("#divImportData").fadeOut();
-                $("#divAddRecords").fadeOut();
-                $("#divColours").fadeOut();
-                $("#divGraphs").fadeOut(); 
-                $("#divEmails").fadeOut();
+                $("#divDisplay").show();
+                $("#divImportData").hide();
+                $("#divAddRecords").hide();
+                $("#divColours").hide();
+                $("#divGraphs").hide(); 
+                $("#divEmails").hide();
             }
             if (sCatergory == 'importdata') {
-                $("#divDisplay").fadeOut();
-                $("#divImportData").fadeIn();
-                $("#divAddRecords").fadeOut();
-                $("#divColours").fadeOut();
-                $("#divGraphs").fadeOut();
-                $("#divEmails").fadeOut();
+                $("#divDisplay").hide();
+                $("#divImportData").show();
+                $("#divAddRecords").hide();
+                $("#divColours").hide();
+                $("#divGraphs").hide();
+                $("#divEmails").hide();
             }
             if (sCatergory == 'addrecords') {
-                $("#divDisplay").fadeOut();
-                $("#divImportData").fadeOut();
-                $("#divAddRecords").fadeIn();
-                $("#divColours").fadeOut();
-                $("#divGraphs").fadeOut();
-                $("#divEmails").fadeOut();
+                $("#divDisplay").hide();
+                $("#divImportData").hide();
+                $("#divAddRecords").show();
+                $("#divColours").hide();
+                $("#divGraphs").hide();
+                $("#divEmails").hide();
             }
             if (sCatergory == 'colours') {
-                $("#divDisplay").fadeOut();
-                $("#divImportData").fadeOut();
-                $("#divAddRecords").fadeOut();
-                $("#divColours").fadeIn();
-                $("#divGraphs").fadeOut();
-                $("#divEmails").fadeOut();
+                $("#divDisplay").hide();
+                $("#divImportData").hide();
+                $("#divAddRecords").hide();
+                $("#divColours").show();
+                $("#divGraphs").hide();
+                $("#divEmails").hide();
             }
             if (sCatergory == 'graphs') {
-                $("#divDisplay").fadeOut();
-                $("#divImportData").fadeOut();
-                $("#divAddRecords").fadeOut();
-                $("#divColours").fadeOut();
-                $("#divGraphs").fadeIn();
-                $("#divEmails").fadeOut();
+                $("#divDisplay").hide();
+                $("#divImportData").hide();
+                $("#divAddRecords").hide();
+                $("#divColours").hide();
+                $("#divGraphs").show();
+                $("#divEmails").hide();
             }
             if (sCatergory == 'emails') {
-                $("#divDisplay").fadeOut();
-                $("#divImportData").fadeOut();
-                $("#divAddRecords").fadeOut();
-                $("#divColours").fadeOut();
-                $("#divGraphs").fadeOut();
-                $("#divEmails").fadeIn();
+                $("#divDisplay").hide();
+                $("#divImportData").hide();
+                $("#divAddRecords").hide();
+                $("#divColours").hide();
+                $("#divGraphs").hide();
+                $("#divEmails").show();
             }
 
             var chkAddUserRecord = document.getElementById("chkAddUserRecord");
             var divAutomaticallyAddUserRecord = document.getElementById("divAutomaticallyAddUserRecord");
             if (chkAddUserRecord != null) {
                 if (chkAddUserRecord.checked == true) {
-                    $("#divAutomaticallyAddUserRecord").fadeIn();
+                    $("#divAutomaticallyAddUserRecord").show();
                 }
                 else {
-                    $("#divAutomaticallyAddUserRecord").fadeOut();
+                    $("#divAutomaticallyAddUserRecord").hide();
                 }
             }
 
 
 
             var chkUniqueRecordedate = document.getElementById("chkUniqueRecordedate");
-           // var divUniqueRecord = document.getElementById("divUniqueRecord");
             if (chkUniqueRecordedate != null) {
                 if (chkUniqueRecordedate.checked == true) {
-                    $("#divUniqueRecord").fadeIn();
-                    if ($("[id$='ddlUniqueColumnID'] option:selected").index() === 0)
-                        $("#chkDataUpdateUniqueColumnID").prop("disabled", true);
+                    $("#divUniqueRecord").show();
+                    if ($("[id$='ddlUniqueColumnID'] option:selected").index() == 0)
+                        $("#trDuplicateRecordAction").hide();
                     else
-                        $("#chkDataUpdateUniqueColumnID").prop("disabled", false);
+                        $("#trDuplicateRecordAction").show();
                 }
                 else {
-                    $("#divUniqueRecord").fadeOut();
-                    $("#chkDataUpdateUniqueColumnID").prop("disabled", true)
+                    $("#divUniqueRecord").hide();
+                    $("#trDuplicateRecordAction").hide();
                 }
             }
 
@@ -298,10 +301,10 @@
             var divDataUpdateUniqueColumnID = document.getElementById("divDataUpdateUniqueColumnID");
             if (chkDataUpdateUniqueColumnID != null) {
                 if (chkDataUpdateUniqueColumnID.checked == true) {
-                    $("#divDataUpdateUniqueColumnID").fadeIn();
+                    $("#divDataUpdateUniqueColumnID").show();
                 }
                 else {
-                    $("#divDataUpdateUniqueColumnID").fadeOut();
+                    $("#divDataUpdateUniqueColumnID").hide();
                 }
             }
             */
@@ -309,10 +312,10 @@
 
             var strColumnValue = $('#ddlHeaderText').val();
             if (strColumnValue != '') {
-                $('#hlDDEdit').fadeOut();
+                $('#hlDDEdit').hide();
             }
             else {
-                $('#hlDDEdit').fadeIn();
+                $('#hlDDEdit').show();
             }
 
         };
@@ -356,11 +359,11 @@
                 if (document.getElementById('hlDDEdit') != null)
                 {
                     if (strColumnValue != '') {
-                        $('#hlDDEdit').fadeOut();
+                        $('#hlDDEdit').hide();
                         document.getElementById('hfDisplayColumnsFormula').value = '[' + $('#ddlHeaderText option:selected').text() + ']';
                     }
                     else {
-                        $('#hlDDEdit').fadeIn();
+                        $('#hlDDEdit').show();
                     }
 
                     document.getElementById('hlDDEdit').href = '../Help/TableColumn.aspx?headername=yes&formula=' + encodeURIComponent(document.getElementById('hfDisplayColumnsFormula').value) + '&Tableid=' + document.getElementById('ctl00_HomeContentPlaceHolder_hfTableID').value;
@@ -484,14 +487,14 @@
 
             //$('#ctl00_HomeContentPlaceHolder_TabContainer2_tabProperties_ddlMenu').change(function (e) {
             //    if (document.getElementById("ctl00_HomeContentPlaceHolder_TabContainer2_tabProperties_ddlMenu").value == 'new') {
-            //        $("#trNewMenuName").fadeIn();
+            //        $("#trNewMenuName").show();
             //        var txtNewMenuName = document.getElementById("ctl00_HomeContentPlaceHolder_TabContainer2_tabProperties_txtNewMenuName");
             //        txtNewMenuName.value = '';
             //        $('#ctl00_HomeContentPlaceHolder_lblMsg').text('');
             //        ValidatorEnable(document.getElementById('rfvNewMenuName'), true);
             //    }
             //    else {
-            //        $("#trNewMenuName").fadeOut();
+            //        $("#trNewMenuName").hide();
             //        var txtNewMenuName = document.getElementById("ctl00_HomeContentPlaceHolder_TabContainer2_tabProperties_txtNewMenuName");
             //        txtNewMenuName.value = '';
             //        $('#ctl00_HomeContentPlaceHolder_lblMsg').text('');
@@ -509,9 +512,9 @@
                 ShowHide();
             });
 
-            $("#chkDataUpdateUniqueColumnID").click(function () {
-                ShowHide();
-            });
+            //$("#chkDataUpdateUniqueColumnID").click(function () {
+            //    ShowHide();
+            //});
 
 
 
@@ -527,10 +530,13 @@
 //            });
 
             $("[id$='ddlUniqueColumnID']").change(function () {
-                if ($("[id$='ddlUniqueColumnID'] option:selected").index() === 0)
-                    $("#chkDataUpdateUniqueColumnID").prop("disabled", true);
+                if ($("[id$='ddlUniqueColumnID'] option:selected").index() == 0)
+                {
+                    $("#trDuplicateRecordAction").hide();
+                    $("#ddlDuplicateRecordAction").attr('selectedIndex', 0);
+                }                 
                 else
-                    $("#chkDataUpdateUniqueColumnID").prop("disabled", false);
+                    $("#trDuplicateRecordAction").show();
             });
 
         });
@@ -538,7 +544,7 @@
        
      
     </script>
-    <asp:UpdateProgress class="ajax-indicator-full" ID="UpdateProgress3" runat="server">
+    <%--<asp:UpdateProgress class="ajax-indicator-full" ID="UpdateProgress3" runat="server">
         <ProgressTemplate>
             <table style="width:100%;  height:100%; text-align: center;" >
                 <tr valign="middle">
@@ -549,7 +555,7 @@
                 </tr>
             </table>
         </ProgressTemplate>
-    </asp:UpdateProgress>
+    </asp:UpdateProgress>--%>
     <table border="0" cellpadding="0" cellspacing="0" align="center" onload="ShowHide();">
         <tr>
             <td colspan="3">
@@ -766,13 +772,13 @@
                                                         <asp:Label ID="lblIsNumeric" runat="server" Text='<%# Eval("ColumnType") %>'></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField Visible="true" HeaderText="Show in the Add field box" ItemStyle-Width="100px">
+                                                <asp:TemplateField Visible="true" HeaderText="Views" ItemStyle-Width="100px">
                                                     <ItemStyle HorizontalAlign="Center" />
                                                     <ItemTemplate>
                                                         <asp:CheckBox ID="chkDisplayTextSummary" runat="server" Checked='<%#  !String.IsNullOrEmpty(Eval("DisplayTextSummary").ToString()) %>' />
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField Visible="true" HeaderText="Show on Detail" ItemStyle-Width="80px">
+                                                <asp:TemplateField Visible="true" HeaderText="Detail" ItemStyle-Width="80px">
                                                     <ItemStyle HorizontalAlign="Center" />
                                                     <ItemTemplate>
                                                         <asp:CheckBox ID="chkDisplayTextDetail" runat="server" Checked='<%#  !String.IsNullOrEmpty(Eval("DisplayTextDetail").ToString()) %>' />
@@ -804,10 +810,10 @@
                                                         <%--<asp:Label ID="lblDisplayRight" runat="server" Text=""></asp:Label>--%>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
-                                                <asp:TemplateField Visible="true" HeaderText="Import" ItemStyle-Width="70px">
+                                               <%-- <asp:TemplateField Visible="true" HeaderText="Import" ItemStyle-Width="70px">
                                                     <ItemStyle HorizontalAlign="Center" />
                                                     <ItemTemplate>
-                                                        <asp:CheckBox ID="chkNameOnImport" runat="server" Checked='<%#  !String.IsNullOrEmpty(Eval("NameOnImport").ToString()) %>' />
+                                                        <asp:CheckBox ID="chkNameOnImport" runat="server" Checked='<%#  !String.IsNullOrEmpty(Eval("Name_OnImport").ToString()) %>' />
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
                                                 <asp:TemplateField Visible="true" HeaderText="Import Position" ItemStyle-Width="100px">
@@ -821,7 +827,7 @@
                                                     <ItemTemplate>
                                                         <asp:CheckBox ID="chkNameOnExport" runat="server" Checked='<%#  !String.IsNullOrEmpty(Eval("NameOnExport").ToString()) %>' />
                                                     </ItemTemplate>
-                                                </asp:TemplateField>
+                                                </asp:TemplateField>--%>
                                                 <asp:TemplateField  HeaderText="Copy Field" ItemStyle-Width="70px" Visible="false" ><%-- 14th columns--%>
                                                     <ItemStyle HorizontalAlign="Center" />
                                                     <ItemTemplate>
@@ -1208,7 +1214,7 @@
                                                                         <asp:TextBox runat="server" ID="txtLateDataDays" CssClass="NormalTextBox" Width="75px"></asp:TextBox>&nbsp;Days
                                                                     </td>
                                                                 </tr>
-                                                                <tr runat="server" id="tr2">
+                                                                <%--<tr runat="server" id="tr2">
                                                                     <td align="right">
                                                                         <strong runat="server" id="stgImportDataColumnHeader">Import Data Field Header Row</strong>
                                                                     </td>
@@ -1216,26 +1222,16 @@
                                                                         <asp:TextBox runat="server" ID="txtImportColumnHeaderRow" CssClass="NormalTextBox"
                                                                             Width="75px"></asp:TextBox>
                                                                     </td>
-                                                                </tr>
-                                                                <tr runat="server" id="trImportData">
+                                                                </tr>--%>
+                                                                <%--<tr runat="server" id="trImportData">
                                                                     <td align="right">
                                                                         <strong>Import Data Start Row</strong>
                                                                     </td>
                                                                     <td>
                                                                         <asp:TextBox runat="server" ID="txtImportDataStartRow" CssClass="NormalTextBox" Width="75px"></asp:TextBox>
                                                                     </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td align="right" style="vertical-align: top;">
-                                                                        <strong>Template</strong>
-                                                                    </td>
-                                                                    <td>
-                                                                        <asp:DropDownList runat="server" ID="ddlTemplate" CssClass="NormalTextBox" >
-                                                                        </asp:DropDownList>
-                                                                        <br />
-                                                                        
-                                                                    </td>
-                                                                </tr>
+                                                                </tr>--%>
+                                                                
                                                                 <tr>
                                                                     <td align="right" valign="top">
                                                                         <strong>Custom Upload Sheet:</strong>
@@ -1256,14 +1252,14 @@
                                                                     <td colspan="2">
                                                                     </td>
                                                                 </tr>
-                                                                <tr runat="server" id="trImport">
+                                                                <%--<tr runat="server" id="trImport">
                                                                     <td align="right">
                                                                     </td>
                                                                     <td>
                                                                         <asp:CheckBox runat="server" ID="chkIsPosition" AutoPostBack="true" Text="Use Positions on Import"
                                                                             TextAlign="Right" OnCheckedChanged="chkIsPosition_CheckedChanged" />
                                                                     </td>
-                                                                </tr>
+                                                                </tr>--%>
                                                                 <tr runat="server" id="trUniqueRecordedate">
                                                                     <td align="right">
                                                                         <strong></strong>
@@ -1298,15 +1294,28 @@
                                                                         </div>
                                                                     </td>
                                                                 </tr>
-                                                                <tr>
+                                                                <tr id="trDuplicateRecordAction">
                                                                     <td align="right">
-                                                                        <strong></strong>
+                                                                        <strong>
+
+                                                                            Duplicate Record Action
+                                                                        </strong>
                                                                     </td>
                                                                     <td>
-                                                                        <asp:CheckBox runat="server" ID="chkDataUpdateUniqueColumnID" ClientIDMode="Static" Checked="false"  
-                                                                            TextAlign="Right"  Text="Allow data to be updated (Unique Reords)"/>
+
+                                                                        <asp:DropDownList runat="server" ID="ddlDuplicateRecordAction" CssClass="NormalTextBox">
+                                                                            <asp:ListItem Value="" Text="--Please Select--" Selected="True"></asp:ListItem>
+                                                                             <asp:ListItem Value="Reject Duplicates" Text="Reject Duplicates"></asp:ListItem>
+                                                                             <asp:ListItem Value="Update Blank Values" Text="Update Blank Values"></asp:ListItem>
+                                                                             <asp:ListItem Value="Update All Values" Text="Update All Values"></asp:ListItem>
+                                                                             <asp:ListItem Value="Admin Review" Text="Admin Review"></asp:ListItem>
+                                                                        </asp:DropDownList>
+
+
+                                                                        <%--<asp:CheckBox runat="server" ID="chkDataUpdateUniqueColumnID" ClientIDMode="Static" Checked="false"  
+                                                                            TextAlign="Right"  Text="Allow data to be updated (Unique Records)"/>--%>
                                                                         <%--<br />--%>
-                                                                        <div id="divDataUpdateUniqueColumnID" style="padding-left:20px; display: none; visibility: hidden;" clientidmode="Static">
+                                                                        <%--<div id="divDataUpdateUniqueColumnID" style="padding-left:20px; display: none; visibility: hidden;" clientidmode="Static">
                                                                             <table>
                                                                                 <tr align="right">
                                                                                     <td><strong>Unique identifier</strong></td>
@@ -1317,7 +1326,7 @@
                                                                                     </td>
                                                                                 </tr>
                                                                             </table>
-                                                                        </div>
+                                                                        </div>--%>
                                                                     </td>
                                                                 </tr>
                                                                 <tr>
@@ -1438,6 +1447,13 @@
                                                                             <td></td>
                                                                             <td align="left">
                                                                                         <asp:CheckBox runat="server" ID="chkAllowCopyRecords" Text="Allow users to copy records"
+                                                                                    TextAlign="Right" ClientIDMode="Static" Checked="false"></asp:CheckBox>
+                                                                            </td>
+                                                                        </tr>
+                                                                         <tr>
+                                                                            <td></td>
+                                                                            <td align="left">
+                                                                                        <asp:CheckBox runat="server" ID="chkShowChildTabsOnAdd" Text="Show Child Tabs On Add"
                                                                                     TextAlign="Right" ClientIDMode="Static" Checked="false"></asp:CheckBox>
                                                                             </td>
                                                                         </tr>
@@ -1642,12 +1658,12 @@
                                                             Display="None" />
                                                         <asp:RequiredFieldValidator ID="rfvTable" runat="server" ControlToValidate="txtTable"
                                                             ErrorMessage="Name - Required" CssClass="NormalTextBox" Display="None"></asp:RequiredFieldValidator>
-                                                        <asp:RangeValidator ID="RangeValidator3" runat="server" ControlToValidate="txtImportDataStartRow"
+                                                        <%--<asp:RangeValidator ID="RangeValidator3" runat="server" ControlToValidate="txtImportDataStartRow"
                                                             ErrorMessage="Invalid Import Data Start Row data!" MaximumValue="1000000" MinimumValue="2"
-                                                            Type="Integer" Display="None" />
-                                                        <asp:RangeValidator ID="RangeValidator4" runat="server" ControlToValidate="txtImportColumnHeaderRow"
+                                                            Type="Integer" Display="None" />--%>
+                                                        <%--<asp:RangeValidator ID="RangeValidator4" runat="server" ControlToValidate="txtImportColumnHeaderRow"
                                                             ErrorMessage="Invalid Import Field Header Row!" MaximumValue="1000000" MinimumValue="1"
-                                                            Type="Integer" Display="None" />
+                                                            Type="Integer" Display="None" />--%>
                                                         <asp:RangeValidator ID="RangeValidator1" runat="server" ControlToValidate="txtMaxTimeBetweenRecords"
                                                             ErrorMessage="Invalid Maximum Time Between Records!" MaximumValue="1000000" MinimumValue="0"
                                                             Type="Double" Display="None" />
@@ -1847,6 +1863,31 @@
                                     <tr>
                                         <td colspan="2">
                                             <div id="divTemplateImport">
+                                                <asp:UpdatePanel ID="UpdatePanel5" runat="server" UpdateMode="Conditional">
+                                                    <ContentTemplate>
+                                                        <table>
+                                                            <tr>
+                                                                <td align="right" style="vertical-align: top;">
+                                                                    <strong>Template</strong>
+                                                                </td>
+                                                                <td style="vertical-align: top;">
+                                                                    <asp:DropDownList runat="server" ID="ddlTemplate" CssClass="NormalTextBox">
+                                                                    </asp:DropDownList>
+                                                                    <br />
+
+                                                                </td>
+                                                                <td style="vertical-align: top;">
+                                                                    <asp:LinkButton runat="server" ID="lnkImportTemplateSave" OnClick="lnkImportTemplateSave_Click">
+                                            <asp:Image runat="server" ID="Image4" ImageUrl="~/App_Themes/Default/images/Save.png"
+                                                ToolTip="Save Default Template" />
+                                                                    </asp:LinkButton>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </ContentTemplate>
+                                                </asp:UpdatePanel>
+                                               
+                                                <br />
                                                 <dbg:ImpTem runat="server" ID="itOne" />
                                             </div>
                                             <div id="divTemplateExport">

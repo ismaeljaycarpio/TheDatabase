@@ -256,7 +256,7 @@ public partial class Pages_Document_Report : SecurePage
             }
 
 
-
+            ViewState[gvTheGrid.ID + "PageIndex"] = (iStartIndex / gvTheGrid.PageSize) + 1;
             gvTheGrid.DataSource = DocumentManager.ets_Document_Select(null,int.Parse(Session["AccountID"].ToString()),
                 txtDocumentText.Text.Trim(),ddlDocumentType.SelectedValue=="-1"?null:(int?) int.Parse(ddlDocumentType.SelectedValue),
                 dtDateFrom,
@@ -277,10 +277,12 @@ public partial class Pages_Document_Report : SecurePage
             {
                 _gvPager = (Common_Pager)gvr.FindControl("Pager");
                 //_gvPager.AddURL = GetAddURL();
-                _gvPager.PageIndexTextSet = (int)(iStartIndex / iMaxRows + 1);
+                //_gvPager.PageIndexTextSet = (int)(iStartIndex / iMaxRows + 1);
+                if (ViewState[gvTheGrid.ID + "PageIndex"] != null)
+                    _gvPager.PageIndex = int.Parse(ViewState[gvTheGrid.ID + "PageIndex"].ToString());
 
-                
-                   
+                _gvPager.PageSize = gvTheGrid.PageSize;
+                _gvPager.TotalRows = iTN;
                     //_gvPager.AddImageURL = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/App_Themes/Default/Images/add_s.png";
                     _gvPager.AddURL= Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/ReportDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SSearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString();
 
@@ -627,7 +629,7 @@ public partial class Pages_Document_Report : SecurePage
 
     protected void Pager_BindTheGridAgain(object sender, EventArgs e)
     {
-        BindTheGrid(_gvPager.StartIndex, _gvPager._gridView.PageSize);
+        BindTheGrid(_gvPager.StartIndex, _gvPager.PageSize);
     }
 
     protected void Pager_OnApplyFilter(object sender, EventArgs e)
@@ -672,11 +674,11 @@ public partial class Pages_Document_Report : SecurePage
 
             DeleteItem(sCheck);
             BindTheGrid(_gvPager.StartIndex, gvTheGrid.PageSize);
-            _gvPager._gridView.PageIndex = _gvPager.PageIndex - 1;
-            if (_gvPager._gridView.Rows.Count == 0 && _gvPager._gridView.PageIndex > 0)
-            {
-                BindTheGrid(_gvPager.StartIndex - gvTheGrid.PageSize, gvTheGrid.PageSize);
-            }
+            //_gvPager._gridView.PageIndex = _gvPager.PageIndex - 1;
+            //if (_gvPager._gridView.Rows.Count == 0 && _gvPager._gridView.PageIndex > 0)
+            //{
+            //    BindTheGrid(_gvPager.StartIndex - gvTheGrid.PageSize, gvTheGrid.PageSize);
+            //}
         }
 
     }

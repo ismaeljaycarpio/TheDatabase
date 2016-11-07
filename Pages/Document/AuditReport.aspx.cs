@@ -197,8 +197,8 @@ public partial class Pages_Document_AuditReport : SecurePage
         try
         {
             int iTN = 0;
-           
 
+            ViewState[gvChangedLog.ID + "PageIndex"] = (iStartIndex / gvChangedLog.PageSize) + 1;
             gvChangedLog.DataSource = RecordManager.Audit_Summary( int.Parse(Session["AccountID"].ToString()), ddlTable.SelectedValue,
                  dtDateFrom,
                 dtDateTo.Value.AddDays(1),
@@ -216,8 +216,12 @@ public partial class Pages_Document_AuditReport : SecurePage
             GridViewRow gvr = gvChangedLog.TopPagerRow;
             if (gvr != null)
             {
-                _gvPager = (Common_Pager)gvr.FindControl("CL_Pager");                
-                _gvPager.PageIndexTextSet = (int)(iStartIndex / iMaxRows + 1);
+                _gvPager = (Common_Pager)gvr.FindControl("CL_Pager");
+                if (ViewState[gvChangedLog.ID + "PageIndex"] != null)
+                    _gvPager.PageIndex = int.Parse(ViewState[gvChangedLog.ID + "PageIndex"].ToString());
+                _gvPager.PageSize = gvChangedLog.PageSize;
+                _gvPager.TotalRows = iTN;
+                //_gvPager.PageIndexTextSet = (int)(iStartIndex / iMaxRows + 1);
             }
 
 
@@ -507,7 +511,7 @@ public partial class Pages_Document_AuditReport : SecurePage
 
     protected void CL_Pager_BindTheGridAgain(object sender, EventArgs e)
     {
-        BindTheGrid(_gvPager.StartIndex, _gvPager._gridView.PageSize);
+        BindTheGrid(_gvPager.StartIndex, _gvPager.PageSize);
     }
 
     protected void CL_Pager_OnApplyFilter(object sender, EventArgs e)

@@ -173,7 +173,7 @@ public partial class Pages_Security_Invoice : SecurePage
             {
                 bIsPaid=bool.Parse(ddlIsPaid.SelectedValue);
             }
-
+            ViewState[gvTheGrid.ID + "PageIndex"] = (iStartIndex / gvTheGrid.PageSize) + 1;
             gvTheGrid.DataSource = InvoiceManager.ets_Invoice_Select(null, txtAccountName.Text.Trim().Replace("'", "''"), null,
                                 txtInvoiceDateFrom.Text.Trim() == "" ? null : (DateTime?)DateTime.ParseExact(txtInvoiceDateFrom.Text + " 00:00", "d/M/yyyy HH:m", CultureInfo.InvariantCulture),
                 txtInvoiceDateTo.Text.Trim() == "" ? null : (DateTime?)DateTime.ParseExact(txtInvoiceDateTo.Text + " 23:59", "d/M/yyyy HH:m", CultureInfo.InvariantCulture),
@@ -192,7 +192,12 @@ public partial class Pages_Security_Invoice : SecurePage
             {
                 _gvPager = (Common_Pager)gvr.FindControl("Pager");
                 _gvPager.AddURL = GetAddURL();
-                _gvPager.PageIndexTextSet = (int)(iStartIndex / iMaxRows + 1);
+                //_gvPager.PageIndexTextSet = (int)(iStartIndex / iMaxRows + 1);
+                if (ViewState[gvTheGrid.ID + "PageIndex"] != null)
+                    _gvPager.PageIndex = int.Parse(ViewState[gvTheGrid.ID + "PageIndex"].ToString());
+
+                _gvPager.PageSize = gvTheGrid.PageSize;
+                _gvPager.TotalRows = iTN;
             }
 
 
@@ -316,7 +321,7 @@ public partial class Pages_Security_Invoice : SecurePage
 
     protected void Pager_BindTheGridAgain(object sender, EventArgs e)
     {
-        BindTheGrid(_gvPager.StartIndex, _gvPager._gridView.PageSize);
+        BindTheGrid(_gvPager.StartIndex, _gvPager.PageSize);
     }
 
     protected void Pager_OnApplyFilter(object sender, EventArgs e)

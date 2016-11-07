@@ -26,6 +26,7 @@
     </style>
 </head>
 <body style="background-image: none;">
+     <%--<script type="text/javascript" src="<%=ResolveUrl("~/Script/jquery-1.11.3.min.js")%>"></script>--%>
     <script type="text/javascript" src="<%=ResolveUrl("~/script/jquery.js")%>"></script>
     <link href="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.css")%>" rel="stylesheet"  type="text/css" />
     <script type="text/javascript" src="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.pack.js")%>"></script>

@@ -140,7 +140,7 @@ public partial class Pages_Record_Notification : SecurePage
                 }
             }
 
-
+            ViewState[gvTheGrid.ID + "PageIndex"] = (iStartIndex / gvTheGrid.PageSize) + 1;
             gvTheGrid.DataSource = RecordManager.ets_Notification_Select(null, int.Parse(Session["AccountID"].ToString()),
                 dtDateFrom, dtDateTo,
                 gvTheGrid.GridViewSortColumn, gvTheGrid.GridViewSortDirection == SortDirection.Ascending ? "ASC" : "DESC",
@@ -155,7 +155,11 @@ public partial class Pages_Record_Notification : SecurePage
             if (gvr != null)
             {
                 _gvPager = (Common_Pager)gvr.FindControl("Pager");
+                if (ViewState[gvTheGrid.ID + "PageIndex"] != null)
+                    _gvPager.PageIndex = int.Parse(ViewState[gvTheGrid.ID + "PageIndex"].ToString());
                 //_gvPager.AddURL = GetAddURL();
+                _gvPager.PageSize = gvTheGrid.PageSize;
+                _gvPager.TotalRows = iTN;
             }
 
 
@@ -249,7 +253,7 @@ public partial class Pages_Record_Notification : SecurePage
 
     protected void Pager_BindTheGridAgain(object sender, EventArgs e)
     {
-        BindTheGrid(_gvPager.StartIndex, _gvPager._gridView.PageSize);
+        BindTheGrid(_gvPager.StartIndex, _gvPager.PageSize);
     }
 
     protected void Pager_OnApplyFilter(object sender, EventArgs e)

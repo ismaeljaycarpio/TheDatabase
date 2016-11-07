@@ -4,14 +4,21 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" Runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="HomeContentPlaceHolder" Runat="Server">
-   <link href="<%=ResolveUrl("~/Styles/jquery-ui-1.7.3.custom.css")%>" rel="stylesheet"
+    <%--<link href="<%=ResolveUrl("~/Styles/jquery-ui-1.11.3.min.css")%>" rel="stylesheet"
         type="text/css" />
-    <script type="text/javascript" src="<%=ResolveUrl("~/Script/jquery-ui-1.9.2.custom.min.js")%>"></script>    
+      <script type="text/javascript" src="<%=ResolveUrl("~/Styles/jquery-ui-1.11.3.min.js")%>"></script>    --%>
+
+
+    <link href="<%=ResolveUrl("~/Styles/jquery-ui-1.7.3.custom.css")%>" rel="stylesheet"
+        type="text/css" />
+      <script type="text/javascript" src="<%=ResolveUrl("~/Script/jquery-ui-1.9.2.custom.min.js")%>"></script>  
+  <%-- 
+    
 
 <link href="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.css")%>" rel="stylesheet"
         type="text/css" />
     <script type="text/javascript" src="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.pack.js")%>"></script>
- 
+ --%>
  <script language="javascript" type="text/javascript">
 
       var fixHelper = function (e, ui) {
@@ -23,7 +30,7 @@
       };
 
 
-      //function CloseAndRefresh() {
+     //function CloseAndRefresh() { jquery-ui-1.11.3.min.css
       //    window.parent.document.getElementById('btnReloadMe').click();
       //    parent.$.fancybox.close();
          

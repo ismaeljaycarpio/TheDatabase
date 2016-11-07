@@ -236,6 +236,11 @@
     <%--<link href="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.css")%>" rel="stylesheet"  type="text/css" />--%>
     <%--<script type="text/javascript" src="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.pack.js")%>"></script>--%>
     <script type="text/javascript" src="<%=ResolveUrl("~/Script/jquery-ui-1.9.2.custom.min.js")%>"></script>
+
+     <%--<link href="<%=ResolveUrl("~/Styles/jquery-ui-1.11.3.min.css")%>" rel="stylesheet"
+        type="text/css" />
+      <script type="text/javascript" src="<%=ResolveUrl("~/Styles/jquery-ui-1.11.3.min.js")%>"></script> --%>
+
     <asp:Label runat="server" ID="lblTopTitle" CssClass="TopTitle" Text="Edit Report"></asp:Label>
     <br />
     <span class="failureNotification">

@@ -132,7 +132,7 @@ public partial class User_List : SecurePage
 
 
             int iTN = 0;
-
+            ViewState[gvTheGrid.ID + "PageIndex"] = (iStartIndex / gvTheGrid.PageSize) + 1;
             gvTheGrid.DataSource = SecurityManager.User_PopUp_Select(
                 txtSearch.Text.Replace("'", "''"),
             int.Parse(Session["AccountID"].ToString()),
@@ -151,8 +151,12 @@ public partial class User_List : SecurePage
             GridViewRow gvr = gvTheGrid.TopPagerRow;
             if (gvr != null)
             {
-                _gvPager = (Common_Pager)gvr.FindControl("Pager");             
-                _gvPager.PageIndexTextSet = (int)(iStartIndex / iMaxRows + 1);
+                _gvPager = (Common_Pager)gvr.FindControl("Pager");
+                if (ViewState[gvTheGrid.ID + "PageIndex"] != null)
+                    _gvPager.PageIndex = int.Parse(ViewState[gvTheGrid.ID + "PageIndex"].ToString());
+                _gvPager.PageSize = gvTheGrid.PageSize;
+                _gvPager.TotalRows = iTN;
+                //_gvPager.PageIndexTextSet = (int)(iStartIndex / iMaxRows + 1);
             }
 
         }
@@ -173,7 +177,7 @@ public partial class User_List : SecurePage
 
     protected void Pager_BindTheGridAgain(object sender, EventArgs e)
     {
-        BindTheGrid(_gvPager.StartIndex, _gvPager._gridView.PageSize);
+        BindTheGrid(_gvPager.StartIndex, _gvPager.PageSize);
     }
 
     protected void Pager_OnApplyFilter(object sender, EventArgs e)

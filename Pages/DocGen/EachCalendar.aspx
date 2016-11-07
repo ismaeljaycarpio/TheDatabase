@@ -145,10 +145,37 @@
 
 </head>
 <body style="background-image: none; background-color: #ffffff;">
-
+     <%--<script type="text/javascript" src="<%=ResolveUrl("~/Script/jquery-1.11.3.min.js")%>"></script>--%>
      <script type="text/javascript" src="<%=ResolveUrl("~/script/jquery.js")%>"></script>
 
     <form id="form1" runat="server">
+
+           <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true" AsyncPostBackTimeout="36000">
+        </asp:ScriptManager>
+
+<asp:UpdateProgress class="ajax-indicator-full" ID="upMaster" runat="server">
+    <ProgressTemplate>
+        <table style="width: 100%; height: 100%; text-align: center;">
+            <tr valign="middle">
+                <td>
+                    <p style="font-size:12px;">
+                        Please wait...
+                    </p>
+                    <asp:Image runat="server" AlternateText="Processing..." ImageUrl="~/Images/ajax.gif" />
+                </td>
+            </tr>
+        </table>
+    </ProgressTemplate>
+</asp:UpdateProgress>
+        <asp:UpdatePanel ID="upNotificationMessage" runat="server" UpdateMode="Always">
+            <ContentTemplate>
+                <div id="divNotificationMessage" style="position: fixed; top: 0px;">
+                    <asp:Label runat="server" ID="lblNotificationMessage"></asp:Label>
+                </div>
+            </ContentTemplate>
+        </asp:UpdatePanel>
+
+
         <asp:HiddenField  runat="server" ID="hfSourceDate" ClientIDMode="Static"/>
          <asp:Button ID="btnRefresh" runat="server" ClientIDMode="Static" OnClick="btnRefresh_Click"
                         Style="display: none;" />

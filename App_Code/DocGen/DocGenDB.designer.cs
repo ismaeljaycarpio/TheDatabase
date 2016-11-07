@@ -33,9 +33,6 @@ namespace DocGen.DAL
     partial void InsertDataMap(DataMap instance);
     partial void UpdateDataMap(DataMap instance);
     partial void DeleteDataMap(DataMap instance);
-    partial void InsertLocationTable(LocationTable instance);
-    partial void UpdateLocationTable(LocationTable instance);
-    partial void DeleteLocationTable(LocationTable instance);
     partial void InsertUser(User instance);
     partial void UpdateUser(User instance);
     partial void DeleteUser(User instance);
@@ -48,18 +45,15 @@ namespace DocGen.DAL
     partial void InsertDocumentSectionStyle(DocumentSectionStyle instance);
     partial void UpdateDocumentSectionStyle(DocumentSectionStyle instance);
     partial void DeleteDocumentSectionStyle(DocumentSectionStyle instance);
-    partial void InsertTable(Table instance);
-    partial void UpdateTable(Table instance);
-    partial void DeleteTable(Table instance);
     partial void InsertDocumentSection(DocumentSection instance);
     partial void UpdateDocumentSection(DocumentSection instance);
     partial void DeleteDocumentSection(DocumentSection instance);
-    partial void InsertLocation(Location instance);
-    partial void UpdateLocation(Location instance);
-    partial void DeleteLocation(Location instance);
     partial void InsertDocument(Document instance);
     partial void UpdateDocument(Document instance);
     partial void DeleteDocument(Document instance);
+    partial void InsertTable(Table instance);
+    partial void UpdateTable(Table instance);
+    partial void DeleteTable(Table instance);
     partial void InsertColumn(Column instance);
     partial void UpdateColumn(Column instance);
     partial void DeleteColumn(Column instance);
@@ -103,14 +97,6 @@ namespace DocGen.DAL
 			}
 		}
 		
-		public System.Data.Linq.Table<LocationTable> LocationTables
-		{
-			get
-			{
-				return this.GetTable<LocationTable>();
-			}
-		}
-		
 		public System.Data.Linq.Table<User> Users
 		{
 			get
@@ -143,14 +129,6 @@ namespace DocGen.DAL
 			}
 		}
 		
-		public System.Data.Linq.Table<Table> Tables
-		{
-			get
-			{
-				return this.GetTable<Table>();
-			}
-		}
-		
 		public System.Data.Linq.Table<DocumentSection> DocumentSections
 		{
 			get
@@ -159,19 +137,19 @@ namespace DocGen.DAL
 			}
 		}
 		
-		public System.Data.Linq.Table<Location> Locations
-		{
-			get
-			{
-				return this.GetTable<Location>();
-			}
-		}
-		
 		public System.Data.Linq.Table<Document> Documents
 		{
 			get
 			{
 				return this.GetTable<Document>();
+			}
+		}
+		
+		public System.Data.Linq.Table<Table> Tables
+		{
+			get
+			{
+				return this.GetTable<Table>();
 			}
 		}
 		
@@ -341,157 +319,6 @@ namespace DocGen.DAL
 					this._ReturnFields = value;
 					this.SendPropertyChanged("ReturnFields");
 					this.OnReturnFieldsChanged();
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.LocationTable")]
-	public partial class LocationTable : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _LocationTableID;
-		
-		private int _LocationID;
-		
-		private int _TableID;
-		
-		private EntityRef<Location> _Location;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnLocationTableIDChanging(int value);
-    partial void OnLocationTableIDChanged();
-    partial void OnLocationIDChanging(int value);
-    partial void OnLocationIDChanged();
-    partial void OnTableIDChanging(int value);
-    partial void OnTableIDChanged();
-    #endregion
-		
-		public LocationTable()
-		{
-			this._Location = default(EntityRef<Location>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LocationTableID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int LocationTableID
-		{
-			get
-			{
-				return this._LocationTableID;
-			}
-			set
-			{
-				if ((this._LocationTableID != value))
-				{
-					this.OnLocationTableIDChanging(value);
-					this.SendPropertyChanging();
-					this._LocationTableID = value;
-					this.SendPropertyChanged("LocationTableID");
-					this.OnLocationTableIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LocationID", DbType="Int NOT NULL")]
-		public int LocationID
-		{
-			get
-			{
-				return this._LocationID;
-			}
-			set
-			{
-				if ((this._LocationID != value))
-				{
-					if (this._Location.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnLocationIDChanging(value);
-					this.SendPropertyChanging();
-					this._LocationID = value;
-					this.SendPropertyChanged("LocationID");
-					this.OnLocationIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TableID", DbType="Int NOT NULL")]
-		public int TableID
-		{
-			get
-			{
-				return this._TableID;
-			}
-			set
-			{
-				if ((this._TableID != value))
-				{
-					this.OnTableIDChanging(value);
-					this.SendPropertyChanging();
-					this._TableID = value;
-					this.SendPropertyChanged("TableID");
-					this.OnTableIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Location_LocationTable", Storage="_Location", ThisKey="LocationID", OtherKey="LocationID", IsForeignKey=true)]
-		public Location Location
-		{
-			get
-			{
-				return this._Location.Entity;
-			}
-			set
-			{
-				Location previousValue = this._Location.Entity;
-				if (((previousValue != value) 
-							|| (this._Location.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Location.Entity = null;
-						previousValue.LocationTables.Remove(this);
-					}
-					this._Location.Entity = value;
-					if ((value != null))
-					{
-						value.LocationTables.Add(this);
-						this._LocationID = value.LocationID;
-					}
-					else
-					{
-						this._LocationID = default(int);
-					}
-					this.SendPropertyChanged("Location");
 				}
 			}
 		}
@@ -1433,512 +1260,6 @@ namespace DocGen.DAL
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Table")]
-	public partial class Table : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _TableID;
-		
-		private string _TableName;
-		
-		private int _MenuID;
-		
-		private System.DateTime _DateAdded;
-		
-		private System.DateTime _DateUpdated;
-		
-		private bool _IsImportPositional;
-		
-		private bool _IsActive;
-		
-		private int _AccountID;
-		
-		private string _PinImage;
-		
-		private System.Nullable<decimal> _MaxTimeBetweenRecords;
-		
-		private string _MaxTimeBetweenRecordsUnit;
-		
-		private System.Nullable<int> _LastUpdatedUserID;
-		
-		private System.Nullable<int> _LateDataDays;
-		
-		private System.Nullable<int> _ImportDataStartRow;
-		
-		private System.Nullable<bool> _AddMissingLocation;
-		
-		private string _DateFormat;
-		
-		private EntitySet<Document> _Documents;
-		
-		private EntitySet<Column> _Columns;
-		
-		private EntitySet<Column> _Columns1;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnTableIDChanging(int value);
-    partial void OnTableIDChanged();
-    partial void OnTableNameChanging(string value);
-    partial void OnTableNameChanged();
-    partial void OnMenuIDChanging(int value);
-    partial void OnMenuIDChanged();
-    partial void OnDateAddedChanging(System.DateTime value);
-    partial void OnDateAddedChanged();
-    partial void OnDateUpdatedChanging(System.DateTime value);
-    partial void OnDateUpdatedChanged();
-    partial void OnIsImportPositionalChanging(bool value);
-    partial void OnIsImportPositionalChanged();
-    partial void OnIsActiveChanging(bool value);
-    partial void OnIsActiveChanged();
-    partial void OnAccountIDChanging(int value);
-    partial void OnAccountIDChanged();
-    partial void OnPinImageChanging(string value);
-    partial void OnPinImageChanged();
-    partial void OnMaxTimeBetweenRecordsChanging(System.Nullable<decimal> value);
-    partial void OnMaxTimeBetweenRecordsChanged();
-    partial void OnMaxTimeBetweenRecordsUnitChanging(string value);
-    partial void OnMaxTimeBetweenRecordsUnitChanged();
-    partial void OnLastUpdatedUserIDChanging(System.Nullable<int> value);
-    partial void OnLastUpdatedUserIDChanged();
-    partial void OnLateDataDaysChanging(System.Nullable<int> value);
-    partial void OnLateDataDaysChanged();
-    partial void OnImportDataStartRowChanging(System.Nullable<int> value);
-    partial void OnImportDataStartRowChanged();
-    partial void OnAddMissingLocationChanging(System.Nullable<bool> value);
-    partial void OnAddMissingLocationChanged();
-    partial void OnDateFormatChanging(string value);
-    partial void OnDateFormatChanged();
-    #endregion
-		
-		public Table()
-		{
-			this._Documents = new EntitySet<Document>(new Action<Document>(this.attach_Documents), new Action<Document>(this.detach_Documents));
-			this._Columns = new EntitySet<Column>(new Action<Column>(this.attach_Columns), new Action<Column>(this.detach_Columns));
-			this._Columns1 = new EntitySet<Column>(new Action<Column>(this.attach_Columns1), new Action<Column>(this.detach_Columns1));
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TableID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int TableID
-		{
-			get
-			{
-				return this._TableID;
-			}
-			set
-			{
-				if ((this._TableID != value))
-				{
-					this.OnTableIDChanging(value);
-					this.SendPropertyChanging();
-					this._TableID = value;
-					this.SendPropertyChanged("TableID");
-					this.OnTableIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TableName", DbType="NVarChar(255) NOT NULL", CanBeNull=false)]
-		public string TableName
-		{
-			get
-			{
-				return this._TableName;
-			}
-			set
-			{
-				if ((this._TableName != value))
-				{
-					this.OnTableNameChanging(value);
-					this.SendPropertyChanging();
-					this._TableName = value;
-					this.SendPropertyChanged("TableName");
-					this.OnTableNameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MenuID", DbType="Int NOT NULL")]
-		public int MenuID
-		{
-			get
-			{
-				return this._MenuID;
-			}
-			set
-			{
-				if ((this._MenuID != value))
-				{
-					this.OnMenuIDChanging(value);
-					this.SendPropertyChanging();
-					this._MenuID = value;
-					this.SendPropertyChanged("MenuID");
-					this.OnMenuIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateAdded", DbType="DateTime NOT NULL")]
-		public System.DateTime DateAdded
-		{
-			get
-			{
-				return this._DateAdded;
-			}
-			set
-			{
-				if ((this._DateAdded != value))
-				{
-					this.OnDateAddedChanging(value);
-					this.SendPropertyChanging();
-					this._DateAdded = value;
-					this.SendPropertyChanged("DateAdded");
-					this.OnDateAddedChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateUpdated", DbType="DateTime NOT NULL")]
-		public System.DateTime DateUpdated
-		{
-			get
-			{
-				return this._DateUpdated;
-			}
-			set
-			{
-				if ((this._DateUpdated != value))
-				{
-					this.OnDateUpdatedChanging(value);
-					this.SendPropertyChanging();
-					this._DateUpdated = value;
-					this.SendPropertyChanged("DateUpdated");
-					this.OnDateUpdatedChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsImportPositional", DbType="Bit NOT NULL")]
-		public bool IsImportPositional
-		{
-			get
-			{
-				return this._IsImportPositional;
-			}
-			set
-			{
-				if ((this._IsImportPositional != value))
-				{
-					this.OnIsImportPositionalChanging(value);
-					this.SendPropertyChanging();
-					this._IsImportPositional = value;
-					this.SendPropertyChanged("IsImportPositional");
-					this.OnIsImportPositionalChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsActive", DbType="Bit NOT NULL")]
-		public bool IsActive
-		{
-			get
-			{
-				return this._IsActive;
-			}
-			set
-			{
-				if ((this._IsActive != value))
-				{
-					this.OnIsActiveChanging(value);
-					this.SendPropertyChanging();
-					this._IsActive = value;
-					this.SendPropertyChanged("IsActive");
-					this.OnIsActiveChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AccountID", DbType="Int NOT NULL")]
-		public int AccountID
-		{
-			get
-			{
-				return this._AccountID;
-			}
-			set
-			{
-				if ((this._AccountID != value))
-				{
-					this.OnAccountIDChanging(value);
-					this.SendPropertyChanging();
-					this._AccountID = value;
-					this.SendPropertyChanged("AccountID");
-					this.OnAccountIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PinImage", DbType="VarChar(255)")]
-		public string PinImage
-		{
-			get
-			{
-				return this._PinImage;
-			}
-			set
-			{
-				if ((this._PinImage != value))
-				{
-					this.OnPinImageChanging(value);
-					this.SendPropertyChanging();
-					this._PinImage = value;
-					this.SendPropertyChanged("PinImage");
-					this.OnPinImageChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MaxTimeBetweenRecords", DbType="Decimal(20,10)")]
-		public System.Nullable<decimal> MaxTimeBetweenRecords
-		{
-			get
-			{
-				return this._MaxTimeBetweenRecords;
-			}
-			set
-			{
-				if ((this._MaxTimeBetweenRecords != value))
-				{
-					this.OnMaxTimeBetweenRecordsChanging(value);
-					this.SendPropertyChanging();
-					this._MaxTimeBetweenRecords = value;
-					this.SendPropertyChanged("MaxTimeBetweenRecords");
-					this.OnMaxTimeBetweenRecordsChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MaxTimeBetweenRecordsUnit", DbType="VarChar(50)")]
-		public string MaxTimeBetweenRecordsUnit
-		{
-			get
-			{
-				return this._MaxTimeBetweenRecordsUnit;
-			}
-			set
-			{
-				if ((this._MaxTimeBetweenRecordsUnit != value))
-				{
-					this.OnMaxTimeBetweenRecordsUnitChanging(value);
-					this.SendPropertyChanging();
-					this._MaxTimeBetweenRecordsUnit = value;
-					this.SendPropertyChanged("MaxTimeBetweenRecordsUnit");
-					this.OnMaxTimeBetweenRecordsUnitChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastUpdatedUserID", DbType="Int")]
-		public System.Nullable<int> LastUpdatedUserID
-		{
-			get
-			{
-				return this._LastUpdatedUserID;
-			}
-			set
-			{
-				if ((this._LastUpdatedUserID != value))
-				{
-					this.OnLastUpdatedUserIDChanging(value);
-					this.SendPropertyChanging();
-					this._LastUpdatedUserID = value;
-					this.SendPropertyChanged("LastUpdatedUserID");
-					this.OnLastUpdatedUserIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LateDataDays", DbType="Int")]
-		public System.Nullable<int> LateDataDays
-		{
-			get
-			{
-				return this._LateDataDays;
-			}
-			set
-			{
-				if ((this._LateDataDays != value))
-				{
-					this.OnLateDataDaysChanging(value);
-					this.SendPropertyChanging();
-					this._LateDataDays = value;
-					this.SendPropertyChanged("LateDataDays");
-					this.OnLateDataDaysChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ImportDataStartRow", DbType="Int")]
-		public System.Nullable<int> ImportDataStartRow
-		{
-			get
-			{
-				return this._ImportDataStartRow;
-			}
-			set
-			{
-				if ((this._ImportDataStartRow != value))
-				{
-					this.OnImportDataStartRowChanging(value);
-					this.SendPropertyChanging();
-					this._ImportDataStartRow = value;
-					this.SendPropertyChanged("ImportDataStartRow");
-					this.OnImportDataStartRowChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AddMissingLocation", DbType="Bit")]
-		public System.Nullable<bool> AddMissingLocation
-		{
-			get
-			{
-				return this._AddMissingLocation;
-			}
-			set
-			{
-				if ((this._AddMissingLocation != value))
-				{
-					this.OnAddMissingLocationChanging(value);
-					this.SendPropertyChanging();
-					this._AddMissingLocation = value;
-					this.SendPropertyChanged("AddMissingLocation");
-					this.OnAddMissingLocationChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateFormat", DbType="VarChar(30) NOT NULL", CanBeNull=false)]
-		public string DateFormat
-		{
-			get
-			{
-				return this._DateFormat;
-			}
-			set
-			{
-				if ((this._DateFormat != value))
-				{
-					this.OnDateFormatChanging(value);
-					this.SendPropertyChanging();
-					this._DateFormat = value;
-					this.SendPropertyChanged("DateFormat");
-					this.OnDateFormatChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Table_Document", Storage="_Documents", ThisKey="TableID", OtherKey="TableID")]
-		public EntitySet<Document> Documents
-		{
-			get
-			{
-				return this._Documents;
-			}
-			set
-			{
-				this._Documents.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Table_Column", Storage="_Columns", ThisKey="TableID", OtherKey="TableID")]
-		public EntitySet<Column> Columns
-		{
-			get
-			{
-				return this._Columns;
-			}
-			set
-			{
-				this._Columns.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Table_Column1", Storage="_Columns1", ThisKey="TableID", OtherKey="DefaultRelatedTableID")]
-		public EntitySet<Column> Columns1
-		{
-			get
-			{
-				return this._Columns1;
-			}
-			set
-			{
-				this._Columns1.Assign(value);
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_Documents(Document entity)
-		{
-			this.SendPropertyChanging();
-			entity.Table = this;
-		}
-		
-		private void detach_Documents(Document entity)
-		{
-			this.SendPropertyChanging();
-			entity.Table = null;
-		}
-		
-		private void attach_Columns(Column entity)
-		{
-			this.SendPropertyChanging();
-			entity.Table = this;
-		}
-		
-		private void detach_Columns(Column entity)
-		{
-			this.SendPropertyChanging();
-			entity.Table = null;
-		}
-		
-		private void attach_Columns1(Column entity)
-		{
-			this.SendPropertyChanging();
-			entity.Table1 = this;
-		}
-		
-		private void detach_Columns1(Column entity)
-		{
-			this.SendPropertyChanging();
-			entity.Table1 = null;
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.DocumentSection")]
 	public partial class DocumentSection : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -2436,384 +1757,6 @@ namespace DocGen.DAL
 		}
 	}
 	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Location")]
-	public partial class Location : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _LocationID;
-		
-		private string _LocationName;
-		
-		private System.Data.Linq.Binary _Photo;
-		
-		private string _NameOnImport;
-		
-		private string _Notes;
-		
-		private bool _IsActive;
-		
-		private System.DateTime _DateAdded;
-		
-		private System.DateTime _DateUpdated;
-		
-		private System.Nullable<decimal> _Latitude;
-		
-		private System.Nullable<decimal> _Longitude;
-		
-		private int _AccountID;
-		
-		private System.Nullable<int> _LastUpdatedUserID;
-		
-		private string _Email;
-		
-		private EntitySet<LocationTable> _LocationTables;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnLocationIDChanging(int value);
-    partial void OnLocationIDChanged();
-    partial void OnLocationNameChanging(string value);
-    partial void OnLocationNameChanged();
-    partial void OnPhotoChanging(System.Data.Linq.Binary value);
-    partial void OnPhotoChanged();
-    partial void OnNameOnImportChanging(string value);
-    partial void OnNameOnImportChanged();
-    partial void OnNotesChanging(string value);
-    partial void OnNotesChanged();
-    partial void OnIsActiveChanging(bool value);
-    partial void OnIsActiveChanged();
-    partial void OnDateAddedChanging(System.DateTime value);
-    partial void OnDateAddedChanged();
-    partial void OnDateUpdatedChanging(System.DateTime value);
-    partial void OnDateUpdatedChanged();
-    partial void OnLatitudeChanging(System.Nullable<decimal> value);
-    partial void OnLatitudeChanged();
-    partial void OnLongitudeChanging(System.Nullable<decimal> value);
-    partial void OnLongitudeChanged();
-    partial void OnAccountIDChanging(int value);
-    partial void OnAccountIDChanged();
-    partial void OnLastUpdatedUserIDChanging(System.Nullable<int> value);
-    partial void OnLastUpdatedUserIDChanged();
-    partial void OnEmailChanging(string value);
-    partial void OnEmailChanged();
-    #endregion
-		
-		public Location()
-		{
-			this._LocationTables = new EntitySet<LocationTable>(new Action<LocationTable>(this.attach_LocationTables), new Action<LocationTable>(this.detach_LocationTables));
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LocationID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int LocationID
-		{
-			get
-			{
-				return this._LocationID;
-			}
-			set
-			{
-				if ((this._LocationID != value))
-				{
-					this.OnLocationIDChanging(value);
-					this.SendPropertyChanging();
-					this._LocationID = value;
-					this.SendPropertyChanged("LocationID");
-					this.OnLocationIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LocationName", DbType="NVarChar(50) NOT NULL", CanBeNull=false)]
-		public string LocationName
-		{
-			get
-			{
-				return this._LocationName;
-			}
-			set
-			{
-				if ((this._LocationName != value))
-				{
-					this.OnLocationNameChanging(value);
-					this.SendPropertyChanging();
-					this._LocationName = value;
-					this.SendPropertyChanged("LocationName");
-					this.OnLocationNameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Photo", DbType="Image", CanBeNull=true, UpdateCheck=UpdateCheck.Never)]
-		public System.Data.Linq.Binary Photo
-		{
-			get
-			{
-				return this._Photo;
-			}
-			set
-			{
-				if ((this._Photo != value))
-				{
-					this.OnPhotoChanging(value);
-					this.SendPropertyChanging();
-					this._Photo = value;
-					this.SendPropertyChanged("Photo");
-					this.OnPhotoChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NameOnImport", DbType="NVarChar(50)")]
-		public string NameOnImport
-		{
-			get
-			{
-				return this._NameOnImport;
-			}
-			set
-			{
-				if ((this._NameOnImport != value))
-				{
-					this.OnNameOnImportChanging(value);
-					this.SendPropertyChanging();
-					this._NameOnImport = value;
-					this.SendPropertyChanged("NameOnImport");
-					this.OnNameOnImportChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Notes", DbType="NVarChar(250)")]
-		public string Notes
-		{
-			get
-			{
-				return this._Notes;
-			}
-			set
-			{
-				if ((this._Notes != value))
-				{
-					this.OnNotesChanging(value);
-					this.SendPropertyChanging();
-					this._Notes = value;
-					this.SendPropertyChanged("Notes");
-					this.OnNotesChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsActive", DbType="Bit NOT NULL")]
-		public bool IsActive
-		{
-			get
-			{
-				return this._IsActive;
-			}
-			set
-			{
-				if ((this._IsActive != value))
-				{
-					this.OnIsActiveChanging(value);
-					this.SendPropertyChanging();
-					this._IsActive = value;
-					this.SendPropertyChanged("IsActive");
-					this.OnIsActiveChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateAdded", DbType="DateTime NOT NULL")]
-		public System.DateTime DateAdded
-		{
-			get
-			{
-				return this._DateAdded;
-			}
-			set
-			{
-				if ((this._DateAdded != value))
-				{
-					this.OnDateAddedChanging(value);
-					this.SendPropertyChanging();
-					this._DateAdded = value;
-					this.SendPropertyChanged("DateAdded");
-					this.OnDateAddedChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateUpdated", DbType="DateTime NOT NULL")]
-		public System.DateTime DateUpdated
-		{
-			get
-			{
-				return this._DateUpdated;
-			}
-			set
-			{
-				if ((this._DateUpdated != value))
-				{
-					this.OnDateUpdatedChanging(value);
-					this.SendPropertyChanging();
-					this._DateUpdated = value;
-					this.SendPropertyChanged("DateUpdated");
-					this.OnDateUpdatedChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Latitude", DbType="Decimal(9,6)")]
-		public System.Nullable<decimal> Latitude
-		{
-			get
-			{
-				return this._Latitude;
-			}
-			set
-			{
-				if ((this._Latitude != value))
-				{
-					this.OnLatitudeChanging(value);
-					this.SendPropertyChanging();
-					this._Latitude = value;
-					this.SendPropertyChanged("Latitude");
-					this.OnLatitudeChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Longitude", DbType="Decimal(9,6)")]
-		public System.Nullable<decimal> Longitude
-		{
-			get
-			{
-				return this._Longitude;
-			}
-			set
-			{
-				if ((this._Longitude != value))
-				{
-					this.OnLongitudeChanging(value);
-					this.SendPropertyChanging();
-					this._Longitude = value;
-					this.SendPropertyChanged("Longitude");
-					this.OnLongitudeChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AccountID", DbType="Int NOT NULL")]
-		public int AccountID
-		{
-			get
-			{
-				return this._AccountID;
-			}
-			set
-			{
-				if ((this._AccountID != value))
-				{
-					this.OnAccountIDChanging(value);
-					this.SendPropertyChanging();
-					this._AccountID = value;
-					this.SendPropertyChanged("AccountID");
-					this.OnAccountIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastUpdatedUserID", DbType="Int")]
-		public System.Nullable<int> LastUpdatedUserID
-		{
-			get
-			{
-				return this._LastUpdatedUserID;
-			}
-			set
-			{
-				if ((this._LastUpdatedUserID != value))
-				{
-					this.OnLastUpdatedUserIDChanging(value);
-					this.SendPropertyChanging();
-					this._LastUpdatedUserID = value;
-					this.SendPropertyChanged("LastUpdatedUserID");
-					this.OnLastUpdatedUserIDChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Email", DbType="VarChar(250)")]
-		public string Email
-		{
-			get
-			{
-				return this._Email;
-			}
-			set
-			{
-				if ((this._Email != value))
-				{
-					this.OnEmailChanging(value);
-					this.SendPropertyChanging();
-					this._Email = value;
-					this.SendPropertyChanged("Email");
-					this.OnEmailChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Location_LocationTable", Storage="_LocationTables", ThisKey="LocationID", OtherKey="LocationID")]
-		public EntitySet<LocationTable> LocationTables
-		{
-			get
-			{
-				return this._LocationTables;
-			}
-			set
-			{
-				this._LocationTables.Assign(value);
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_LocationTables(LocationTable entity)
-		{
-			this.SendPropertyChanging();
-			entity.Location = this;
-		}
-		
-		private void detach_LocationTables(LocationTable entity)
-		{
-			this.SendPropertyChanging();
-			entity.Location = null;
-		}
-	}
-	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Document")]
 	public partial class Document : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -2862,9 +1805,9 @@ namespace DocGen.DAL
 		
 		private EntityRef<DocumentType> _DocumentType;
 		
-		private EntityRef<Table> _Table;
-		
 		private EntityRef<User> _User;
+		
+		private EntityRef<Table> _Table;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -2914,8 +1857,8 @@ namespace DocGen.DAL
 		{
 			this._DocumentSections = new EntitySet<DocumentSection>(new Action<DocumentSection>(this.attach_DocumentSections), new Action<DocumentSection>(this.detach_DocumentSections));
 			this._DocumentType = default(EntityRef<DocumentType>);
-			this._Table = default(EntityRef<Table>);
 			this._User = default(EntityRef<User>);
+			this._Table = default(EntityRef<Table>);
 			OnCreated();
 		}
 		
@@ -3358,40 +2301,6 @@ namespace DocGen.DAL
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Table_Document", Storage="_Table", ThisKey="TableID", OtherKey="TableID", IsForeignKey=true)]
-		public Table Table
-		{
-			get
-			{
-				return this._Table.Entity;
-			}
-			set
-			{
-				Table previousValue = this._Table.Entity;
-				if (((previousValue != value) 
-							|| (this._Table.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Table.Entity = null;
-						previousValue.Documents.Remove(this);
-					}
-					this._Table.Entity = value;
-					if ((value != null))
-					{
-						value.Documents.Add(this);
-						this._TableID = value.TableID;
-					}
-					else
-					{
-						this._TableID = default(Nullable<int>);
-					}
-					this.SendPropertyChanged("Table");
-				}
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="User_Document", Storage="_User", ThisKey="UserID", OtherKey="UserID", IsForeignKey=true)]
 		public User User
 		{
@@ -3422,6 +2331,40 @@ namespace DocGen.DAL
 						this._UserID = default(Nullable<int>);
 					}
 					this.SendPropertyChanged("User");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Table_Document", Storage="_Table", ThisKey="TableID", OtherKey="TableID", IsForeignKey=true)]
+		public Table Table
+		{
+			get
+			{
+				return this._Table.Entity;
+			}
+			set
+			{
+				Table previousValue = this._Table.Entity;
+				if (((previousValue != value) 
+							|| (this._Table.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Table.Entity = null;
+						previousValue.Documents.Remove(this);
+					}
+					this._Table.Entity = value;
+					if ((value != null))
+					{
+						value.Documents.Add(this);
+						this._TableID = value.TableID;
+					}
+					else
+					{
+						this._TableID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Table");
 				}
 			}
 		}
@@ -3459,6 +2402,2441 @@ namespace DocGen.DAL
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.[Table]")]
+	public partial class Table : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _TableID;
+		
+		private string _TableName;
+		
+		private System.Nullable<int> _MenuID_NO;
+		
+		private System.DateTime _DateAdded;
+		
+		private System.DateTime _DateUpdated;
+		
+		private bool _IsImportPositional_DELETED;
+		
+		private bool _IsActive;
+		
+		private int _AccountID;
+		
+		private string _PinImage;
+		
+		private System.Nullable<decimal> _MaxTimeBetweenRecords;
+		
+		private string _MaxTimeBetweenRecordsUnit;
+		
+		private System.Nullable<int> _LastUpdatedUserID;
+		
+		private System.Nullable<int> _LateDataDays;
+		
+		private System.Nullable<int> _ImportDataStartRow_DELETED;
+		
+		private string _DateFormat;
+		
+		private System.Nullable<int> _DisplayOrder;
+		
+		private bool _IsRecordDateUnique_DELETED;
+		
+		private System.Nullable<bool> _FlashAlerts;
+		
+		private System.Nullable<int> _FilterColumnID;
+		
+		private string _FilterDefaultValue;
+		
+		private string _ReasonChangeType;
+		
+		private string _ChangeHistoryType;
+		
+		private System.Nullable<bool> _AddWithoutLogin;
+		
+		private System.Nullable<int> _ParentTableID;
+		
+		private System.Nullable<bool> _AddUserRecord;
+		
+		private System.Nullable<int> _AddUserUserColumnID;
+		
+		private System.Nullable<int> _AddUserPasswordColumnID;
+		
+		private System.Nullable<bool> _AddUserNotification;
+		
+		private System.Nullable<int> _ImportColumnHeaderRow_DELETED;
+		
+		private System.Nullable<int> _SortColumnID;
+		
+		private string _HeaderName;
+		
+		private System.Nullable<bool> _HideAdvancedOption;
+		
+		private System.Nullable<int> _ValidateColumnID1;
+		
+		private System.Nullable<int> _ValidateColumnID2;
+		
+		private string _HeaderColor;
+		
+		private string _JSONAttachmentPOP3;
+		
+		private string _JSONAttachmentInfo;
+		
+		private System.Nullable<bool> _ShowTabVertically;
+		
+		private System.Nullable<bool> _CopyToChildrenAfterImport;
+		
+		private string _CustomUploadSheet;
+		
+		private string _FilterType;
+		
+		private string _TabColour;
+		
+		private string _TabTextColour;
+		
+		private System.Nullable<bool> _BoxAroundField;
+		
+		private string _FilterTopColour;
+		
+		private string _FilterBottomColour;
+		
+		private System.Nullable<bool> _ShowEditAfterAdd;
+		
+		private System.Nullable<bool> _AddOpensForm;
+		
+		private string _AddRecordSP;
+		
+		private string _SPSaveRecord;
+		
+		private System.Nullable<bool> _HideFilter;
+		
+		private System.Nullable<bool> _SaveAndAdd;
+		
+		private bool _NavigationArrows;
+		
+		private System.Nullable<int> _GraphXAxisColumnID;
+		
+		private System.Nullable<int> _GraphSeriesColumnID;
+		
+		private System.Nullable<int> _GraphDefaultPeriod;
+		
+		private System.Nullable<int> _DataUpdateUniqueColumnID;
+		
+		private System.Nullable<bool> _AllowCopyRecords;
+		
+		private string _SPSendEmail;
+		
+		private string _SPUpdateConfirm;
+		
+		private System.Nullable<bool> _ShowSentEmails;
+		
+		private System.Nullable<bool> _ShowReceivedEmails;
+		
+		private System.Nullable<int> _UniqueColumnID;
+		
+		private System.Nullable<int> _UniqueColumnID2;
+		
+		private string _SPAfterImport_DELETED;
+		
+		private System.Nullable<int> _PinDisplayOrder;
+		
+		private string _GraphOnStart;
+		
+		private System.Nullable<int> _GraphDefaultYAxisColumnID;
+		
+		private string _SummaryPageContent;
+		
+		private System.Nullable<bool> _IsDataUpdateAllowed;
+		
+		private System.Nullable<int> _DefaultImportTemplateID;
+		
+		private System.Nullable<bool> _NavigationArrows_BU;
+		
+		private string _DuplicateRecordAction;
+		
+		private EntitySet<Document> _Documents;
+		
+		private EntitySet<Table> _Tables;
+		
+		private EntitySet<Column> _Columns;
+		
+		private EntitySet<Column> _Columns1;
+		
+		private EntityRef<Table> _Table1;
+		
+		private EntityRef<Column> _Column;
+		
+		private EntityRef<Column> _Column1;
+		
+		private EntityRef<Column> _Column2;
+		
+		private EntityRef<Column> _Column3;
+		
+		private EntityRef<Column> _Column4;
+		
+		private EntityRef<Column> _Column5;
+		
+		private EntityRef<Column> _Column6;
+		
+		private EntityRef<Column> _Column7;
+		
+		private EntityRef<Column> _Column8;
+		
+		private EntityRef<Column> _Column9;
+		
+		private EntityRef<Column> _Column10;
+		
+		private EntityRef<Column> _Column11;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnTableIDChanging(int value);
+    partial void OnTableIDChanged();
+    partial void OnTableNameChanging(string value);
+    partial void OnTableNameChanged();
+    partial void OnMenuID_NOChanging(System.Nullable<int> value);
+    partial void OnMenuID_NOChanged();
+    partial void OnDateAddedChanging(System.DateTime value);
+    partial void OnDateAddedChanged();
+    partial void OnDateUpdatedChanging(System.DateTime value);
+    partial void OnDateUpdatedChanged();
+    partial void OnIsImportPositional_DELETEDChanging(bool value);
+    partial void OnIsImportPositional_DELETEDChanged();
+    partial void OnIsActiveChanging(bool value);
+    partial void OnIsActiveChanged();
+    partial void OnAccountIDChanging(int value);
+    partial void OnAccountIDChanged();
+    partial void OnPinImageChanging(string value);
+    partial void OnPinImageChanged();
+    partial void OnMaxTimeBetweenRecordsChanging(System.Nullable<decimal> value);
+    partial void OnMaxTimeBetweenRecordsChanged();
+    partial void OnMaxTimeBetweenRecordsUnitChanging(string value);
+    partial void OnMaxTimeBetweenRecordsUnitChanged();
+    partial void OnLastUpdatedUserIDChanging(System.Nullable<int> value);
+    partial void OnLastUpdatedUserIDChanged();
+    partial void OnLateDataDaysChanging(System.Nullable<int> value);
+    partial void OnLateDataDaysChanged();
+    partial void OnImportDataStartRow_DELETEDChanging(System.Nullable<int> value);
+    partial void OnImportDataStartRow_DELETEDChanged();
+    partial void OnDateFormatChanging(string value);
+    partial void OnDateFormatChanged();
+    partial void OnDisplayOrderChanging(System.Nullable<int> value);
+    partial void OnDisplayOrderChanged();
+    partial void OnIsRecordDateUnique_DELETEDChanging(bool value);
+    partial void OnIsRecordDateUnique_DELETEDChanged();
+    partial void OnFlashAlertsChanging(System.Nullable<bool> value);
+    partial void OnFlashAlertsChanged();
+    partial void OnFilterColumnIDChanging(System.Nullable<int> value);
+    partial void OnFilterColumnIDChanged();
+    partial void OnFilterDefaultValueChanging(string value);
+    partial void OnFilterDefaultValueChanged();
+    partial void OnReasonChangeTypeChanging(string value);
+    partial void OnReasonChangeTypeChanged();
+    partial void OnChangeHistoryTypeChanging(string value);
+    partial void OnChangeHistoryTypeChanged();
+    partial void OnAddWithoutLoginChanging(System.Nullable<bool> value);
+    partial void OnAddWithoutLoginChanged();
+    partial void OnParentTableIDChanging(System.Nullable<int> value);
+    partial void OnParentTableIDChanged();
+    partial void OnAddUserRecordChanging(System.Nullable<bool> value);
+    partial void OnAddUserRecordChanged();
+    partial void OnAddUserUserColumnIDChanging(System.Nullable<int> value);
+    partial void OnAddUserUserColumnIDChanged();
+    partial void OnAddUserPasswordColumnIDChanging(System.Nullable<int> value);
+    partial void OnAddUserPasswordColumnIDChanged();
+    partial void OnAddUserNotificationChanging(System.Nullable<bool> value);
+    partial void OnAddUserNotificationChanged();
+    partial void OnImportColumnHeaderRow_DELETEDChanging(System.Nullable<int> value);
+    partial void OnImportColumnHeaderRow_DELETEDChanged();
+    partial void OnSortColumnIDChanging(System.Nullable<int> value);
+    partial void OnSortColumnIDChanged();
+    partial void OnHeaderNameChanging(string value);
+    partial void OnHeaderNameChanged();
+    partial void OnHideAdvancedOptionChanging(System.Nullable<bool> value);
+    partial void OnHideAdvancedOptionChanged();
+    partial void OnValidateColumnID1Changing(System.Nullable<int> value);
+    partial void OnValidateColumnID1Changed();
+    partial void OnValidateColumnID2Changing(System.Nullable<int> value);
+    partial void OnValidateColumnID2Changed();
+    partial void OnHeaderColorChanging(string value);
+    partial void OnHeaderColorChanged();
+    partial void OnJSONAttachmentPOP3Changing(string value);
+    partial void OnJSONAttachmentPOP3Changed();
+    partial void OnJSONAttachmentInfoChanging(string value);
+    partial void OnJSONAttachmentInfoChanged();
+    partial void OnShowTabVerticallyChanging(System.Nullable<bool> value);
+    partial void OnShowTabVerticallyChanged();
+    partial void OnCopyToChildrenAfterImportChanging(System.Nullable<bool> value);
+    partial void OnCopyToChildrenAfterImportChanged();
+    partial void OnCustomUploadSheetChanging(string value);
+    partial void OnCustomUploadSheetChanged();
+    partial void OnFilterTypeChanging(string value);
+    partial void OnFilterTypeChanged();
+    partial void OnTabColourChanging(string value);
+    partial void OnTabColourChanged();
+    partial void OnTabTextColourChanging(string value);
+    partial void OnTabTextColourChanged();
+    partial void OnBoxAroundFieldChanging(System.Nullable<bool> value);
+    partial void OnBoxAroundFieldChanged();
+    partial void OnFilterTopColourChanging(string value);
+    partial void OnFilterTopColourChanged();
+    partial void OnFilterBottomColourChanging(string value);
+    partial void OnFilterBottomColourChanged();
+    partial void OnShowEditAfterAddChanging(System.Nullable<bool> value);
+    partial void OnShowEditAfterAddChanged();
+    partial void OnAddOpensFormChanging(System.Nullable<bool> value);
+    partial void OnAddOpensFormChanged();
+    partial void OnAddRecordSPChanging(string value);
+    partial void OnAddRecordSPChanged();
+    partial void OnSPSaveRecordChanging(string value);
+    partial void OnSPSaveRecordChanged();
+    partial void OnHideFilterChanging(System.Nullable<bool> value);
+    partial void OnHideFilterChanged();
+    partial void OnSaveAndAddChanging(System.Nullable<bool> value);
+    partial void OnSaveAndAddChanged();
+    partial void OnNavigationArrowsChanging(bool value);
+    partial void OnNavigationArrowsChanged();
+    partial void OnGraphXAxisColumnIDChanging(System.Nullable<int> value);
+    partial void OnGraphXAxisColumnIDChanged();
+    partial void OnGraphSeriesColumnIDChanging(System.Nullable<int> value);
+    partial void OnGraphSeriesColumnIDChanged();
+    partial void OnGraphDefaultPeriodChanging(System.Nullable<int> value);
+    partial void OnGraphDefaultPeriodChanged();
+    partial void OnDataUpdateUniqueColumnIDChanging(System.Nullable<int> value);
+    partial void OnDataUpdateUniqueColumnIDChanged();
+    partial void OnAllowCopyRecordsChanging(System.Nullable<bool> value);
+    partial void OnAllowCopyRecordsChanged();
+    partial void OnSPSendEmailChanging(string value);
+    partial void OnSPSendEmailChanged();
+    partial void OnSPUpdateConfirmChanging(string value);
+    partial void OnSPUpdateConfirmChanged();
+    partial void OnShowSentEmailsChanging(System.Nullable<bool> value);
+    partial void OnShowSentEmailsChanged();
+    partial void OnShowReceivedEmailsChanging(System.Nullable<bool> value);
+    partial void OnShowReceivedEmailsChanged();
+    partial void OnUniqueColumnIDChanging(System.Nullable<int> value);
+    partial void OnUniqueColumnIDChanged();
+    partial void OnUniqueColumnID2Changing(System.Nullable<int> value);
+    partial void OnUniqueColumnID2Changed();
+    partial void OnSPAfterImport_DELETEDChanging(string value);
+    partial void OnSPAfterImport_DELETEDChanged();
+    partial void OnPinDisplayOrderChanging(System.Nullable<int> value);
+    partial void OnPinDisplayOrderChanged();
+    partial void OnGraphOnStartChanging(string value);
+    partial void OnGraphOnStartChanged();
+    partial void OnGraphDefaultYAxisColumnIDChanging(System.Nullable<int> value);
+    partial void OnGraphDefaultYAxisColumnIDChanged();
+    partial void OnSummaryPageContentChanging(string value);
+    partial void OnSummaryPageContentChanged();
+    partial void OnIsDataUpdateAllowedChanging(System.Nullable<bool> value);
+    partial void OnIsDataUpdateAllowedChanged();
+    partial void OnDefaultImportTemplateIDChanging(System.Nullable<int> value);
+    partial void OnDefaultImportTemplateIDChanged();
+    partial void OnNavigationArrows_BUChanging(System.Nullable<bool> value);
+    partial void OnNavigationArrows_BUChanged();
+    partial void OnDuplicateRecordActionChanging(string value);
+    partial void OnDuplicateRecordActionChanged();
+    #endregion
+		
+		public Table()
+		{
+			this._Documents = new EntitySet<Document>(new Action<Document>(this.attach_Documents), new Action<Document>(this.detach_Documents));
+			this._Tables = new EntitySet<Table>(new Action<Table>(this.attach_Tables), new Action<Table>(this.detach_Tables));
+			this._Columns = new EntitySet<Column>(new Action<Column>(this.attach_Columns), new Action<Column>(this.detach_Columns));
+			this._Columns1 = new EntitySet<Column>(new Action<Column>(this.attach_Columns1), new Action<Column>(this.detach_Columns1));
+			this._Table1 = default(EntityRef<Table>);
+			this._Column = default(EntityRef<Column>);
+			this._Column1 = default(EntityRef<Column>);
+			this._Column2 = default(EntityRef<Column>);
+			this._Column3 = default(EntityRef<Column>);
+			this._Column4 = default(EntityRef<Column>);
+			this._Column5 = default(EntityRef<Column>);
+			this._Column6 = default(EntityRef<Column>);
+			this._Column7 = default(EntityRef<Column>);
+			this._Column8 = default(EntityRef<Column>);
+			this._Column9 = default(EntityRef<Column>);
+			this._Column10 = default(EntityRef<Column>);
+			this._Column11 = default(EntityRef<Column>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TableID", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int TableID
+		{
+			get
+			{
+				return this._TableID;
+			}
+			set
+			{
+				if ((this._TableID != value))
+				{
+					this.OnTableIDChanging(value);
+					this.SendPropertyChanging();
+					this._TableID = value;
+					this.SendPropertyChanged("TableID");
+					this.OnTableIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TableName", DbType="NVarChar(255) NOT NULL", CanBeNull=false)]
+		public string TableName
+		{
+			get
+			{
+				return this._TableName;
+			}
+			set
+			{
+				if ((this._TableName != value))
+				{
+					this.OnTableNameChanging(value);
+					this.SendPropertyChanging();
+					this._TableName = value;
+					this.SendPropertyChanged("TableName");
+					this.OnTableNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MenuID_NO", DbType="Int")]
+		public System.Nullable<int> MenuID_NO
+		{
+			get
+			{
+				return this._MenuID_NO;
+			}
+			set
+			{
+				if ((this._MenuID_NO != value))
+				{
+					this.OnMenuID_NOChanging(value);
+					this.SendPropertyChanging();
+					this._MenuID_NO = value;
+					this.SendPropertyChanged("MenuID_NO");
+					this.OnMenuID_NOChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateAdded", DbType="DateTime NOT NULL")]
+		public System.DateTime DateAdded
+		{
+			get
+			{
+				return this._DateAdded;
+			}
+			set
+			{
+				if ((this._DateAdded != value))
+				{
+					this.OnDateAddedChanging(value);
+					this.SendPropertyChanging();
+					this._DateAdded = value;
+					this.SendPropertyChanged("DateAdded");
+					this.OnDateAddedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateUpdated", DbType="DateTime NOT NULL")]
+		public System.DateTime DateUpdated
+		{
+			get
+			{
+				return this._DateUpdated;
+			}
+			set
+			{
+				if ((this._DateUpdated != value))
+				{
+					this.OnDateUpdatedChanging(value);
+					this.SendPropertyChanging();
+					this._DateUpdated = value;
+					this.SendPropertyChanged("DateUpdated");
+					this.OnDateUpdatedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsImportPositional_DELETED", DbType="Bit NOT NULL")]
+		public bool IsImportPositional_DELETED
+		{
+			get
+			{
+				return this._IsImportPositional_DELETED;
+			}
+			set
+			{
+				if ((this._IsImportPositional_DELETED != value))
+				{
+					this.OnIsImportPositional_DELETEDChanging(value);
+					this.SendPropertyChanging();
+					this._IsImportPositional_DELETED = value;
+					this.SendPropertyChanged("IsImportPositional_DELETED");
+					this.OnIsImportPositional_DELETEDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsActive", DbType="Bit NOT NULL")]
+		public bool IsActive
+		{
+			get
+			{
+				return this._IsActive;
+			}
+			set
+			{
+				if ((this._IsActive != value))
+				{
+					this.OnIsActiveChanging(value);
+					this.SendPropertyChanging();
+					this._IsActive = value;
+					this.SendPropertyChanged("IsActive");
+					this.OnIsActiveChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AccountID", DbType="Int NOT NULL")]
+		public int AccountID
+		{
+			get
+			{
+				return this._AccountID;
+			}
+			set
+			{
+				if ((this._AccountID != value))
+				{
+					this.OnAccountIDChanging(value);
+					this.SendPropertyChanging();
+					this._AccountID = value;
+					this.SendPropertyChanged("AccountID");
+					this.OnAccountIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PinImage", DbType="VarChar(255)")]
+		public string PinImage
+		{
+			get
+			{
+				return this._PinImage;
+			}
+			set
+			{
+				if ((this._PinImage != value))
+				{
+					this.OnPinImageChanging(value);
+					this.SendPropertyChanging();
+					this._PinImage = value;
+					this.SendPropertyChanged("PinImage");
+					this.OnPinImageChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MaxTimeBetweenRecords", DbType="Decimal(20,10)")]
+		public System.Nullable<decimal> MaxTimeBetweenRecords
+		{
+			get
+			{
+				return this._MaxTimeBetweenRecords;
+			}
+			set
+			{
+				if ((this._MaxTimeBetweenRecords != value))
+				{
+					this.OnMaxTimeBetweenRecordsChanging(value);
+					this.SendPropertyChanging();
+					this._MaxTimeBetweenRecords = value;
+					this.SendPropertyChanged("MaxTimeBetweenRecords");
+					this.OnMaxTimeBetweenRecordsChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_MaxTimeBetweenRecordsUnit", DbType="VarChar(50)")]
+		public string MaxTimeBetweenRecordsUnit
+		{
+			get
+			{
+				return this._MaxTimeBetweenRecordsUnit;
+			}
+			set
+			{
+				if ((this._MaxTimeBetweenRecordsUnit != value))
+				{
+					this.OnMaxTimeBetweenRecordsUnitChanging(value);
+					this.SendPropertyChanging();
+					this._MaxTimeBetweenRecordsUnit = value;
+					this.SendPropertyChanged("MaxTimeBetweenRecordsUnit");
+					this.OnMaxTimeBetweenRecordsUnitChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LastUpdatedUserID", DbType="Int")]
+		public System.Nullable<int> LastUpdatedUserID
+		{
+			get
+			{
+				return this._LastUpdatedUserID;
+			}
+			set
+			{
+				if ((this._LastUpdatedUserID != value))
+				{
+					this.OnLastUpdatedUserIDChanging(value);
+					this.SendPropertyChanging();
+					this._LastUpdatedUserID = value;
+					this.SendPropertyChanged("LastUpdatedUserID");
+					this.OnLastUpdatedUserIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_LateDataDays", DbType="Int")]
+		public System.Nullable<int> LateDataDays
+		{
+			get
+			{
+				return this._LateDataDays;
+			}
+			set
+			{
+				if ((this._LateDataDays != value))
+				{
+					this.OnLateDataDaysChanging(value);
+					this.SendPropertyChanging();
+					this._LateDataDays = value;
+					this.SendPropertyChanged("LateDataDays");
+					this.OnLateDataDaysChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ImportDataStartRow_DELETED", DbType="Int")]
+		public System.Nullable<int> ImportDataStartRow_DELETED
+		{
+			get
+			{
+				return this._ImportDataStartRow_DELETED;
+			}
+			set
+			{
+				if ((this._ImportDataStartRow_DELETED != value))
+				{
+					this.OnImportDataStartRow_DELETEDChanging(value);
+					this.SendPropertyChanging();
+					this._ImportDataStartRow_DELETED = value;
+					this.SendPropertyChanged("ImportDataStartRow_DELETED");
+					this.OnImportDataStartRow_DELETEDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DateFormat", DbType="VarChar(30) NOT NULL", CanBeNull=false)]
+		public string DateFormat
+		{
+			get
+			{
+				return this._DateFormat;
+			}
+			set
+			{
+				if ((this._DateFormat != value))
+				{
+					this.OnDateFormatChanging(value);
+					this.SendPropertyChanging();
+					this._DateFormat = value;
+					this.SendPropertyChanged("DateFormat");
+					this.OnDateFormatChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DisplayOrder", DbType="Int")]
+		public System.Nullable<int> DisplayOrder
+		{
+			get
+			{
+				return this._DisplayOrder;
+			}
+			set
+			{
+				if ((this._DisplayOrder != value))
+				{
+					this.OnDisplayOrderChanging(value);
+					this.SendPropertyChanging();
+					this._DisplayOrder = value;
+					this.SendPropertyChanged("DisplayOrder");
+					this.OnDisplayOrderChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsRecordDateUnique_DELETED", DbType="Bit NOT NULL")]
+		public bool IsRecordDateUnique_DELETED
+		{
+			get
+			{
+				return this._IsRecordDateUnique_DELETED;
+			}
+			set
+			{
+				if ((this._IsRecordDateUnique_DELETED != value))
+				{
+					this.OnIsRecordDateUnique_DELETEDChanging(value);
+					this.SendPropertyChanging();
+					this._IsRecordDateUnique_DELETED = value;
+					this.SendPropertyChanged("IsRecordDateUnique_DELETED");
+					this.OnIsRecordDateUnique_DELETEDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FlashAlerts", DbType="Bit")]
+		public System.Nullable<bool> FlashAlerts
+		{
+			get
+			{
+				return this._FlashAlerts;
+			}
+			set
+			{
+				if ((this._FlashAlerts != value))
+				{
+					this.OnFlashAlertsChanging(value);
+					this.SendPropertyChanging();
+					this._FlashAlerts = value;
+					this.SendPropertyChanged("FlashAlerts");
+					this.OnFlashAlertsChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FilterColumnID", DbType="Int")]
+		public System.Nullable<int> FilterColumnID
+		{
+			get
+			{
+				return this._FilterColumnID;
+			}
+			set
+			{
+				if ((this._FilterColumnID != value))
+				{
+					if (this._Column.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnFilterColumnIDChanging(value);
+					this.SendPropertyChanging();
+					this._FilterColumnID = value;
+					this.SendPropertyChanged("FilterColumnID");
+					this.OnFilterColumnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FilterDefaultValue", DbType="VarChar(50)")]
+		public string FilterDefaultValue
+		{
+			get
+			{
+				return this._FilterDefaultValue;
+			}
+			set
+			{
+				if ((this._FilterDefaultValue != value))
+				{
+					this.OnFilterDefaultValueChanging(value);
+					this.SendPropertyChanging();
+					this._FilterDefaultValue = value;
+					this.SendPropertyChanged("FilterDefaultValue");
+					this.OnFilterDefaultValueChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ReasonChangeType", DbType="VarChar(20)")]
+		public string ReasonChangeType
+		{
+			get
+			{
+				return this._ReasonChangeType;
+			}
+			set
+			{
+				if ((this._ReasonChangeType != value))
+				{
+					this.OnReasonChangeTypeChanging(value);
+					this.SendPropertyChanging();
+					this._ReasonChangeType = value;
+					this.SendPropertyChanged("ReasonChangeType");
+					this.OnReasonChangeTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ChangeHistoryType", DbType="VarChar(20)")]
+		public string ChangeHistoryType
+		{
+			get
+			{
+				return this._ChangeHistoryType;
+			}
+			set
+			{
+				if ((this._ChangeHistoryType != value))
+				{
+					this.OnChangeHistoryTypeChanging(value);
+					this.SendPropertyChanging();
+					this._ChangeHistoryType = value;
+					this.SendPropertyChanged("ChangeHistoryType");
+					this.OnChangeHistoryTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AddWithoutLogin", DbType="Bit")]
+		public System.Nullable<bool> AddWithoutLogin
+		{
+			get
+			{
+				return this._AddWithoutLogin;
+			}
+			set
+			{
+				if ((this._AddWithoutLogin != value))
+				{
+					this.OnAddWithoutLoginChanging(value);
+					this.SendPropertyChanging();
+					this._AddWithoutLogin = value;
+					this.SendPropertyChanged("AddWithoutLogin");
+					this.OnAddWithoutLoginChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ParentTableID", DbType="Int")]
+		public System.Nullable<int> ParentTableID
+		{
+			get
+			{
+				return this._ParentTableID;
+			}
+			set
+			{
+				if ((this._ParentTableID != value))
+				{
+					if (this._Table1.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnParentTableIDChanging(value);
+					this.SendPropertyChanging();
+					this._ParentTableID = value;
+					this.SendPropertyChanged("ParentTableID");
+					this.OnParentTableIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AddUserRecord", DbType="Bit")]
+		public System.Nullable<bool> AddUserRecord
+		{
+			get
+			{
+				return this._AddUserRecord;
+			}
+			set
+			{
+				if ((this._AddUserRecord != value))
+				{
+					this.OnAddUserRecordChanging(value);
+					this.SendPropertyChanging();
+					this._AddUserRecord = value;
+					this.SendPropertyChanged("AddUserRecord");
+					this.OnAddUserRecordChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AddUserUserColumnID", DbType="Int")]
+		public System.Nullable<int> AddUserUserColumnID
+		{
+			get
+			{
+				return this._AddUserUserColumnID;
+			}
+			set
+			{
+				if ((this._AddUserUserColumnID != value))
+				{
+					if (this._Column1.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnAddUserUserColumnIDChanging(value);
+					this.SendPropertyChanging();
+					this._AddUserUserColumnID = value;
+					this.SendPropertyChanged("AddUserUserColumnID");
+					this.OnAddUserUserColumnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AddUserPasswordColumnID", DbType="Int")]
+		public System.Nullable<int> AddUserPasswordColumnID
+		{
+			get
+			{
+				return this._AddUserPasswordColumnID;
+			}
+			set
+			{
+				if ((this._AddUserPasswordColumnID != value))
+				{
+					if (this._Column6.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnAddUserPasswordColumnIDChanging(value);
+					this.SendPropertyChanging();
+					this._AddUserPasswordColumnID = value;
+					this.SendPropertyChanged("AddUserPasswordColumnID");
+					this.OnAddUserPasswordColumnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AddUserNotification", DbType="Bit")]
+		public System.Nullable<bool> AddUserNotification
+		{
+			get
+			{
+				return this._AddUserNotification;
+			}
+			set
+			{
+				if ((this._AddUserNotification != value))
+				{
+					this.OnAddUserNotificationChanging(value);
+					this.SendPropertyChanging();
+					this._AddUserNotification = value;
+					this.SendPropertyChanged("AddUserNotification");
+					this.OnAddUserNotificationChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ImportColumnHeaderRow_DELETED", DbType="Int")]
+		public System.Nullable<int> ImportColumnHeaderRow_DELETED
+		{
+			get
+			{
+				return this._ImportColumnHeaderRow_DELETED;
+			}
+			set
+			{
+				if ((this._ImportColumnHeaderRow_DELETED != value))
+				{
+					this.OnImportColumnHeaderRow_DELETEDChanging(value);
+					this.SendPropertyChanging();
+					this._ImportColumnHeaderRow_DELETED = value;
+					this.SendPropertyChanged("ImportColumnHeaderRow_DELETED");
+					this.OnImportColumnHeaderRow_DELETEDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SortColumnID", DbType="Int")]
+		public System.Nullable<int> SortColumnID
+		{
+			get
+			{
+				return this._SortColumnID;
+			}
+			set
+			{
+				if ((this._SortColumnID != value))
+				{
+					if (this._Column7.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnSortColumnIDChanging(value);
+					this.SendPropertyChanging();
+					this._SortColumnID = value;
+					this.SendPropertyChanged("SortColumnID");
+					this.OnSortColumnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HeaderName", DbType="VarChar(MAX)")]
+		public string HeaderName
+		{
+			get
+			{
+				return this._HeaderName;
+			}
+			set
+			{
+				if ((this._HeaderName != value))
+				{
+					this.OnHeaderNameChanging(value);
+					this.SendPropertyChanging();
+					this._HeaderName = value;
+					this.SendPropertyChanged("HeaderName");
+					this.OnHeaderNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HideAdvancedOption", DbType="Bit")]
+		public System.Nullable<bool> HideAdvancedOption
+		{
+			get
+			{
+				return this._HideAdvancedOption;
+			}
+			set
+			{
+				if ((this._HideAdvancedOption != value))
+				{
+					this.OnHideAdvancedOptionChanging(value);
+					this.SendPropertyChanging();
+					this._HideAdvancedOption = value;
+					this.SendPropertyChanged("HideAdvancedOption");
+					this.OnHideAdvancedOptionChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ValidateColumnID1", DbType="Int")]
+		public System.Nullable<int> ValidateColumnID1
+		{
+			get
+			{
+				return this._ValidateColumnID1;
+			}
+			set
+			{
+				if ((this._ValidateColumnID1 != value))
+				{
+					if (this._Column10.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnValidateColumnID1Changing(value);
+					this.SendPropertyChanging();
+					this._ValidateColumnID1 = value;
+					this.SendPropertyChanged("ValidateColumnID1");
+					this.OnValidateColumnID1Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ValidateColumnID2", DbType="Int")]
+		public System.Nullable<int> ValidateColumnID2
+		{
+			get
+			{
+				return this._ValidateColumnID2;
+			}
+			set
+			{
+				if ((this._ValidateColumnID2 != value))
+				{
+					if (this._Column11.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnValidateColumnID2Changing(value);
+					this.SendPropertyChanging();
+					this._ValidateColumnID2 = value;
+					this.SendPropertyChanged("ValidateColumnID2");
+					this.OnValidateColumnID2Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HeaderColor", DbType="VarChar(6)")]
+		public string HeaderColor
+		{
+			get
+			{
+				return this._HeaderColor;
+			}
+			set
+			{
+				if ((this._HeaderColor != value))
+				{
+					this.OnHeaderColorChanging(value);
+					this.SendPropertyChanging();
+					this._HeaderColor = value;
+					this.SendPropertyChanged("HeaderColor");
+					this.OnHeaderColorChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_JSONAttachmentPOP3", DbType="VarChar(MAX)")]
+		public string JSONAttachmentPOP3
+		{
+			get
+			{
+				return this._JSONAttachmentPOP3;
+			}
+			set
+			{
+				if ((this._JSONAttachmentPOP3 != value))
+				{
+					this.OnJSONAttachmentPOP3Changing(value);
+					this.SendPropertyChanging();
+					this._JSONAttachmentPOP3 = value;
+					this.SendPropertyChanged("JSONAttachmentPOP3");
+					this.OnJSONAttachmentPOP3Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_JSONAttachmentInfo", DbType="VarChar(MAX)")]
+		public string JSONAttachmentInfo
+		{
+			get
+			{
+				return this._JSONAttachmentInfo;
+			}
+			set
+			{
+				if ((this._JSONAttachmentInfo != value))
+				{
+					this.OnJSONAttachmentInfoChanging(value);
+					this.SendPropertyChanging();
+					this._JSONAttachmentInfo = value;
+					this.SendPropertyChanged("JSONAttachmentInfo");
+					this.OnJSONAttachmentInfoChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowTabVertically", DbType="Bit")]
+		public System.Nullable<bool> ShowTabVertically
+		{
+			get
+			{
+				return this._ShowTabVertically;
+			}
+			set
+			{
+				if ((this._ShowTabVertically != value))
+				{
+					this.OnShowTabVerticallyChanging(value);
+					this.SendPropertyChanging();
+					this._ShowTabVertically = value;
+					this.SendPropertyChanged("ShowTabVertically");
+					this.OnShowTabVerticallyChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CopyToChildrenAfterImport", DbType="Bit")]
+		public System.Nullable<bool> CopyToChildrenAfterImport
+		{
+			get
+			{
+				return this._CopyToChildrenAfterImport;
+			}
+			set
+			{
+				if ((this._CopyToChildrenAfterImport != value))
+				{
+					this.OnCopyToChildrenAfterImportChanging(value);
+					this.SendPropertyChanging();
+					this._CopyToChildrenAfterImport = value;
+					this.SendPropertyChanged("CopyToChildrenAfterImport");
+					this.OnCopyToChildrenAfterImportChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CustomUploadSheet", DbType="VarChar(MAX)")]
+		public string CustomUploadSheet
+		{
+			get
+			{
+				return this._CustomUploadSheet;
+			}
+			set
+			{
+				if ((this._CustomUploadSheet != value))
+				{
+					this.OnCustomUploadSheetChanging(value);
+					this.SendPropertyChanging();
+					this._CustomUploadSheet = value;
+					this.SendPropertyChanged("CustomUploadSheet");
+					this.OnCustomUploadSheetChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FilterType", DbType="VarChar(25)")]
+		public string FilterType
+		{
+			get
+			{
+				return this._FilterType;
+			}
+			set
+			{
+				if ((this._FilterType != value))
+				{
+					this.OnFilterTypeChanging(value);
+					this.SendPropertyChanging();
+					this._FilterType = value;
+					this.SendPropertyChanged("FilterType");
+					this.OnFilterTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TabColour", DbType="VarChar(6)")]
+		public string TabColour
+		{
+			get
+			{
+				return this._TabColour;
+			}
+			set
+			{
+				if ((this._TabColour != value))
+				{
+					this.OnTabColourChanging(value);
+					this.SendPropertyChanging();
+					this._TabColour = value;
+					this.SendPropertyChanged("TabColour");
+					this.OnTabColourChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_TabTextColour", DbType="VarChar(6)")]
+		public string TabTextColour
+		{
+			get
+			{
+				return this._TabTextColour;
+			}
+			set
+			{
+				if ((this._TabTextColour != value))
+				{
+					this.OnTabTextColourChanging(value);
+					this.SendPropertyChanging();
+					this._TabTextColour = value;
+					this.SendPropertyChanged("TabTextColour");
+					this.OnTabTextColourChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BoxAroundField", DbType="Bit")]
+		public System.Nullable<bool> BoxAroundField
+		{
+			get
+			{
+				return this._BoxAroundField;
+			}
+			set
+			{
+				if ((this._BoxAroundField != value))
+				{
+					this.OnBoxAroundFieldChanging(value);
+					this.SendPropertyChanging();
+					this._BoxAroundField = value;
+					this.SendPropertyChanged("BoxAroundField");
+					this.OnBoxAroundFieldChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FilterTopColour", DbType="VarChar(6)")]
+		public string FilterTopColour
+		{
+			get
+			{
+				return this._FilterTopColour;
+			}
+			set
+			{
+				if ((this._FilterTopColour != value))
+				{
+					this.OnFilterTopColourChanging(value);
+					this.SendPropertyChanging();
+					this._FilterTopColour = value;
+					this.SendPropertyChanged("FilterTopColour");
+					this.OnFilterTopColourChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FilterBottomColour", DbType="VarChar(6)")]
+		public string FilterBottomColour
+		{
+			get
+			{
+				return this._FilterBottomColour;
+			}
+			set
+			{
+				if ((this._FilterBottomColour != value))
+				{
+					this.OnFilterBottomColourChanging(value);
+					this.SendPropertyChanging();
+					this._FilterBottomColour = value;
+					this.SendPropertyChanged("FilterBottomColour");
+					this.OnFilterBottomColourChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowEditAfterAdd", DbType="Bit")]
+		public System.Nullable<bool> ShowEditAfterAdd
+		{
+			get
+			{
+				return this._ShowEditAfterAdd;
+			}
+			set
+			{
+				if ((this._ShowEditAfterAdd != value))
+				{
+					this.OnShowEditAfterAddChanging(value);
+					this.SendPropertyChanging();
+					this._ShowEditAfterAdd = value;
+					this.SendPropertyChanged("ShowEditAfterAdd");
+					this.OnShowEditAfterAddChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AddOpensForm", DbType="Bit")]
+		public System.Nullable<bool> AddOpensForm
+		{
+			get
+			{
+				return this._AddOpensForm;
+			}
+			set
+			{
+				if ((this._AddOpensForm != value))
+				{
+					this.OnAddOpensFormChanging(value);
+					this.SendPropertyChanging();
+					this._AddOpensForm = value;
+					this.SendPropertyChanged("AddOpensForm");
+					this.OnAddOpensFormChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AddRecordSP", DbType="VarChar(MAX)")]
+		public string AddRecordSP
+		{
+			get
+			{
+				return this._AddRecordSP;
+			}
+			set
+			{
+				if ((this._AddRecordSP != value))
+				{
+					this.OnAddRecordSPChanging(value);
+					this.SendPropertyChanging();
+					this._AddRecordSP = value;
+					this.SendPropertyChanged("AddRecordSP");
+					this.OnAddRecordSPChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SPSaveRecord", DbType="VarChar(200)")]
+		public string SPSaveRecord
+		{
+			get
+			{
+				return this._SPSaveRecord;
+			}
+			set
+			{
+				if ((this._SPSaveRecord != value))
+				{
+					this.OnSPSaveRecordChanging(value);
+					this.SendPropertyChanging();
+					this._SPSaveRecord = value;
+					this.SendPropertyChanged("SPSaveRecord");
+					this.OnSPSaveRecordChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_HideFilter", DbType="Bit")]
+		public System.Nullable<bool> HideFilter
+		{
+			get
+			{
+				return this._HideFilter;
+			}
+			set
+			{
+				if ((this._HideFilter != value))
+				{
+					this.OnHideFilterChanging(value);
+					this.SendPropertyChanging();
+					this._HideFilter = value;
+					this.SendPropertyChanged("HideFilter");
+					this.OnHideFilterChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SaveAndAdd", DbType="Bit")]
+		public System.Nullable<bool> SaveAndAdd
+		{
+			get
+			{
+				return this._SaveAndAdd;
+			}
+			set
+			{
+				if ((this._SaveAndAdd != value))
+				{
+					this.OnSaveAndAddChanging(value);
+					this.SendPropertyChanging();
+					this._SaveAndAdd = value;
+					this.SendPropertyChanged("SaveAndAdd");
+					this.OnSaveAndAddChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NavigationArrows", DbType="Bit NOT NULL")]
+		public bool NavigationArrows
+		{
+			get
+			{
+				return this._NavigationArrows;
+			}
+			set
+			{
+				if ((this._NavigationArrows != value))
+				{
+					this.OnNavigationArrowsChanging(value);
+					this.SendPropertyChanging();
+					this._NavigationArrows = value;
+					this.SendPropertyChanged("NavigationArrows");
+					this.OnNavigationArrowsChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GraphXAxisColumnID", DbType="Int")]
+		public System.Nullable<int> GraphXAxisColumnID
+		{
+			get
+			{
+				return this._GraphXAxisColumnID;
+			}
+			set
+			{
+				if ((this._GraphXAxisColumnID != value))
+				{
+					if (this._Column9.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnGraphXAxisColumnIDChanging(value);
+					this.SendPropertyChanging();
+					this._GraphXAxisColumnID = value;
+					this.SendPropertyChanged("GraphXAxisColumnID");
+					this.OnGraphXAxisColumnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GraphSeriesColumnID", DbType="Int")]
+		public System.Nullable<int> GraphSeriesColumnID
+		{
+			get
+			{
+				return this._GraphSeriesColumnID;
+			}
+			set
+			{
+				if ((this._GraphSeriesColumnID != value))
+				{
+					if (this._Column8.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnGraphSeriesColumnIDChanging(value);
+					this.SendPropertyChanging();
+					this._GraphSeriesColumnID = value;
+					this.SendPropertyChanged("GraphSeriesColumnID");
+					this.OnGraphSeriesColumnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GraphDefaultPeriod", DbType="Int")]
+		public System.Nullable<int> GraphDefaultPeriod
+		{
+			get
+			{
+				return this._GraphDefaultPeriod;
+			}
+			set
+			{
+				if ((this._GraphDefaultPeriod != value))
+				{
+					this.OnGraphDefaultPeriodChanging(value);
+					this.SendPropertyChanging();
+					this._GraphDefaultPeriod = value;
+					this.SendPropertyChanged("GraphDefaultPeriod");
+					this.OnGraphDefaultPeriodChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DataUpdateUniqueColumnID", DbType="Int")]
+		public System.Nullable<int> DataUpdateUniqueColumnID
+		{
+			get
+			{
+				return this._DataUpdateUniqueColumnID;
+			}
+			set
+			{
+				if ((this._DataUpdateUniqueColumnID != value))
+				{
+					if (this._Column2.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnDataUpdateUniqueColumnIDChanging(value);
+					this.SendPropertyChanging();
+					this._DataUpdateUniqueColumnID = value;
+					this.SendPropertyChanged("DataUpdateUniqueColumnID");
+					this.OnDataUpdateUniqueColumnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_AllowCopyRecords", DbType="Bit")]
+		public System.Nullable<bool> AllowCopyRecords
+		{
+			get
+			{
+				return this._AllowCopyRecords;
+			}
+			set
+			{
+				if ((this._AllowCopyRecords != value))
+				{
+					this.OnAllowCopyRecordsChanging(value);
+					this.SendPropertyChanging();
+					this._AllowCopyRecords = value;
+					this.SendPropertyChanged("AllowCopyRecords");
+					this.OnAllowCopyRecordsChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SPSendEmail", DbType="VarChar(200)")]
+		public string SPSendEmail
+		{
+			get
+			{
+				return this._SPSendEmail;
+			}
+			set
+			{
+				if ((this._SPSendEmail != value))
+				{
+					this.OnSPSendEmailChanging(value);
+					this.SendPropertyChanging();
+					this._SPSendEmail = value;
+					this.SendPropertyChanged("SPSendEmail");
+					this.OnSPSendEmailChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SPUpdateConfirm", DbType="VarChar(256)")]
+		public string SPUpdateConfirm
+		{
+			get
+			{
+				return this._SPUpdateConfirm;
+			}
+			set
+			{
+				if ((this._SPUpdateConfirm != value))
+				{
+					this.OnSPUpdateConfirmChanging(value);
+					this.SendPropertyChanging();
+					this._SPUpdateConfirm = value;
+					this.SendPropertyChanged("SPUpdateConfirm");
+					this.OnSPUpdateConfirmChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowSentEmails", DbType="Bit")]
+		public System.Nullable<bool> ShowSentEmails
+		{
+			get
+			{
+				return this._ShowSentEmails;
+			}
+			set
+			{
+				if ((this._ShowSentEmails != value))
+				{
+					this.OnShowSentEmailsChanging(value);
+					this.SendPropertyChanging();
+					this._ShowSentEmails = value;
+					this.SendPropertyChanged("ShowSentEmails");
+					this.OnShowSentEmailsChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ShowReceivedEmails", DbType="Bit")]
+		public System.Nullable<bool> ShowReceivedEmails
+		{
+			get
+			{
+				return this._ShowReceivedEmails;
+			}
+			set
+			{
+				if ((this._ShowReceivedEmails != value))
+				{
+					this.OnShowReceivedEmailsChanging(value);
+					this.SendPropertyChanging();
+					this._ShowReceivedEmails = value;
+					this.SendPropertyChanged("ShowReceivedEmails");
+					this.OnShowReceivedEmailsChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UniqueColumnID", DbType="Int")]
+		public System.Nullable<int> UniqueColumnID
+		{
+			get
+			{
+				return this._UniqueColumnID;
+			}
+			set
+			{
+				if ((this._UniqueColumnID != value))
+				{
+					if (this._Column4.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnUniqueColumnIDChanging(value);
+					this.SendPropertyChanging();
+					this._UniqueColumnID = value;
+					this.SendPropertyChanged("UniqueColumnID");
+					this.OnUniqueColumnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_UniqueColumnID2", DbType="Int")]
+		public System.Nullable<int> UniqueColumnID2
+		{
+			get
+			{
+				return this._UniqueColumnID2;
+			}
+			set
+			{
+				if ((this._UniqueColumnID2 != value))
+				{
+					if (this._Column5.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnUniqueColumnID2Changing(value);
+					this.SendPropertyChanging();
+					this._UniqueColumnID2 = value;
+					this.SendPropertyChanged("UniqueColumnID2");
+					this.OnUniqueColumnID2Changed();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SPAfterImport_DELETED", DbType="VarChar(100)")]
+		public string SPAfterImport_DELETED
+		{
+			get
+			{
+				return this._SPAfterImport_DELETED;
+			}
+			set
+			{
+				if ((this._SPAfterImport_DELETED != value))
+				{
+					this.OnSPAfterImport_DELETEDChanging(value);
+					this.SendPropertyChanging();
+					this._SPAfterImport_DELETED = value;
+					this.SendPropertyChanged("SPAfterImport_DELETED");
+					this.OnSPAfterImport_DELETEDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PinDisplayOrder", DbType="Int")]
+		public System.Nullable<int> PinDisplayOrder
+		{
+			get
+			{
+				return this._PinDisplayOrder;
+			}
+			set
+			{
+				if ((this._PinDisplayOrder != value))
+				{
+					this.OnPinDisplayOrderChanging(value);
+					this.SendPropertyChanging();
+					this._PinDisplayOrder = value;
+					this.SendPropertyChanged("PinDisplayOrder");
+					this.OnPinDisplayOrderChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GraphOnStart", DbType="VarChar(25)")]
+		public string GraphOnStart
+		{
+			get
+			{
+				return this._GraphOnStart;
+			}
+			set
+			{
+				if ((this._GraphOnStart != value))
+				{
+					this.OnGraphOnStartChanging(value);
+					this.SendPropertyChanging();
+					this._GraphOnStart = value;
+					this.SendPropertyChanged("GraphOnStart");
+					this.OnGraphOnStartChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_GraphDefaultYAxisColumnID", DbType="Int")]
+		public System.Nullable<int> GraphDefaultYAxisColumnID
+		{
+			get
+			{
+				return this._GraphDefaultYAxisColumnID;
+			}
+			set
+			{
+				if ((this._GraphDefaultYAxisColumnID != value))
+				{
+					if (this._Column3.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnGraphDefaultYAxisColumnIDChanging(value);
+					this.SendPropertyChanging();
+					this._GraphDefaultYAxisColumnID = value;
+					this.SendPropertyChanged("GraphDefaultYAxisColumnID");
+					this.OnGraphDefaultYAxisColumnIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_SummaryPageContent", DbType="VarChar(MAX)")]
+		public string SummaryPageContent
+		{
+			get
+			{
+				return this._SummaryPageContent;
+			}
+			set
+			{
+				if ((this._SummaryPageContent != value))
+				{
+					this.OnSummaryPageContentChanging(value);
+					this.SendPropertyChanging();
+					this._SummaryPageContent = value;
+					this.SendPropertyChanged("SummaryPageContent");
+					this.OnSummaryPageContentChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsDataUpdateAllowed", DbType="Bit")]
+		public System.Nullable<bool> IsDataUpdateAllowed
+		{
+			get
+			{
+				return this._IsDataUpdateAllowed;
+			}
+			set
+			{
+				if ((this._IsDataUpdateAllowed != value))
+				{
+					this.OnIsDataUpdateAllowedChanging(value);
+					this.SendPropertyChanging();
+					this._IsDataUpdateAllowed = value;
+					this.SendPropertyChanged("IsDataUpdateAllowed");
+					this.OnIsDataUpdateAllowedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DefaultImportTemplateID", DbType="Int")]
+		public System.Nullable<int> DefaultImportTemplateID
+		{
+			get
+			{
+				return this._DefaultImportTemplateID;
+			}
+			set
+			{
+				if ((this._DefaultImportTemplateID != value))
+				{
+					this.OnDefaultImportTemplateIDChanging(value);
+					this.SendPropertyChanging();
+					this._DefaultImportTemplateID = value;
+					this.SendPropertyChanged("DefaultImportTemplateID");
+					this.OnDefaultImportTemplateIDChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NavigationArrows_BU", DbType="Bit")]
+		public System.Nullable<bool> NavigationArrows_BU
+		{
+			get
+			{
+				return this._NavigationArrows_BU;
+			}
+			set
+			{
+				if ((this._NavigationArrows_BU != value))
+				{
+					this.OnNavigationArrows_BUChanging(value);
+					this.SendPropertyChanging();
+					this._NavigationArrows_BU = value;
+					this.SendPropertyChanged("NavigationArrows_BU");
+					this.OnNavigationArrows_BUChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_DuplicateRecordAction", DbType="VarChar(50)")]
+		public string DuplicateRecordAction
+		{
+			get
+			{
+				return this._DuplicateRecordAction;
+			}
+			set
+			{
+				if ((this._DuplicateRecordAction != value))
+				{
+					this.OnDuplicateRecordActionChanging(value);
+					this.SendPropertyChanging();
+					this._DuplicateRecordAction = value;
+					this.SendPropertyChanged("DuplicateRecordAction");
+					this.OnDuplicateRecordActionChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Table_Document", Storage="_Documents", ThisKey="TableID", OtherKey="TableID")]
+		public EntitySet<Document> Documents
+		{
+			get
+			{
+				return this._Documents;
+			}
+			set
+			{
+				this._Documents.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Table_Table", Storage="_Tables", ThisKey="TableID", OtherKey="ParentTableID")]
+		public EntitySet<Table> Tables
+		{
+			get
+			{
+				return this._Tables;
+			}
+			set
+			{
+				this._Tables.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Table_Column", Storage="_Columns", ThisKey="TableID", OtherKey="TableID")]
+		public EntitySet<Column> Columns
+		{
+			get
+			{
+				return this._Columns;
+			}
+			set
+			{
+				this._Columns.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Table_Column1", Storage="_Columns1", ThisKey="TableID", OtherKey="DefaultRelatedTableID")]
+		public EntitySet<Column> Columns1
+		{
+			get
+			{
+				return this._Columns1;
+			}
+			set
+			{
+				this._Columns1.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Table_Table", Storage="_Table1", ThisKey="ParentTableID", OtherKey="TableID", IsForeignKey=true)]
+		public Table Table1
+		{
+			get
+			{
+				return this._Table1.Entity;
+			}
+			set
+			{
+				Table previousValue = this._Table1.Entity;
+				if (((previousValue != value) 
+							|| (this._Table1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Table1.Entity = null;
+						previousValue.Tables.Remove(this);
+					}
+					this._Table1.Entity = value;
+					if ((value != null))
+					{
+						value.Tables.Add(this);
+						this._ParentTableID = value.TableID;
+					}
+					else
+					{
+						this._ParentTableID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Table1");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table", Storage="_Column", ThisKey="FilterColumnID", OtherKey="ColumnID", IsForeignKey=true)]
+		public Column Column
+		{
+			get
+			{
+				return this._Column.Entity;
+			}
+			set
+			{
+				Column previousValue = this._Column.Entity;
+				if (((previousValue != value) 
+							|| (this._Column.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Column.Entity = null;
+						previousValue.Tables.Remove(this);
+					}
+					this._Column.Entity = value;
+					if ((value != null))
+					{
+						value.Tables.Add(this);
+						this._FilterColumnID = value.ColumnID;
+					}
+					else
+					{
+						this._FilterColumnID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Column");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table1", Storage="_Column1", ThisKey="AddUserUserColumnID", OtherKey="ColumnID", IsForeignKey=true)]
+		public Column Column1
+		{
+			get
+			{
+				return this._Column1.Entity;
+			}
+			set
+			{
+				Column previousValue = this._Column1.Entity;
+				if (((previousValue != value) 
+							|| (this._Column1.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Column1.Entity = null;
+						previousValue.Tables1.Remove(this);
+					}
+					this._Column1.Entity = value;
+					if ((value != null))
+					{
+						value.Tables1.Add(this);
+						this._AddUserUserColumnID = value.ColumnID;
+					}
+					else
+					{
+						this._AddUserUserColumnID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Column1");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table2", Storage="_Column2", ThisKey="DataUpdateUniqueColumnID", OtherKey="ColumnID", IsForeignKey=true)]
+		public Column Column2
+		{
+			get
+			{
+				return this._Column2.Entity;
+			}
+			set
+			{
+				Column previousValue = this._Column2.Entity;
+				if (((previousValue != value) 
+							|| (this._Column2.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Column2.Entity = null;
+						previousValue.Tables2.Remove(this);
+					}
+					this._Column2.Entity = value;
+					if ((value != null))
+					{
+						value.Tables2.Add(this);
+						this._DataUpdateUniqueColumnID = value.ColumnID;
+					}
+					else
+					{
+						this._DataUpdateUniqueColumnID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Column2");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table3", Storage="_Column3", ThisKey="GraphDefaultYAxisColumnID", OtherKey="ColumnID", IsForeignKey=true)]
+		public Column Column3
+		{
+			get
+			{
+				return this._Column3.Entity;
+			}
+			set
+			{
+				Column previousValue = this._Column3.Entity;
+				if (((previousValue != value) 
+							|| (this._Column3.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Column3.Entity = null;
+						previousValue.Tables3.Remove(this);
+					}
+					this._Column3.Entity = value;
+					if ((value != null))
+					{
+						value.Tables3.Add(this);
+						this._GraphDefaultYAxisColumnID = value.ColumnID;
+					}
+					else
+					{
+						this._GraphDefaultYAxisColumnID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Column3");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table4", Storage="_Column4", ThisKey="UniqueColumnID", OtherKey="ColumnID", IsForeignKey=true)]
+		public Column Column4
+		{
+			get
+			{
+				return this._Column4.Entity;
+			}
+			set
+			{
+				Column previousValue = this._Column4.Entity;
+				if (((previousValue != value) 
+							|| (this._Column4.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Column4.Entity = null;
+						previousValue.Tables4.Remove(this);
+					}
+					this._Column4.Entity = value;
+					if ((value != null))
+					{
+						value.Tables4.Add(this);
+						this._UniqueColumnID = value.ColumnID;
+					}
+					else
+					{
+						this._UniqueColumnID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Column4");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table5", Storage="_Column5", ThisKey="UniqueColumnID2", OtherKey="ColumnID", IsForeignKey=true)]
+		public Column Column5
+		{
+			get
+			{
+				return this._Column5.Entity;
+			}
+			set
+			{
+				Column previousValue = this._Column5.Entity;
+				if (((previousValue != value) 
+							|| (this._Column5.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Column5.Entity = null;
+						previousValue.Tables5.Remove(this);
+					}
+					this._Column5.Entity = value;
+					if ((value != null))
+					{
+						value.Tables5.Add(this);
+						this._UniqueColumnID2 = value.ColumnID;
+					}
+					else
+					{
+						this._UniqueColumnID2 = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Column5");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table6", Storage="_Column6", ThisKey="AddUserPasswordColumnID", OtherKey="ColumnID", IsForeignKey=true)]
+		public Column Column6
+		{
+			get
+			{
+				return this._Column6.Entity;
+			}
+			set
+			{
+				Column previousValue = this._Column6.Entity;
+				if (((previousValue != value) 
+							|| (this._Column6.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Column6.Entity = null;
+						previousValue.Tables6.Remove(this);
+					}
+					this._Column6.Entity = value;
+					if ((value != null))
+					{
+						value.Tables6.Add(this);
+						this._AddUserPasswordColumnID = value.ColumnID;
+					}
+					else
+					{
+						this._AddUserPasswordColumnID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Column6");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table7", Storage="_Column7", ThisKey="SortColumnID", OtherKey="ColumnID", IsForeignKey=true)]
+		public Column Column7
+		{
+			get
+			{
+				return this._Column7.Entity;
+			}
+			set
+			{
+				Column previousValue = this._Column7.Entity;
+				if (((previousValue != value) 
+							|| (this._Column7.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Column7.Entity = null;
+						previousValue.Tables7.Remove(this);
+					}
+					this._Column7.Entity = value;
+					if ((value != null))
+					{
+						value.Tables7.Add(this);
+						this._SortColumnID = value.ColumnID;
+					}
+					else
+					{
+						this._SortColumnID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Column7");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table8", Storage="_Column8", ThisKey="GraphSeriesColumnID", OtherKey="ColumnID", IsForeignKey=true)]
+		public Column Column8
+		{
+			get
+			{
+				return this._Column8.Entity;
+			}
+			set
+			{
+				Column previousValue = this._Column8.Entity;
+				if (((previousValue != value) 
+							|| (this._Column8.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Column8.Entity = null;
+						previousValue.Tables8.Remove(this);
+					}
+					this._Column8.Entity = value;
+					if ((value != null))
+					{
+						value.Tables8.Add(this);
+						this._GraphSeriesColumnID = value.ColumnID;
+					}
+					else
+					{
+						this._GraphSeriesColumnID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Column8");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table9", Storage="_Column9", ThisKey="GraphXAxisColumnID", OtherKey="ColumnID", IsForeignKey=true)]
+		public Column Column9
+		{
+			get
+			{
+				return this._Column9.Entity;
+			}
+			set
+			{
+				Column previousValue = this._Column9.Entity;
+				if (((previousValue != value) 
+							|| (this._Column9.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Column9.Entity = null;
+						previousValue.Tables9.Remove(this);
+					}
+					this._Column9.Entity = value;
+					if ((value != null))
+					{
+						value.Tables9.Add(this);
+						this._GraphXAxisColumnID = value.ColumnID;
+					}
+					else
+					{
+						this._GraphXAxisColumnID = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Column9");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table10", Storage="_Column10", ThisKey="ValidateColumnID1", OtherKey="ColumnID", IsForeignKey=true)]
+		public Column Column10
+		{
+			get
+			{
+				return this._Column10.Entity;
+			}
+			set
+			{
+				Column previousValue = this._Column10.Entity;
+				if (((previousValue != value) 
+							|| (this._Column10.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Column10.Entity = null;
+						previousValue.Tables10.Remove(this);
+					}
+					this._Column10.Entity = value;
+					if ((value != null))
+					{
+						value.Tables10.Add(this);
+						this._ValidateColumnID1 = value.ColumnID;
+					}
+					else
+					{
+						this._ValidateColumnID1 = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Column10");
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table11", Storage="_Column11", ThisKey="ValidateColumnID2", OtherKey="ColumnID", IsForeignKey=true)]
+		public Column Column11
+		{
+			get
+			{
+				return this._Column11.Entity;
+			}
+			set
+			{
+				Column previousValue = this._Column11.Entity;
+				if (((previousValue != value) 
+							|| (this._Column11.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Column11.Entity = null;
+						previousValue.Tables11.Remove(this);
+					}
+					this._Column11.Entity = value;
+					if ((value != null))
+					{
+						value.Tables11.Add(this);
+						this._ValidateColumnID2 = value.ColumnID;
+					}
+					else
+					{
+						this._ValidateColumnID2 = default(Nullable<int>);
+					}
+					this.SendPropertyChanged("Column11");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_Documents(Document entity)
+		{
+			this.SendPropertyChanging();
+			entity.Table = this;
+		}
+		
+		private void detach_Documents(Document entity)
+		{
+			this.SendPropertyChanging();
+			entity.Table = null;
+		}
+		
+		private void attach_Tables(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Table1 = this;
+		}
+		
+		private void detach_Tables(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Table1 = null;
+		}
+		
+		private void attach_Columns(Column entity)
+		{
+			this.SendPropertyChanging();
+			entity.Table = this;
+		}
+		
+		private void detach_Columns(Column entity)
+		{
+			this.SendPropertyChanging();
+			entity.Table = null;
+		}
+		
+		private void attach_Columns1(Column entity)
+		{
+			this.SendPropertyChanging();
+			entity.Table1 = this;
+		}
+		
+		private void detach_Columns1(Column entity)
+		{
+			this.SendPropertyChanging();
+			entity.Table1 = null;
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.[Column]")]
 	public partial class Column : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -3477,9 +4855,9 @@ namespace DocGen.DAL
 		
 		private string _DisplayTextDetail;
 		
-		private string _NameOnImport;
+		private string _NameOnImport_DELETED;
 		
-		private string _NameOnExport;
+		private string _NameOnExport_DELETED;
 		
 		private string _MobileName;
 		
@@ -3505,7 +4883,7 @@ namespace DocGen.DAL
 		
 		private bool _CheckUnlikelyValue;
 		
-		private System.Nullable<int> _PositionOnImport;
+		private System.Nullable<int> _PositionOnImport_DELETED;
 		
 		private string _Constant;
 		
@@ -3531,7 +4909,7 @@ namespace DocGen.DAL
 		
 		private System.Nullable<int> _AvgNumberOfRecords;
 		
-		private bool _IsDateSingleColumn;
+		private bool _IsDateSingleColumn_DELETED;
 		
 		private System.Nullable<decimal> _ShowGraphExceedance;
 		
@@ -3647,6 +5025,30 @@ namespace DocGen.DAL
 		
 		private System.Nullable<char> _Importance;
 		
+		private EntitySet<Table> _Tables;
+		
+		private EntitySet<Table> _Tables1;
+		
+		private EntitySet<Table> _Tables2;
+		
+		private EntitySet<Table> _Tables3;
+		
+		private EntitySet<Table> _Tables4;
+		
+		private EntitySet<Table> _Tables5;
+		
+		private EntitySet<Table> _Tables6;
+		
+		private EntitySet<Table> _Tables7;
+		
+		private EntitySet<Table> _Tables8;
+		
+		private EntitySet<Table> _Tables9;
+		
+		private EntitySet<Table> _Tables10;
+		
+		private EntitySet<Table> _Tables11;
+		
 		private EntitySet<Column> _Columns;
 		
 		private EntitySet<Column> _Columns1;
@@ -3705,10 +5107,10 @@ namespace DocGen.DAL
     partial void OnDisplayTextSummaryChanged();
     partial void OnDisplayTextDetailChanging(string value);
     partial void OnDisplayTextDetailChanged();
-    partial void OnNameOnImportChanging(string value);
-    partial void OnNameOnImportChanged();
-    partial void OnNameOnExportChanging(string value);
-    partial void OnNameOnExportChanged();
+    partial void OnNameOnImport_DELETEDChanging(string value);
+    partial void OnNameOnImport_DELETEDChanged();
+    partial void OnNameOnExport_DELETEDChanging(string value);
+    partial void OnNameOnExport_DELETEDChanged();
     partial void OnMobileNameChanging(string value);
     partial void OnMobileNameChanged();
     partial void OnDisplayOrderChanging(System.Nullable<int> value);
@@ -3733,8 +5135,8 @@ namespace DocGen.DAL
     partial void OnValidationOnEntryChanged();
     partial void OnCheckUnlikelyValueChanging(bool value);
     partial void OnCheckUnlikelyValueChanged();
-    partial void OnPositionOnImportChanging(System.Nullable<int> value);
-    partial void OnPositionOnImportChanged();
+    partial void OnPositionOnImport_DELETEDChanging(System.Nullable<int> value);
+    partial void OnPositionOnImport_DELETEDChanged();
     partial void OnConstantChanging(string value);
     partial void OnConstantChanged();
     partial void OnCalculationChanging(string value);
@@ -3759,8 +5161,8 @@ namespace DocGen.DAL
     partial void OnAvgColumnIDChanged();
     partial void OnAvgNumberOfRecordsChanging(System.Nullable<int> value);
     partial void OnAvgNumberOfRecordsChanged();
-    partial void OnIsDateSingleColumnChanging(bool value);
-    partial void OnIsDateSingleColumnChanged();
+    partial void OnIsDateSingleColumn_DELETEDChanging(bool value);
+    partial void OnIsDateSingleColumn_DELETEDChanged();
     partial void OnShowGraphExceedanceChanging(System.Nullable<decimal> value);
     partial void OnShowGraphExceedanceChanged();
     partial void OnShowGraphWarningChanging(System.Nullable<decimal> value);
@@ -3879,6 +5281,18 @@ namespace DocGen.DAL
 		
 		public Column()
 		{
+			this._Tables = new EntitySet<Table>(new Action<Table>(this.attach_Tables), new Action<Table>(this.detach_Tables));
+			this._Tables1 = new EntitySet<Table>(new Action<Table>(this.attach_Tables1), new Action<Table>(this.detach_Tables1));
+			this._Tables2 = new EntitySet<Table>(new Action<Table>(this.attach_Tables2), new Action<Table>(this.detach_Tables2));
+			this._Tables3 = new EntitySet<Table>(new Action<Table>(this.attach_Tables3), new Action<Table>(this.detach_Tables3));
+			this._Tables4 = new EntitySet<Table>(new Action<Table>(this.attach_Tables4), new Action<Table>(this.detach_Tables4));
+			this._Tables5 = new EntitySet<Table>(new Action<Table>(this.attach_Tables5), new Action<Table>(this.detach_Tables5));
+			this._Tables6 = new EntitySet<Table>(new Action<Table>(this.attach_Tables6), new Action<Table>(this.detach_Tables6));
+			this._Tables7 = new EntitySet<Table>(new Action<Table>(this.attach_Tables7), new Action<Table>(this.detach_Tables7));
+			this._Tables8 = new EntitySet<Table>(new Action<Table>(this.attach_Tables8), new Action<Table>(this.detach_Tables8));
+			this._Tables9 = new EntitySet<Table>(new Action<Table>(this.attach_Tables9), new Action<Table>(this.detach_Tables9));
+			this._Tables10 = new EntitySet<Table>(new Action<Table>(this.attach_Tables10), new Action<Table>(this.detach_Tables10));
+			this._Tables11 = new EntitySet<Table>(new Action<Table>(this.attach_Tables11), new Action<Table>(this.detach_Tables11));
 			this._Columns = new EntitySet<Column>(new Action<Column>(this.attach_Columns), new Action<Column>(this.detach_Columns));
 			this._Columns1 = new EntitySet<Column>(new Action<Column>(this.attach_Columns1), new Action<Column>(this.detach_Columns1));
 			this._Columns2 = new EntitySet<Column>(new Action<Column>(this.attach_Columns2), new Action<Column>(this.detach_Columns2));
@@ -4027,42 +5441,42 @@ namespace DocGen.DAL
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NameOnImport", DbType="VarChar(50)")]
-		public string NameOnImport
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NameOnImport_DELETED", DbType="VarChar(50)")]
+		public string NameOnImport_DELETED
 		{
 			get
 			{
-				return this._NameOnImport;
+				return this._NameOnImport_DELETED;
 			}
 			set
 			{
-				if ((this._NameOnImport != value))
+				if ((this._NameOnImport_DELETED != value))
 				{
-					this.OnNameOnImportChanging(value);
+					this.OnNameOnImport_DELETEDChanging(value);
 					this.SendPropertyChanging();
-					this._NameOnImport = value;
-					this.SendPropertyChanged("NameOnImport");
-					this.OnNameOnImportChanged();
+					this._NameOnImport_DELETED = value;
+					this.SendPropertyChanged("NameOnImport_DELETED");
+					this.OnNameOnImport_DELETEDChanged();
 				}
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NameOnExport", DbType="VarChar(50)")]
-		public string NameOnExport
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_NameOnExport_DELETED", DbType="VarChar(50)")]
+		public string NameOnExport_DELETED
 		{
 			get
 			{
-				return this._NameOnExport;
+				return this._NameOnExport_DELETED;
 			}
 			set
 			{
-				if ((this._NameOnExport != value))
+				if ((this._NameOnExport_DELETED != value))
 				{
-					this.OnNameOnExportChanging(value);
+					this.OnNameOnExport_DELETEDChanging(value);
 					this.SendPropertyChanging();
-					this._NameOnExport = value;
-					this.SendPropertyChanged("NameOnExport");
-					this.OnNameOnExportChanged();
+					this._NameOnExport_DELETED = value;
+					this.SendPropertyChanged("NameOnExport_DELETED");
+					this.OnNameOnExport_DELETEDChanged();
 				}
 			}
 		}
@@ -4307,22 +5721,22 @@ namespace DocGen.DAL
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PositionOnImport", DbType="Int")]
-		public System.Nullable<int> PositionOnImport
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_PositionOnImport_DELETED", DbType="Int")]
+		public System.Nullable<int> PositionOnImport_DELETED
 		{
 			get
 			{
-				return this._PositionOnImport;
+				return this._PositionOnImport_DELETED;
 			}
 			set
 			{
-				if ((this._PositionOnImport != value))
+				if ((this._PositionOnImport_DELETED != value))
 				{
-					this.OnPositionOnImportChanging(value);
+					this.OnPositionOnImport_DELETEDChanging(value);
 					this.SendPropertyChanging();
-					this._PositionOnImport = value;
-					this.SendPropertyChanged("PositionOnImport");
-					this.OnPositionOnImportChanged();
+					this._PositionOnImport_DELETED = value;
+					this.SendPropertyChanged("PositionOnImport_DELETED");
+					this.OnPositionOnImport_DELETEDChanged();
 				}
 			}
 		}
@@ -4571,22 +5985,22 @@ namespace DocGen.DAL
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsDateSingleColumn", DbType="Bit NOT NULL")]
-		public bool IsDateSingleColumn
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_IsDateSingleColumn_DELETED", DbType="Bit NOT NULL")]
+		public bool IsDateSingleColumn_DELETED
 		{
 			get
 			{
-				return this._IsDateSingleColumn;
+				return this._IsDateSingleColumn_DELETED;
 			}
 			set
 			{
-				if ((this._IsDateSingleColumn != value))
+				if ((this._IsDateSingleColumn_DELETED != value))
 				{
-					this.OnIsDateSingleColumnChanging(value);
+					this.OnIsDateSingleColumn_DELETEDChanging(value);
 					this.SendPropertyChanging();
-					this._IsDateSingleColumn = value;
-					this.SendPropertyChanged("IsDateSingleColumn");
-					this.OnIsDateSingleColumnChanged();
+					this._IsDateSingleColumn_DELETED = value;
+					this.SendPropertyChanged("IsDateSingleColumn_DELETED");
+					this.OnIsDateSingleColumn_DELETEDChanged();
 				}
 			}
 		}
@@ -5771,6 +7185,162 @@ namespace DocGen.DAL
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table", Storage="_Tables", ThisKey="ColumnID", OtherKey="FilterColumnID")]
+		public EntitySet<Table> Tables
+		{
+			get
+			{
+				return this._Tables;
+			}
+			set
+			{
+				this._Tables.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table1", Storage="_Tables1", ThisKey="ColumnID", OtherKey="AddUserUserColumnID")]
+		public EntitySet<Table> Tables1
+		{
+			get
+			{
+				return this._Tables1;
+			}
+			set
+			{
+				this._Tables1.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table2", Storage="_Tables2", ThisKey="ColumnID", OtherKey="DataUpdateUniqueColumnID")]
+		public EntitySet<Table> Tables2
+		{
+			get
+			{
+				return this._Tables2;
+			}
+			set
+			{
+				this._Tables2.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table3", Storage="_Tables3", ThisKey="ColumnID", OtherKey="GraphDefaultYAxisColumnID")]
+		public EntitySet<Table> Tables3
+		{
+			get
+			{
+				return this._Tables3;
+			}
+			set
+			{
+				this._Tables3.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table4", Storage="_Tables4", ThisKey="ColumnID", OtherKey="UniqueColumnID")]
+		public EntitySet<Table> Tables4
+		{
+			get
+			{
+				return this._Tables4;
+			}
+			set
+			{
+				this._Tables4.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table5", Storage="_Tables5", ThisKey="ColumnID", OtherKey="UniqueColumnID2")]
+		public EntitySet<Table> Tables5
+		{
+			get
+			{
+				return this._Tables5;
+			}
+			set
+			{
+				this._Tables5.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table6", Storage="_Tables6", ThisKey="ColumnID", OtherKey="AddUserPasswordColumnID")]
+		public EntitySet<Table> Tables6
+		{
+			get
+			{
+				return this._Tables6;
+			}
+			set
+			{
+				this._Tables6.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table7", Storage="_Tables7", ThisKey="ColumnID", OtherKey="SortColumnID")]
+		public EntitySet<Table> Tables7
+		{
+			get
+			{
+				return this._Tables7;
+			}
+			set
+			{
+				this._Tables7.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table8", Storage="_Tables8", ThisKey="ColumnID", OtherKey="GraphSeriesColumnID")]
+		public EntitySet<Table> Tables8
+		{
+			get
+			{
+				return this._Tables8;
+			}
+			set
+			{
+				this._Tables8.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table9", Storage="_Tables9", ThisKey="ColumnID", OtherKey="GraphXAxisColumnID")]
+		public EntitySet<Table> Tables9
+		{
+			get
+			{
+				return this._Tables9;
+			}
+			set
+			{
+				this._Tables9.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table10", Storage="_Tables10", ThisKey="ColumnID", OtherKey="ValidateColumnID1")]
+		public EntitySet<Table> Tables10
+		{
+			get
+			{
+				return this._Tables10;
+			}
+			set
+			{
+				this._Tables10.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Table11", Storage="_Tables11", ThisKey="ColumnID", OtherKey="ValidateColumnID2")]
+		public EntitySet<Table> Tables11
+		{
+			get
+			{
+				return this._Tables11;
+			}
+			set
+			{
+				this._Tables11.Assign(value);
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Column_Column", Storage="_Columns", ThisKey="ColumnID", OtherKey="HideColumnID")]
 		public EntitySet<Column> Columns
 		{
@@ -6314,6 +7884,150 @@ namespace DocGen.DAL
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+		
+		private void attach_Tables(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column = this;
+		}
+		
+		private void detach_Tables(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column = null;
+		}
+		
+		private void attach_Tables1(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column1 = this;
+		}
+		
+		private void detach_Tables1(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column1 = null;
+		}
+		
+		private void attach_Tables2(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column2 = this;
+		}
+		
+		private void detach_Tables2(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column2 = null;
+		}
+		
+		private void attach_Tables3(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column3 = this;
+		}
+		
+		private void detach_Tables3(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column3 = null;
+		}
+		
+		private void attach_Tables4(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column4 = this;
+		}
+		
+		private void detach_Tables4(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column4 = null;
+		}
+		
+		private void attach_Tables5(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column5 = this;
+		}
+		
+		private void detach_Tables5(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column5 = null;
+		}
+		
+		private void attach_Tables6(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column6 = this;
+		}
+		
+		private void detach_Tables6(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column6 = null;
+		}
+		
+		private void attach_Tables7(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column7 = this;
+		}
+		
+		private void detach_Tables7(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column7 = null;
+		}
+		
+		private void attach_Tables8(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column8 = this;
+		}
+		
+		private void detach_Tables8(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column8 = null;
+		}
+		
+		private void attach_Tables9(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column9 = this;
+		}
+		
+		private void detach_Tables9(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column9 = null;
+		}
+		
+		private void attach_Tables10(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column10 = this;
+		}
+		
+		private void detach_Tables10(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column10 = null;
+		}
+		
+		private void attach_Tables11(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column11 = this;
+		}
+		
+		private void detach_Tables11(Table entity)
+		{
+			this.SendPropertyChanging();
+			entity.Column11 = null;
 		}
 		
 		private void attach_Columns(Column entity)

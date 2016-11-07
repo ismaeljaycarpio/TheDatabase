@@ -4,8 +4,8 @@
 
 <%@ Register Src="~/Pages/Pager/Pager.ascx" TagName="GridViewPager" TagPrefix="asp" %>
 <%@ Register Namespace="DBGServerControl" Assembly="DBGServerControl" TagPrefix="dbg" %>
-    <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
-
+ <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
+<asp:ScriptManagerProxy runat="server" ID="ScriptManagerProxy1"></asp:ScriptManagerProxy>
 
 
 
@@ -25,110 +25,110 @@
 
        }
 
-       function MouseEvents(objRef, evt) {
-           var checkbox = objRef.getElementsByTagName("input")[0];
+       //function MouseEvents(objRef, evt) {
+       //    var checkbox = objRef.getElementsByTagName("input")[0];
 
 
 
-           if (evt.type == "mouseover") {
-               objRef.style.backgroundColor = "#76BAF2";
-               objRef.style.cursor = 'pointer';
-           }
-           else {
-               //            if (checkbox == null) {
-               //                return;
-               //            }
+       //    if (evt.type == "mouseover") {
+       //        objRef.style.backgroundColor = "#76BAF2";
+       //        objRef.style.cursor = 'pointer';
+       //    }
+       //    else {
+       //        //            if (checkbox == null) {
+       //        //                return;
+       //        //            }
 
-               if (checkbox != null && checkbox.checked) {
-                   objRef.style.backgroundColor = "#96FFFF";
-               }
-               else if (evt.type == "mouseout") {
-                   if (objRef.rowIndex % 2 == 0) {
-                       //Alternating Row Color
-                       objRef.style.backgroundColor = "white";
-                   }
-                   else {
-                       objRef.style.backgroundColor = "#DCF2F0";
-                   }
-               }
-           }
-       }
+       //        if (checkbox != null && checkbox.checked) {
+       //            objRef.style.backgroundColor = "#96FFFF";
+       //        }
+       //        else if (evt.type == "mouseout") {
+       //            if (objRef.rowIndex % 2 == 0) {
+       //                //Alternating Row Color
+       //                objRef.style.backgroundColor = "white";
+       //            }
+       //            else {
+       //                objRef.style.backgroundColor = "#DCF2F0";
+       //            }
+       //        }
+       //    }
+       //}
 
 
-       function Check_Click(objRef) {
-           //Get the Row based on checkbox
-           var row = objRef.parentNode.parentNode;
-           if (objRef.checked) {
-               //If checked change color to Aqua
-               row.style.backgroundColor = "#96FFFF";
-           }
-           else {
-               //If not checked change back to original color
-               if (row.rowIndex % 2 == 0) {
-                   //Alternating Row Color
-                   row.style.backgroundColor = "white";
+       //function Check_Click(objRef) {
+       //    //Get the Row based on checkbox
+       //    var row = objRef.parentNode.parentNode;
+       //    if (objRef.checked) {
+       //        //If checked change color to Aqua
+       //        row.style.backgroundColor = "#96FFFF";
+       //    }
+       //    else {
+       //        //If not checked change back to original color
+       //        if (row.rowIndex % 2 == 0) {
+       //            //Alternating Row Color
+       //            row.style.backgroundColor = "white";
 
-               }
-               else {
-                   row.style.backgroundColor = "#DCF2F0";
-               }
-           }
+       //        }
+       //        else {
+       //            row.style.backgroundColor = "#DCF2F0";
+       //        }
+       //    }
 
-           //Get the reference of GridView
-           var GridView = row.parentNode;
+       //    //Get the reference of GridView
+       //    var GridView = row.parentNode;
 
-           //Get all input elements in Gridview
-           var inputList = GridView.getElementsByTagName("input");
+       //    //Get all input elements in Gridview
+       //    var inputList = GridView.getElementsByTagName("input");
 
-           for (var i = 0; i < inputList.length; i++) {
-               //The First element is the Header Checkbox
-               var headerCheckBox = inputList[0];
+       //    for (var i = 0; i < inputList.length; i++) {
+       //        //The First element is the Header Checkbox
+       //        var headerCheckBox = inputList[0];
 
-               //Based on all or none checkboxes
-               //are checked check/uncheck Header Checkbox
-               var checked = true;
-               if (inputList[i].type == "checkbox" && inputList[i] != headerCheckBox) {
-                   if (!inputList[i].checked) {
-                       checked = false;
-                       break;
-                   }
-               }
-           }
-           headerCheckBox.checked = checked;
+       //        //Based on all or none checkboxes
+       //        //are checked check/uncheck Header Checkbox
+       //        var checked = true;
+       //        if (inputList[i].type == "checkbox" && inputList[i] != headerCheckBox) {
+       //            if (!inputList[i].checked) {
+       //                checked = false;
+       //                break;
+       //            }
+       //        }
+       //    }
+       //    headerCheckBox.checked = checked;
 
-       }
+       //}
 
-       function checkAll(objRef) {
-           var GridView = objRef.parentNode.parentNode.parentNode;
-           var inputList = GridView.getElementsByTagName("input");
-           for (var i = 0; i < inputList.length; i++) {
-               //Get the Cell To find out ColumnIndex
-               var row = inputList[i].parentNode.parentNode;
-               if (inputList[i].type == "checkbox" && objRef != inputList[i]) {
-                   if (objRef.checked) {
-                       //If the header checkbox is checked
-                       //check all checkboxes
-                       //and highlight all rows
-                       row.style.backgroundColor = "#96FFFF";
-                       inputList[i].checked = true;
-                   }
-                   else {
-                       //If the header checkbox is checked
-                       //uncheck all checkboxes
-                       //and change rowcolor back to original 
-                       if (row.rowIndex % 2 == 0) {
-                           //Alternating Row Color
-                           row.style.backgroundColor = "white";
+       //function checkAll(objRef) {
+       //    var GridView = objRef.parentNode.parentNode.parentNode;
+       //    var inputList = GridView.getElementsByTagName("input");
+       //    for (var i = 0; i < inputList.length; i++) {
+       //        //Get the Cell To find out ColumnIndex
+       //        var row = inputList[i].parentNode.parentNode;
+       //        if (inputList[i].type == "checkbox" && objRef != inputList[i]) {
+       //            if (objRef.checked) {
+       //                //If the header checkbox is checked
+       //                //check all checkboxes
+       //                //and highlight all rows
+       //                row.style.backgroundColor = "#96FFFF";
+       //                inputList[i].checked = true;
+       //            }
+       //            else {
+       //                //If the header checkbox is checked
+       //                //uncheck all checkboxes
+       //                //and change rowcolor back to original 
+       //                if (row.rowIndex % 2 == 0) {
+       //                    //Alternating Row Color
+       //                    row.style.backgroundColor = "white";
 
-                       }
-                       else {
-                           row.style.backgroundColor = "#DCF2F0";
-                       }
-                       inputList[i].checked = false;
-                   }
-               }
-           }
-       }
+       //                }
+       //                else {
+       //                    row.style.backgroundColor = "#DCF2F0";
+       //                }
+       //                inputList[i].checked = false;
+       //            }
+       //        }
+       //    }
+       //}
 
     </script>
 
@@ -180,7 +180,7 @@
 
    
 
-        <asp:UpdatePanel ID="UpdatePanel1" runat="server">
+        <asp:UpdatePanel ID="upMsg" runat="server">
         <ContentTemplate>
             <table border="0" cellpadding="0" cellspacing="0"  align="center">
                 <tr>
@@ -192,7 +192,7 @@
                                 </td>
                                 <td align="left">
                                     <div style="width: 40px; height: 40px;">
-                                        <asp:UpdateProgress class="ajax-indicator" ID="UpdateProgress1" runat="server" AssociatedUpdatePanelID="UpdatePanel1">
+                                        <%--<asp:UpdateProgress class="ajax-indicator" ID="UpdateProgress1" runat="server" >
                                             <ProgressTemplate>
                                                 <table style="width: 100%; text-align: center">
                                                     <tr>
@@ -202,7 +202,7 @@
                                                     </tr>
                                                 </table>
                                             </ProgressTemplate>
-                                        </asp:UpdateProgress>
+                                        </asp:UpdateProgress>--%>
                                     </div>
                                 </td>
                             </tr>

@@ -366,6 +366,7 @@ public partial class Home_Responsive : System.Web.UI.MasterPage
         if (Request.QueryString["public"] != null)
         {
             imgHouse.Visible = false;
+            imgResponsiveHouse.Visible = false;
             imgMenuOpen.Visible = false;
             Image2.Visible = false;
 
@@ -1066,6 +1067,7 @@ public partial class Home_Responsive : System.Web.UI.MasterPage
     protected void BindAccountMenu()
     {
         imgHouse.Visible = false;
+        imgResponsiveHouse.Visible = false;
         menuAccount.Items.Clear();
 
 
@@ -1089,10 +1091,15 @@ public partial class Home_Responsive : System.Web.UI.MasterPage
                     UserRole INNER JOIN Account ON UserRole.AccountID=Account.AccountID
                     WHERE UserID=" + _objUser.UserID.ToString() + " ORDER BY AccountName");
 
+            //test ismael
+            //old code: > 1
+            //new code: > 0
+            //end test
             if (dtTemp.Rows.Count > 1)
             {
                 menuAccount.Visible = true;
                 imgHouse.Visible = true;
+                imgResponsiveHouse.Visible = true;
 
                 int i = 0;
 

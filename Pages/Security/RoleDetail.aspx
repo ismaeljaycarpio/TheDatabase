@@ -17,7 +17,7 @@ Inherits="Pages_Security_RoleDetail" %>
          <tr>
          <td colspan="3">
     
-    <asp:UpdateProgress ID="UpdateProgress1" runat="server" AssociatedUpdatePanelID="UpdatePanel1">
+    <%--<asp:UpdateProgress ID="UpdateProgress1" runat="server" AssociatedUpdatePanelID="UpdatePanel1">
             <ProgressTemplate>
                 <table style="width:100%; text-align:center">
                 <tr>
@@ -25,7 +25,7 @@ Inherits="Pages_Security_RoleDetail" %>
                 </tr>
                 </table>
             </ProgressTemplate>
-        </asp:UpdateProgress>
+        </asp:UpdateProgress>--%>
     </td>
     </tr>
         <tr>

@@ -1006,8 +1006,8 @@ public class RecordManager
                 if (nParentMenuID != null)
                     command.Parameters.Add(new SqlParameter("@nParentMenuID", nParentMenuID));
 
-                if (p_Table.IsImportPositional != null)
-                    command.Parameters.Add(new SqlParameter("@bIsImportPositional", p_Table.IsImportPositional));
+                //if (p_Table.IsImportPositional != null)
+                //    command.Parameters.Add(new SqlParameter("@bIsImportPositional", p_Table.IsImportPositional));
 
                 if (p_Table.IsActive != null)
                     command.Parameters.Add(new SqlParameter("@bIsActive", p_Table.IsActive));
@@ -1015,21 +1015,21 @@ public class RecordManager
                 command.Parameters.Add(new SqlParameter("@iAccountID", p_Table.AccountID));
 
 
-                if (p_Table.PinImage != "")
+                if ( !string.IsNullOrEmpty( p_Table.PinImage))
                     command.Parameters.Add(new SqlParameter("@sPinImage", p_Table.PinImage));
 
 
                 if (p_Table.MaxTimeBetweenRecords != null)
                     command.Parameters.Add(new SqlParameter("@dMaxTimeBetweenRecords", p_Table.MaxTimeBetweenRecords));
 
-                if (p_Table.MaxTimeBetweenRecordsUnit != "")
+                if ( !string.IsNullOrEmpty( p_Table.MaxTimeBetweenRecordsUnit))
                     command.Parameters.Add(new SqlParameter("@sMaxTimeBetweenRecordsUnit", p_Table.MaxTimeBetweenRecordsUnit));
 
 
                 if (p_Table.LateDataDays != null)
                     command.Parameters.Add(new SqlParameter("@nLateDataDays", p_Table.LateDataDays));
-                if (p_Table.ImportDataStartRow != null)
-                    command.Parameters.Add(new SqlParameter("@nImportDataStartRow", p_Table.ImportDataStartRow));
+                //if (p_Table.ImportDataStartRow != null)
+                //    command.Parameters.Add(new SqlParameter("@nImportDataStartRow", p_Table.ImportDataStartRow));
 
                 //if (p_Table.AddMissingLocation != null)
                 //    command.Parameters.Add(new SqlParameter("@bAddMissingLocation", p_Table.AddMissingLocation));
@@ -1077,6 +1077,12 @@ public class RecordManager
                 if (p_Table.DefaultImportTemplateID != null)
                     command.Parameters.Add(new SqlParameter("@DefaultImportTemplateID", p_Table.DefaultImportTemplateID));
 
+                //if (!string.IsNullOrEmpty(  p_Table.SPSearchGo))
+                //    command.Parameters.Add(new SqlParameter("@sSPSearchGo", p_Table.SPSearchGo));
+
+                //if (!string.IsNullOrEmpty(p_Table.SPSearchGo))
+                //    command.Parameters.Add(new SqlParameter("@sSPSearchGo", p_Table.SPSearchGo));
+
 
                 if (p_Table.ShowSentEmails != null)
                     command.Parameters.Add(new SqlParameter("@bShowSentEmails", p_Table.ShowSentEmails));
@@ -1086,9 +1092,7 @@ public class RecordManager
                 if (p_Table.AllowCopyRecords != null)
                     command.Parameters.Add(new SqlParameter("@bAllowCopyRecords", p_Table.AllowCopyRecords));
 
-                if (p_Table.DataUpdateUniqueColumnID != null)
-                    command.Parameters.Add(new SqlParameter("@nDataUpdateUniqueColumnID", p_Table.DataUpdateUniqueColumnID));
-
+             
 
                 if (p_Table.NavigationArrows != null)
                     command.Parameters.Add(new SqlParameter("@bNavigationArrows", p_Table.NavigationArrows));
@@ -1138,7 +1142,7 @@ public class RecordManager
 
 
 
-                command.Parameters.Add(new SqlParameter("@bIsImportPositional", p_Table.IsImportPositional));
+                //command.Parameters.Add(new SqlParameter("@bIsImportPositional", p_Table.IsImportPositional));
                 if (p_Table.IsActive != null)
                     command.Parameters.Add(new SqlParameter("@bIsActive", p_Table.IsActive));
 
@@ -1162,8 +1166,8 @@ public class RecordManager
                 if (p_Table.LateDataDays != null)
                     command.Parameters.Add(new SqlParameter("@nLateDataDays", p_Table.LateDataDays));
 
-                if (p_Table.ImportDataStartRow != null)
-                    command.Parameters.Add(new SqlParameter("@nImportDataStartRow", p_Table.ImportDataStartRow));
+                //if (p_Table.ImportDataStartRow != null)
+                //    command.Parameters.Add(new SqlParameter("@nImportDataStartRow", p_Table.ImportDataStartRow));
 
                 //if (p_Table.AddMissingLocation != null)
                 //    command.Parameters.Add(new SqlParameter("@bAddMissingLocation", p_Table.AddMissingLocation));
@@ -1171,16 +1175,16 @@ public class RecordManager
                 if (p_Table.DateFormat != "")
                     command.Parameters.Add(new SqlParameter("@sDateFormat", p_Table.DateFormat));
 
-                if (p_Table.IsRecordDateUnique != null)
-                    command.Parameters.Add(new SqlParameter("@bIsRecordDateUnique", p_Table.IsRecordDateUnique));
+                //if (p_Table.IsRecordDateUnique != null)
+                //    command.Parameters.Add(new SqlParameter("@bIsRecordDateUnique", p_Table.IsRecordDateUnique));
 
                 if (p_Table.UniqueColumnID != null)
                     command.Parameters.Add(new SqlParameter("@nUniqueColumnID", p_Table.UniqueColumnID));
                 if (p_Table.UniqueColumnID2 != null)
                     command.Parameters.Add(new SqlParameter("@nUniqueColumnID2", p_Table.UniqueColumnID2));
 
-                if (p_Table.IsDataUpdateAllowed != null)
-                    command.Parameters.Add(new SqlParameter("@bIsDataUpdateAllowed", p_Table.IsDataUpdateAllowed));
+                if (p_Table.DuplicateRecordAction != "")
+                    command.Parameters.Add(new SqlParameter("@sDuplicateRecordAction", p_Table.DuplicateRecordAction));
 
 
 
@@ -1207,8 +1211,8 @@ public class RecordManager
                 if (p_Table.AddUserNotification != null)
                     command.Parameters.Add(new SqlParameter("@bAddUserNotification", p_Table.AddUserNotification));
 
-                if (p_Table.ImportColumnHeaderRow != null)
-                    command.Parameters.Add(new SqlParameter("@nImportColumnHeaderRow", p_Table.ImportColumnHeaderRow));
+                //if (p_Table.ImportColumnHeaderRow != null)
+                //    command.Parameters.Add(new SqlParameter("@nImportColumnHeaderRow", p_Table.ImportColumnHeaderRow));
 
                 if (p_Table.SortColumnID != null)
                     command.Parameters.Add(new SqlParameter("@nSortColumnID", p_Table.SortColumnID));
@@ -1261,6 +1265,10 @@ public class RecordManager
 
                 if (p_Table.SummaryPageContent != "")
                     command.Parameters.Add(new SqlParameter("@SummaryPageContent", p_Table.SummaryPageContent));
+
+
+                if (p_Table.ShowChildTabsOnAdd != null)
+                    command.Parameters.Add(new SqlParameter("@bShowChildTabsOnAdd", p_Table.ShowChildTabsOnAdd));
 
                 //if (p_Table.BoxAroundField != null)
                 //command.Parameters.Add(new SqlParameter("@bBoxAroundField", p_Table.BoxAroundField));
@@ -1857,7 +1865,7 @@ public class RecordManager
                                (string)reader["TableName"],
                                (DateTime)reader["DateAdded"],
                                (DateTime)reader["DateUpdated"],
-                                 (bool)reader["IsImportPositional"], (bool)reader["IsActive"]
+                                  (bool)reader["IsActive"]
                                 );
 
                             temp.AccountID = reader["AccountID"] == DBNull.Value ? null : (int?)reader["AccountID"];
@@ -1867,12 +1875,12 @@ public class RecordManager
                             temp.MaxTimeBetweenRecordsUnit = reader["MaxTimeBetweenRecordsUnit"] == DBNull.Value ? "" : (string)reader["MaxTimeBetweenRecordsUnit"];
                             temp.LastUpdatedUserID = reader["LastUpdatedUserID"] == DBNull.Value ? null : (int?)reader["LastUpdatedUserID"];
                             temp.LateDataDays = reader["LateDataDays"] == DBNull.Value ? null : (int?)reader["LateDataDays"];
-                            temp.ImportDataStartRow = reader["ImportDataStartRow"] == DBNull.Value ? null : (int?)reader["ImportDataStartRow"];
+                            //temp.ImportDataStartRow = reader["ImportDataStartRow"] == DBNull.Value ? null : (int?)reader["ImportDataStartRow"];
                             //temp.AddMissingLocation = reader["AddMissingLocation"] == DBNull.Value ? null : (bool?)reader["AddMissingLocation"];
-                            temp.IsRecordDateUnique = reader["IsRecordDateUnique"] == DBNull.Value ? null : (bool?)reader["IsRecordDateUnique"];
+                            //temp.IsRecordDateUnique = reader["IsRecordDateUnique"] == DBNull.Value ? null : (bool?)reader["IsRecordDateUnique"];
                             temp.UniqueColumnID = reader["UniqueColumnID"] == DBNull.Value ? null : (int?)reader["UniqueColumnID"];
                             temp.UniqueColumnID2 = reader["UniqueColumnID2"] == DBNull.Value ? null : (int?)reader["UniqueColumnID2"];
-                            temp.IsDataUpdateAllowed = reader["IsDataUpdateAllowed"] == DBNull.Value ? null : (bool?)reader["IsDataUpdateAllowed"];
+                            temp.DuplicateRecordAction = reader["DuplicateRecordAction"] == DBNull.Value ? "" : (string)reader["DuplicateRecordAction"];
                             temp.FlashAlerts = reader["FlashAlerts"] == DBNull.Value ? null : (bool?)reader["FlashAlerts"];
 
                             temp.DateFormat = (string)reader["DateFormat"];
@@ -1891,7 +1899,7 @@ public class RecordManager
                             temp.AddUserUserColumnID = reader["AddUserUserColumnID"] == DBNull.Value ? null : (int?)reader["AddUserUserColumnID"];
                             temp.AddUserPasswordColumnID = reader["AddUserPasswordColumnID"] == DBNull.Value ? null : (int?)reader["AddUserPasswordColumnID"];
                             temp.AddUserNotification = reader["AddUserNotification"] == DBNull.Value ? null : (bool?)reader["AddUserNotification"];
-                            temp.ImportColumnHeaderRow = reader["ImportColumnHeaderRow"] == DBNull.Value ? null : (int?)reader["ImportColumnHeaderRow"];
+                            //temp.ImportColumnHeaderRow = reader["ImportColumnHeaderRow"] == DBNull.Value ? null : (int?)reader["ImportColumnHeaderRow"];
                             temp.SortColumnID = reader["SortColumnID"] == DBNull.Value ? null : (int?)reader["SortColumnID"];
                             temp.HeaderName = reader["HeaderName"] == DBNull.Value ? "" : (string)reader["HeaderName"];
                             temp.HideAdvancedOption = reader["HideAdvancedOption"] == DBNull.Value ? null : (bool?)reader["HideAdvancedOption"];
@@ -1924,7 +1932,7 @@ public class RecordManager
                             temp.GraphXAxisColumnID = reader["GraphXAxisColumnID"] == DBNull.Value ? null : (int?)reader["GraphXAxisColumnID"];
                             temp.GraphSeriesColumnID = reader["GraphSeriesColumnID"] == DBNull.Value ? null : (int?)reader["GraphSeriesColumnID"];
                             temp.GraphDefaultPeriod = reader["GraphDefaultPeriod"] == DBNull.Value ? null : (int?)reader["GraphDefaultPeriod"];
-                            temp.DataUpdateUniqueColumnID = reader["DataUpdateUniqueColumnID"] == DBNull.Value ? null : (int?)reader["DataUpdateUniqueColumnID"];
+                            //temp.DataUpdateUniqueColumnID = reader["DataUpdateUniqueColumnID"] == DBNull.Value ? null : (int?)reader["DataUpdateUniqueColumnID"];
                             temp.AllowCopyRecords = reader["AllowCopyRecords"] == DBNull.Value ? null : (bool?)reader["AllowCopyRecords"];
 
                             temp.SPSendEmail = reader["SPSendEmail"] == DBNull.Value ? "" : (string)reader["SPSendEmail"];
@@ -1933,7 +1941,7 @@ public class RecordManager
                             temp.ShowSentEmails = reader["ShowSentEmails"] == DBNull.Value ? null : (bool?)reader["ShowSentEmails"];
                             temp.ShowReceivedEmails = reader["ShowReceivedEmails"] == DBNull.Value ? null : (bool?)reader["ShowReceivedEmails"];
 
-                            temp.SPAfterImport = reader["SPAfterImport"] == DBNull.Value ? "" : (string)reader["SPAfterImport"];
+                            //temp.SPAfterImport = reader["SPAfterImport"] == DBNull.Value ? "" : (string)reader["SPAfterImport"];
                             temp.PinDisplayOrder = reader["PinDisplayOrder"] == DBNull.Value ? null : (int?)reader["PinDisplayOrder"];
 
                             temp.GraphOnStart = reader["GraphOnStart"] == DBNull.Value ? "" : (string)reader["GraphOnStart"];
@@ -1941,7 +1949,9 @@ public class RecordManager
 
                             temp.SummaryPageContent = reader["SummaryPageContent"] == DBNull.Value ? "" : (string)reader["SummaryPageContent"];
                             temp.DefaultImportTemplateID = reader["DefaultImportTemplateID"] == DBNull.Value ? null : (int?)reader["DefaultImportTemplateID"];
-                            
+                            temp.SPSearchGo = reader["SPSearchGo"] == DBNull.Value ? "" : (string)reader["SPSearchGo"];
+                            temp.SPSearchReset = reader["SPSearchReset"] == DBNull.Value ? "" : (string)reader["SPSearchReset"];
+                            temp.ShowChildTabsOnAdd = reader["ShowChildTabsOnAdd"] == DBNull.Value ? null : (bool?)reader["ShowChildTabsOnAdd"];
 
                             connection.Close();
                             connection.Dispose();
@@ -2280,7 +2290,7 @@ public class RecordManager
                                 (string)reader["TableName"],
                                 (DateTime)reader["DateAdded"],
                                 (DateTime)reader["DateUpdated"],
-                                  (bool)reader["IsImportPositional"], (bool)reader["IsActive"]
+                                  (bool)reader["IsActive"]
                                  );
                             temp.PinImage = reader["PinImage"] == DBNull.Value ? "" : (string)reader["PinImage"];
 
@@ -2288,7 +2298,7 @@ public class RecordManager
                             temp.MaxTimeBetweenRecordsUnit = reader["MaxTimeBetweenRecordsUnit"] == DBNull.Value ? "" : (string)reader["MaxTimeBetweenRecordsUnit"];
                             temp.LastUpdatedUserID = reader["LastUpdatedUserID"] == DBNull.Value ? null : (int?)reader["LastUpdatedUserID"];
                             temp.LateDataDays = reader["LateDataDays"] == DBNull.Value ? null : (int?)reader["LateDataDays"];
-                            temp.ImportDataStartRow = reader["ImportDataStartRow"] == DBNull.Value ? null : (int?)reader["ImportDataStartRow"];
+                            //temp.ImportDataStartRow = reader["ImportDataStartRow"] == DBNull.Value ? null : (int?)reader["ImportDataStartRow"];
                             //temp.AddMissingLocation = reader["AddMissingLocation"] == DBNull.Value ? null : (bool?)reader["AddMissingLocation"];
                             //temp.IsRecordDateUnique = reader["IsRecordDateUnique"] == DBNull.Value ? null : (bool?)reader["IsRecordDateUnique"];
 
@@ -2450,8 +2460,6 @@ public class RecordManager
     //                        (int)reader["DisplayOrder"],
     //                        reader["DisplayTextSummary"] == DBNull.Value ? "" : (string)reader["DisplayTextSummary"],
     //                        reader["DisplayTextDetail"] == DBNull.Value ? "" : (string)reader["DisplayTextDetail"],
-    //                         reader["NameOnImport"] == DBNull.Value ? "" : (string)reader["NameOnImport"],
-    //                        reader["NameOnExport"] == DBNull.Value ? "" : (string)reader["NameOnExport"],
     //                        null, "", "",
     //                        null, null, "", "", (bool)reader["IsStandard"], (string)reader["DisplayName"],
     //                        reader["PositionOnImport"] == DBNull.Value ? null : (int?)reader["PositionOnImport"],
@@ -2597,11 +2605,8 @@ public class RecordManager
                                 (int)reader["DisplayOrder"],
                                 reader["DisplayTextSummary"] == DBNull.Value ? "" : (string)reader["DisplayTextSummary"],
                                 reader["DisplayTextDetail"] == DBNull.Value ? "" : (string)reader["DisplayTextDetail"],
-                                 reader["NameOnImport"] == DBNull.Value ? "" : (string)reader["NameOnImport"],
-                                reader["NameOnExport"] == DBNull.Value ? "" : (string)reader["NameOnExport"],
                                 null, "", "",
                                 null, null, "", "", (bool)reader["IsStandard"], (string)reader["DisplayName"],
-                                reader["PositionOnImport"] == DBNull.Value ? null : (int?)reader["PositionOnImport"],
                                  reader["Notes"] == DBNull.Value ? string.Empty : (string)reader["Notes"],
                                 reader["IsRound"] == DBNull.Value ? null : (bool?)reader["IsRound"],
                                  reader["RoundNumber"] == DBNull.Value ? null : (int?)reader["RoundNumber"],
@@ -2625,7 +2630,7 @@ public class RecordManager
                             temp.AvgColumnID = reader["AvgColumnID"] == DBNull.Value ? null : (int?)reader["AvgColumnID"];
                             temp.AvgNumberOfRecords = reader["AvgNumberOfRecords"] == DBNull.Value ? null : (int?)reader["AvgNumberOfRecords"];
                             temp.MobileName = reader["MobileName"] == DBNull.Value ? string.Empty : (string)reader["MobileName"];
-                            temp.IsDateSingleColumn = reader["IsDateSingleColumn"] == DBNull.Value ? null : (bool?)reader["IsDateSingleColumn"];
+                            //temp.IsDateSingleColumn = reader["IsDateSingleColumn"] == DBNull.Value ? null : (bool?)reader["IsDateSingleColumn"];
                             temp.ShowGraphExceedance = reader["ShowGraphExceedance"] == DBNull.Value ? null : (double?)double.Parse(reader["ShowGraphExceedance"].ToString());
                             temp.ShowGraphWarning = reader["ShowGraphWarning"] == DBNull.Value ? null : (double?)double.Parse(reader["ShowGraphWarning"].ToString());
 
@@ -2689,6 +2694,9 @@ public class RecordManager
                             temp.ColourCells = reader["ColourCells"] == DBNull.Value ? null : (bool?)reader["ColourCells"];
                             temp.ButtonInfo = reader["ButtonInfo"] == DBNull.Value ? string.Empty : (string)reader["ButtonInfo"];
                             temp.FilterOperator = reader["FilterOperator"] == DBNull.Value ? string.Empty : (string)reader["FilterOperator"];
+                            temp.IsReadOnly = reader["IsReadOnly"] == DBNull.Value ? null : (bool?)reader["IsReadOnly"];
+                            temp.ControlValueChangeService = reader["ControlValueChangeService"] == DBNull.Value ? string.Empty : (string)reader["ControlValueChangeService"];
+
                             list.Add(temp);
                         }
 
@@ -2754,11 +2762,8 @@ public class RecordManager
                                 (int)reader["DisplayOrder"],
                                 reader["DisplayTextSummary"] == DBNull.Value ? "" : (string)reader["DisplayTextSummary"],
                                 reader["DisplayTextDetail"] == DBNull.Value ? "" : (string)reader["DisplayTextDetail"],
-                                 reader["NameOnImport"] == DBNull.Value ? "" : (string)reader["NameOnImport"],
-                                reader["NameOnExport"] == DBNull.Value ? "" : (string)reader["NameOnExport"],
                                 null, "", "",
                                 null, null, "", "", (bool)reader["IsStandard"], (string)reader["DisplayName"],
-                                reader["PositionOnImport"] == DBNull.Value ? null : (int?)reader["PositionOnImport"],
                                  reader["Notes"] == DBNull.Value ? string.Empty : (string)reader["Notes"],
                                 reader["IsRound"] == DBNull.Value ? null : (bool?)reader["IsRound"],
                                  reader["RoundNumber"] == DBNull.Value ? null : (int?)reader["RoundNumber"],
@@ -2782,7 +2787,7 @@ public class RecordManager
                             temp.AvgColumnID = reader["AvgColumnID"] == DBNull.Value ? null : (int?)reader["AvgColumnID"];
                             temp.AvgNumberOfRecords = reader["AvgNumberOfRecords"] == DBNull.Value ? null : (int?)reader["AvgNumberOfRecords"];
                             temp.MobileName = reader["MobileName"] == DBNull.Value ? string.Empty : (string)reader["MobileName"];
-                            temp.IsDateSingleColumn = reader["IsDateSingleColumn"] == DBNull.Value ? null : (bool?)reader["IsDateSingleColumn"];
+                            //temp.IsDateSingleColumn = reader["IsDateSingleColumn"] == DBNull.Value ? null : (bool?)reader["IsDateSingleColumn"];
                             temp.ShowGraphExceedance = reader["ShowGraphExceedance"] == DBNull.Value ? null : (double?)double.Parse(reader["ShowGraphExceedance"].ToString());
                             temp.ShowGraphWarning = reader["ShowGraphWarning"] == DBNull.Value ? null : (double?)double.Parse(reader["ShowGraphWarning"].ToString());
 
@@ -2847,6 +2852,8 @@ public class RecordManager
                             temp.ColourCells = reader["ColourCells"] == DBNull.Value ? null : (bool?)reader["ColourCells"];
                             temp.ButtonInfo = reader["ButtonInfo"] == DBNull.Value ? string.Empty : (string)reader["ButtonInfo"];
                             temp.FilterOperator = reader["FilterOperator"] == DBNull.Value ? string.Empty : (string)reader["FilterOperator"];
+                            temp.IsReadOnly = reader["IsReadOnly"] == DBNull.Value ? null : (bool?)reader["IsReadOnly"];
+                            temp.ControlValueChangeService = reader["ControlValueChangeService"] == DBNull.Value ? string.Empty : (string)reader["ControlValueChangeService"];
 
                             list.Add(temp);
                         }
@@ -2960,11 +2967,6 @@ public class RecordManager
     //                command.Parameters.Add(new SqlParameter("@sDisplayTextSummary", p_Column.DisplayTextSummary));
     //            if (p_Column.DisplayTextDetail != string.Empty)
     //                command.Parameters.Add(new SqlParameter("@sDisplayTextDetail", p_Column.DisplayTextDetail));
-    //            if (p_Column.NameOnImport != string.Empty)
-    //                command.Parameters.Add(new SqlParameter("@sNameOnImport", p_Column.NameOnImport));
-
-    //            if (p_Column.NameOnExport != string.Empty)
-    //                command.Parameters.Add(new SqlParameter("@sNameOnExport", p_Column.NameOnExport));
 
     //            if (p_Column.GraphLabel != string.Empty)
     //                command.Parameters.Add(new SqlParameter("@sGraphLabel", p_Column.GraphLabel));
@@ -3161,7 +3163,8 @@ public class RecordManager
 
                 if (p_Column.ButtonInfo != null)
                     command.Parameters.Add(new SqlParameter("@sButtonInfo", p_Column.ButtonInfo));
-
+                if (p_Column.IsReadOnly != null)
+                    command.Parameters.Add(new SqlParameter("@bIsReadOnly", p_Column.IsReadOnly));
 
                 if (p_Column.ColourCells != null)
                     command.Parameters.Add(new SqlParameter("@bColourCells", p_Column.ColourCells));
@@ -3243,11 +3246,11 @@ public class RecordManager
                     command.Parameters.Add(new SqlParameter("@sDisplayTextSummary", p_Column.DisplayTextSummary));
                 if (p_Column.DisplayTextDetail != string.Empty)
                     command.Parameters.Add(new SqlParameter("@sDisplayTextDetail", p_Column.DisplayTextDetail));
-                if (p_Column.NameOnImport != string.Empty)
-                    command.Parameters.Add(new SqlParameter("@sNameOnImport", p_Column.NameOnImport));
+                //if (p_Column.ImportHeaderName != string.Empty)
+                //    command.Parameters.Add(new SqlParameter("@sImportHeaderName", p_Column.ImportHeaderName));
 
-                if (p_Column.NameOnExport != string.Empty)
-                    command.Parameters.Add(new SqlParameter("@sNameOnExport", p_Column.NameOnExport));
+                //if (p_Column.NameOnExport != string.Empty)
+                //    command.Parameters.Add(new SqlParameter("@sNameOnExport", p_Column.NameOnExport));
 
                 if (p_Column.GraphLabel != string.Empty)
                     command.Parameters.Add(new SqlParameter("@sGraphLabel", p_Column.GraphLabel));
@@ -3265,8 +3268,8 @@ public class RecordManager
                 if (p_Column.IsStandard != null)
                     command.Parameters.Add(new SqlParameter("@bIsStandard", p_Column.IsStandard));
 
-                if (p_Column.PositionOnImport != null)
-                    command.Parameters.Add(new SqlParameter("@nPositionOnImport", p_Column.PositionOnImport));
+                //if (p_Column.PositionOnImport != null)
+                //    command.Parameters.Add(new SqlParameter("@nPositionOnImport", p_Column.PositionOnImport));
 
 
                 if (p_Column.Constant != "")
@@ -3345,8 +3348,8 @@ public class RecordManager
                 if (p_Column.MobileName != "")
                     command.Parameters.Add(new SqlParameter("@sMobileName ", p_Column.MobileName));
 
-                if (p_Column.IsDateSingleColumn != null)
-                    command.Parameters.Add(new SqlParameter("@bIsDateSingleColumn ", p_Column.IsDateSingleColumn));
+                //if (p_Column.IsDateSingleColumn != null)
+                //    command.Parameters.Add(new SqlParameter("@bIsDateSingleColumn ", p_Column.IsDateSingleColumn));
 
                 if (p_Column.ShowGraphExceedance != null)
                     command.Parameters.Add(new SqlParameter("@dShowGraphExceedance ", p_Column.ShowGraphExceedance));
@@ -3395,6 +3398,9 @@ public class RecordManager
 
                 if (p_Column.TableTabID != null)
                     command.Parameters.Add(new SqlParameter("@nTableTabID ", p_Column.TableTabID));
+                
+                if ( !string.IsNullOrEmpty( p_Column.ControlValueChangeService))
+                    command.Parameters.Add(new SqlParameter("@sControlValueChangeService ", p_Column.ControlValueChangeService));
 
                 //if (p_Column.AllowCopy != null)
                 //    command.Parameters.Add(new SqlParameter("@bAllowCopy ", p_Column.AllowCopy));
@@ -3437,7 +3443,8 @@ public class RecordManager
 
                 if (p_Column.ButtonInfo != null)
                     command.Parameters.Add(new SqlParameter("@sButtonInfo", p_Column.ButtonInfo));
-
+                if (p_Column.IsReadOnly != null)
+                    command.Parameters.Add(new SqlParameter("@bIsReadOnly", p_Column.IsReadOnly));
                 if (p_Column.ColourCells != null)
                     command.Parameters.Add(new SqlParameter("@bColourCells", p_Column.ColourCells));
 
@@ -3544,11 +3551,11 @@ public class RecordManager
                     command.Parameters.Add(new SqlParameter("@sDisplayTextSummary", p_Column.DisplayTextSummary));
                 if (p_Column.DisplayTextDetail != string.Empty)
                     command.Parameters.Add(new SqlParameter("@sDisplayTextDetail", p_Column.DisplayTextDetail));
-                if (p_Column.NameOnImport != string.Empty)
-                    command.Parameters.Add(new SqlParameter("@sNameOnImport", p_Column.NameOnImport));
+                //if (p_Column.ImportHeaderName != string.Empty)
+                //    command.Parameters.Add(new SqlParameter("@sImportHeaderName", p_Column.ImportHeaderName));
 
-                if (p_Column.NameOnExport != string.Empty)
-                    command.Parameters.Add(new SqlParameter("@sNameOnExport", p_Column.NameOnExport));
+                //if (p_Column.NameOnExport != string.Empty)
+                //    command.Parameters.Add(new SqlParameter("@sNameOnExport", p_Column.NameOnExport));
 
                 if (p_Column.GraphLabel != string.Empty)
                     command.Parameters.Add(new SqlParameter("@sGraphLabel", p_Column.GraphLabel));
@@ -3566,8 +3573,8 @@ public class RecordManager
                 if (p_Column.IsStandard != null)
                     command.Parameters.Add(new SqlParameter("@bIsStandard", p_Column.IsStandard));
 
-                if (p_Column.PositionOnImport != null)
-                    command.Parameters.Add(new SqlParameter("@nPositionOnImport", p_Column.PositionOnImport));
+                //if (p_Column.PositionOnImport != null)
+                //    command.Parameters.Add(new SqlParameter("@nPositionOnImport", p_Column.PositionOnImport));
 
 
 
@@ -3654,8 +3661,8 @@ public class RecordManager
                 if (p_Column.MobileName != "")
                     command.Parameters.Add(new SqlParameter("@sMobileName ", p_Column.MobileName));
 
-                if (p_Column.IsDateSingleColumn != null)
-                    command.Parameters.Add(new SqlParameter("@bIsDateSingleColumn ", p_Column.IsDateSingleColumn));
+                //if (p_Column.IsDateSingleColumn != null)
+                //    command.Parameters.Add(new SqlParameter("@bIsDateSingleColumn ", p_Column.IsDateSingleColumn));
 
                 if (p_Column.ShowGraphExceedance != null)
                     command.Parameters.Add(new SqlParameter("@dShowGraphExceedance ", p_Column.ShowGraphExceedance));
@@ -3708,6 +3715,8 @@ public class RecordManager
                 if (p_Column.TableTabID != null)
                     command.Parameters.Add(new SqlParameter("@nTableTabID ", p_Column.TableTabID));
 
+                if (!string.IsNullOrEmpty(p_Column.ControlValueChangeService))
+                    command.Parameters.Add(new SqlParameter("@sControlValueChangeService ", p_Column.ControlValueChangeService));
 
                
                 int i = 1;
@@ -3863,8 +3872,8 @@ public class RecordManager
     //            command.Parameters.Add(new SqlParameter("@sDisplayTextSummary", p_Column.DisplayTextSummary));
     //        if (p_Column.DisplayTextDetail != string.Empty)
     //            command.Parameters.Add(new SqlParameter("@sDisplayTextDetail", p_Column.DisplayTextDetail));
-    //        if (p_Column.NameOnImport != string.Empty)
-    //            command.Parameters.Add(new SqlParameter("@sNameOnImport", p_Column.NameOnImport));
+    //        if (p_Column.ImportHeaderName != string.Empty)
+    //            command.Parameters.Add(new SqlParameter("@sImportHeaderName", p_Column.ImportHeaderName));
 
     //        if (p_Column.NameOnExport != string.Empty)
     //            command.Parameters.Add(new SqlParameter("@sNameOnExport", p_Column.NameOnExport));
@@ -4149,7 +4158,7 @@ public class RecordManager
     //                         (int)reader["DisplayOrder"],
     //                        reader["DisplayTextSummary"] == DBNull.Value ? string.Empty : (string)reader["DisplayTextSummary"],
     //                        reader["DisplayTextDetail"] == DBNull.Value ? string.Empty : (string)reader["DisplayTextDetail"],
-    //                        reader["NameOnImport"] == DBNull.Value ? string.Empty : (string)reader["NameOnImport"],
+    //                        reader["ImportHeaderName"] == DBNull.Value ? string.Empty : (string)reader["ImportHeaderName"],
     //                        reader["NameOnExport"] == DBNull.Value ? string.Empty : (string)reader["NameOnExport"],
     //                         reader["GraphTypeID"] == DBNull.Value ? null : (int?)reader["GraphTypeID"],
     //                         reader["ValidationOnWarning"] == DBNull.Value ? string.Empty : (string)reader["ValidationOnWarning"],
@@ -4307,8 +4316,6 @@ public class RecordManager
                                  (int)reader["DisplayOrder"],
                                 reader["DisplayTextSummary"] == DBNull.Value ? string.Empty : (string)reader["DisplayTextSummary"],
                                 reader["DisplayTextDetail"] == DBNull.Value ? string.Empty : (string)reader["DisplayTextDetail"],
-                                reader["NameOnImport"] == DBNull.Value ? string.Empty : (string)reader["NameOnImport"],
-                                reader["NameOnExport"] == DBNull.Value ? string.Empty : (string)reader["NameOnExport"],
                                  reader["GraphTypeID"] == DBNull.Value ? null : (int?)reader["GraphTypeID"],
                                  reader["ValidationOnWarning"] == DBNull.Value ? string.Empty : (string)reader["ValidationOnWarning"],
                                  reader["ValidationOnEntry"] == DBNull.Value ? string.Empty : (string)reader["ValidationOnEntry"],
@@ -4316,7 +4323,6 @@ public class RecordManager
                                 (DateTime)reader["DateUpdated"], string.Empty,
                                 reader["TableName"] == DBNull.Value ? string.Empty : (string)reader["TableName"],
                                 (bool)reader["IsStandard"], (string)reader["DisplayName"],
-                                reader["PositionOnImport"] == DBNull.Value ? null : (int?)reader["PositionOnImport"],
                                 reader["Notes"] == DBNull.Value ? string.Empty : (string)reader["Notes"],
                                 reader["IsRound"] == DBNull.Value ? null : (bool?)reader["IsRound"],
                                  reader["RoundNumber"] == DBNull.Value ? null : (int?)reader["RoundNumber"],
@@ -4341,7 +4347,7 @@ public class RecordManager
                             temp.AvgColumnID = reader["AvgColumnID"] == DBNull.Value ? null : (int?)reader["AvgColumnID"];
                             temp.AvgNumberOfRecords = reader["AvgNumberOfRecords"] == DBNull.Value ? null : (int?)reader["AvgNumberOfRecords"];
                             temp.MobileName = reader["MobileName"] == DBNull.Value ? string.Empty : (string)reader["MobileName"];
-                            temp.IsDateSingleColumn = reader["IsDateSingleColumn"] == DBNull.Value ? null : (bool?)reader["IsDateSingleColumn"];
+                            //temp.IsDateSingleColumn = reader["IsDateSingleColumn"] == DBNull.Value ? null : (bool?)reader["IsDateSingleColumn"];
 
                             temp.ShowGraphExceedance = reader["ShowGraphExceedance"] == DBNull.Value ? null : (double?)double.Parse(reader["ShowGraphExceedance"].ToString());
                             temp.ShowGraphWarning = reader["ShowGraphWarning"] == DBNull.Value ? null : (double?)double.Parse(reader["ShowGraphWarning"].ToString());
@@ -4407,6 +4413,8 @@ public class RecordManager
                             temp.ColourCells = reader["ColourCells"] == DBNull.Value ? null : (bool?)reader["ColourCells"];
                             temp.ButtonInfo = reader["ButtonInfo"] == DBNull.Value ? string.Empty : (string)reader["ButtonInfo"];
                             temp.FilterOperator = reader["FilterOperator"] == DBNull.Value ? string.Empty : (string)reader["FilterOperator"];
+                            temp.IsReadOnly = reader["IsReadOnly"] == DBNull.Value ? null : (bool?)reader["IsReadOnly"];
+                            temp.ControlValueChangeService = reader["ControlValueChangeService"] == DBNull.Value ? string.Empty : (string)reader["ControlValueChangeService"];
 
                             connection.Close();
                             connection.Dispose();
@@ -4459,8 +4467,6 @@ public class RecordManager
                                  (int)reader["DisplayOrder"],
                                 reader["DisplayTextSummary"] == DBNull.Value ? string.Empty : (string)reader["DisplayTextSummary"],
                                 reader["DisplayTextDetail"] == DBNull.Value ? string.Empty : (string)reader["DisplayTextDetail"],
-                                reader["NameOnImport"] == DBNull.Value ? string.Empty : (string)reader["NameOnImport"],
-                                reader["NameOnExport"] == DBNull.Value ? string.Empty : (string)reader["NameOnExport"],
                                  reader["GraphTypeID"] == DBNull.Value ? null : (int?)reader["GraphTypeID"],
                                  reader["ValidationOnWarning"] == DBNull.Value ? string.Empty : (string)reader["ValidationOnWarning"],
                                  reader["ValidationOnEntry"] == DBNull.Value ? string.Empty : (string)reader["ValidationOnEntry"],
@@ -4468,7 +4474,6 @@ public class RecordManager
                                 (DateTime)reader["DateUpdated"], string.Empty,
                                 reader["TableName"] == DBNull.Value ? string.Empty : (string)reader["TableName"],
                                 (bool)reader["IsStandard"], (string)reader["DisplayName"],
-                                reader["PositionOnImport"] == DBNull.Value ? null : (int?)reader["PositionOnImport"],
                                  reader["Notes"] == DBNull.Value ? string.Empty : (string)reader["Notes"],
                                 reader["IsRound"] == DBNull.Value ? null : (bool?)reader["IsRound"],
                                  reader["RoundNumber"] == DBNull.Value ? null : (int?)reader["RoundNumber"],
@@ -4495,7 +4500,7 @@ public class RecordManager
                             temp.AvgNumberOfRecords = reader["AvgNumberOfRecords"] == DBNull.Value ? null : (int?)reader["AvgNumberOfRecords"];
 
                             temp.MobileName = reader["MobileName"] == DBNull.Value ? string.Empty : (string)reader["MobileName"];
-                            temp.IsDateSingleColumn = reader["IsDateSingleColumn"] == DBNull.Value ? null : (bool?)reader["IsDateSingleColumn"];
+                            //temp.IsDateSingleColumn = reader["IsDateSingleColumn"] == DBNull.Value ? null : (bool?)reader["IsDateSingleColumn"];
                             temp.ShowGraphExceedance = reader["ShowGraphExceedance"] == DBNull.Value ? null : (double?)double.Parse(reader["ShowGraphExceedance"].ToString());
                             temp.ShowGraphWarning = reader["ShowGraphWarning"] == DBNull.Value ? null : (double?)double.Parse(reader["ShowGraphWarning"].ToString());
 
@@ -4558,6 +4563,9 @@ public class RecordManager
                             temp.ColourCells = reader["ColourCells"] == DBNull.Value ? null : (bool?)reader["ColourCells"];
                             temp.ButtonInfo = reader["ButtonInfo"] == DBNull.Value ? string.Empty : (string)reader["ButtonInfo"];
                             temp.FilterOperator = reader["FilterOperator"] == DBNull.Value ? string.Empty : (string)reader["FilterOperator"];
+                            temp.IsReadOnly = reader["IsReadOnly"] == DBNull.Value ? null : (bool?)reader["IsReadOnly"];
+                            temp.ControlValueChangeService = reader["ControlValueChangeService"] == DBNull.Value ? string.Empty : (string)reader["ControlValueChangeService"];
+
                             connection.Close();
                             connection.Dispose();
 
@@ -4594,7 +4602,7 @@ public class RecordManager
 
                 //command.Parameters.Add(new SqlParameter("@nAccountID", nAccountID));
                 command.Parameters.Add(new SqlParameter("@nTableID", nTableID));
-                command.Parameters.Add(new SqlParameter("@nPositionOnImport", nPositionOnImport));
+                //command.Parameters.Add(new SqlParameter("@nPositionOnImport", nPositionOnImport));
 
                 connection.Open();
 
@@ -4614,8 +4622,6 @@ public class RecordManager
                                  (int)reader["DisplayOrder"],
                                 reader["DisplayTextSummary"] == DBNull.Value ? string.Empty : (string)reader["DisplayTextSummary"],
                                 reader["DisplayTextDetail"] == DBNull.Value ? string.Empty : (string)reader["DisplayTextDetail"],
-                                reader["NameOnImport"] == DBNull.Value ? string.Empty : (string)reader["NameOnImport"],
-                                reader["NameOnExport"] == DBNull.Value ? string.Empty : (string)reader["NameOnExport"],
                                  reader["GraphTypeID"] == DBNull.Value ? null : (int?)reader["GraphTypeID"],
                                  reader["ValidationOnEntry"] == DBNull.Value ? string.Empty : (string)reader["ValidationOnEntry"],
                                  reader["ValidationOnEntry"] == DBNull.Value ? string.Empty : (string)reader["ValidationOnEntry"],
@@ -4623,7 +4629,6 @@ public class RecordManager
                                 (DateTime)reader["DateUpdated"], string.Empty,
                                 reader["TableName"] == DBNull.Value ? string.Empty : (string)reader["TableName"],
                                 (bool)reader["IsStandard"], (string)reader["DisplayName"],
-                                reader["PositionOnImport"] == DBNull.Value ? null : (int?)reader["PositionOnImport"],
                                   reader["Notes"] == DBNull.Value ? string.Empty : (string)reader["Notes"],
                                 reader["IsRound"] == DBNull.Value ? null : (bool?)reader["IsRound"],
                                  reader["RoundNumber"] == DBNull.Value ? null : (int?)reader["RoundNumber"],
@@ -4646,7 +4651,7 @@ public class RecordManager
                             temp.AvgColumnID = reader["AvgColumnID"] == DBNull.Value ? null : (int?)reader["AvgColumnID"];
                             temp.AvgNumberOfRecords = reader["AvgNumberOfRecords"] == DBNull.Value ? null : (int?)reader["AvgNumberOfRecords"];
                             temp.MobileName = reader["MobileName"] == DBNull.Value ? string.Empty : (string)reader["MobileName"];
-                            temp.IsDateSingleColumn = reader["IsDateSingleColumn"] == DBNull.Value ? null : (bool?)reader["IsDateSingleColumn"];
+                            //temp.IsDateSingleColumn = reader["IsDateSingleColumn"] == DBNull.Value ? null : (bool?)reader["IsDateSingleColumn"];
                             temp.ShowGraphExceedance = reader["ShowGraphExceedance"] == DBNull.Value ? null : (double?)double.Parse(reader["ShowGraphExceedance"].ToString());
                             temp.ShowGraphWarning = reader["ShowGraphWarning"] == DBNull.Value ? null : (double?)double.Parse(reader["ShowGraphWarning"].ToString());
 
@@ -4712,6 +4717,9 @@ public class RecordManager
                             temp.ColourCells = reader["ColourCells"] == DBNull.Value ? null : (bool?)reader["ColourCells"];
                             temp.ButtonInfo = reader["ButtonInfo"] == DBNull.Value ? string.Empty : (string)reader["ButtonInfo"];
                             temp.FilterOperator = reader["FilterOperator"] == DBNull.Value ? string.Empty : (string)reader["FilterOperator"];
+                            temp.IsReadOnly = reader["IsReadOnly"] == DBNull.Value ? null : (bool?)reader["IsReadOnly"];
+                            temp.ControlValueChangeService = reader["ControlValueChangeService"] == DBNull.Value ? string.Empty : (string)reader["ControlValueChangeService"];
+
                             connection.Close();
                             connection.Dispose();
                             return temp;
@@ -18137,12 +18145,12 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
                 
                 command.Parameters.Add(new SqlParameter("@nBatchID", nBatchID));
 
-                if (strUniqueColumnIDSys != "")
-                    command.Parameters.Add(new SqlParameter("@sUniqueColumnIDSys", strUniqueColumnIDSys));
+                //if (strUniqueColumnIDSys != "")
+                //    command.Parameters.Add(new SqlParameter("@sUniqueColumnIDSys", strUniqueColumnIDSys));
 
 
-                if (strUniqueColumnID2Sys != "")
-                    command.Parameters.Add(new SqlParameter("@sUniqueColumnID2Sys", strUniqueColumnID2Sys));
+                //if (strUniqueColumnID2Sys != "")
+                //    command.Parameters.Add(new SqlParameter("@sUniqueColumnID2Sys", strUniqueColumnID2Sys));
 
                 connection.Open();
                 try
@@ -18166,6 +18174,69 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
         
 
     }
+
+    public static void ets_Batch_Duplicate_Self(int nBatchID, string strUniqueColumnIDSys, string strUniqueColumnID2Sys)
+    {
+        using (SqlConnection connection = new SqlConnection(DBGurus.strGlobalConnectionString))
+        {
+            using (SqlCommand command = new SqlCommand("ets_Batch_Duplicate_Self", connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandTimeout = 3600;
+
+                command.Parameters.Add(new SqlParameter("@nBatchID", nBatchID));
+                //if (strUniqueColumnIDSys != "")
+                //    command.Parameters.Add(new SqlParameter("@sUniqueColumnIDSys", strUniqueColumnIDSys));
+                //if (strUniqueColumnID2Sys != "")
+                //    command.Parameters.Add(new SqlParameter("@sUniqueColumnID2Sys", strUniqueColumnID2Sys));
+
+                connection.Open();
+                try
+                {
+                    command.ExecuteNonQuery();
+                }
+                catch
+                {
+                    //
+                }
+
+                connection.Close();
+                connection.Dispose();
+            }
+        }
+    }
+
+    public static void ets_Batch_Duplicate_UniqueKey(int nBatchID)
+    {
+        using (SqlConnection connection = new SqlConnection(DBGurus.strGlobalConnectionString))
+        {
+            using (SqlCommand command = new SqlCommand("ets_Batch_Duplicate_UniqueKey", connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandTimeout = 3600;
+
+                command.Parameters.Add(new SqlParameter("@nBatchID", nBatchID));
+                //if (strUniqueColumnIDSys != "")
+                //    command.Parameters.Add(new SqlParameter("@sUniqueColumnIDSys", strUniqueColumnIDSys));
+                //if (strUniqueColumnID2Sys != "")
+                //    command.Parameters.Add(new SqlParameter("@sUniqueColumnID2Sys", strUniqueColumnID2Sys));
+
+                connection.Open();
+                try
+                {
+                    command.ExecuteNonQuery();
+                }
+                catch
+                {
+                    //
+                }
+
+                connection.Close();
+                connection.Dispose();
+            }
+        }
+    }
+
 
 
     public static int ets_TableChild_Insert(TableChild p_TableChild)

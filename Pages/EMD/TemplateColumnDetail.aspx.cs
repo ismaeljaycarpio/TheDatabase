@@ -170,8 +170,8 @@ public partial class Pages_EMD_TemplateColumnDetail : SecurePage
                     newColumn.DisplayName = li.Text;
                     newColumn.DisplayTextSummary = li.Text;
                     newColumn.DisplayTextDetail = li.Text;
-                    newColumn.NameOnImport = li.Text;
-                    newColumn.NameOnExport = li.Text;
+                    //newColumn.Name_OnImport = li.Text;
+                    //newColumn.NameOnExport = li.Text;
                     newColumn.ColumnType = "number";
                     newColumn.NumberType = 1;
 

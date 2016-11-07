@@ -327,7 +327,7 @@ public partial class Pages_Document_Document : SecurePage
 
             if (chkAllFolder.Checked)
                 iParentFolderID = -1;
-
+            ViewState[gvTheGrid.ID + "PageIndex"] = (iStartIndex / gvTheGrid.PageSize) + 1;
             gvTheGrid.DataSource = DocumentManager.ets_FolderDocument_Select(null,int.Parse(Session["AccountID"].ToString()),
                 txtDocumentText.Text.Trim(),ddlDocumentType.SelectedValue=="-1"?null:(int?) int.Parse(ddlDocumentType.SelectedValue),
                 txtDateFrom.Text==""?null: (DateTime?)DateTime.ParseExact(txtDateFrom.Text, "d/M/yyyy", CultureInfo.InvariantCulture),
@@ -353,10 +353,12 @@ public partial class Pages_Document_Document : SecurePage
                 //_gvPager.AddURL = "javascript:OpenAddFolder();";
                 hlAddFolder.NavigateUrl = GetAddFolderURL();
                 lnkCreateFolder.NavigateUrl = GetAddFolderURL();
-                _gvPager.PageIndexTextSet = (int)(iStartIndex / iMaxRows + 1);
+                //_gvPager.PageIndexTextSet = (int)(iStartIndex / iMaxRows + 1);
+                if (ViewState[gvTheGrid.ID + "PageIndex"] != null)
+                    _gvPager.PageIndex = int.Parse(ViewState[gvTheGrid.ID + "PageIndex"].ToString());
 
-                
-                   
+                _gvPager.PageSize = gvTheGrid.PageSize;
+                _gvPager.TotalRows = iTN;
                     //_gvPager.AddImageURL2 = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/App_Themes/Default/Images/add_s.png";
                     //_gvPager.AddURL2 = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Pages/Document/ReportDetail.aspx?mode=" + Cryptography.Encrypt("add") + "&SearchCriteria=" + Cryptography.Encrypt(_iSearchCriteriaID.ToString()) + "&TableID=" + Request.QueryString["TableID"].ToString() + "&SSearchCriteriaID=" + Request.QueryString["SSearchCriteriaID"].ToString();
 
@@ -963,7 +965,7 @@ public partial class Pages_Document_Document : SecurePage
 
     protected void Pager_BindTheGridAgain(object sender, EventArgs e)
     {
-        BindTheGrid(_gvPager.StartIndex, _gvPager._gridView.PageSize);
+        BindTheGrid(_gvPager.StartIndex, _gvPager.PageSize);
     }
 
 
@@ -1047,11 +1049,11 @@ public partial class Pages_Document_Document : SecurePage
             DeleteFolderItem(sCheckFol);
 
             BindTheGrid(_gvPager.StartIndex, gvTheGrid.PageSize);
-            _gvPager._gridView.PageIndex = _gvPager.PageIndex - 1;
-            if (_gvPager._gridView.Rows.Count == 0 && _gvPager._gridView.PageIndex > 0)
-            {
-                BindTheGrid(_gvPager.StartIndex - gvTheGrid.PageSize, gvTheGrid.PageSize);
-            }
+            //_gvPager._gridView.PageIndex = _gvPager.PageIndex - 1;
+            //if (_gvPager._gridView.Rows.Count == 0 && _gvPager._gridView.PageIndex > 0)
+            //{
+            //    BindTheGrid(_gvPager.StartIndex - gvTheGrid.PageSize, gvTheGrid.PageSize);
+            //}
         }
 
     }

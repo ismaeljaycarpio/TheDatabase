@@ -302,7 +302,7 @@ public partial class Pages_Record_TableList : SecurePage
 
        
             int iTN = 0;
-           
+            ViewState[gvTheGrid.ID + "PageIndex"] = (iStartIndex / gvTheGrid.PageSize) + 1;
             gvTheGrid.DataSource = RecordManager.ets_Table_Select_dt(null,
                 txtTableSearch.Text.Trim().Replace("'","''"), null, int.Parse(Session["AccountID"].ToString()),
                 null, null,!chkIsActive.Checked,
@@ -319,9 +319,11 @@ public partial class Pages_Record_TableList : SecurePage
             {
                 _gvPager = (Common_Pager)gvr.FindControl("Pager");
                 _gvPager.AddURL = GetAddURL();
-
-                _gvPager.PageIndexTextSet = (int)(iStartIndex / iMaxRows + 1);
-               
+                if (ViewState[gvTheGrid.ID + "PageIndex"] != null)
+                    _gvPager.PageIndex = int.Parse(ViewState[gvTheGrid.ID + "PageIndex"].ToString());
+                //_gvPager.PageIndexTextSet = (int)(iStartIndex / iMaxRows + 1);
+                _gvPager.PageSize = gvTheGrid.PageSize;
+                _gvPager.TotalRows = iTN;
             }
             if (iTN == 0)
             {
@@ -386,7 +388,7 @@ public partial class Pages_Record_TableList : SecurePage
 
     protected void Pager_BindTheGridAgain(object sender, EventArgs e)
     {
-        BindTheGrid(_gvPager.StartIndex, _gvPager._gridView.PageSize);
+        BindTheGrid(_gvPager.StartIndex, _gvPager.PageSize);
     }
 
 

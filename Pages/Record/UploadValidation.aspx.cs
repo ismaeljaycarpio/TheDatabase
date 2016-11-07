@@ -65,7 +65,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
     protected void Pager_BindTheGridAgain(object sender, EventArgs e)
     {
 
-        BindTheGrid(_gvPager.StartIndex, _gvPager._gridView.PageSize);
+        BindTheGrid(_gvPager.StartIndex, _gvPager.PageSize);
     }
 
 
@@ -178,7 +178,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                 {
                     if (IsStandard(_dtRecordColums.Rows[i]["SystemName"].ToString()) == false)
                     {
-                        if (_dtRecordColums.Rows[i]["NameOnImport"].ToString() == _dtDataSourceInvalid.Columns[j].ColumnName)
+                        if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == _dtDataSourceInvalid.Columns[j].ColumnName)
                         {
                             e.Row.Cells[j + 1].HorizontalAlign = HorizontalAlign.Right;
 
@@ -186,7 +186,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                     }
                     if (_dtRecordColums.Rows[i]["SystemName"].ToString() == "RecordID")
                     {
-                        if (_dtRecordColums.Rows[i]["NameOnImport"].ToString() == _dtDataSourceInvalid.Columns[j].ColumnName)
+                        if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == _dtDataSourceInvalid.Columns[j].ColumnName)
                         {
                             e.Row.Cells[j + 1].HorizontalAlign = HorizontalAlign.Right;
                             //strRecordID = e.Row.Cells[j + 1].Text;
@@ -197,7 +197,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                         || _dtRecordColums.Rows[i]["SystemName"].ToString() == "DateTimeRecorded"
                         )
                     {
-                        if (_dtRecordColums.Rows[i]["NameOnImport"].ToString() == _dtDataSourceInvalid.Columns[j].ColumnName)
+                        if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == _dtDataSourceInvalid.Columns[j].ColumnName)
                         {
                             e.Row.Cells[j + 1].HorizontalAlign = HorizontalAlign.Center;
 
@@ -219,7 +219,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                     {
                         //for (int i = 0; i < _dtRecordColums.Rows.Count; i++)
                         //{
-                        //    aRecord.ValidationResults = aRecord.ValidationResults.Replace(_dtRecordColums.Rows[i]["DisplayName"].ToString(), _dtRecordColums.Rows[i]["NameOnImport"].ToString());
+                        //    aRecord.ValidationResults = aRecord.ValidationResults.Replace(_dtRecordColums.Rows[i]["DisplayName"].ToString(), _dtRecordColums.Rows[i]["ImportHeaderName"].ToString());
                         //}
 
                         //now we have warning with NameOnImport
@@ -230,7 +230,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                             {
                                 if (IsStandard(_dtRecordColums.Rows[i]["SystemName"].ToString()) == false)
                                 {
-                                    if (_dtRecordColums.Rows[i]["NameOnImport"].ToString() == _dtDataSourceInvalid.Columns[j].ColumnName)
+                                    if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == _dtDataSourceInvalid.Columns[j].ColumnName)
                                     {
                                         if (aRecord.RejectReason.IndexOf(": " + _dtRecordColums.Rows[i]["DisplayName"].ToString()) >= 0
                                             || aRecord.RejectReason.IndexOf(":" + _dtRecordColums.Rows[i]["DisplayName"].ToString()) >= 0)
@@ -247,7 +247,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                                 {
                                     if (_dtRecordColums.Rows[i]["SystemName"].ToString() == "DateTimeRecorded")
                                     {
-                                        if (_dtRecordColums.Rows[i]["NameOnImport"].ToString() == _dtDataSourceInvalid.Columns[j].ColumnName)
+                                        if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == _dtDataSourceInvalid.Columns[j].ColumnName)
                                         {
                                             if (aRecord.RejectReason.IndexOf(WarningMsg.MaxtimebetweenRecords) >= 0)
                                             {
@@ -350,7 +350,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                 {
                     if (IsStandard(_dtRecordColums.Rows[i]["SystemName"].ToString()) == false)
                     {
-                        if (_dtRecordColums.Rows[i]["NameOnImport"].ToString() == _dtDataSourceWarning.Columns[j].ColumnName)
+                        if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == _dtDataSourceWarning.Columns[j].ColumnName)
                         {
                             e.Row.Cells[j + 1].HorizontalAlign = HorizontalAlign.Right;
 
@@ -358,7 +358,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                     }
                     if (_dtRecordColums.Rows[i]["SystemName"].ToString() == "RecordID")
                     {
-                        if (_dtRecordColums.Rows[i]["NameOnImport"].ToString() == _dtDataSourceWarning.Columns[j].ColumnName)
+                        if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == _dtDataSourceWarning.Columns[j].ColumnName)
                         {
                             e.Row.Cells[j + 1].HorizontalAlign = HorizontalAlign.Right;
                             //strRecordID = e.Row.Cells[j + 1].Text;
@@ -369,7 +369,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                         || _dtRecordColums.Rows[i]["SystemName"].ToString() == "DateTimeRecorded"
                         )
                     {
-                        if (_dtRecordColums.Rows[i]["NameOnImport"].ToString() == _dtDataSourceWarning.Columns[j].ColumnName)
+                        if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == _dtDataSourceWarning.Columns[j].ColumnName)
                         {
                             e.Row.Cells[j + 1].HorizontalAlign = HorizontalAlign.Center;
 
@@ -391,10 +391,10 @@ public partial class Pages_Record_UploadValidation : SecurePage
                     {
                         //for (int i = 0; i < _dtRecordColums.Rows.Count; i++)
                         //{
-                        //    aRecord.WarningReason = aRecord.WarningReason.Replace(_dtRecordColums.Rows[i]["DisplayName"].ToString(), _dtRecordColums.Rows[i]["NameOnImport"].ToString());
+                        //    aRecord.WarningReason = aRecord.WarningReason.Replace(_dtRecordColums.Rows[i]["DisplayName"].ToString(), _dtRecordColums.Rows[i]["ImportHeaderName"].ToString());
                         //}
 
-                        //now we have warning with NameOnImport
+                        //now we have warning with ImportHeaderName
 
                         for (int i = 0; i < _dtRecordColums.Rows.Count; i++)
                         {
@@ -402,7 +402,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                             {
                                 if (IsStandard(_dtRecordColums.Rows[i]["SystemName"].ToString()) == false)
                                 {
-                                    if (_dtRecordColums.Rows[i]["NameOnImport"].ToString() == _dtDataSourceWarning.Columns[j].ColumnName)
+                                    if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == _dtDataSourceWarning.Columns[j].ColumnName)
                                     {
                                         if (aRecord.WarningReason.IndexOf("WARNING: " + _dtRecordColums.Rows[i]["DisplayName"].ToString()) >= 0)
                                         {
@@ -418,7 +418,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                                 {
                                     if (_dtRecordColums.Rows[i]["SystemName"].ToString() == "DateTimeRecorded")
                                     {
-                                        if (_dtRecordColums.Rows[i]["NameOnImport"].ToString() == _dtDataSourceWarning.Columns[j].ColumnName)
+                                        if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == _dtDataSourceWarning.Columns[j].ColumnName)
                                         {
                                             if (aRecord.WarningReason.IndexOf( WarningMsg.MaxtimebetweenRecords ) >= 0)
                                             {
@@ -467,13 +467,13 @@ public partial class Pages_Record_UploadValidation : SecurePage
     protected void gvInValidPager_BindTheGridAgain(object sender, EventArgs e)
     {
 
-        BindTheInvalidGrid(_gvPagerInvalid.StartIndex, _gvPagerInvalid._gridView.PageSize);
+        BindTheInvalidGrid(_gvPagerInvalid.StartIndex, _gvPagerInvalid.PageSize);
     }
 
     protected void gvWarningPager_BindTheGridAgain(object sender, EventArgs e)
     {
 
-        BindWarningGrid(_gvPagerWarning.StartIndex, _gvPagerWarning._gridView.PageSize);
+        BindWarningGrid(_gvPagerWarning.StartIndex, _gvPagerWarning.PageSize);
     }
 
 
@@ -538,20 +538,25 @@ public partial class Pages_Record_UploadValidation : SecurePage
            if(_qsBatch.ImportTemplateID!=null)
            {
                _iImportTemplateID = (int)_qsBatch.ImportTemplateID;
-               _theImportTemplate = ImportManager.dbg_ImportTemplate_Detail((int)_iImportTemplateID);
+              
            }
 
            _qsTable = RecordManager.ets_Table_Details(int.Parse(_qsTableID));
             //Menu qsMenu = RecordManager.ets_Menu_Details((int)_qsTable.MenuID);
-            if (_theImportTemplate != null)
-            {
-                _qsTable.ImportColumnHeaderRow = _theImportTemplate.ImportColumnHeaderRow;
-                _qsTable.ImportDataStartRow = _theImportTemplate.ImportDataStartRow;
-            }
+            //if (_theImportTemplate != null)
+            //{
+            //    _qsTable.ImportColumnHeaderRow = _theImportTemplate.ImportColumnHeaderRow;
+            //    _qsTable.ImportDataStartRow = _theImportTemplate.ImportDataStartRow;
+            //}
 
 
             //_dtRecordColums = RecordManager.ets_Table_Columns_Summary(
             // int.Parse(_qsTableID), null);
+
+           if (_iImportTemplateID == null)
+               _iImportTemplateID = ImportManager.GetDefaultImportTemplate(int.Parse(_qsTableID));
+
+           _theImportTemplate = ImportManager.dbg_ImportTemplate_Detail((int)_iImportTemplateID);
 
             _dtRecordColums = RecordManager.ets_Table_Columns_Import(
             int.Parse(_qsTableID), _iImportTemplateID);
@@ -567,11 +572,11 @@ public partial class Pages_Record_UploadValidation : SecurePage
                 //if(_qsTable.DataUpdateUniqueColumnID!=null)
                 //{
                    
-                    if (_qsBatch.AllowDataUpdate != null && (bool)_qsBatch.AllowDataUpdate)
-                    {
-                        tblAllowDataUpdate.Visible = true;
-                        lblDataUpdate.Text = "Yes";
-                    }
+                    //if (_qsBatch.AllowDataUpdate != null && (bool)_qsBatch.AllowDataUpdate)
+                    //{
+                    //    tblAllowDataUpdate.Visible = true;
+                    //    lblDataUpdate.Text = "Yes";
+                    //}
                 //}
                
 
@@ -692,7 +697,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
 
             }
 
-            if (_qsBatch.IsImportPositional == true)
+            if (_theImportTemplate.IsImportPositional == true)
             {
                
                 lblPositional.Text = "Yes";
@@ -739,11 +744,11 @@ public partial class Pages_Record_UploadValidation : SecurePage
                 }
                 else
                 {
-                    if(_qsTable.ImportColumnHeaderRow!=null)
-                        txtImportColumnHeaderRow.Text = _qsTable.ImportColumnHeaderRow.ToString();
+                    if(_theImportTemplate.ImportColumnHeaderRow!=null)
+                        txtImportColumnHeaderRow.Text = _theImportTemplate.ImportColumnHeaderRow.ToString();
 
-                    if (_qsTable.ImportDataStartRow != null)
-                        txtImportDataStartRow.Text = _qsTable.ImportDataStartRow.ToString();
+                    if (_theImportTemplate.ImportDataStartRow != null)
+                        txtImportDataStartRow.Text = _theImportTemplate.ImportDataStartRow.ToString();
                 }
 
                 //if (Common.HaveAccess(_strRecordRightID, "1,2"))
@@ -857,22 +862,22 @@ public partial class Pages_Record_UploadValidation : SecurePage
                 sOrder = gvTheGrid.GridViewSortColumn;
             }
 
-
-            if (_qsBatch.IsImportPositional==true)
-            {
-                gvTheGrid.DataSource = UploadManager.ets_TempRecord_Position_List(int.Parse(_qsTableID),
-                    int.Parse(_qsBatchID), false,false, null,
-                     null, null,
-                 sOrder, strOrderDirection, iStartIndex, iMaxRows, ref iTN, ref _iTotalDynamicColumns);
-            }
-            else
-            {
+            ViewState[gvTheGrid.ID + "PageIndex"] = (iStartIndex / gvTheGrid.PageSize) + 1;
+            //if (_theImportTemplate.IsImportPositional==true)
+            //{
+            //    gvTheGrid.DataSource = UploadManager.ets_TempRecord_Position_List(int.Parse(_qsTableID),
+            //        int.Parse(_qsBatchID), false,false, null,
+            //         null, null,
+            //     sOrder, strOrderDirection, iStartIndex, iMaxRows, ref iTN, ref _iTotalDynamicColumns);
+            //}
+            //else
+            //{
 
                 gvTheGrid.DataSource = UploadManager.ets_TempRecord_List(int.Parse(_qsTableID),
                     int.Parse(_qsBatchID), false,false, null,
                    null, null,
                  sOrder, strOrderDirection, iStartIndex, iMaxRows, ref iTN, ref _iTotalDynamicColumns, "", _iImportTemplateID, "");
-            }
+            //}
 
             DataTable dtTemp = (DataTable)gvTheGrid.DataSource;
             for (int i = 0; i < dtTemp.Columns.Count; i++)
@@ -904,7 +909,13 @@ public partial class Pages_Record_UploadValidation : SecurePage
             if (gvr != null)
             {
                 _gvPager = (Common_Pager)gvr.FindControl("Pager");
-                //_gvPager.AddURL = GetAddURL();
+
+                if (ViewState[gvTheGrid.ID + "PageIndex"] != null)
+                    _gvPager.PageIndex = int.Parse(ViewState[gvTheGrid.ID + "PageIndex"].ToString());
+
+                _gvPager.PageSize = gvTheGrid.PageSize;
+                _gvPager.TotalRows = iTN;
+
             }
             if (iTN == 0)
             {
@@ -981,23 +992,23 @@ public partial class Pages_Record_UploadValidation : SecurePage
                 sOrder = gvInValid.GridViewSortColumn;
             }
 
-
-            if (_qsBatch.IsImportPositional == true)
-            {
-                gvWarning.DataSource = UploadManager.ets_TempRecord_Position_List(int.Parse(_qsTableID),
-                   int.Parse(_qsBatchID), false, true, null,
-                    null, null,
-                sOrder, strOrderDirection, iStartIndex, iMaxRows, ref iTN, ref _iTotalDynamicColumns);
-            }
-            else
-            {
+            ViewState[gvWarning.ID + "PageIndex"] = (iStartIndex / gvWarning.PageSize) + 1;
+            //if (_theImportTemplate.IsImportPositional == true)
+            //{
+            //    gvWarning.DataSource = UploadManager.ets_TempRecord_Position_List(int.Parse(_qsTableID),
+            //       int.Parse(_qsBatchID), false, true, null,
+            //        null, null,
+            //    sOrder, strOrderDirection, iStartIndex, iMaxRows, ref iTN, ref _iTotalDynamicColumns);
+            //}
+            //else
+            //{
 
                 gvWarning.DataSource = UploadManager.ets_TempRecord_List(int.Parse(_qsTableID),
                     int.Parse(_qsBatchID), false, true, null,
                      null, null,
                  sOrder, strOrderDirection, iStartIndex, iMaxRows, ref iTN, ref _iTotalDynamicColumns, "", _iImportTemplateID, "");
 
-            }
+            //}
             DataTable dtTemp = (DataTable)gvWarning.DataSource;
             _dtDataSourceWarning=dtTemp;
             for (int i = 0; i < dtTemp.Columns.Count; i++)
@@ -1022,8 +1033,8 @@ public partial class Pages_Record_UploadValidation : SecurePage
                 gvWarning.TopPagerRow.Visible = true;
 
 
-            lblWarning.Text = "Warnings: " + iTN.ToString() + "&nbsp;<a href='#stWarnings'> View</a>";
-
+            lblWarning.Text = "Valid With Warnings: " + iTN.ToString() + "&nbsp;<a href='#stWarnings'> View</a>";
+            /* JB Commented this section out at the request of the client
             if(Common.SO_ShowExceedances(_qsTable.AccountID,_qsTable.TableID))
             {
                 tdExceedance.Visible = true;
@@ -1046,12 +1057,18 @@ public partial class Pages_Record_UploadValidation : SecurePage
             {
                 tdExceedance.Visible = false;
             }
+            */
 
             GridViewRow gvr = gvWarning.TopPagerRow;
             if (gvr != null)
             {
                 _gvPagerWarning = (Common_Pager)gvr.FindControl("Pager");
-                
+
+                if (ViewState[gvWarning.ID + "PageIndex"] != null)
+                    _gvPagerWarning.PageIndex = int.Parse(ViewState[gvWarning.ID + "PageIndex"].ToString());
+
+                _gvPagerWarning.PageSize = gvTheGrid.PageSize;
+                _gvPagerWarning.TotalRows = iTN;
             }
             if (iTN == 0)
             {
@@ -1114,23 +1131,23 @@ public partial class Pages_Record_UploadValidation : SecurePage
                 if (ddlInValidReason.SelectedValue != "")
                     strRF = " AND RejectReason='" + ddlInValidReason.SelectedValue.Replace("'", "''") + "'";
             }
-
-            if (_qsBatch.IsImportPositional == true)
-            {
-                gvInValid.DataSource = UploadManager.ets_TempRecord_Position_List(int.Parse(_qsTableID),
-                   int.Parse(_qsBatchID), true,null, null,
-                    null, null,
-                sOrder, strOrderDirection, iStartIndex, iMaxRows, ref iTN, ref _iTotalDynamicColumns);
-            }
-            else
-            {
+            ViewState[gvInValid.ID + "PageIndex"] = (iStartIndex / gvInValid.PageSize) + 1;
+            //if (_theImportTemplate.IsImportPositional == true)
+            //{
+            //    gvInValid.DataSource = UploadManager.ets_TempRecord_Position_List(int.Parse(_qsTableID),
+            //       int.Parse(_qsBatchID), true,null, null,
+            //        null, null,
+            //    sOrder, strOrderDirection, iStartIndex, iMaxRows, ref iTN, ref _iTotalDynamicColumns);
+            //}
+            //else
+            //{
 
                 gvInValid.DataSource = UploadManager.ets_TempRecord_List(int.Parse(_qsTableID),
                     int.Parse(_qsBatchID), true,null, null,
                      null, null,
                  sOrder, strOrderDirection, iStartIndex, iMaxRows, ref iTN, ref _iTotalDynamicColumns, strRF, _iImportTemplateID, "");
 
-            }
+            //}
             DataTable dtTemp = (DataTable)gvInValid.DataSource;
             _dtDataSourceInvalid = dtTemp;
             for (int i = 0; i < dtTemp.Columns.Count; i++)
@@ -1161,6 +1178,11 @@ public partial class Pages_Record_UploadValidation : SecurePage
             if (gvr != null)
             {
                 _gvPagerInvalid = (Common_Pager)gvr.FindControl("Pager");
+                if (ViewState[gvInValid.ID + "PageIndex"] != null)
+                    _gvPagerInvalid.PageIndex = int.Parse(ViewState[gvInValid.ID + "PageIndex"].ToString());
+
+                _gvPagerInvalid.PageSize = gvInValid.PageSize;
+                _gvPagerInvalid.TotalRows = iTN;
                 //_gvPager.AddURL = GetAddURL();
             }
             if (iTN == 0)
@@ -1378,9 +1400,9 @@ public partial class Pages_Record_UploadValidation : SecurePage
                 }
                 Table theTable = RecordManager.ets_Table_Details((int)_qsBatch.TableID);
 
-                if(_qsBatch.AllowDataUpdate!=null && (bool)_qsBatch.AllowDataUpdate )
-                {
-                    bUpdatedBatch = true;
+                //if(_qsBatch.AllowDataUpdate!=null && (bool)_qsBatch.AllowDataUpdate )
+                //{
+                //    bUpdatedBatch = true;
 
                     //if(theTable.DataUpdateUniqueColumnID!=null)
                     //{
@@ -1392,7 +1414,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                     //    }                           
 
                     //}                    
-                }
+                //}
 
 
                 //check if this is a users upload
@@ -1624,21 +1646,21 @@ public partial class Pages_Record_UploadValidation : SecurePage
 
 
         DataTable dt=new DataTable();
-        if (_qsBatch.IsImportPositional == true)
-        {
-            dt = UploadManager.ets_TempRecord_Position_List(int.Parse(_qsTableID),
-                int.Parse(_qsBatchID), false, false, null,
-                 null, null,
-             sOrder, strOrderDirection, null, null, ref iTN, ref _iTotalDynamicColumns);
-        }
-        else
-        {
+        //if (_theImportTemplate.IsImportPositional == true)
+        //{
+        //    dt = UploadManager.ets_TempRecord_Position_List(int.Parse(_qsTableID),
+        //        int.Parse(_qsBatchID), false, false, null,
+        //         null, null,
+        //     sOrder, strOrderDirection, null, null, ref iTN, ref _iTotalDynamicColumns);
+        //}
+        //else
+        //{
 
             dt = UploadManager.ets_TempRecord_List(int.Parse(_qsTableID),
                 int.Parse(_qsBatchID), false, false, null,
                  null, null,
              sOrder, strOrderDirection, null, null, ref iTN, ref _iTotalDynamicColumns, "", _iImportTemplateID, "");
-        }
+        //}
 
 
         DataRow drFooter = dt.NewRow();
@@ -1647,11 +1669,11 @@ public partial class Pages_Record_UploadValidation : SecurePage
         {
             for (int j = 0; j < dt.Columns.Count; j++)
             {
-                if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == dt.Columns[j].ColumnName)
+                if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == dt.Columns[j].ColumnName)
                 {
                     if (_dtRecordColums.Rows[i]["ShowTotal"].ToString().ToLower() == "true")
                     {
-                        drFooter[_dtRecordColums.Rows[i]["NameOnExport"].ToString()] = CalculateTotalForAColumn(dt, dt.Columns[j].ColumnName, bool.Parse(_dtRecordColums.Rows[i]["IgnoreSymbols"].ToString().ToLower()));
+                        drFooter[_dtRecordColums.Rows[i]["ImportHeaderName"].ToString()] = CalculateTotalForAColumn(dt, dt.Columns[j].ColumnName, bool.Parse(_dtRecordColums.Rows[i]["IgnoreSymbols"].ToString().ToLower()));
 
                     }
 
@@ -1666,7 +1688,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
         {
             for (int j = dt.Columns.Count - 1; j >= 0; j--)
             {
-                if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == dt.Columns[j].ColumnName)
+                if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == dt.Columns[j].ColumnName)
                 {
                     if (_dtRecordColums.Rows[i]["OnlyForAdmin"].ToString().ToLower() == "true")
                     {
@@ -1698,7 +1720,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                 for (int j = 0; j < dt.Columns.Count; j++)
                 {
                     //DisplayTextSummary
-                    if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == dt.Columns[j].ColumnName)
+                    if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == dt.Columns[j].ColumnName)
                     {
                         if (IsStandard(_dtRecordColums.Rows[i]["SystemName"].ToString()) == false)
                         {
@@ -1796,7 +1818,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
 
                         if (_dtRecordColums.Rows[i]["ColumnType"].ToString() == "datetime")
                         {
-                            if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == dt.Columns[j].ColumnName)
+                            if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == dt.Columns[j].ColumnName)
                             {
                                 if (dr[j].ToString().Length > 15)
                                 {
@@ -1807,7 +1829,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
 
                         if (_dtRecordColums.Rows[i]["ColumnType"].ToString() == "date")
                         {
-                            if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == dt.Columns[j].ColumnName)
+                            if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == dt.Columns[j].ColumnName)
                             {
                                 if (dr[j].ToString().Length > 9)
                                 {
@@ -1918,21 +1940,21 @@ public partial class Pages_Record_UploadValidation : SecurePage
 
 
         DataTable dt = new DataTable();
-        if (_qsBatch.IsImportPositional == true)
-        {
-            dt = UploadManager.ets_TempRecord_Position_List(int.Parse(_qsTableID),
-                int.Parse(_qsBatchID), false, true, null,
-                 null, null,
-             sOrder, strOrderDirection, null, null, ref iTN, ref _iTotalDynamicColumns);
-        }
-        else
-        {
+        //if (_theImportTemplate.IsImportPositional == true)
+        //{
+        //    dt = UploadManager.ets_TempRecord_Position_List(int.Parse(_qsTableID),
+        //        int.Parse(_qsBatchID), false, true, null,
+        //         null, null,
+        //     sOrder, strOrderDirection, null, null, ref iTN, ref _iTotalDynamicColumns);
+        //}
+        //else
+        //{
 
             dt = UploadManager.ets_TempRecord_List(int.Parse(_qsTableID),
                 int.Parse(_qsBatchID), false, true, null,
                  null, null,
              sOrder, strOrderDirection, null, null, ref iTN, ref _iTotalDynamicColumns, "", _iImportTemplateID, "");
-        }
+        //}
 
 
         DataRow drFooter = dt.NewRow();
@@ -1941,11 +1963,11 @@ public partial class Pages_Record_UploadValidation : SecurePage
         {
             for (int j = 0; j < dt.Columns.Count; j++)
             {
-                if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == dt.Columns[j].ColumnName)
+                if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == dt.Columns[j].ColumnName)
                 {
                     if (_dtRecordColums.Rows[i]["ShowTotal"].ToString().ToLower() == "true")
                     {
-                        drFooter[_dtRecordColums.Rows[i]["NameOnExport"].ToString()] = CalculateTotalForAColumn(dt, dt.Columns[j].ColumnName, bool.Parse(_dtRecordColums.Rows[i]["IgnoreSymbols"].ToString().ToLower()));
+                        drFooter[_dtRecordColums.Rows[i]["ImportHeaderName"].ToString()] = CalculateTotalForAColumn(dt, dt.Columns[j].ColumnName, bool.Parse(_dtRecordColums.Rows[i]["IgnoreSymbols"].ToString().ToLower()));
 
                     }
 
@@ -1960,7 +1982,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
         {
             for (int j = dt.Columns.Count - 1; j >= 0; j--)
             {
-                if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == dt.Columns[j].ColumnName)
+                if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == dt.Columns[j].ColumnName)
                 {
                     if (_dtRecordColums.Rows[i]["OnlyForAdmin"].ToString().ToLower() == "true")
                     {
@@ -1992,7 +2014,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                 for (int j = 0; j < dt.Columns.Count; j++)
                 {
                     //DisplayTextSummary
-                    if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == dt.Columns[j].ColumnName)
+                    if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == dt.Columns[j].ColumnName)
                     {
                         if (IsStandard(_dtRecordColums.Rows[i]["SystemName"].ToString()) == false)
                         {
@@ -2090,7 +2112,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
 
                         if (_dtRecordColums.Rows[i]["ColumnType"].ToString() == "datetime")
                         {
-                            if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == dt.Columns[j].ColumnName)
+                            if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == dt.Columns[j].ColumnName)
                             {
                                 if (dr[j].ToString().Length > 15)
                                 {
@@ -2101,7 +2123,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
 
                         if (_dtRecordColums.Rows[i]["ColumnType"].ToString() == "date")
                         {
-                            if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == dt.Columns[j].ColumnName)
+                            if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == dt.Columns[j].ColumnName)
                             {
                                 if (dr[j].ToString().Length > 9)
                                 {
@@ -2213,21 +2235,21 @@ public partial class Pages_Record_UploadValidation : SecurePage
 
 
         DataTable dt = new DataTable();
-        if (_qsBatch.IsImportPositional == true)
-        {
-            dt = UploadManager.ets_TempRecord_Position_List(int.Parse(_qsTableID),
-                int.Parse(_qsBatchID), true, null, null,
-                 null, null,
-             sOrder, strOrderDirection, null, null, ref iTN, ref _iTotalDynamicColumns);
-        }
-        else
-        {
+        //if (_theImportTemplate.IsImportPositional == true)
+        //{
+        //    dt = UploadManager.ets_TempRecord_Position_List(int.Parse(_qsTableID),
+        //        int.Parse(_qsBatchID), true, null, null,
+        //         null, null,
+        //     sOrder, strOrderDirection, null, null, ref iTN, ref _iTotalDynamicColumns);
+        //}
+        //else
+        //{
 
             dt = UploadManager.ets_TempRecord_List(int.Parse(_qsTableID),
                 int.Parse(_qsBatchID), true, null, null,
                  null, null,
              sOrder, strOrderDirection, null, null, ref iTN, ref _iTotalDynamicColumns, "", _iImportTemplateID, "");
-        }
+        //}
 
 
         DataRow drFooter = dt.NewRow();
@@ -2236,11 +2258,11 @@ public partial class Pages_Record_UploadValidation : SecurePage
         {
             for (int j = 0; j < dt.Columns.Count; j++)
             {
-                if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == dt.Columns[j].ColumnName)
+                if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == dt.Columns[j].ColumnName)
                 {
                     if (_dtRecordColums.Rows[i]["ShowTotal"].ToString().ToLower() == "true")
                     {
-                        drFooter[_dtRecordColums.Rows[i]["NameOnExport"].ToString()] = CalculateTotalForAColumn(dt, dt.Columns[j].ColumnName, bool.Parse(_dtRecordColums.Rows[i]["IgnoreSymbols"].ToString().ToLower()));
+                        drFooter[_dtRecordColums.Rows[i]["ImportHeaderName"].ToString()] = CalculateTotalForAColumn(dt, dt.Columns[j].ColumnName, bool.Parse(_dtRecordColums.Rows[i]["IgnoreSymbols"].ToString().ToLower()));
 
                     }
 
@@ -2255,7 +2277,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
         {
             for (int j = dt.Columns.Count - 1; j >= 0; j--)
             {
-                if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == dt.Columns[j].ColumnName)
+                if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == dt.Columns[j].ColumnName)
                 {
                     if (_dtRecordColums.Rows[i]["OnlyForAdmin"].ToString().ToLower() == "true")
                     {
@@ -2287,7 +2309,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                 for (int j = 0; j < dt.Columns.Count; j++)
                 {
                     //DisplayTextSummary
-                    if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == dt.Columns[j].ColumnName)
+                    if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == dt.Columns[j].ColumnName)
                     {
                         if (IsStandard(_dtRecordColums.Rows[i]["SystemName"].ToString()) == false)
                         {
@@ -2385,7 +2407,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
 
                         if (_dtRecordColums.Rows[i]["ColumnType"].ToString() == "datetime")
                         {
-                            if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == dt.Columns[j].ColumnName)
+                            if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == dt.Columns[j].ColumnName)
                             {
                                 if (dr[j].ToString().Length > 15)
                                 {
@@ -2396,7 +2418,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
 
                         if (_dtRecordColums.Rows[i]["ColumnType"].ToString() == "date")
                         {
-                            if (_dtRecordColums.Rows[i]["NameOnExport"].ToString() == dt.Columns[j].ColumnName)
+                            if (_dtRecordColums.Rows[i]["ImportHeaderName"].ToString() == dt.Columns[j].ColumnName)
                             {
                                 if (dr[j].ToString().Length > 9)
                                 {
@@ -2499,12 +2521,12 @@ public partial class Pages_Record_UploadValidation : SecurePage
            
             try
             {
-                _qsTable.ImportColumnHeaderRow = int.Parse(txtImportColumnHeaderRow.Text.Trim());
-                _qsTable.ImportDataStartRow = int.Parse(txtImportDataStartRow.Text.Trim());
+                _theImportTemplate.ImportColumnHeaderRow = int.Parse(txtImportColumnHeaderRow.Text.Trim());
+                _theImportTemplate.ImportDataStartRow = int.Parse(txtImportDataStartRow.Text.Trim());
                 if (_theImportTemplate!=null)
                 {
-                    _theImportTemplate.ImportColumnHeaderRow = _qsTable.ImportColumnHeaderRow;
-                    _theImportTemplate.ImportDataStartRow = _qsTable.ImportDataStartRow;
+                    //_theImportTemplate.ImportColumnHeaderRow = _qsTable.ImportColumnHeaderRow;
+                    //_theImportTemplate.ImportDataStartRow = _qsTable.ImportDataStartRow;
                     ImportManager.dbg_ImportTemplate_Update(_theImportTemplate);
                 }
                 else
@@ -2658,7 +2680,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
 
                     Table newTable = new Table(null,
                                  _qsTable.TableName, 
-                                 null, null, false, true);
+                                 null, null, true);
                     newTable.AccountID = int.Parse(Session["AccountID"].ToString());
 
 
@@ -2672,12 +2694,12 @@ public partial class Pages_Record_UploadValidation : SecurePage
                     && txtImportDataStartRow.Text.Trim() != "")
                     {
 
-                        theTable.ImportColumnHeaderRow = int.Parse(txtImportColumnHeaderRow.Text.Trim());
-                        theTable.ImportDataStartRow = int.Parse(txtImportDataStartRow.Text.Trim());
+                        _theImportTemplate.ImportColumnHeaderRow = int.Parse(txtImportColumnHeaderRow.Text.Trim());
+                        _theImportTemplate.ImportDataStartRow = int.Parse(txtImportDataStartRow.Text.Trim());
                         if (_theImportTemplate != null)
                         {
-                            _theImportTemplate.ImportColumnHeaderRow = theTable.ImportColumnHeaderRow;
-                            _theImportTemplate.ImportDataStartRow = theTable.ImportDataStartRow;
+                            //_theImportTemplate.ImportColumnHeaderRow = theTable.ImportColumnHeaderRow;
+                            //_theImportTemplate.ImportDataStartRow = theTable.ImportDataStartRow;
                             ImportManager.dbg_ImportTemplate_Update(_theImportTemplate);
                         }
                         else
@@ -2692,23 +2714,23 @@ public partial class Pages_Record_UploadValidation : SecurePage
 
                     //lets check column header
 
-                    if (_theImportTemplate != null)
-                    {
-                        theTable.ImportColumnHeaderRow = _theImportTemplate.ImportColumnHeaderRow;
-                        theTable.ImportDataStartRow = _theImportTemplate.ImportDataStartRow;
-                    }
+                    //if (_theImportTemplate != null)
+                    //{
+                    //    theTable.ImportColumnHeaderRow = _theImportTemplate.ImportColumnHeaderRow;
+                    //    theTable.ImportDataStartRow = _theImportTemplate.ImportDataStartRow;
+                    //}
 
                     if (strFileExtension.ToLower() != ".dbf")
                     {
-                        if (theTable.ImportColumnHeaderRow != null)
+                        if (_theImportTemplate.ImportColumnHeaderRow != null)
                         {
                             //if ((int)theTable.ImportColumnHeaderRow > 1)
                             //{
-                            if (dtImportFileTable.Rows.Count >= (int)theTable.ImportColumnHeaderRow)
+                            if (dtImportFileTable.Rows.Count >= (int)_theImportTemplate.ImportColumnHeaderRow)
                             {
                                 for (int i = 0; i <= dtImportFileTable.Columns.Count - 1; i++)
                                 {
-                                    if (dtImportFileTable.Rows[(int)theTable.ImportColumnHeaderRow - 1][i].ToString() == "")
+                                    if (dtImportFileTable.Rows[(int)_theImportTemplate.ImportColumnHeaderRow - 1][i].ToString() == "")
                                     {
                                         //do nothing for it
                                         if (strFileExtension.ToLower() == ".csv")
@@ -2727,7 +2749,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                                     {
                                         try
                                         {
-                                            dtImportFileTable.Columns[i].ColumnName = dtImportFileTable.Rows[(int)theTable.ImportColumnHeaderRow - 1][i].ToString();
+                                            dtImportFileTable.Columns[i].ColumnName = dtImportFileTable.Rows[(int)_theImportTemplate.ImportColumnHeaderRow - 1][i].ToString();
                                         }
                                         catch (Exception ex)
                                         {
@@ -2738,7 +2760,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                                                     bool bOK = true;
                                                     foreach (DataColumn dc in dtImportFileTable.Columns)
                                                     {
-                                                        if (dc.ColumnName == dtImportFileTable.Rows[(int)theTable.ImportColumnHeaderRow - 1][i].ToString() + j.ToString())
+                                                        if (dc.ColumnName == dtImportFileTable.Rows[(int)_theImportTemplate.ImportColumnHeaderRow - 1][i].ToString() + j.ToString())
                                                         {
                                                             bOK = false;
                                                         }
@@ -2746,7 +2768,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
 
                                                     if (bOK)
                                                     {
-                                                        dtImportFileTable.Columns[i].ColumnName = dtImportFileTable.Rows[(int)theTable.ImportColumnHeaderRow - 1][i].ToString() + j.ToString();
+                                                        dtImportFileTable.Columns[i].ColumnName = dtImportFileTable.Rows[(int)_theImportTemplate.ImportColumnHeaderRow - 1][i].ToString() + j.ToString();
                                                         dtImportFileTable.AcceptChanges();
                                                         break;
                                                     }
@@ -2787,9 +2809,9 @@ public partial class Pages_Record_UploadValidation : SecurePage
                         }
 
 
-                        if (theTable.ImportDataStartRow != null)
+                        if (_theImportTemplate.ImportDataStartRow != null)
                         {
-                            for (int i = 1; i <= (int)theTable.ImportDataStartRow - 1; i++)
+                            for (int i = 1; i <= (int)_theImportTemplate.ImportDataStartRow - 1; i++)
                             {
                                 dtImportFileTable.Rows.RemoveAt(0);
 
@@ -2861,8 +2883,8 @@ public partial class Pages_Record_UploadValidation : SecurePage
                             }
 
                             Column newColumn = new Column(null, iTableID,
-                          strAutoSystemName, iDisplayOrder + 1, strSummaryName, strColumnName, strColumnName, strColumnName,
-                           null, "", "", null, null, "", "", false, strColumnName, null, "", null,
+                          strAutoSystemName, iDisplayOrder + 1, strSummaryName, strColumnName, 
+                           null, "", "", null, null, "", "", false, strColumnName, "", null,
                            null, null, strColumnName, "", null);
 
                             newColumn.ColumnType = "text";
@@ -2935,7 +2957,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                                     {
                                         theColumn.DisplayTextSummary = newColumn.DisplayTextSummary;
                                         theColumn.DisplayTextDetail = newColumn.DisplayTextDetail;
-                                        theColumn.NameOnImport = newColumn.NameOnImport;
+                                        //theColumn.Name_OnImport = newColumn.NameOnImport;
                                         RecordManager.ets_Column_Update(theColumn);
 
                                     }
@@ -2961,7 +2983,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                        UploadManager.UploadCSV(_ObjUser.UserID, _theTable, strExcelFileName,
             strExcelFileName, guidNew, _strFilesPhisicalPath + "\\UserFiles\\AppFiles",
             out strMsg, out iBatchID,  strFileExtension,
-            strSelectedSheet, int.Parse(Session["AccountID"].ToString()), _qsBatch.AllowDataUpdate, _iImportTemplateID, null);
+            strSelectedSheet, int.Parse(Session["AccountID"].ToString()), null, _iImportTemplateID, null);
 
                      theBatch = UploadManager.ets_Batch_Details(iBatchID);
                                       
@@ -3058,8 +3080,8 @@ public partial class Pages_Record_UploadValidation : SecurePage
         if (txtImportDataStartRow.Text == "")
             txtImportDataStartRow.Text = "2";
 
-            _qsTable.TempImportColumnHeaderRow = int.Parse(txtImportColumnHeaderRow.Text.Trim());
-            _qsTable.TempImportDataStartRow = int.Parse(txtImportDataStartRow.Text.Trim());
+        _theImportTemplate.TempImportColumnHeaderRow = int.Parse(txtImportColumnHeaderRow.Text.Trim());
+        _theImportTemplate.TempImportDataStartRow = int.Parse(txtImportDataStartRow.Text.Trim());
 
 
 
@@ -3109,7 +3131,7 @@ public partial class Pages_Record_UploadValidation : SecurePage
                 UploadManager.UploadCSV(_ObjUser.UserID, _qsTable, _qsBatch.BatchDescription,
               _qsBatch.UploadedFileName, guidNew, _strFilesPhisicalPath + "\\UserFiles\\AppFiles",
              out strMsg, out iBatchID,  strFileExtension, "",
-             int.Parse(Session["AccountID"].ToString()), _qsBatch.AllowDataUpdate, _iImportTemplateID, null);
+             int.Parse(Session["AccountID"].ToString()), null, _iImportTemplateID, null);
 
                 
                 if (strMsg == "")

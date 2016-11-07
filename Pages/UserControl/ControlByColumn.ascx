@@ -2,9 +2,11 @@
     Inherits="Pages_UserControl_ControlByColumn" %>
 
     <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
+
+<asp:ScriptManagerProxy runat="server" ID="ScriptManagerProxy1"></asp:ScriptManagerProxy>
 <div>
 
-<asp:UpdatePanel ID="UpdatePanel1" runat="server">
+<asp:UpdatePanel ID="upCBC" runat="server">
     <ContentTemplate>
     <table cellspacing="0" cellpadding="0">
         <tr>

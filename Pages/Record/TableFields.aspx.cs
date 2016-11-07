@@ -77,8 +77,8 @@ public partial class Pages_Record_TableFields :Page
                         iDisplayOrder = -1;                   
 
                     Column newColumn = new Column(null, _iTableID,
-                   strAutoSystemName, iDisplayOrder + 1, strDisplayName, strDisplayName, "", "", null, "",
-                    "", null, null, "", "", false, strDisplayName, null, "", null, null, false, "", "", "");
+                   strAutoSystemName, iDisplayOrder + 1, strDisplayName, strDisplayName,  null, "",
+                    "", null, null, "", "", false, strDisplayName, "", null, null, false, "", "", "");
 
                     newColumn.ColumnType = strColumnType;
 

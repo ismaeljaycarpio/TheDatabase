@@ -51,8 +51,8 @@ public class ExportManager
         //            AND ColumnType NOT IN ('staticcontent') AND TableID=" + TableID.ToString()
         //           + @"  ORDER BY DisplayOrder ASC");
 
-        DataTable dtExportColumns = Common.DataTableFromText(@"SELECT ColumnID,NameOnExport FROM [Column] WHERE 
-            Systemname not in('IsActive','TableID') AND NameOnExport IS NOT NULL AND LEN(NameOnExport) > 0
+        DataTable dtExportColumns = Common.DataTableFromText(@"SELECT ColumnID,DisplayName FROM [Column] WHERE 
+            Systemname not in('IsActive','TableID') AND DisplayName IS NOT NULL AND LEN(DisplayName) > 0
             AND ColumnType NOT IN ('staticcontent') AND TableID=" + TableID.ToString()
      + @"  ORDER BY DisplayRight,DisplayOrder");
 

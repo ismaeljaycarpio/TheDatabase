@@ -92,7 +92,7 @@ position: fixed;
 top:50%;
 left: 50%;
 background-color:rgba(256,256,256,0.5);
-
+z-index:1001;
 }
 
 
@@ -1727,12 +1727,6 @@ top:300px;
 left: 50%;
 }
 #ctl00_HomeContentPlaceHolder_UpdateProgress2
-{
-position: fixed;
-top:300px;
-left: 50%;
-}
-#ctl00_HomeContentPlaceHolder_UpdateProgress3
 {
 position: fixed;
 top:300px;

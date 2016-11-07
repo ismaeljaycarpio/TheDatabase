@@ -464,7 +464,7 @@ public partial class Pages_Record_TableSheet : SecurePage
 
             Table newTable = new Table(null,
                          txtTable.Text, 
-                         null, null, false, true);
+                         null, null,  true);
             newTable.AccountID = int.Parse(Session["AccountID"].ToString());
 
 
@@ -474,14 +474,14 @@ public partial class Pages_Record_TableSheet : SecurePage
 
             Table theTable = RecordManager.ets_Table_Details(iTableID);
 
-            if (txtImportColumnHeaderRow.Text.Trim() != ""
-            && txtImportDataStartRow.Text.Trim() != "")
-            {
-               
-                theTable.ImportColumnHeaderRow = int.Parse(txtImportColumnHeaderRow.Text.Trim());
-                theTable.ImportDataStartRow = int.Parse(txtImportDataStartRow.Text.Trim());
-                RecordManager.ets_Table_Update(theTable);
-            }
+            //if (txtImportColumnHeaderRow.Text.Trim() != ""
+            //&& txtImportDataStartRow.Text.Trim() != "")
+            //{
+
+            //    theTable.ImportColumnHeaderRow = int.Parse(txtImportColumnHeaderRow.Text.Trim());
+            //    theTable.ImportDataStartRow = int.Parse(txtImportDataStartRow.Text.Trim());
+            //    RecordManager.ets_Table_Update(theTable);
+            //}
 
 
 
@@ -530,7 +530,6 @@ public partial class Pages_Record_TableSheet : SecurePage
                         List<int> lstColumnCount = new List<int>();
 
                         int j = 0;
-
                         //lstColumnCount.Add(iBlankColumnHeadrCount);
 
                         foreach (DataRow dr in dtImportFileTable.Rows)
@@ -575,11 +574,9 @@ public partial class Pages_Record_TableSheet : SecurePage
                                         {
                                             //
                                         }
-
                                     }
                                 }
                             }
-
 
                             lstColumnCount.Add(iThisRowBlankColumnCount);
                             j = j + 1;
@@ -589,8 +586,7 @@ public partial class Pages_Record_TableSheet : SecurePage
                                 break;
                             }
                         }
-
-
+                    
                         //get the minimum blank count
 
                         int iMinValue = lstColumnCount.Min();
@@ -608,8 +604,8 @@ public partial class Pages_Record_TableSheet : SecurePage
                             m = m + 1;
                         }
 
-                        theTable.ImportColumnHeaderRow = iMinIndex + 1;
-                        theTable.ImportDataStartRow = iMinIndex + 2;
+                        ViewState["ImportColumnHeaderRow"] = iMinIndex + 1;
+                        ViewState["ImportDataStartRow"] = iMinIndex + 2;
 
 
 
@@ -628,15 +624,15 @@ public partial class Pages_Record_TableSheet : SecurePage
 
             if (strFileExtension.ToLower() != ".dbf")
             {
-                if (theTable.ImportColumnHeaderRow != null)
+                if (ViewState["ImportColumnHeaderRow"] != null)
                 {
                     //if ((int)theTable.ImportColumnHeaderRow > 1)
                     //{
-                    if (dtImportFileTable.Rows.Count >= (int)theTable.ImportColumnHeaderRow)
+                    if (dtImportFileTable.Rows.Count >= int.Parse(ViewState["ImportColumnHeaderRow"].ToString()))
                     {
                         for (int i = 0; i <= dtImportFileTable.Columns.Count - 1; i++)
                         {
-                            if (dtImportFileTable.Rows[(int)theTable.ImportColumnHeaderRow - 1][i].ToString() == "")
+                            if (dtImportFileTable.Rows[int.Parse(ViewState["ImportColumnHeaderRow"].ToString()) - 1][i].ToString() == "")
                             {
                                 //do nothing for it
                                 if (strFileExtension.ToLower() == ".csv")
@@ -655,8 +651,8 @@ public partial class Pages_Record_TableSheet : SecurePage
                             {
                                 try
                                 {
-                                    if (dtImportFileTable.Rows[(int)theTable.ImportColumnHeaderRow - 1][i].ToString() != "")
-                                        dtImportFileTable.Columns[i].ColumnName = dtImportFileTable.Rows[(int)theTable.ImportColumnHeaderRow - 1][i].ToString();
+                                    if (dtImportFileTable.Rows[int.Parse(ViewState["ImportColumnHeaderRow"].ToString()) - 1][i].ToString() != "")
+                                        dtImportFileTable.Columns[i].ColumnName = dtImportFileTable.Rows[int.Parse(ViewState["ImportColumnHeaderRow"].ToString()) - 1][i].ToString();
                                 }
                                 catch (Exception ex)
                                 {
@@ -667,7 +663,7 @@ public partial class Pages_Record_TableSheet : SecurePage
                                             bool bOK = true;
                                             foreach (DataColumn dc in dtImportFileTable.Columns)
                                             {
-                                                if (dc.ColumnName == dtImportFileTable.Rows[(int)theTable.ImportColumnHeaderRow - 1][i].ToString() + j.ToString())
+                                                if (dc.ColumnName == dtImportFileTable.Rows[int.Parse(ViewState["ImportColumnHeaderRow"].ToString()) - 1][i].ToString() + j.ToString())
                                                 {
                                                     bOK = false;
                                                 }
@@ -675,7 +671,7 @@ public partial class Pages_Record_TableSheet : SecurePage
 
                                             if (bOK)
                                             {
-                                                dtImportFileTable.Columns[i].ColumnName = dtImportFileTable.Rows[(int)theTable.ImportColumnHeaderRow - 1][i].ToString() + j.ToString();
+                                                dtImportFileTable.Columns[i].ColumnName = dtImportFileTable.Rows[int.Parse(ViewState["ImportColumnHeaderRow"].ToString()) - 1][i].ToString() + j.ToString();
                                                 dtImportFileTable.AcceptChanges();
                                                 break;
                                             }
@@ -717,9 +713,9 @@ public partial class Pages_Record_TableSheet : SecurePage
                 }
 
 
-                if (theTable.ImportDataStartRow != null)
+                if (ViewState["ImportDataStartRow"] != null)
                 {
-                    for (int i = 1; i <= (int)theTable.ImportDataStartRow - 1; i++)
+                    for (int i = 1; i <= int.Parse(ViewState["ImportDataStartRow"].ToString()) - 1; i++)
                     {
                         dtImportFileTable.Rows.RemoveAt(0);
 
@@ -796,8 +792,8 @@ public partial class Pages_Record_TableSheet : SecurePage
                     }
 
                     Column newColumn = new Column( null, iTableID,
-                  strAutoSystemName, iDisplayOrder + 1, strSummaryName, strColumnName, strColumnName, strColumnName,
-                   null, "", "", null, null, "", "", false, strColumnName, null, "", null,
+                  strAutoSystemName, iDisplayOrder + 1, strSummaryName, strColumnName, 
+                   null, "", "", null, null, "", "", false, strColumnName, "", null,
                    null, null, strColumnName, "", null);
 
                     newColumn.ColumnType = "text";
@@ -870,7 +866,7 @@ public partial class Pages_Record_TableSheet : SecurePage
                             {
                                 theColumn.DisplayTextSummary = newColumn.DisplayTextSummary;
                                 theColumn.DisplayTextDetail = newColumn.DisplayTextDetail;
-                                theColumn.NameOnImport = newColumn.NameOnImport;
+                                //theColumn.Name_OnImport = newColumn.Name_OnImport;
                                 RecordManager.ets_Column_Update(theColumn);
 
                             }
@@ -943,7 +939,7 @@ public partial class Pages_Record_TableSheet : SecurePage
                 UploadManager.UploadCSV(_ObjUser.UserID, _theTable, fuRecordFile.FileName,
               fuRecordFile.FileName, guidNew, _strFilesPhisicalPath + "\\UserFiles\\AppFiles",
               out strMsg, out iBatchID,  strFileExtension,
-              strSelectedSheet, int.Parse(Session["AccountID"].ToString()), null, null, null);
+              strSelectedSheet, int.Parse(Session["AccountID"].ToString()), null,null, null);
 
                 theBatch = UploadManager.ets_Batch_Details(iBatchID);
                 //strImportMsg = UploadManager.ImportClickFucntions(theBatch, ref connection, ref tn);

@@ -128,7 +128,7 @@
                                 </div>
                             </ContentTemplate>
                         </asp:UpdatePanel>
-                        <asp:UpdateProgress class="ajax-indicator" ID="UpdateProgress3" runat="server" AssociatedUpdatePanelID="UpdatePanel1">
+                        <%--<asp:UpdateProgress class="ajax-indicator" ID="UpdateProgress3" runat="server" AssociatedUpdatePanelID="UpdatePanel1">
                             <ProgressTemplate>
                                 <table style="width: 100%; text-align: center">
                                     <tr>
@@ -138,7 +138,7 @@
                                     </tr>
                                 </table>
                             </ProgressTemplate>
-                        </asp:UpdateProgress>
+                        </asp:UpdateProgress>--%>
                     </asp:Panel>
                 </td>
                 <td valign="top">

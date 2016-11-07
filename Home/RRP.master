@@ -51,13 +51,33 @@
     <script type="text/javascript" src="<%=ResolveUrl("~/JS/RRP/holder.js")%>"></script>
 
     <script type="text/javascript" src="<%=ResolveUrl("~/swfobject.js")%>"></script>
-
+    <script type="text/javascript">
+        $(".btn")
+                 .click(
+                   function () {
+                       $(".ajax-indicator-full").fadeIn();
+                   }
+                 );
+    </script>
     <form id="form1" runat="server" enctype="multipart/form-data">
         <input id="Hidden1" type="hidden" />
         <asp:HiddenField runat="server" ID="hfFlashSupport" Value="no" />
         <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true" AsyncPostBackTimeout="36000">
         </asp:ScriptManager>
-
+        <asp:UpdateProgress class="ajax-indicator-full" ID="upMaster" runat="server">
+    <ProgressTemplate>
+        <table style="width: 100%; height: 100%; text-align: center;">
+            <tr valign="middle">
+                <td>
+                    <p style="font-size:12px;">
+                        Please wait...
+                    </p>
+                    <asp:Image runat="server" AlternateText="Processing..." ImageUrl="~/Images/ajax.gif" />
+                </td>
+            </tr>
+        </table>
+    </ProgressTemplate>
+</asp:UpdateProgress>
         <asp:HiddenField runat="server" ID="hfIsAccountHolder" />
         <asp:UpdatePanel ID="upNotificationMessage" runat="server" UpdateMode="Always">
             <ContentTemplate>

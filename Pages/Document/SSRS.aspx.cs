@@ -7,9 +7,59 @@ using System.Web.UI.WebControls;
 using Microsoft.Reporting.WebForms;
 using System.Web.Security;
 using System.Net;
-
+using System.Collections; 
 public partial class Pages_Document_SSRS : SecurePage
 {
+    //private IEnumerable GetDateParameters()
+    //{
+    //    // I'm assuming report view control id as reportViewer
+    //    foreach (ReportParameterInfo info in ReportViewer1.ServerReport.GetParameters())
+    //    {
+    //        if (info.DataType == ParameterDataType.DateTime)
+    //        {
+    //            yield return string.Format("[{0}]", info.Prompt);
+    //        }
+    //    }
+    //}
+
+    //protected override void OnPreRender(EventArgs e)
+    //{
+    //    base.OnPreRender(e);
+    //    DatePickers.Value = string.Join(",", (new List(GetDateParameters()).ToArray()));
+    //}
+
+    //private IEnumerable<string> GetDateParameters()
+    //{
+    //    // I'm assuming report view control id as reportViewer
+    //    foreach (ReportParameterInfo info in ReportViewer1.ServerReport.GetParameters())
+    //    {
+    //        if (info.DataType == ParameterDataType.DateTime)
+    //        {
+    //            yield return string.Format("[{0}]", info.Prompt);
+    //        }
+    //    }
+    //}
+
+    private IEnumerable<string> GetDateParameters()
+    {
+        // I'm assuming report view control id as reportViewer
+        foreach (ReportParameterInfo info in ReportViewer1.ServerReport.GetParameters())
+        {
+            if (info.DataType == ParameterDataType.DateTime)
+            {
+                yield return string.Format("[{0}]", info.Prompt);
+            }
+        }
+    }
+
+
+    protected override void OnPreRender(EventArgs e)
+    {
+        base.OnPreRender(e);
+        DatePickers.Value = string.Join(",", (GetDateParameters().ToList().ToArray()));
+        //lblNoReport.Visible = true;
+        //lblNoReport.Text = DatePickers.Value;
+    }
 
     protected void Page_Init(object sender, EventArgs e)
     {
@@ -102,11 +152,61 @@ public partial class Pages_Document_SSRS : SecurePage
 
         }
 
-                
+        string strJS = @"
+
+ $(document).ready(function () {
+            
+//            function fixParameters() {
+//                if ($.browser.webkit) {
+//
+//                    // add date picker
+//                    $($("":hidden[id*='DatePickers']"").val().split("","")).each(function (i, item) {
+//                        var h = $(""table[id*='ParametersGrid'] span"").filter(function (i) {
+//                            var v = ""["" + $(this).text() + ""]"";
+//                            return (v != null && item != """" && v.indexOf(item) >= 0);
+//                        }).parent(""td"").next(""td"").find("":input:not(:checkbox)"").datepicker({
+//                            showOn: ""button""
+//                           , buttonImage: '/Reserved.ReportViewerWebControl.axd?OpType=Resource&Name=Microsoft.Reporting.WebForms.calendar.gif'
+//                           , buttonImageOnly: true
+//                           , dateFormat: 'dd/mm/yyyy'
+//                           , changeMonth: true
+//                           , changeYear: true
+//                        });
+//                    });
+//
+//                    // remove time from date  parent(""td"").next(""td"").find("":input:not(:checkbox)"").datepicker
+//                    $($("":hidden[id*='DatePickers']"").val().split("","")).each(function (i, item) {
+//                        var h = $(""table[id*='ParametersGrid'] span"").filter(function (i) {
+//                            var v = ""["" + $(this).text() + ""]"";
+//                            return (v != null && item != """" && v.indexOf(item) >= 0);
+//                        }).parent(""td"").next(""td"").find(""input"").parent().children(""input"").each(function () {
+//                            $(this).val($(this).val().substring(0, 10));
+//                        });
+//                    });
+//                }
+//            }
+//
+//            fixParameters();
+//            Sys.WebForms.PageRequestManager.getInstance().add_endRequest(applicationInitHandler);
+//
+//            function applicationInitHandler() {
+//                fixParameters();
+//            }
+
+
+           
+
+        });
+
+";
+
+
+        ScriptManager.RegisterStartupScript(this, this.GetType(), "SSRS_JS", strJS, true);
+
 
     }
 
-
+  
     protected void Page_Load(object sender, EventArgs e)
     {
 

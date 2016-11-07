@@ -11,16 +11,10 @@ body
 	font-size:12pt; 
 	background:url(images/bg.jpg) center top no-repeat; 
 	line-height:1.25; 
-}
-
-#loadingredirect {
-    position:fixed;
-    top:50px;
-    left:50%;
-    /*background-color:rgba(256,256,256,0.5);*/
-    z-index:1;
     
 }
+
+
 .pager_textbox
 {
     background-color: Transparent;
@@ -1650,12 +1644,22 @@ color:#3E8BF9;
 .DBGTab .ajax__tab_header A
 {
     color:#000000;
+      text-decoration:none;
+}
+
+.DBGTab .ajax__tab_panel
+{
+    color:#000000;
+     overflow:auto;
 }
 
 
 .DBGTab .ajax__tab_header 
 {
     
+   display:inline;
+    text-align: center;
+     width:100%;
     font-size: 14px;
     margin-left: 0px;
     margin-right: 2px;
@@ -1663,8 +1667,27 @@ color:#3E8BF9;
     margin-bottom: 0px;
     background: #FFFFFF; /* for non-css3 browsers */
 }
+
+.DBGTab .ajax__tab_header_verticalleft A
+{
+    color:#000000;
+      text-decoration:none;
+}
+.DBGTab .ajax__tab_header_verticalleft 
+{
+    font-size: 14px;
+    margin: 0px;   
+    background: #FFFFFF; /* for non-css3 browsers */
+     border-bottom:1px solid #505050;
+    
+}
+
+
+
 .DBGTab .ajax__tab_outer
 {
+   
+  
      background: #E7E7E7; /* for non-css3 browsers E7E7E7 */ 
      border:1px solid #505050;
       border-bottom:0px none;
@@ -1733,15 +1756,15 @@ z-index:1;
 
 .ajax-indicator-full
 {
-position: fixed;
-top:0px;
-left: 0px;
-/* background-color:#C0C0C0; 
-background-color:rgba(192,192,192,0.5);*/
-background-color:rgba(256,256,256,0.5);
-width:100%;
-height:100%;
-
+    position: fixed;
+    top:0px;
+    left: 0px;
+    /* background-color:#C0C0C0; 
+    background-color:rgba(192,192,192,0.5);*/
+    background-color:rgba(256,256,256,0.4);
+    width:100%;
+    height:100%;
+    z-index:1001;
 }
 
 
@@ -1789,13 +1812,4 @@ position: fixed;
 top:300px;
 left: 50%;
 }
-/* 
-
-#ctl00_HomeContentPlaceHolder_UpdateProgress3
-{
-position: fixed;
-top:300px;
-left: 50%;
-}
-*/
 

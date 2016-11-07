@@ -11,7 +11,7 @@ using iTextSharp.text.pdf;
 using iTextSharp.text.html;
 using System.Web.UI.HtmlControls;
 using iTextSharp.text.html.simpleparser;
-using DBGServerControl;
+//using DBGServerControl;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -21,43 +21,43 @@ public partial class Common_Pager : System.Web.UI.UserControl
 
     bool _bOpenInParent = false;
 
-    public dbgGridView _gridView;
+    //public dbgGridView _gridView;
     private ScriptManager _scriptManager;
    
     private string _strTable = "User";
     //private int? _iAccontID ;
     //private string _strFullName = "";
-    private string _strAddURL = "#";
-    private string _strAddURL2 = "#";
-    private string _strEditURL = "#";
+    //private string _strAddURL = "#";
+    //private string _strAddURL2 = "#";
+    //private string _strEditURL = "#";
     
-    private bool _bIsInLine=false ;
-    private bool _bIsDynamicColumn = false;
-    private bool _bHideAdd = false;
-    private bool _bHideGo = false;
-    private bool _bHideNavigation = false;
-    private bool _bHideEdit = false;
-    private bool _bHideDelete = false;
-    private bool _bHideUnDelete = true;
-    private bool _bHideParmanenetDel = true;
-    private bool _bHideEditMany = true;
-    private bool _bHideSendEmail = true;
+    //private bool _bIsInLine=false ;
+    //private bool _bIsDynamicColumn = false;
+    //private bool _bHideAdd = false;
+    //private bool _bHideGo = false;
+    //private bool _bHideNavigation = false;
+    //private bool _bHideEdit = false;
+    //private bool _bHideDelete = false;
+    //private bool _bHideUnDelete = true;
+    //private bool _bHideParmanenetDel = true;
+    //private bool _bHideEditMany = true;
+    //private bool _bHideSendEmail = true;
 
-    private bool _bHideExcelExport = true;
-    private bool _bHideAllExport = true;
+    //private bool _bHideExcelExport = true;
+    //private bool _bHideAllExport = true;
 
 
-    private bool _bHideFilter = false;
-    private string _strAddImageURL="Images/add.png";
-    private string _strAddImageURL2 = "Images/add.png";
-    private bool _bShowAdd2 = false;
-    private string _strAddToolTip = "Add";
-    private string _strAddToolTip2 = "Add";
+    //private bool _bHideFilter = false;
+    //private string _strAddImageURL="Images/add.png";
+    //private string _strAddImageURL2 = "Images/add.png";
+    //private bool _bShowAdd2 = false;
+    //private string _strAddToolTip = "Add";
+    //private string _strAddToolTip2 = "Add";
 
-    private bool _bHideExport = false;
-    private bool _bHideRefresh = false;
-    private bool _bHidePageSize = false;
-    private bool _bHidePageSizeButton = true;
+    //private bool _bHideExport = false;
+    //private bool _bHideRefresh = false;
+    //private bool _bHidePageSize = false;
+    //private bool _bHidePageSizeButton = true;
 
     public string _strExportFileName = "GridViewExport";
 
@@ -81,8 +81,8 @@ public partial class Common_Pager : System.Web.UI.UserControl
 
     public event EventHandler CustomExportPDF;
 
-    private bool _bDOCustomPDF = false;
-    private bool _bCustomPager = false;
+    //private bool _bDOCustomPDF = false;
+    //private bool _bCustomPager = false;
     
     //public int? TableID { get; set; }
 
@@ -95,10 +95,10 @@ public partial class Common_Pager : System.Web.UI.UserControl
         set
         {
             ViewState["TableID"] = value;
-            if(IsPostBack)
-            {
-                ShowHideSizeButtonMethod();
-            }
+            //if(IsPostBack)
+            //{
+            //    ShowHideSizeButtonMethod();
+            //}
         }
     }
 
@@ -109,11 +109,12 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
          get
         {
-            return _bCustomPager;
+             return ViewState["CustomPager"]==null?false:bool.Parse(ViewState["CustomPager"].ToString());
+            
         }
         set
         {
-            _bCustomPager = value;
+            ViewState["CustomPager"] = value;
         }
     }
 
@@ -140,18 +141,133 @@ public partial class Common_Pager : System.Web.UI.UserControl
         }
     }
 
+    public string DeleteOnClientClick
+    {
+        get
+        {
+            return DeleteLinkButton.OnClientClick;
+        }
+        set
+        {
+            DeleteLinkButton.OnClientClick = value;
+        }
+    }
 
+    public string UnDeleteOnClientClick
+    {
+        get
+        {
+            return lnkUnDelete.OnClientClick;
+        }
+        set
+        {
+            lnkUnDelete.OnClientClick = value;
+        }
+    }
+
+    public string ParmanentDeleteOnClientClick
+    {
+        get
+        {
+            return lnkParmanentDelete.OnClientClick;
+        }
+        set
+        {
+            lnkParmanentDelete.OnClientClick = value;
+        }
+    }
+    public string DeleteCssClass
+    {
+        get
+        {
+            return DeleteLinkButton.CssClass;
+        }
+        set
+        {
+            DeleteLinkButton.CssClass = value;
+        }
+    }
+
+
+    public string UnDeleteCssClass
+    {
+        get
+        {
+            return lnkUnDelete.CssClass;
+        }
+        set
+        {
+            lnkUnDelete.CssClass = value;
+        }
+    }
+
+    public string ParmanentDeleteCssClass
+    {
+        get
+        {
+            return lnkParmanentDelete.CssClass;
+        }
+        set
+        {
+            lnkParmanentDelete.CssClass = value;
+        }
+    }
+
+    public string DeleteHref
+    {
+        get
+        {
+            return DeleteLinkButton.Attributes["href"];
+        }
+        set
+        {
+            DeleteLinkButton.Attributes.Add("href",value);
+        }
+    }
+
+    public string UnDeleteHref
+    {
+        get
+        {
+            return lnkUnDelete.Attributes["href"];
+        }
+        set
+        {
+            lnkUnDelete.Attributes.Add("href", value);
+        }
+    }
+
+    public string ParmanentDeleteHref
+    {
+        get
+        {
+            return lnkParmanentDelete.Attributes["href"];
+        }
+        set
+        {
+            lnkParmanentDelete.Attributes.Add("href", value);
+        }
+    }
+
+    public string DeleteClientID
+    {
+        get
+        {
+            return DeleteLinkButton.ClientID;
+        }
+      
+    }
     public bool DOCustomPDF
     {
         get
         {
-            return _bDOCustomPDF;
+            return ViewState["DOCustomPDF"] == null ? false : (bool)ViewState["DOCustomPDF"];
         }
         set
         {
-            _bDOCustomPDF = value;
+            ViewState["DOCustomPDF"] = value;
 
-            if (_bDOCustomPDF)
+            if (value)
             {
                 cmdPDF.OnClientClick = "Javascript:confirmation();";
             }
@@ -163,12 +279,12 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _bShowAdd2;
+            return HyperAdd2.Visible;
         }
         set
         {
-            _bShowAdd2 = value;
-            HyperAdd2.Visible = _bShowAdd2;           
+         
+            HyperAdd2.Visible = value;           
         }
     }
 
@@ -219,16 +335,17 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _bHidePageSize;
+            return ViewState["HidePageSize"] == null ? false : bool.Parse(ViewState["HidePageSize"].ToString());
         }
         set
         {
-            _bHidePageSize = value;
-            tdPageSize.Visible = !_bHidePageSize;
-            tdPageSizeRow.Visible = !_bHidePageSize;
-            tdPageSizeRow1.Visible = !_bHidePageSize;
-            tdPageSizeRow2.Visible = !_bHidePageSize;
-            tdPageSizeRow3.Visible = !_bHidePageSize;
+            ViewState["HidePageSize"] = value;
+            //_bHidePageSize = value;
+            tdPageSize.Visible = !value;
+            tdPageSizeRow.Visible = !value;
+            tdPageSizeRow1.Visible = !value;
+            tdPageSizeRow2.Visible = !value;
+            tdPageSizeRow3.Visible = !value;
             
         }
     }
@@ -237,29 +354,27 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _bHidePageSizeButton;
+            return ViewState["HidePageSizeButton"] == null ? true : bool.Parse(ViewState["HidePageSizeButton"].ToString()); ;
         }
         set
         {
-            _bHidePageSizeButton = value;
+            ViewState["HidePageSizeButton"] = value;
 
-          
+            tdPageSize.Visible = !value;
 
-            tdPageSize.Visible = !_bHidePageSizeButton;
-          
-            tdPageSizeRow1.Visible = !_bHidePageSizeButton;
-            tdPageSizeRow2.Visible = !_bHidePageSizeButton;
-            tdPageSizeRow3.Visible = !_bHidePageSizeButton;
-            cmdLast.Visible = !_bHidePageSizeButton;
-            cmdFirst.Visible = !_bHidePageSizeButton;
+            tdPageSizeRow1.Visible = !value;
+            tdPageSizeRow2.Visible = !value;
+            tdPageSizeRow3.Visible = !value;
+            cmdLast.Visible = !value;
+            cmdFirst.Visible = !value;
             //cmdCog.Visible = _bHidePageSizeButton;
-           
-            tdFirst.Visible = !_bHidePageSizeButton;
-            tdLast.Visible = !_bHidePageSizeButton;
-            cmdUp.Visible = !_bHidePageSizeButton;
-            cmdDown.Visible = !_bHidePageSizeButton; ;
 
-            if (_bHidePageSizeButton)
+            tdFirst.Visible = !value;
+            tdLast.Visible = !value;
+            cmdUp.Visible = !value;
+            cmdDown.Visible = !value; ;
+
+            if (value)
             {
                 tdDown.Style.Add("width", "1px");
             }
@@ -270,13 +385,13 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _bHideAdd;
+            return !HyperAdd.Visible;
         }
         set
         {
-            _bHideAdd = value;
-            HyperAdd.Visible = !_bHideAdd;
-            cmdAdd.Visible =false;
+           // ViewState["HideAdd"] = value;
+            HyperAdd.Visible = !value;
+            //cmdAdd.Visible =false;
         }
     }
 
@@ -284,7 +399,7 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return hlEditView.Visible;
+            return !hlEditView.Visible;
         }
         set
         {
@@ -297,12 +412,12 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _bHideGo;
+            return !divGo.Visible;
         }
         set
         {
-            _bHideGo = value;
-            divGo.Visible = !_bHideGo;
+           
+            divGo.Visible = !value;
             
         }
     }
@@ -311,12 +426,12 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _bHideNavigation;
+            return !tblNavigation.Visible;
         }
         set
         {
-            _bHideNavigation = value;
-            tblNavigation.Visible = !_bHideNavigation;
+          
+            tblNavigation.Visible = !value;
 
         }
     }
@@ -325,13 +440,13 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _bHideRefresh;
+            return !cmdRefresh.Visible;
         }
         set
         {
-            _bHideRefresh = value;
-            cmdRefresh.Visible = !_bHideRefresh;
-            imgRefresh.Visible = !_bHideRefresh;
+           
+            cmdRefresh.Visible = !value;
+            imgRefresh.Visible = !value;
         }
     }
 
@@ -339,25 +454,25 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _bHideExport;
+            return !cmdCSV.Visible;
         }
         set
         {
-            _bHideExport = value;
-            cmdWord.Visible = !_bHideExport;
-            cmdCSV.Visible = !_bHideExport;
-            cmdPDF.Visible = !_bHideExport;
-            imgCSV.Visible = !_bHideExport;
-            imgWord.Visible = !_bHideExport;
-            imgPDF.Visible = !_bHideExport;
-            if (_bHideExport)
+           
+            cmdWord.Visible = !value;
+            cmdCSV.Visible = !value;
+            cmdPDF.Visible = !value;
+            imgCSV.Visible = !value;
+            imgWord.Visible = !value;
+            imgPDF.Visible = !value;
+            if (value)
             {
 
                 
-                tdAddPart.Width="100";
+                tdAddPart.Width="400";
 
                 if(HideAdd)
-                    tdAddPart.Width = "50";
+                    tdAddPart.Width = "200";
 
                 if(HideDelete)
                     tdAddPart.Width = "50";
@@ -373,12 +488,12 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _bHideUnDelete;
+            return !lnkUnDelete.Visible;
         }
         set
         {
-            _bHideUnDelete = value;
-            lnkUnDelete.Visible = !_bHideUnDelete;
+         
+            lnkUnDelete.Visible = !value;
         }
     }
 
@@ -386,12 +501,12 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _bHideParmanenetDel;
+            return !lnkParmanentDelete.Visible;
         }
         set
         {
-            _bHideParmanenetDel = value;
-            lnkParmanentDelete.Visible = !_bHideParmanenetDel;
+           
+            lnkParmanentDelete.Visible = !value;
         }
     }
 
@@ -399,12 +514,12 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _bHideEditMany;
+            return !lnkEditMany.Visible;
         }
         set
         {
-            _bHideEditMany = value;
-            lnkEditMany.Visible = !_bHideEditMany;
+          
+            lnkEditMany.Visible = !value;
         }
     }
 
@@ -413,12 +528,12 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _bHideSendEmail;
+            return !lnkSendEmail.Visible;
         }
         set
         {
-            _bHideSendEmail = value;
-            lnkSendEmail.Visible = !_bHideSendEmail;
+            
+            lnkSendEmail.Visible = !value;
         }
     }
 
@@ -427,13 +542,13 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _bHideExcelExport;
+            return !cmdExcel.Visible;
         }
         set
         {
-            _bHideExcelExport = value;
-            cmdExcel.Visible = !_bHideExcelExport;
-            imgExcel.Visible = !_bHideExcelExport;
+          
+            cmdExcel.Visible = !value;
+            imgExcel.Visible = !value;
         }
     }
 
@@ -441,15 +556,80 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _bHideAllExport;
+            return !lnkAllExport.Visible;
         }
         set
         {
-            _bHideAllExport = value;
-            cmdAllExport.Visible = !_bHideAllExport;
-            imgAllExportS.Visible = !_bHideAllExport;
+           
+            lnkAllExport.Visible = !value;
+            imgAllExportS.Visible = !value;
         }
     }
+    public string AllExportOnClientClick
+    {
+        get
+        {
+            return lnkAllExport.OnClientClick;
+        }
+        set
+        {
+            lnkAllExport.OnClientClick = value;
+        }
+    }
+    public string AllExportCssClass
+    {
+        get
+        {
+            return lnkAllExport.CssClass;
+        }
+        set
+        {
+            lnkAllExport.CssClass = value;
+        }
+    }
+
+    public string AllExportHref
+    {
+        get
+        {
+            return lnkAllExport.Attributes["href"];
+        }
+        set
+        {
+            lnkAllExport.Attributes.Add("href", value);
+        }
+    }
+
+
+    //public bool HideDeleteURL
+    //{
+    //    get
+    //    {
+    //        return !hlDeleteURL.Visible;
+    //    }
+    //    set
+    //    {
+    //        hlDeleteURL.Visible = !value;
+           
+    //    }
+    //}
+
+    //public HyperLink DeleteObject
+    //{
+    //    get
+    //    {
+    //        return hlDeleteURL;
+    //    }
+    //    set
+    //    {
+    //        HyperLink hlTemp = (HyperLink)value;
+    //        if (hlTemp!=null)
+    //        {
+    //            hlDeleteURL.CssClass = hlTemp.CssClass;
+    //            hlDeleteURL.NavigateUrl = hlTemp.NavigateUrl;
+    //        }           
+    //    }
+    //}
 
 
 
@@ -457,12 +637,12 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _bHideDelete;
+            return !DeleteLinkButton.Visible;
         }
         set
         {
-            _bHideDelete = value;
-            DeleteLinkButton.Visible = !_bHideDelete;
+            
+            DeleteLinkButton.Visible = !value;
         }
     }
 
@@ -471,13 +651,13 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _bHideFilter;
+            return !cmdFilter.Visible;
         }
         set
         {
-            _bHideFilter = value;
-            cmdFilter.Visible = !_bHideFilter;
-            imgFilter.Visible = !_bHideFilter;
+            
+            cmdFilter.Visible = !value;
+            imgFilter.Visible = !value;
         }
     }
 
@@ -487,12 +667,12 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _bHideEdit;
+            return !divEdit.Visible;
         }
         set
         {
-            _bHideEdit = value;
-            divEdit.Visible = !_bHideEdit;
+            
+            divEdit.Visible = !value;
             
         }
     }
@@ -501,12 +681,12 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _strEditURL;
+            return hlEdit.NavigateUrl;
         }
         set
         {
-            _strEditURL = value;
-            hlEdit.NavigateUrl = _strEditURL;
+          
+            hlEdit.NavigateUrl = value;
         }
     }
 
@@ -518,11 +698,11 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _bIsInLine;
+            return ViewState["IsInLine"] == null ? false : bool.Parse(ViewState["IsInLine"].ToString()); ;
         }
         set
         {
-            _bIsInLine = value;
+            ViewState["IsInLine"] = value;
         }
     }
 
@@ -532,11 +712,11 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _strTable;
+            return ViewState["TableName"] == null ? "" : ViewState["TableName"].ToString(); 
         }
         set
         {
-            _strTable = value;
+            ViewState["TableName"] = value;
         }
     }
 
@@ -545,11 +725,11 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _strExportFileName;
+            return ViewState["ExportFileName"] == null ? "" : ViewState["ExportFileName"].ToString();
         }
         set
         {
-            _strExportFileName = value;            
+            ViewState["ExportFileName"] = value;            
         }
     }
     
@@ -560,12 +740,12 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _strAddURL;
+            return HyperAdd.NavigateUrl;
         }
         set
         {
-            _strAddURL = value;
-            HyperAdd.NavigateUrl = _strAddURL;           
+           
+            HyperAdd.NavigateUrl = value;           
                
 
         }
@@ -634,12 +814,12 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _strAddURL2;
+            return HyperAdd2.NavigateUrl;
         }
         set
         {
-            _strAddURL2 = value;
-            HyperAdd2.NavigateUrl = _strAddURL2;
+           
+            HyperAdd2.NavigateUrl = value;
             
         }
     }
@@ -648,12 +828,12 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _strAddToolTip;
+            return HyperAdd.ToolTip;
         }
         set
         {
-            _strAddToolTip = value;
-            HyperAdd.ToolTip = _strAddToolTip;
+           
+            HyperAdd.ToolTip = value;
         }
     }
 
@@ -690,17 +870,53 @@ public partial class Common_Pager : System.Web.UI.UserControl
             lnkEditMany.ToolTip = value;
         }
     }
+    public string EditManyOnClientClick
+    {
+        get
+        {
+            return lnkEditMany.OnClientClick;
+        }
+        set
+        {
+            lnkEditMany.OnClientClick = value;
+        }
+    }
+
+    public string EditManyCssClass
+    {
+        get
+        {
+            return lnkEditMany.CssClass;
+        }
+        set
+        {
+            lnkEditMany.CssClass = value;
+        }
+    }
+
+    public string EditManyHref
+    {
+        get
+        {
+            return lnkEditMany.Attributes["href"];
+        }
+        set
+        {
+            lnkEditMany.Attributes.Add("href", value);
+        }
+    }
+
 
     public string AddToolTip2
     {
         get
         {
-            return _strAddToolTip2;
+            return HyperAdd2.ToolTip;
         }
         set
         {
-            _strAddToolTip2 = value;
-            HyperAdd2.ToolTip = _strAddToolTip2;
+            
+            HyperAdd2.ToolTip = value;
         }
     }
 
@@ -722,12 +938,12 @@ public partial class Common_Pager : System.Web.UI.UserControl
     {
         get
         {
-            return _strAddImageURL2;
+            return HyperAdd2.ImageUrl;
         }
         set
         {
-            _strAddImageURL2 = value;
-            HyperAdd2.ImageUrl = _strAddImageURL2;
+           
+            HyperAdd2.ImageUrl = value;
         }
     }
 
@@ -767,7 +983,9 @@ public partial class Common_Pager : System.Web.UI.UserControl
         set
         {
             lblTotalRows.Text = value.ToString();
+            TotalPages=Get_LastPage();
         }
+        
     }
 
     public int TotalPages
@@ -790,23 +1008,23 @@ public partial class Common_Pager : System.Web.UI.UserControl
             if (this.PageIndex == 1)
                 startIndex = 0;
             else
-                startIndex = (this.PageIndex - 1) * this.PageSize;
+                startIndex = (this.PageIndex-1)* this.PageSize;// (this.PageIndex - 1) * this.PageSize;
             return startIndex;
         }
     }
 
     protected void Page_Init(object sender, EventArgs e)
     {
-        if (_gridView != null)
-        {
-            _gridView.PageIndexChanged += GridViewPageIndexChanged;
-            //var GridDataSource = _gridView.FindDataSourceControl();
-            var GridDataSource = _gridView.DataSource;
-            //_table = GridDataSource.GetTable();
-            _scriptManager = ScriptManager.GetCurrent(Page);
-            if (_scriptManager != null)
-                _scriptManager.Navigate += ScriptManagerOnNavigate;
-        }
+        //if (_gridView != null)
+        //{
+        //    _gridView.PageIndexChanged += GridViewPageIndexChanged;
+        //    //var GridDataSource = _gridView.FindDataSourceControl();
+        //    var GridDataSource = _gridView.DataSource;
+        //    //_table = GridDataSource.GetTable();
+        //    _scriptManager = ScriptManager.GetCurrent(Page);
+        //    if (_scriptManager != null)
+        //        _scriptManager.Navigate += ScriptManagerOnNavigate;
+        //}
 
         if (this.Page.MasterPageFile!=null && this.Page.MasterPageFile.ToLower().IndexOf("rrp") > -1)
         {
@@ -825,7 +1043,7 @@ public partial class Common_Pager : System.Web.UI.UserControl
             imgcach4.Visible = false;
 
             HyperAdd.ImageUrl = "Images/rrp/add.png";
-            cmdAdd.ImageUrl = "Images/rrp/add.png";
+            //cmdAdd.ImageUrl = "Images/rrp/add.png";
             ImgDelete.Src = "Images/rrp/delete.png";
             cmdPDF.ImageUrl = "Images/rrp/file-pdf.png";
             cmdWord.ImageUrl = "Images/rrp/file-doc.png";
@@ -857,17 +1075,17 @@ public partial class Common_Pager : System.Web.UI.UserControl
         }
     }
 
-    protected void GridViewPageIndexChanged(object sender, EventArgs e)
-    {
-        if (_scriptManager != null)
-            _scriptManager.AddHistoryPoint("PageIndex", _gridView.PageIndex.ToString());
-    }
+    //protected void GridViewPageIndexChanged(object sender, EventArgs e)
+    //{
+    //    //if (_scriptManager != null)
+    //    //    _scriptManager.AddHistoryPoint("PageIndex", _gridView.PageIndex.ToString());
+    //}
 
-    protected void ScriptManagerOnNavigate(object sender, HistoryEventArgs e)
-    {
-        if (!String.IsNullOrEmpty(e.State["PageIndex"]))
-            _gridView.PageIndex = int.Parse(e.State["PageIndex"]);
-    }
+    //protected void ScriptManagerOnNavigate(object sender, HistoryEventArgs e)
+    //{
+    //    //if (!String.IsNullOrEmpty(e.State["PageIndex"]))
+    //    //    _gridView.PageIndex = int.Parse(e.State["PageIndex"]);
+    //}
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -883,7 +1101,7 @@ public partial class Common_Pager : System.Web.UI.UserControl
 
         }
       
-        GetTheGrid();
+        //GetTheGrid();
         if (HideDelete)
         {
             DeleteLinkButton.Visible = false;
@@ -919,24 +1137,24 @@ public partial class Common_Pager : System.Web.UI.UserControl
             lnkEditMany.Visible = true;
         }
 
-        if (IsInLine)
-        {
-            HyperAdd.Visible = false;
-            cmdAdd.Visible = false;
-        }
-        else
-        {
-            cmdAdd.Visible = false;
-            HyperAdd.Visible = true;
-        }
+        //if (IsInLine)
+        //{
+        //    HyperAdd.Visible = false;
+        //    //cmdAdd.Visible = false;
+        //}
+        //else
+        //{
+        //    //cmdAdd.Visible = false;
+        //    HyperAdd.Visible = true;
+        //}
 
         if (HideAdd)
         {
             HyperAdd.Visible = false;
-            cmdAdd.Visible = false;
+            //cmdAdd.Visible = false;
         }
 
-      
+      //if(!IsPostBack)
         ShowHideSizeButtonMethod();
         
 
@@ -953,26 +1171,26 @@ public partial class Common_Pager : System.Web.UI.UserControl
         }
            
     }
-    private void GetTheGrid()
-    {
-        Control c = Parent;
+    //private void GetTheGrid()
+    //{
+    //    Control c = Parent;
         
-        while (c != null)
-        {
-            if (c is GridView)
-            {
-                _gridView = (dbgGridView)c;
+    //    while (c != null)
+    //    {
+    //        if (c is GridView)
+    //        {
+    //            _gridView = (dbgGridView)c;
                 
-                TotalRows = _gridView.VirtualItemCount ;
-                //_gridView.TopPagerRow.Visible = true;
+    //            TotalRows = _gridView.VirtualItemCount ;
+    //            //_gridView.TopPagerRow.Visible = true;
 
               
-                break;
-            }
-            c = c.Parent;
-        }
-        this.TotalPages = Get_LastPage();
-    }
+    //            break;
+    //        }
+    //        c = c.Parent;
+    //    }
+    //    this.TotalPages = Get_LastPage();
+    //}
 
 
     
@@ -985,7 +1203,7 @@ public partial class Common_Pager : System.Web.UI.UserControl
 
     protected void cmdPrev_Click(object sender, ImageClickEventArgs e)
     {
-        if (_gridView.PageIndex > 0) _gridView.PageIndex = _gridView.PageIndex - 1;
+        //if (_gridView.PageIndex > 0) _gridView.PageIndex = _gridView.PageIndex - 1;
 
         if (this.PageIndex > 1) this.PageIndex = this.PageIndex - 1;
         PageIndexChanged();
@@ -998,10 +1216,11 @@ public partial class Common_Pager : System.Web.UI.UserControl
     //protected void cmdGo_Click(object sender, ImageClickEventArgs e)
     protected void lnkGo_Click(object sender, EventArgs e)
     {
-        if (int.Parse(txtPageIndex.Text) > this.Get_LastPage())
-        {
-            txtPageIndex.Text = this.Get_LastPage().ToString();
-        }
+        PageIndexChanged();
+        //if (int.Parse(txtPageIndex.Text) > this.Get_LastPage())
+        //{
+        //    txtPageIndex.Text = this.Get_LastPage().ToString();
+        //}
         //PageIndexChanged();
 
     }
@@ -1009,10 +1228,10 @@ public partial class Common_Pager : System.Web.UI.UserControl
     protected void cmdNext_Click(object sender, ImageClickEventArgs e)
     {
 
-        if (_gridView.PageIndex +1< Get_LastPage())
-        {
-            _gridView.PageIndex = _gridView.PageIndex + 1;
-        } 
+        //if (_gridView.PageIndex +1< Get_LastPage())
+        //{
+        //    _gridView.PageIndex = _gridView.PageIndex + 1;
+        //} 
 
         if (this.PageIndex < Get_LastPage())
         {
@@ -1030,26 +1249,27 @@ public partial class Common_Pager : System.Web.UI.UserControl
     private int Get_LastPage()
     {
         int LastPage = 0;
-        if (this.TotalRows > _gridView.PageSize)
+        if (this.TotalRows > this.PageSize)
         {
             int iRem=0;
-            iRem = this.TotalRows % _gridView.PageSize;
+            iRem = this.TotalRows % this.PageSize;
             if (iRem>0)
             {
-                LastPage = Convert.ToInt32(this.TotalRows / _gridView.PageSize) + 1;
+                LastPage = Convert.ToInt32(this.TotalRows / this.PageSize) + 1;
             }
             else
             {
-                LastPage = Convert.ToInt32(this.TotalRows / _gridView.PageSize);
+                LastPage = Convert.ToInt32(this.TotalRows / this.PageSize);
             }
             
         }
         else
         {
-            LastPage = Convert.ToInt32(this.TotalRows / _gridView.PageSize);
+            LastPage = Convert.ToInt32(this.TotalRows / this.PageSize);
         }
 
         if (LastPage == 0) LastPage = 1;
+       
         return LastPage;
     }
 
@@ -1086,89 +1306,89 @@ public partial class Common_Pager : System.Web.UI.UserControl
             PageIndexChanged();
         }
     }
-    protected void cmdAdd_Click(object sender, ImageClickEventArgs e)
-    {
-        int iTemp = 0;
-        _gridView.EditIndex = 0;
-        BindTheGridForAdd(this.StartIndex, this.StartIndex + _gridView.PageSize);
-        //((LinkButton)_gridView.Rows[0].Cells[0].FindControl("lbUpdate")).Text = "Insert";
-        ((HiddenField)_gridView.Rows[0].Cells[0].FindControl("hSaveMode")).Value = "Insert";
+    //protected void cmdAdd_Click(object sender, ImageClickEventArgs e)
+    //{
+    //    int iTemp = 0;
+    //    //_gridView.EditIndex = 0;
+    //    //BindTheGridForAdd(this.StartIndex, this.StartIndex + _gridView.PageSize);
+    //    //((LinkButton)_gridView.Rows[0].Cells[0].FindControl("lbUpdate")).Text = "Insert";
+    //    //((HiddenField)_gridView.Rows[0].Cells[0].FindControl("hSaveMode")).Value = "Insert";
 
-        switch (this.TableName.ToLower())
-        {
-
-
-            case "testtable":
-                //DropDownList ddlAccountT = (DropDownList)_gridView.Rows[0].Cells[0].FindControl("ddlAccount");
-                //ddlAccountT.DataSource = SecurityManager.Account_Select(null, string.Empty, null, null, "AccountName", "ASC", null, null, ref iTemp);
-                //ddlAccountT.DataBind();
-
-                break;
+    //    switch (this.TableName.ToLower())
+    //    {
 
 
-        }
+    //        case "testtable":
+    //            //DropDownList ddlAccountT = (DropDownList)_gridView.Rows[0].Cells[0].FindControl("ddlAccount");
+    //            //ddlAccountT.DataSource = SecurityManager.Account_Select(null, string.Empty, null, null, "AccountName", "ASC", null, null, ref iTemp);
+    //            //ddlAccountT.DataBind();
+
+    //            break;
+
+
+    //    }
 
        
 
-    }
+    //}
 
 
-    protected void BindTheGridForAdd(int iStartIndex, int iMaxRows)
-    {
-        int iTN = 0;
-        string strOrderDirection = "DESC";
-        string sOrder="" ;
+    //protected void BindTheGridForAdd(int iStartIndex, int iMaxRows)
+    //{
+    //    int iTN = 0;
+    //    string strOrderDirection = "DESC";
+    //    string sOrder="" ;
 
-        if (_gridView.GridViewSortDirection == SortDirection.Ascending)
-        {
-            strOrderDirection = "ASC";
-        }
-        if (_gridView.GridViewSortColumn != "")
-        {
-            sOrder = _gridView.GridViewSortColumn;
-        }
+    //    if (_gridView.GridViewSortDirection == SortDirection.Ascending)
+    //    {
+    //        strOrderDirection = "ASC";
+    //    }
+    //    if (_gridView.GridViewSortColumn != "")
+    //    {
+    //        sOrder = _gridView.GridViewSortColumn;
+    //    }
 
-        switch (this.TableName.ToLower())
-        {
-
-
-            case "testtable":
-
-                //if (sOrder == "")
-                //    sOrder = "Menu";
-
-                //List<Menu> listTest = SecurityManager.test_TestTable_Select(null,
-                //    this.MenuName, null, this.AccountID, sOrder,
-                //    strOrderDirection, this.StartIndex, Convert.ToInt32(txtPageSize.Text),
-                //     ref iTN);
-
-                //Menu emptyTest = new Menu(null, "", 2, false, "Default");
-                //listTest.Insert(0, emptyTest);
-
-                //_gridView.DataSource = listTest;
-
-                break;
-
-            default:
-                break;
-        }
-
-        _gridView.VirtualItemCount = iTN;
-        _gridView.DataBind();
-        _gridView.TopPagerRow.Visible = true;  
+    //    switch (this.TableName.ToLower())
+    //    {
 
 
-    }
+    //        case "testtable":
+
+    //            //if (sOrder == "")
+    //            //    sOrder = "Menu";
+
+    //            //List<Menu> listTest = SecurityManager.test_TestTable_Select(null,
+    //            //    this.MenuName, null, this.AccountID, sOrder,
+    //            //    strOrderDirection, this.StartIndex, Convert.ToInt32(txtPageSize.Text),
+    //            //     ref iTN);
+
+    //            //Menu emptyTest = new Menu(null, "", 2, false, "Default");
+    //            //listTest.Insert(0, emptyTest);
+
+    //            //_gridView.DataSource = listTest;
+
+    //            break;
+
+    //        default:
+    //            break;
+    //    }
+
+    //    _gridView.VirtualItemCount = iTN;
+    //    _gridView.DataBind();
+    //    _gridView.TopPagerRow.Visible = true;  
+
+
+    //}
     public int PageIndexTextSet
     {
        
         set
         {
-            txtPageIndex.Text = value.ToString();
-            this.PageIndex = Convert.ToInt32(txtPageIndex.Text);
-            if (_gridView == null)
-                GetTheGrid();
-            _gridView.PageIndex = int.Parse(txtPageIndex.Text) - 1;
+            //txtPageIndex.Text = value.ToString();
+            //this.PageIndex = Convert.ToInt32(txtPageIndex.Text);
+            //if (_gridView == null)
+            //    GetTheGrid();
+            //_gridView.PageIndex = int.Parse(txtPageIndex.Text) - 1;
 
         }
     }
@@ -1224,48 +1444,49 @@ public partial class Common_Pager : System.Web.UI.UserControl
 
     private void PageIndexChanged()
     {
-        if (_gridView == null)
-            GetTheGrid();
+        //if (_gridView == null)
+        //    GetTheGrid();
 
-        if (_scriptManager != null)
-            _scriptManager.AddHistoryPoint("PageIndex", txtPageIndex.Text);
-        _gridView.EditIndex = -1;
+        //if (_scriptManager != null)
+        //    _scriptManager.AddHistoryPoint("PageIndex", txtPageIndex.Text);
+        //_gridView.EditIndex = -1;
+        //txtPageIndex.Text = this.PageIndex.ToString();
         if (BindTheGridAgain != null)
             BindTheGridAgain(this, EventArgs.Empty);
 
-        _gridView.PageIndex = int.Parse(txtPageIndex.Text) - 1;
-        _gridView.TopPagerRow.Visible = true;
+        //_gridView.PageIndex = int.Parse(txtPageIndex.Text) - 1;
+        //_gridView.TopPagerRow.Visible = true;
 
         if (HideAdd)
         {
             HyperAdd.Visible = false;
-            cmdAdd.Visible = false;
+            //cmdAdd.Visible = false;
         }
 
     }
 
     private void PageSizeChanged()
     {
-        if (_gridView == null)
-            GetTheGrid();
+        //if (_gridView == null)
+        //    GetTheGrid();
 
-        if (txtPageSize.Text == "" || txtPageSize.Text == "0")
-            txtPageSize.Text = _gridView.PageSize.ToString();
+        //if (txtPageSize.Text == "" || txtPageSize.Text == "0")
+        //    txtPageSize.Text = _gridView.PageSize.ToString();
 
-        _gridView.PageSize = Convert.ToInt32(txtPageSize.Text);
+        //_gridView.PageSize = Convert.ToInt32(txtPageSize.Text);
 
-        // save pager size
-        if (ViewState[_strTable + "_PagerSize"] != null)
-            ViewState[_strTable + "_PagerSize"] = _gridView.PageSize.ToString();
-        else
-            ViewState.Add(_strTable + "_PagerSize", _gridView.PageSize.ToString());
+        //// save pager size
+        //if (ViewState[_strTable + "_PagerSize"] != null)
+        //    ViewState[_strTable + "_PagerSize"] = _gridView.PageSize.ToString();
+        //else
+        //    ViewState.Add(_strTable + "_PagerSize", _gridView.PageSize.ToString());
 
 
-        _gridView.EditIndex = -1;
+        //_gridView.EditIndex = -1;
         if (BindTheGridAgain != null)
             BindTheGridAgain(this, EventArgs.Empty);
 
-        _gridView.TopPagerRow.Visible = true;
+        //_gridView.TopPagerRow.Visible = true;
 
         //if (HideAdd)
         //{
@@ -1274,18 +1495,18 @@ public partial class Common_Pager : System.Web.UI.UserControl
         //}
     }
 
-    protected void BindGridAgain()
-    {
-        int iTN = 0;
-        string strOrderDirection = "DESC";
-        if (_gridView.GridViewSortDirection == SortDirection.Ascending)
-        {
-            strOrderDirection = "ASC";
-        }
+    //protected void BindGridAgain()
+    //{
+    //    int iTN = 0;
+    //    string strOrderDirection = "DESC";
+    //    if (_gridView.GridViewSortDirection == SortDirection.Ascending)
+    //    {
+    //        strOrderDirection = "ASC";
+    //    }
      
 
-        switch (this.TableName.ToLower())
-        {
+    //    switch (this.TableName.ToLower())
+    //    {
 
             
 
@@ -1297,44 +1518,44 @@ public partial class Common_Pager : System.Web.UI.UserControl
 
 
 
-            case "testtable":
-                //if (_gridView.GridViewSortColumn == "")
-                //{
-                //    _gridView.GridViewSortColumn = "MenuID";
-                //    _gridView.GridViewSortDirection = SortDirection.Descending;
-                //}
+    //        case "testtable":
+    //            //if (_gridView.GridViewSortColumn == "")
+    //            //{
+    //            //    _gridView.GridViewSortColumn = "MenuID";
+    //            //    _gridView.GridViewSortDirection = SortDirection.Descending;
+    //            //}
 
-                //_gridView.DataSource = SecurityManager.test_TestTable_Select(null, this.MenuName,
-                //    null, 1, _gridView.GridViewSortColumn,
-                //    strOrderDirection, this.StartIndex, Convert.ToInt32(txtPageSize.Text), ref iTN);
+    //            //_gridView.DataSource = SecurityManager.test_TestTable_Select(null, this.MenuName,
+    //            //    null, 1, _gridView.GridViewSortColumn,
+    //            //    strOrderDirection, this.StartIndex, Convert.ToInt32(txtPageSize.Text), ref iTN);
 
 
-                break;
+    //            break;
 
           
 
-            default:
-                break;
-        }
+    //        default:
+    //            break;
+    //    }
 
-        _gridView.VirtualItemCount = iTN;
-        _gridView.DataBind();
-        _gridView.PageIndex = this.PageIndex - 1;
-        _gridView.TopPagerRow.Visible = true;
+    //    _gridView.VirtualItemCount = iTN;
+    //    _gridView.DataBind();
+    //    _gridView.PageIndex = this.PageIndex - 1;
+    //    _gridView.TopPagerRow.Visible = true;
 
-    }
+    //}
 
     protected void Page_PreRender(object sender, EventArgs e)
     {
-        if (_gridView != null)
-        {
+        //if (_gridView != null)
+        //{
 
-            txtPageIndex.Text = (_gridView.PageIndex + 1).ToString();
-            //txtPageIndex.Text = (this.PageIndex).ToString();
-            //txtPageIndex.Text = (this.PageIndexBU).ToString();
-            txtPageSize.Text = _gridView.PageSize.ToString();
-            txtPageIndex.ToolTip = txtPageIndex.Text;
-        }
+        //    txtPageIndex.Text = (_gridView.PageIndex + 1).ToString();
+        //    //txtPageIndex.Text = (this.PageIndex).ToString();
+        //    //txtPageIndex.Text = (this.PageIndexBU).ToString();
+        //    txtPageSize.Text = _gridView.PageSize.ToString();
+        //    txtPageIndex.ToolTip = txtPageIndex.Text;
+        //}
     }
 
     public void VerifyRenderingInServerForm(Control control)
@@ -1347,7 +1568,7 @@ public partial class Common_Pager : System.Web.UI.UserControl
    
     protected void cmdPDF_Click(object sender, ImageClickEventArgs e)
     {
-        if (_bDOCustomPDF == true)
+        if (DOCustomPDF == true)
         {
             if (CustomExportPDF != null)
                 CustomExportPDF(null, EventArgs.Empty);
@@ -1378,6 +1599,26 @@ public partial class Common_Pager : System.Web.UI.UserControl
 
     public void ExportPDF()
     {
+        DBGServerControl.dbgGridView _gridView = null;
+        Control c = Parent;
+
+        while (c != null)
+        {
+            if (c is GridView)
+            {
+                _gridView = (DBGServerControl.dbgGridView)c;
+
+                //TotalRows = _gridView.VirtualItemCount;
+                //_gridView.TopPagerRow.Visible = true;
+
+
+                break;
+            }
+            c = c.Parent;
+        }
+        // this.TotalPages = Get_LastPage();
+        if (_gridView == null)
+            return;
 
         _gridView.AllowPaging = false;
         if (BindTheGridToExport != null)
@@ -1391,7 +1632,7 @@ public partial class Common_Pager : System.Web.UI.UserControl
         HtmlTextWriter hw = new HtmlTextWriter(sw);
 
         //BindGridAgainToExport();
-       
+
 
         for (int i = 0; i < _gridView.Columns.Count; i++)
         {
@@ -1414,6 +1655,27 @@ public partial class Common_Pager : System.Web.UI.UserControl
     }
     public void ExportWord()
     {
+        DBGServerControl.dbgGridView _gridView=null;
+        Control c = Parent;
+
+        while (c != null)
+        {
+            if (c is GridView)
+            {
+                _gridView = (DBGServerControl.dbgGridView)c;
+
+                //TotalRows = _gridView.VirtualItemCount;
+                //_gridView.TopPagerRow.Visible = true;
+
+
+                break;
+            }
+            c = c.Parent;
+        }
+       // this.TotalPages = Get_LastPage();
+        if (_gridView == null)
+            return;
+
         _gridView.AllowPaging = false;
         if (BindTheGridToExport != null)
             BindTheGridToExport(this, EventArgs.Empty);
@@ -1430,7 +1692,7 @@ public partial class Common_Pager : System.Web.UI.UserControl
 
         //BindGridAgainToExport();
 
-      
+
 
         for (int i = 0; i < _gridView.Columns.Count; i++)
         {
@@ -1459,40 +1721,40 @@ public partial class Common_Pager : System.Web.UI.UserControl
        
         //BindGridAgainToExport();
 
-        _gridView.AllowPaging = false;
+        //_gridView.AllowPaging = false;
         if (BindTheGridToExport != null)
             BindTheGridToExport(this, EventArgs.Empty);
 
-        for (int i = 0; i < _gridView.Columns.Count; i++)
-        {
-            if (string.IsNullOrEmpty(_gridView.Columns[i].HeaderText))
-                _gridView.Columns[i].Visible = false;
-        }
-        //Change the Header Row back to white color
-        _gridView.HeaderRow.Style.Add("background-color", "#FFFFFF");
-        //Apply style to Individual Cells
-        _gridView.HeaderRow.Cells[0].Style.Add("background-color", "green");
-        _gridView.HeaderRow.Cells[1].Style.Add("background-color", "green");
-        _gridView.HeaderRow.Cells[2].Style.Add("background-color", "green");
-        _gridView.HeaderRow.Cells[3].Style.Add("background-color", "green");
+        //for (int i = 0; i < _gridView.Columns.Count; i++)
+        //{
+        //    if (string.IsNullOrEmpty(_gridView.Columns[i].HeaderText))
+        //        _gridView.Columns[i].Visible = false;
+        //}
+        ////Change the Header Row back to white color
+        //_gridView.HeaderRow.Style.Add("background-color", "#FFFFFF");
+        ////Apply style to Individual Cells
+        //_gridView.HeaderRow.Cells[0].Style.Add("background-color", "green");
+        //_gridView.HeaderRow.Cells[1].Style.Add("background-color", "green");
+        //_gridView.HeaderRow.Cells[2].Style.Add("background-color", "green");
+        //_gridView.HeaderRow.Cells[3].Style.Add("background-color", "green");
 
-        for (int i = 0; i < _gridView.Rows.Count; i++)
-        {
-            GridViewRow row = _gridView.Rows[i];
-            //Change Color back to white
-            row.BackColor = System.Drawing.Color.White;
-            //Apply text style to each Row
-            row.Attributes.Add("class", "textmode");
-            //Apply style to Individual Cells of Alternating Row
-            if (i % 2 != 0)
-            {
-                row.Cells[0].Style.Add("background-color", "#C2D69B");
-                row.Cells[1].Style.Add("background-color", "#C2D69B");
-                row.Cells[2].Style.Add("background-color", "#C2D69B");
-                row.Cells[3].Style.Add("background-color", "#C2D69B");
-            }
-        }
-        _gridView.RenderControl(hw);
+        //for (int i = 0; i < _gridView.Rows.Count; i++)
+        //{
+        //    GridViewRow row = _gridView.Rows[i];
+        //    //Change Color back to white
+        //    row.BackColor = System.Drawing.Color.White;
+        //    //Apply text style to each Row
+        //    row.Attributes.Add("class", "textmode");
+        //    //Apply style to Individual Cells of Alternating Row
+        //    if (i % 2 != 0)
+        //    {
+        //        row.Cells[0].Style.Add("background-color", "#C2D69B");
+        //        row.Cells[1].Style.Add("background-color", "#C2D69B");
+        //        row.Cells[2].Style.Add("background-color", "#C2D69B");
+        //        row.Cells[3].Style.Add("background-color", "#C2D69B");
+        //    }
+        //}
+        //_gridView.RenderControl(hw);
 
         //style to format numbers to string
         string style = @"<style> .textmode { mso-number-format:\@; } </style>";
@@ -1577,18 +1839,18 @@ public partial class Common_Pager : System.Web.UI.UserControl
         //Response.End();
     }
 
-    protected void BindGridAgainToExport()
-    {
-        int iTN = 0;
-        string strOrderDirection = "DESC";
-        if (_gridView.GridViewSortDirection == SortDirection.Ascending)
-        {
-            strOrderDirection = "ASC";
-        }
-        _gridView.AllowPaging = false; 
+    //protected void BindGridAgainToExport()
+    //{
+    //    int iTN = 0;
+    //    string strOrderDirection = "DESC";
+    //    if (_gridView.GridViewSortDirection == SortDirection.Ascending)
+    //    {
+    //        strOrderDirection = "ASC";
+    //    }
+    //    _gridView.AllowPaging = false; 
 
-        switch (this.TableName.ToLower())
-        {
+    //    switch (this.TableName.ToLower())
+    //    {
 
             
 
@@ -1596,42 +1858,42 @@ public partial class Common_Pager : System.Web.UI.UserControl
 
            
 
-            case "testtable":
-                //if (_gridView.GridViewSortColumn == "")
-                //{
-                //    _gridView.GridViewSortColumn = "MenuID";
-                //    _gridView.GridViewSortDirection = SortDirection.Descending;
-                //}
+    //        case "testtable":
+    //            //if (_gridView.GridViewSortColumn == "")
+    //            //{
+    //            //    _gridView.GridViewSortColumn = "MenuID";
+    //            //    _gridView.GridViewSortDirection = SortDirection.Descending;
+    //            //}
 
-                //_gridView.DataSource = SecurityManager.test_TestTable_Select(null, this.MenuName,
-                //    null, 1, _gridView.GridViewSortColumn,
-                //    strOrderDirection, 0, this.TotalRows, ref iTN);
-                break;
+    //            //_gridView.DataSource = SecurityManager.test_TestTable_Select(null, this.MenuName,
+    //            //    null, 1, _gridView.GridViewSortColumn,
+    //            //    strOrderDirection, 0, this.TotalRows, ref iTN);
+    //            break;
 
                           
 
-            default:
-                break;
-        }
+    //        default:
+    //            break;
+    //    }
 
-        _gridView.VirtualItemCount = iTN;
-        _gridView.DataBind();
-        //_gridView.TopPagerRow.Visible = true;
+    //    _gridView.VirtualItemCount = iTN;
+    //    _gridView.DataBind();
+    //    //_gridView.TopPagerRow.Visible = true;
 
-    }
+    //}
 
 
 
     protected void cmdRefresh_Click(object sender, ImageClickEventArgs e)
     {
-        if (_gridView != null)
-        {
+        //if (_gridView != null)
+        //{
             this.PageIndex = 1;
             //this.PageIndexBU = 1;
-            _gridView.PageIndex = 0;
-            _gridView.PageIndex = this.PageIndex;
+            //_gridView.PageIndex = 0;
+            //_gridView.PageIndex = this.PageIndex;
             PageIndexChanged();
-        }
+        //}
     }
 
     protected void lnkUnDelete_Click(object sender, EventArgs e)
@@ -1707,63 +1969,63 @@ public partial class Common_Pager : System.Web.UI.UserControl
     }
 
 
-    private void DeleteItem( string keys)
-    {
+    //private void DeleteItem( string keys)
+    //{
 
-        switch (this.TableName.ToLower() )
-        {
+    //    switch (this.TableName.ToLower() )
+    //    {
 
-            //#region Menu
-            //case "Menu":
-            //    {
-            //        try
-            //        {
-            //            if (!string.IsNullOrEmpty(keys))
-            //            {
+    //        //#region Menu
+    //        //case "Menu":
+    //        //    {
+    //        //        try
+    //        //        {
+    //        //            if (!string.IsNullOrEmpty(keys))
+    //        //            {
 
-            //                foreach (string sTemp in keys.Split(','))
-            //                {
-            //                    if (!string.IsNullOrEmpty(sTemp))
-            //                    {
+    //        //                foreach (string sTemp in keys.Split(','))
+    //        //                {
+    //        //                    if (!string.IsNullOrEmpty(sTemp))
+    //        //                    {
                                    
-            //                        RecordManager.ets_Menu_Delete( int.Parse(sTemp));
+    //        //                        RecordManager.ets_Menu_Delete( int.Parse(sTemp));
 
-            //                    }
-            //                }
-
-
-            //            }
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            //DBGurus.AddErrorLog(ex.Message);
-            //            ScriptManager.RegisterClientScriptBlock(_gridView, typeof(Page), "msg_delete", "alert('Delete Table Group has failed!');", true);
-            //        }
-
-            //        break;
-            //    }
-
-            //#endregion
+    //        //                    }
+    //        //                }
 
 
-            #region Test
-            case "testtable":
-                {
+    //        //            }
+    //        //        }
+    //        //        catch (Exception ex)
+    //        //        {
+    //        //            //DBGurus.AddErrorLog(ex.Message);
+    //        //            ScriptManager.RegisterClientScriptBlock(_gridView, typeof(Page), "msg_delete", "alert('Delete Table Group has failed!');", true);
+    //        //        }
+
+    //        //        break;
+    //        //    }
+
+    //        //#endregion
+
+
+    //        #region Test
+    //        case "testtable":
+    //            {
                
-                    break;
-                }
+    //                break;
+    //            }
 
           
 
 
-            #endregion
+    //        #endregion
 
 
            
-        }
+    //    }
         
-        BindGridAgain();
+    //    //BindGridAgain();
 
-    }
+    //}
   
 }

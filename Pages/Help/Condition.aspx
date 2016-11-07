@@ -23,7 +23,7 @@ CodeFile="Condition.aspx.cs" Inherits="Pages_Schedule_Condition" %>
                                 </td>
                                 <td align="left">
                                     <div style="width: 40px; height: 40px;">
-                                        <asp:UpdateProgress ID="UpdateProgress1" runat="server" AssociatedUpdatePanelID="UpdatePanel1">
+                                        <%--<asp:UpdateProgress ID="UpdateProgress1" runat="server" AssociatedUpdatePanelID="UpdatePanel1">
                                             <ProgressTemplate>
                                                 <table style="width: 100%; text-align: center">
                                                     <tr>
@@ -33,7 +33,7 @@ CodeFile="Condition.aspx.cs" Inherits="Pages_Schedule_Condition" %>
                                                     </tr>
                                                 </table>
                                             </ProgressTemplate>
-                                        </asp:UpdateProgress>
+                                        </asp:UpdateProgress>--%>
                                     </div>
                                 </td>
                             </tr>
@@ -52,7 +52,7 @@ CodeFile="Condition.aspx.cs" Inherits="Pages_Schedule_Condition" %>
                                        <dbg:dbgGridView ID="gvTheGrid" runat="server" GridLines="Both" CssClass="gridview"
                              HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"
                             AllowPaging="True" AllowSorting="True" DataKeyNames="ConditionID" HeaderStyle-ForeColor="Black"
-                            Width="100%" AutoGenerateColumns="false" PageSize="15" OnSorting="gvTheGrid_Sorting"
+                            Width="100%" AutoGenerateColumns="false" PageSize="200" OnSorting="gvTheGrid_Sorting"
                             OnPreRender="gvTheGrid_PreRender" OnRowDataBound="gvTheGrid_RowDataBound">
                             <PagerSettings Position="Top" />
                             <Columns>

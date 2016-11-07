@@ -99,7 +99,7 @@ public class Common
     }
     public static DateTime? GetDateTimeFromString(string strDateTime,string strFormat)
     {
-        if (strFormat == "" || strFormat == "GB")
+        if (strFormat == "" || strFormat == "GB" || strFormat.ToUpper() == "DD/MM/YYYY")
         {
             try
             {
@@ -405,30 +405,32 @@ public class Common
     public static string LongDateWithTimeStringFormat = @"dd\/MM\/yyyy h\:mm tt";
 
     public static string ToolTip_Today = @"You can use TODAY keyword; e.g TODAY - 10, TODAY, TODAY + 20 etc.";
-    public static int? GetDefaultImportTemplate(int? iTableID)
+ 
+    public static string BeforeComma(string sX)
     {
-        if (iTableID == null)
-            return null;
-        try
+        string sR="";
+        if (sX.IndexOf(",") > 0)
         {
-            string strID = Common.GetValueFromSQL("SELECT  TOP 1 ImportTemplateID  FROM ImportTemplate WHERE TableID=" + iTableID.ToString() 
-                + " AND ImportTemplateName='Default' ORDER BY ImportTemplateName");
-
-            if(strID=="")
-            {
-                strID = Common.GetValueFromSQL("SELECT  TOP 1 ImportTemplateID  FROM ImportTemplate WHERE TableID=" + iTableID.ToString() + "  ORDER BY ImportTemplateName");
-            }
-            if(strID!="")
-            {
-                return int.Parse(strID);
-            }
+            sR = sX.Substring(0, sX.IndexOf(","));
         }
-        catch
+        else
         {
-            //
+            sR = sX;
         }
-      
-        return null;
+        return sR;
+    }
+    public static string AferComma(string sX)
+    {
+        string sR = "";
+        if (sX.IndexOf(",") > 0)
+        {
+            sR = sX.Substring(sX.IndexOf(",") + 1);
+        }
+        else
+        {
+            sR = sX;
+        }
+        return sR;
     }
 
     public static bool SO_ImportTemplateAsDefault(int? iAccountID, int? iTableID)
@@ -463,7 +465,16 @@ public class Common
         }
         return false;
     }
+    public static string SO_ViewAlignmentDefault(int? iAccountID, int? iTableID)
+    {
 
+        string strOptionValue = SystemData.SystemOption_ValueByKey_Account("View Alignment Default", iAccountID, iTableID);
+        if (strOptionValue != "")
+        {
+            return strOptionValue;
+        }
+        return "Auto";
+    }
     public static bool SO_ShowRecordFirstLastButtons(int? iAccountID, int? iTableID)
     {
         string strOptionValue = SystemData.SystemOption_ValueByKey_Account("Show Record First-Last Buttons", iAccountID, iTableID);
@@ -928,7 +939,7 @@ public class Common
     {
        public static string GOD = "1";
          public static string Administrator = "2";
-         public static string EditRecordSite = "3";
+         //public static string EditRecordSite = "3";
          public static string AddEditRecord = "4";
          public static string ReadOnly = "5";
          public static string None = "6";
@@ -2721,10 +2732,51 @@ public class Common
         return strValue;
 
     }
-    
 
-    
 
+
+    public static string Get_Comma_Sep_IDs(string sIDName, string sTableName, string sWHERE)
+    {
+
+        string strValue = "";
+
+
+        using (SqlConnection connection = new SqlConnection(DBGurus.strGlobalConnectionString))
+        {
+            using (SqlCommand command = new SqlCommand("Get_Comma_Sep_IDs", connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@sIDName", sIDName));
+                command.Parameters.Add(new SqlParameter("@sTableName", sTableName));
+                command.Parameters.Add(new SqlParameter("@sWHERE", sWHERE));
+
+                connection.Open();
+                try
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            if (reader[0] != DBNull.Value)
+                            {
+                                strValue = reader[0].ToString();
+                                break;
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                    //
+                }
+                connection.Close();
+                connection.Dispose();
+            }
+        }
+
+        return strValue;
+
+    }
    
 
 

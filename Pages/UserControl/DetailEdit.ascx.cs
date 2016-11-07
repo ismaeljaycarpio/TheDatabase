@@ -26,6 +26,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
     string _strFilesLocation = "";
     string _strFilesPhisicalPath = "";
     string _strChildSession = "";
+    string _strSelectedtabLinkHF = "";
     public string ContentPage { get; set; }
     public int TableID { get; set; }
     public int? RecordID { get; set; }
@@ -309,7 +310,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
         //                    {
 
         //                        _ccddl[i] = new CascadingDropDown();
-        //                        _ccddl[i].ID = "ccddl" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
+        //                        _ccddl[i].ID = _strDynamictabPart + "ccddl" + _dtRecordTypleColumlns.Rows[i]["SystemName"].ToString();
 
         //                        _ccddl[i].Category = _dtRecordTypleColumlns.Rows[i]["ColumnID"].ToString() + "," + _dtRecordTypleColumlns.Rows[i]["FilterParentColumnID"].ToString();
         //                        _ccddl[i].TargetControlID = _ddlValue[i].ID;
@@ -340,12 +341,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
         _lblWarningResults = new Label();
-        _lblWarningResults.ID = "lblWarningResults";
+        _lblWarningResults.ID = _strDynamictabPart + "lblWarningResults";
+        _lblWarningResults.ClientIDMode = ClientIDMode.Static;
         _lblWarningResults.Text = "Warning Results";
         _lblWarningResults.Font.Bold = true;
 
         _lblWarningResultsValue = new Label();
-        _lblWarningResultsValue.ID = "lblWarningResultsValue";
+        _lblWarningResultsValue.ID = _strDynamictabPart + "lblWarningResultsValue";
+        _lblWarningResultsValue.ClientIDMode = ClientIDMode.Static;
         _lblWarningResultsValue.Width = 300;
         _lblWarningResults.Visible = false;
 
@@ -353,13 +356,15 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
         _lblValidationResults = new Label();
-        _lblValidationResults.ID = "lblValidationResults";
+        _lblValidationResults.ID = _strDynamictabPart + "lblValidationResults";
+        _lblValidationResults.ClientIDMode = ClientIDMode.Static;
         _lblValidationResults.Text = "Validation Results";
         _lblValidationResults.Font.Bold = true;
         _lblValidationResults.Visible = false;
 
         _txtValidationResults = new TextBox();
-        _txtValidationResults.ID = "txtValidationResults";
+        _txtValidationResults.ID = _strDynamictabPart + "txtValidationResults";
+        _txtValidationResults.ClientIDMode = ClientIDMode.Static;
         _txtValidationResults.Width = 300;
         //_txtValidationResults.Height = 50;
         _txtValidationResults.TextMode = TextBoxMode.SingleLine;
@@ -425,12 +430,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
      
                 _lblAddedCaption = new Label();
-                _lblAddedCaption.ID = "lblAddedCaption";
+                _lblAddedCaption.ID = _strDynamictabPart + "lblAddedCaption";
+                _lblAddedCaption.ClientIDMode = ClientIDMode.Static;
                 _lblAddedCaption.Text = "Added";
                 _lblAddedCaption.Font.Bold = true;
 
                 _lblAddedTimeEmail = new Label();
-                _lblAddedTimeEmail.ID = "lblAddedTimeEmail";
+                _lblAddedTimeEmail.ID = _strDynamictabPart + "lblAddedTimeEmail";
+                _lblAddedTimeEmail.ClientIDMode = ClientIDMode.Static;
                 _lblAddedTimeEmail.Text = "";
                 //_lblAddedTimeEmail.Font.Bold = true;
 
@@ -453,12 +460,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
                 _lblUpdatedCaption = new Label();
-                _lblUpdatedCaption.ID = "lblUpdatedCaption";
+                _lblUpdatedCaption.ID = _strDynamictabPart + "lblUpdatedCaption";
+                _lblUpdatedCaption.ClientIDMode = ClientIDMode.Static;
                 _lblUpdatedCaption.Text = "Updated";
                 _lblUpdatedCaption.Font.Bold = true;
 
                 _lblUpdatedTimeEmail = new Label();
-                _lblUpdatedTimeEmail.ID = "lblUpdatedTimeEmail";
+                _lblUpdatedTimeEmail.ID = _strDynamictabPart + "lblUpdatedTimeEmail";
+                _lblUpdatedTimeEmail.ClientIDMode = ClientIDMode.Static;
                 _lblUpdatedTimeEmail.Text = "";
                 //_lblUpdatedTimeEmail.Font.Bold = true;
 
@@ -489,6 +498,15 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
     protected void ShowWhenJS()
     {
+
+        //if (_strTableTabsJS != "")
+        //    ScriptManager.RegisterStartupScript(upChildDetail, upChildDetail.GetType(), "strTableTabsJS" + _strDynamictabPart, _strTableTabsJS, true);
+
+        //if (ViewState["jsClickFirstTab"] != null)
+        //    ScriptManager.RegisterStartupScript(upChildDetail, upChildDetail.GetType(), "jsClickFirstTab" + _strDynamictabPart, ViewState["jsClickFirstTab"].ToString(), true);
+
+
+
         for (int i = 0; i < _dtColumnsDetail.Rows.Count; i++)
         {
             if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "image")
@@ -496,17 +514,17 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 trX[i].Style.Add("vertical-align", "top");
             }
 
-            if (ViewState["trX_ID"  + i.ToString()] != null)
-                trX[i].ID = ViewState["trX_ID" + i.ToString()].ToString();
+            //trX[i].ID = _strDynamictabPart + "trX" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+            //trX[i].ClientIDMode = ClientIDMode.Static; 
 
             if (ViewState["ShowHideAdmin" + _strDynamictabPart + i.ToString()] != null)
             {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "ShowHideAdmin" + _strDynamictabPart + i.ToString(), ViewState["ShowHideAdmin" + _strDynamictabPart + i.ToString()].ToString(), true);
+                ScriptManager.RegisterStartupScript(upChildDetail, upChildDetail.GetType(), "ShowHideAdmin" + _strDynamictabPart + i.ToString(), ViewState["ShowHideAdmin" + _strDynamictabPart + i.ToString()].ToString(), true);
             }
 
             if (ViewState["strShowHideFunction" + _strDynamictabPart + i.ToString()] != null)
             {
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "strShowHideFunction" + _strDynamictabPart + i.ToString(), ViewState["strShowHideFunction" + _strDynamictabPart + i.ToString()].ToString(), true);
+                ScriptManager.RegisterStartupScript(upChildDetail, upChildDetail.GetType(), "strShowHideFunction" + _strDynamictabPart + i.ToString(), ViewState["strShowHideFunction" + _strDynamictabPart + i.ToString()].ToString(), true);
             }
         }
 
@@ -560,14 +578,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                 if (bHide)
                 {
-                    trX[i].ID = "trX" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-                    ViewState["trX_ID" + i.ToString()] = trX[i].ID;
-                    string targetID = "#" + _strDynamictabPart + trX[i].ID;
-                    string strOnlyAdminJS = @"$('" + targetID + @"').fadeOut();";
+                    //trX[i].ID = _strDynamictabPart + "trX" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    //ViewState["trX_ID" + i.ToString()] = trX[i].ID;
+                    string targetID = "#" + trX[i].ID;
+                    string strOnlyAdminJS = @"$('" + targetID + @"').hide();";
 
 
                     ViewState["ShowHideAdmin" + _strDynamictabPart + i.ToString()] = strOnlyAdminJS;
-                   // ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "ShowHideAdmin" + _strDynamictabPart + i.ToString(), strOnlyAdminJS, true);
+                   // ScriptManager.RegisterStartupScript(upChildDetail, upChildDetail.GetType(), "ShowHideAdmin" + _strDynamictabPart + i.ToString(), strOnlyAdminJS, true);
 
 
                 }
@@ -581,9 +599,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
             if (dtShowWhen.Rows.Count > 0)
             {
-                trX[i].ID = "trX" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-                ViewState["trX_ID" + i.ToString()] = trX[i].ID;
-                string strTargetTRID = "#" + _strDynamictabPart + trX[i].ID;
+                //trX[i].ID = _strDynamictabPart + "trX" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                //ViewState["trX_ID" + i.ToString()] = trX[i].ID;
+                string strTargetTRID = "#"  + trX[i].ID;
 
 
                 string strAllDriverValue = "";
@@ -607,12 +625,12 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         {
                             if (drSW["HideColumnID"].ToString() == _dtColumnsDetail.Rows[m]["ColumnID"].ToString() && trX[m] != null)
                             {
-                                trX[m].ID = "trX" + _dtColumnsDetail.Rows[m]["SystemName"].ToString();
-                                ViewState["trX_ID" + m.ToString()] = trX[m].ID;
+                                //trX[m].ID = _strDynamictabPart + "trX" + _dtColumnsDetail.Rows[m]["SystemName"].ToString();
+                                //ViewState["trX_ID" + m.ToString()] = trX[m].ID;
 
                                 string strEachDriverID = "#" + _strDynamictabPart;
 
-                                string strControlClientIDPrefix = _strDynamictabPart;
+                                //string strControlClientIDPrefix = _strDynamictabPart;
 
                                 string strEachHideColumnValue = HttpUtility.JavaScriptStringEncode(drSW["HideColumnValue"].ToString()); //drSW["HideColumnValue"].ToString().Replace("'","\\'");
                                 string strEachHideOperator = "";
@@ -680,7 +698,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                         strVariableDeclare = " var ";
                                     }
                                     strEachDriverID = strEachDriverID + "_";
-                                    strBeforeShowHideFunction = strBeforeShowHideFunction + "$('" + strTargetTRID + "').fadeOut(); ";
+                                    strBeforeShowHideFunction = strBeforeShowHideFunction + "$('" + strTargetTRID + "').hide(); ";
                                     string strDriverIDMain = strEachDriverID;
 
                                     strAllDriverValue = strAllDriverValue + @"
@@ -735,7 +753,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
                                         strAllDriverValue = strAllDriverValue + @"
-                                                            $('" + strTargetTRID + @"').fadeOut();" + @"
+                                                            $('" + strTargetTRID + @"').hide();" + @"
                                                             var bShow" + m.ToString() + @"=false;
                                                             var strHideValues" + m.ToString() + @"='" + strEachHideColumnValue + @"';
                                                             if(strHideValues" + m.ToString() + @"==null || strHideValues" + m.ToString() + @"=='')
@@ -812,7 +830,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                     {
                                         strAllDriverValue = strAllDriverValue + @"
 
-                                                            $('" + strTargetTRID + @"').fadeOut();" + @"
+                                                            $('" + strTargetTRID + @"').hide();" + @"
                                                             var bShow" + m.ToString() + @"=false;
                                                             var strHideValues" + m.ToString() + @"='" + strEachHideColumnValue + @"';
                                                             if(strHideValues" + m.ToString() + @"==null || strHideValues" + m.ToString() + @"=='')
@@ -963,7 +981,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                                 else if (strCY == "datetime")
                                                 {
                                                     string strDateLogic = @" var strHideColumnValue" + m.ToString() + @"='" + strEachHideColumnValue + @"';
-                                                                                  var time1" + m.ToString() + @"= document.getElementById('" + strControlClientIDPrefix + _txtTime[m].ID + @"');
+                                                                                  var time1" + m.ToString() + @"= document.getElementById('" +  _txtTime[m].ID + @"');
                                                                                   var t1" + m.ToString() + @"=time1" + m.ToString() + @".value;
                                                                                   if(t1" + m.ToString() + @"==''){t1" + m.ToString() + @"='00:00'};
                                                                                   var d1" + m.ToString() + @" =new Date(strEachValue" + m.ToString() + @".replace( /(\d{2})\/(\d{2})\/(\d{4})/, '$2/$1/$3') + ' ' + t1" + m.ToString() + @" );
@@ -978,10 +996,10 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                                                     //add time trigger too
                                                     strAllDriverTrigger = strAllDriverTrigger + @"
-                                                                 $('#" + strControlClientIDPrefix + _txtTime[m].ID + @"').change(function (e) {
+                                                                 $('#" +  _txtTime[m].ID + @"').change(function (e) {
                                                                           ShowHideFunction" + _strDynamictabPart + i.ToString() + @"();
                                                                     });
-                                                                    $('#" + strControlClientIDPrefix + _txtTime[m].ID + @"').trigger('change');  
+                                                                    $('#" +  _txtTime[m].ID + @"').trigger('change');  
                                                             ";
 
 
@@ -1057,10 +1075,10 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                                                                                                     " + strAllDriverValue + @"
                                                                             if (" + strAllLogic + @") {
-                                                                               $('" + strTargetTRID + @"').stop(true,true); $('" + strTargetTRID + @"').fadeIn();" + @"
+                                                                               $('" + strTargetTRID + @"').stop(true,true); $('" + strTargetTRID + @"').show();" + @"
                                                                             }
                                                                             else {
-                                                                                $('" + strTargetTRID + @"').fadeOut();" + @"
+                                                                                $('" + strTargetTRID + @"').hide();" + @"
                                                                             }
                                                                          }
                                                                         catch(err) {
@@ -1078,7 +1096,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                         ";
 
                     ViewState["strShowHideFunction" + _strDynamictabPart + i.ToString()] = strShowHideFunction;
-                    //ScriptManager.RegisterStartupScript(this, this.GetType(), "strShowHideFunction" + _strDynamictabPart + i.ToString(), strShowHideFunction, true);
+                    //ScriptManager.RegisterStartupScript(upChildDetail, upChildDetail.GetType(), "strShowHideFunction" + _strDynamictabPart + i.ToString(), strShowHideFunction, true);
                 }
             }
         }
@@ -1226,8 +1244,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
         }
 
 
-        if (_strRecordRightID == Common.UserRoleType.ReadOnly
-                       || _strRecordRightID == Common.UserRoleType.None)
+        if (_strRecordRightID == Common.UserRoleType.None)
         {
             Response.Redirect("~/Empty.aspx", true);
             return;
@@ -1257,10 +1274,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
         }
        
-        ShowWhenJS();
-        if (ViewState["jsClickFirstTab"] != null)
-            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "jsClickFirstTab" + _strDynamictabPart, ViewState["jsClickFirstTab"].ToString(), true);
-
+        //ShowWhenJS();
+        
+       
     }
 
 
@@ -1391,7 +1407,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     if (SecurityManager.IsRecordsExceeded(_iSessionAccountID))
                     {
                         Session["DoNotAllow"] = "true";
-                        ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "DoNotAllow" + _strDynamictabPart, "alert('" + Common.RecordExceededMessage.Replace("'", "''") + "');", true);
+                        ScriptManager.RegisterStartupScript(upChildDetail, upChildDetail.GetType(), "DoNotAllow" + _strDynamictabPart, "alert('" + Common.RecordExceededMessage.Replace("'", "''") + "');", true);
                         return;
                     }
 
@@ -1448,10 +1464,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
     {
 
 
-        if (!IsPostBack && RecordID == null && OnlyOneRecord)
-        {
-            CreatABlank();
-        }
+       
 
         if(!IsPostBack)
         {
@@ -1485,6 +1498,13 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
             {
                 ViewState["RecordID"] = strFirstRecord;
                 Session[_strChildSession] = strFirstRecord;
+            }
+            else
+            {
+                if (!IsPostBack && RecordID == null && OnlyOneRecord)
+                {
+                    CreatABlank();
+                }
             }
 
         }
@@ -1573,7 +1593,12 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 }
             }
         }        
-
+        if (_strRecordRightID == Common.UserRoleType.ReadOnly)
+        {
+            hlEdit.Visible = false;
+            hlAdd.Visible = false;
+            hlNewData.Visible = false;
+        }
         //Get warning and validation here
         string strWarning = "";
         string strValidation = "";
@@ -2662,18 +2687,18 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
         ShowHideNextPrev();
         ShowHideControls();
         ShowHideTableTab();
-        
-        
+
+        ShowWhenJS();
 
 
-        if (_strTableTabsJS != "")
-            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strTableTabsJS" + _strDynamictabPart, _strTableTabsJS, true);
+        //if (_strTableTabsJS != "")
+        //    ScriptManager.RegisterStartupScript(upChildDetail, upChildDetail.GetType(), "strTableTabsJS" + _strDynamictabPart, _strTableTabsJS, true);
 
-        if (!IsPostBack)
-        {
-            if (_jsClickFirstTab != "")
-                ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strTableTabsJSFirstTab" + _strDynamictabPart, _jsClickFirstTab, true);
-        }
+        ////if (!IsPostBack)
+        ////{
+        //    if (_jsClickFirstTab != "")
+        //        ScriptManager.RegisterStartupScript(upChildDetail, upChildDetail.GetType(), "strTableTabsJSFirstTab" + _strDynamictabPart, _jsClickFirstTab, true);
+        ////}
        
     }
 
@@ -2804,7 +2829,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
             if (_dtDBTableTab.Rows.Count > 1)
             {            
                 _bTableTabYes = true;
-                pnlDetailTab.CssClass = "showhidedivs" + _theTable.TableID.ToString();  
+                pnlDetailTab.CssClass = "eachtabletab" + _theTable.TableID.ToString();  
                 _pnlDetailTabD = new Panel[_dtDBTableTab.Rows.Count];
                 _tblMainD = new HtmlTable[_dtDBTableTab.Rows.Count];
                 _tblLeftD = new HtmlTable[_dtDBTableTab.Rows.Count];
@@ -2817,16 +2842,22 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     if (t == 0)
                     {
                         LinkButton lnkDetialTab = new LinkButton();
-                        lnkDetialTab.ID = "lnkDetialTab" + _theTable.TableID.ToString();
+                        lnkDetialTab.ID = _strDynamictabPart + "lnkDetialTab" + _theTable.TableID.ToString();
+                        lnkDetialTab.ClientIDMode = ClientIDMode.Static;
                         lnkDetialTab.Text = _dtDBTableTab.Rows[t]["TabName"].ToString(); //"Detail";
                         lnkDetialTab.Font.Bold = true;
 
-                        _jsClickFirstTab = "ShowHideMainDivs" + _theTable.TableID.ToString() + "('" + pnlDetailTab.ClientID + "',this," + _dtDBTableTab.Rows[t]["TableTabID"].ToString() + ");";
-                        //_jsClickFirstTab = " $('#"+_strDynamictabPart + lnkDetialTab.ID + "').trigger('click');";
+                        //_jsClickFirstTab = "ShowHideMainDivs" + _theTable.TableID.ToString() + "('" + pnlDetailTab.ClientID + "',this," + _dtDBTableTab.Rows[t]["TableTabID"].ToString() + ");";
+
+                        HiddenField hfSelectedTab = new HiddenField();
+                        hfSelectedTab.ID = _strDynamictabPart+"hfSelectedTab_main";
+                        hfSelectedTab.ClientIDMode = ClientIDMode.Static;
+                        hfSelectedTab.Value = lnkDetialTab.ID;
+                        _strSelectedtabLinkHF = hfSelectedTab.ID;
+                        pnlMain.Controls.Add(hfSelectedTab);
                         
-                        
-                        lnkDetialTab.Attributes.Add("onclick", "ShowHideMainDivs" + _theTable.TableID.ToString() + "('" + pnlDetailTab.ClientID + "',this," + _dtDBTableTab.Rows[t]["TableTabID"].ToString() + "); return false");
-                        lnkDetialTab.CssClass = "TablLinkClass" + _theTable.TableID.ToString();
+                        lnkDetialTab.Attributes.Add("onclick", "ShowHideMainDivs" + _theTable.TableID.ToString() + "('" + pnlDetailTab.ClientID + "',this," + _dtDBTableTab.Rows[t]["TableTabID"].ToString() + "); return false;");
+                        lnkDetialTab.CssClass = "maintablinkclass" + _theTable.TableID.ToString();
                         
                         lnkDetialTab.CausesValidation = false;
                         pnlTabHeading.Controls.Add(new LiteralControl("&nbsp&nbsp&nbsp&nbsp"));
@@ -2839,15 +2870,16 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
                         _pnlDetailTabD[t] = new Panel();
-                        _pnlDetailTabD[t].ID = "pnlDetailTabD" + _theTable.TableID.ToString() + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
-                        _pnlDetailTabD[t].CssClass = "showhidedivs" + _theTable.TableID.ToString();
+                        _pnlDetailTabD[t].ID = _strDynamictabPart + "pnlDetailTabD" + _theTable.TableID.ToString() + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
+                        _pnlDetailTabD[t].CssClass = "eachtabletab" + _theTable.TableID.ToString();
                         _pnlDetailTabD[t].ClientIDMode = ClientIDMode.Static;
 
                         LinkButton lnkDetialTabD = new LinkButton();
-                        lnkDetialTabD.ID = "lnkDetialTabD" + _theTable.TableID.ToString() + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
+                        lnkDetialTabD.ID = _strDynamictabPart + "lnkDetialTabD" + _theTable.TableID.ToString() + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
+                        lnkDetialTabD.ClientIDMode = ClientIDMode.Static;
                         lnkDetialTabD.Text = _dtDBTableTab.Rows[t]["TabName"].ToString();
-                        lnkDetialTabD.OnClientClick = "ShowHideMainDivs" + _theTable.TableID.ToString() + "('" + _pnlDetailTabD[t].ClientID + "',this," + _dtDBTableTab.Rows[t]["TableTabID"].ToString() + "); return false";
-                        lnkDetialTabD.CssClass = "TablLinkClass" + _theTable.TableID.ToString();
+                        lnkDetialTabD.OnClientClick = "ShowHideMainDivs" + _theTable.TableID.ToString() + "('" + _pnlDetailTabD[t].ID + "',this," + _dtDBTableTab.Rows[t]["TableTabID"].ToString() + "); return false;";
+                        lnkDetialTabD.CssClass = "maintablinkclass" + _theTable.TableID.ToString();
                        
                         pnlTabHeading.Controls.Add(lnkDetialTabD);
                         pnlTabHeading.Controls.Add(new LiteralControl("&nbsp&nbsp&nbsp&nbsp"));
@@ -2863,11 +2895,13 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         _tblMainD[t].Rows.Add(hrTemp);
 
                         _tblLeftD[t] = new HtmlTable();
-                        _tblLeftD[t].ID = "tblLeftD" + _theTable.TableID.ToString() + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
+                        _tblLeftD[t].ID = _strDynamictabPart + "tblLeftD" + _theTable.TableID.ToString() + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
+                        _tblLeftD[t].ClientIDMode = ClientIDMode.Static;
                         cellLeft.Controls.Add(_tblLeftD[t]);
 
                         _tblRightD[t] = new HtmlTable();
-                        _tblRightD[t].ID = "tblRightD" + _theTable.TableID.ToString() + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
+                        _tblRightD[t].ID = _strDynamictabPart + "tblRightD" + _theTable.TableID.ToString() + _dtDBTableTab.Rows[t]["TableTabID"].ToString();
+                        _tblRightD[t].ClientIDMode = ClientIDMode.Static;
                         cellRight.Controls.Add(_tblRightD[t]);
 
                         _pnlDetailTabD[t].Controls.Add(_tblMainD[t]);
@@ -2880,41 +2914,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
 
-                 _strTableTabsJS = @" function ShowHideMainDivs" + _theTable.TableID.ToString() + @"(divSelected,lnk,ttID) {
-                                        var divSelectedO = document.getElementsByName(divSelected.toString());
-                                            $('.showhidedivs_hide"+ _theTable.TableID.ToString()+@"').hide();
-                                            if (divSelectedO != null) 
-                                            {                                              
-                                                if(ttID!=0)
-                                                {
-                                                    var hlEdit= document.getElementById('" + hlEdit.ClientID + @"');
-                                                    if(hlEdit!=null)
-                                                    {
-                                                        hlEdit.href = document.getElementById('" + hfEdit.ClientID + @"').value + '&TableTabID=' + ttID;
-                                                    }
-                                                }
-
-                                                $('.showhidedivs" + _theTable.TableID.ToString() + @"').hide();
-                                                //divSelectedO.style.display = 'block';
-                                                $('#'+divSelected).fadeIn();
-                                                if ($('.TablLinkClass" + _theTable.TableID.ToString() + @"') != null && lnk != null) {
-                                                    $('.TablLinkClass" + _theTable.TableID.ToString() + @"').css('font-weight', 'normal');
-                                                }
-                                                if (lnk != null) {
-                                                    try{
-                                                    lnk.style.fontWeight = 'bold';}
-                                                    catch(err) { 
-                                                        //
-                                                        }
-                                                }
-                                            }
-
-                                        }
-
-                                        ";
-                
+                 
                 
             }
+
+           
+                
+
+
         }
     }
     protected void ShowHideTableTab()
@@ -3022,7 +3029,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                     if (t == 0)
                     {
-                        LinkButton lnkDetialTab =(LinkButton) pnlMain.FindControl("lnkDetialTab" + _theTable.TableID.ToString());                    
+                        LinkButton lnkDetialTab =(LinkButton) pnlMain.FindControl(_strDynamictabPart+ "lnkDetialTab" + _theTable.TableID.ToString());                    
                         if (strColour != "")
                         {
                             lnkDetialTab.Style.Add("color", "#" + strColour);
@@ -3036,7 +3043,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     {
 
 
-                        LinkButton lnkDetialTabD = (LinkButton)pnlMain.FindControl("lnkDetialTabD" + _theTable.TableID.ToString() + _dtDBTableTab.Rows[t]["TableTabID"].ToString());          
+                        LinkButton lnkDetialTabD = (LinkButton)pnlMain.FindControl(_strDynamictabPart+ "lnkDetialTabD" + _theTable.TableID.ToString() + _dtDBTableTab.Rows[t]["TableTabID"].ToString());          
                   
                         if (strColour != "")
                         {
@@ -3050,13 +3057,13 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                              
                         if (Common.IsIn(_dtDBTableTab.Rows[t]["TableTabID"].ToString(), strHiddenTableTabID))
                         {
-                            _pnlDetailTabD[t].CssClass = "showhidedivs_hide" + _theTable.TableID.ToString();
+                            _pnlDetailTabD[t].CssClass = "eachtabletab_hide" + _theTable.TableID.ToString();
                             _pnlDetailTabD[t].Style.Add("display", "none");
                             lnkDetialTabD.Style.Add("display", "none");
                         }
                         else
                         {
-                            //_pnlDetailTabD[t].CssClass = "TablLinkClass" + _theTable.TableID.ToString();
+                            //_pnlDetailTabD[t].CssClass = "maintablinkclass" + _theTable.TableID.ToString();
                             //_pnlDetailTabD[t].Style.Add("display", "inline");
                             lnkDetialTabD.Style.Add("display", "inline");
                         }
@@ -3067,6 +3074,79 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                
             }
         }
+
+        
+    }
+
+    protected void Page_PreRender(object sender, EventArgs e)
+    {
+        string strSelectedTab = "";
+        if (_strSelectedtabLinkHF != "")
+        {
+            strSelectedTab = @"
+
+                                 var hfCurrentSelectedTabLink = document.getElementById('" + _strSelectedtabLinkHF + @"'); 
+                                if(hfCurrentSelectedTabLink!=null)
+                                    {
+                                        hfCurrentSelectedTabLink.value = lnk.id.toString();                                    
+                                    }         
+                                ";
+        }
+
+        _strTableTabsJS = @" function ShowHideMainDivs" + _theTable.TableID.ToString() + @"(divSelected,lnk,ttID) {
+                                        var divSelectedO = document.getElementsByName(divSelected.toString());
+                                            $('.eachtabletab_hide" + _theTable.TableID.ToString() + @"').hide();
+                                            if (divSelectedO != null) 
+                                            {                                              
+                                                if(ttID!=0)
+                                                {
+                                                    var hlEdit= document.getElementById('" + hlEdit.ClientID + @"');
+                                                    if(hlEdit!=null)
+                                                    {
+                                                        hlEdit.href = document.getElementById('" + hfEdit.ClientID + @"').value + '&TableTabID=' + ttID;
+                                                    }
+                                                }
+
+                                                $('.eachtabletab" + _theTable.TableID.ToString() + @"').hide();
+                                                //divSelectedO.style.display = 'block';
+                                                $('#'+divSelected).show();
+                                                if ($('.maintablinkclass" + _theTable.TableID.ToString() + @"') != null && lnk != null) {
+                                                    $('.maintablinkclass" + _theTable.TableID.ToString() + @"').css('font-weight', 'normal');
+                                                }
+                                                if (lnk != null) {
+                                                    try{
+                                                    lnk.style.fontWeight = 'bold';
+                                                             " + strSelectedTab + @"
+                                                        }                                                  
+
+                                                    catch(err) { 
+                                                        //
+                                                        }
+                                                }
+                                            }
+
+                                        }
+
+                                        ";
+
+
+
+        if (_strTableTabsJS != "" && pnlMain.FindControl(_strSelectedtabLinkHF) != null)
+        {
+            HiddenField hfSelectedTab = (HiddenField)pnlMain.FindControl(_strSelectedtabLinkHF);
+
+            if (hfSelectedTab.Value != "")
+            {
+                _strTableTabsJS = _strTableTabsJS + @"
+                        $('#" + hfSelectedTab.Value + @"').trigger('click');";
+            }
+        }
+
+
+        if (_strTableTabsJS != "")
+            ScriptManager.RegisterStartupScript(upChildDetail, upChildDetail.GetType(), "strTableTabsJS" + _strDynamictabPart, _strTableTabsJS, true);
+        //if (_strTableTabsJS != "")
+        //    ltTextJS.Text = ltTextJS.Text + @"<script type='text/javascript' >" + _strTableTabsJS + "</script>";
     }
     protected void CreateDynamicControls()
     {
@@ -3078,8 +3158,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
             bDisplayRight = bool.Parse(_dtColumnsDetail.Rows[i]["DisplayRight"].ToString());
 
             _lbl[i] = new Label();
-            _lbl[i].ID = "lbl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-
+            _lbl[i].ID = _strDynamictabPart + "lbl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+            _lbl[i].ClientIDMode = ClientIDMode.Static;
             cell[i * 2] = new HtmlTableCell();
 
 
@@ -3119,14 +3199,16 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 case "datetimerecorded":
 
                     _txtValue[i] = new TextBox();
-                    _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _txtValue[i].ID = _strDynamictabPart + "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _txtValue[i].ClientIDMode = ClientIDMode.Static;
                     _txtValue[i].Width = 100;
                     _txtValue[i].AutoCompleteType = AutoCompleteType.Disabled;
                     _txtValue[i].CssClass = "NormalTextBox";
 
 
                     _ibValue[i] = new ImageButton();
-                    _ibValue[i].ID = "ib" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _ibValue[i].ID = _strDynamictabPart + "ib" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _ibValue[i].ClientIDMode = ClientIDMode.Static;
                     _ibValue[i].ImageUrl = "~/Images/Calendar.png";
                     _ibValue[i].Style.Add("padding-left", "3px");
                     _ibValue[i].Enabled = false;
@@ -3135,11 +3217,12 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "datetime")
                     {
                         _lblTime[i] = new Label();
-                        _lblTime[i].ID = "lblTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-
+                        _lblTime[i].ID = _strDynamictabPart + "lblTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _lblTime[i].ClientIDMode = ClientIDMode.Static;
 
                         _txtTime[i] = new TextBox();
-                        _txtTime[i].ID = "txtTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtTime[i].ID = _strDynamictabPart + "txtTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtTime[i].ClientIDMode = ClientIDMode.Static;
                         _txtTime[i].Width = 80;
                         _txtTime[i].AutoCompleteType = AutoCompleteType.Disabled;
                         _txtTime[i].CssClass = "NormalTextBox";
@@ -3162,7 +3245,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 case "recordid":
 
                     _txtValue[i] = new TextBox();
-                    _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _txtValue[i].ID = _strDynamictabPart + "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _txtValue[i].ClientIDMode = ClientIDMode.Static;
                     _txtValue[i].Width = 198;
                     _txtValue[i].Enabled = false;
                     _txtValue[i].CssClass = "NormalTextBox";
@@ -3172,7 +3256,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 case "isactive":
 
                     _chkIsActive = new CheckBox();
-                    _chkIsActive.ID = "chkIsActive";
+                    _chkIsActive.ID = _strDynamictabPart + "chkIsActive";
+                    _chkIsActive.ClientIDMode = ClientIDMode.Static;
                     _chkIsActive.CssClass = "NormalTextBox";
                     _iIsActiveIndex = i;
 
@@ -3183,7 +3268,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 case "notes":
 
                     _txtValue[i] = new TextBox();
-                    _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _txtValue[i].ID = _strDynamictabPart + "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _txtValue[i].ClientIDMode = ClientIDMode.Static;
+
                     _txtValue[i].Width = 270; //30*9
                     _txtValue[i].Height = 54; //18 * 3
                     _txtValue[i].TextMode = TextBoxMode.MultiLine;
@@ -3198,7 +3285,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 case "tableid":
 
                     _txtValue[i] = new TextBox();
-                    _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _txtValue[i].ID = _strDynamictabPart + "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                    _txtValue[i].ClientIDMode = ClientIDMode.Static;
+
                     _txtValue[i].Width = 198;
                     _txtValue[i].Enabled = false;
                     _txtValue[i].CssClass = "NormalTextBox";
@@ -3213,7 +3302,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                 case "enteredby":
 
                     _ddlEnteredBy = new DropDownList();
-                    _ddlEnteredBy.ID = "ddlEnteredBy";
+                    _ddlEnteredBy.ID = _strDynamictabPart + "ddlEnteredBy";
+                    _ddlEnteredBy.ClientIDMode = ClientIDMode.Static;
+
                     _ddlEnteredBy.CssClass = "NormalTextBox";
                     _iEnteredByIndex = i;
 
@@ -3227,14 +3318,18 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "date")
                     {
                         _txtValue[i] = new TextBox();
-                        _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ID = _strDynamictabPart + "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ClientIDMode = ClientIDMode.Static;
+
                         _txtValue[i].Width = 100;
                         _txtValue[i].AutoCompleteType = AutoCompleteType.Disabled;
                         _txtValue[i].CssClass = "NormalTextBox";
 
 
                         _ibValue[i] = new ImageButton();
-                        _ibValue[i].ID = "ib" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _ibValue[i].ID = _strDynamictabPart + "ib" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _ibValue[i].ClientIDMode = ClientIDMode.Static;
+
                         _ibValue[i].ImageUrl = "~/Images/Calendar.png";
                         _ibValue[i].Style.Add("padding-left", "3px");
                         _ibValue[i].Enabled = false;
@@ -3246,7 +3341,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "time")
                     {
                         _txtValue[i] = new TextBox();
-                        _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ID = _strDynamictabPart + "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ClientIDMode = ClientIDMode.Static;
+
                         _txtValue[i].Width = 100;
                         _txtValue[i].AutoCompleteType = AutoCompleteType.Disabled;
                         _txtValue[i].CssClass = "NormalTextBox";
@@ -3257,23 +3354,31 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "datetime")
                     {
                         _txtValue[i] = new TextBox();
-                        _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ID = _strDynamictabPart + "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ClientIDMode = ClientIDMode.Static;
+
                         _txtValue[i].Width = 100;
                         _txtValue[i].AutoCompleteType = AutoCompleteType.Disabled;
                         _txtValue[i].CssClass = "NormalTextBox";
 
                         _ibValue[i] = new ImageButton();
-                        _ibValue[i].ID = "ib" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _ibValue[i].ID = _strDynamictabPart + "ib" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _ibValue[i].ClientIDMode = ClientIDMode.Static;
+
                         _ibValue[i].ImageUrl = "~/Images/Calendar.png";
                         _ibValue[i].AlternateText = "Click to show calendar";
                         _ibValue[i].Style.Add("padding-left", "3px");
                         _ibValue[i].Enabled = false;
 
                         _lblTime[i] = new Label();
-                        _lblTime[i].ID = "lblTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _lblTime[i].ID = _strDynamictabPart + "lblTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _lblTime[i].ClientIDMode = ClientIDMode.Static;
+
 
                         _txtTime[i] = new TextBox();
-                        _txtTime[i].ID = "txtTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtTime[i].ID = _strDynamictabPart + "txtTime" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtTime[i].ClientIDMode = ClientIDMode.Static;
+
                         _txtTime[i].Width = 80;
                         _txtTime[i].AutoCompleteType = AutoCompleteType.Disabled;
                         _txtTime[i].CssClass = "NormalTextBox";
@@ -3295,7 +3400,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "button")
                     {
                         _lnkValue[i] = new LinkButton();
-                        _lnkValue[i].ID = "lnk" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _lnkValue[i].ID = _strDynamictabPart + "lnk" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         _lnkValue[i].ClientIDMode = ClientIDMode.Static;
 
                         cell[(i * 2) + 1].Controls.Add(_lnkValue[i]);
@@ -3306,17 +3411,17 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     {
 
                         _hfValue[i] = new HiddenField();
-                        _hfValue[i].ID = "hf" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-
+                        _hfValue[i].ID = _strDynamictabPart + "hf" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _hfValue[i].ClientIDMode = ClientIDMode.Static;
 
                         _lblValue[i] = new Label();
-                        _lblValue[i].ID = "lblV" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-
+                        _lblValue[i].ID = _strDynamictabPart + "lblV" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _lblValue[i].ClientIDMode = ClientIDMode.Static;
                         _pnlDIV[i] = new Panel();
-                        _pnlDIV[i].ID = "pnl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-
+                        _pnlDIV[i].ID = _strDynamictabPart + "pnl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _pnlDIV[i].ClientIDMode = ClientIDMode.Static;
                         //_fuValue[i] = new FileUpload();
-                        //_fuValue[i].ID = "fu" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        //_fuValue[i].ID = _strDynamictabPart + "fu" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
                         //_pnlDIV[i].Controls.Add(_fuValue[i]);
 
 
@@ -3351,7 +3456,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                             if (_dtColumnsDetail.Rows[i]["DropDownType"].ToString() == "table")
                             {
                                 _txtValue[i] = new TextBox();
-                                _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                _txtValue[i].ID = _strDynamictabPart + "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                _txtValue[i].ClientIDMode = ClientIDMode.Static;
                                 _txtValue[i].Width = 198;
                                 _txtValue[i].CssClass = "NormalTextBox";
 
@@ -3359,8 +3465,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 _imgValues[i].ImageUrl = "~/App_Themes/Default/Images/dropdown.png";
 
                                 _hfValue[i] = new HiddenField();
-                                _hfValue[i].ID = "hf" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-
+                                _hfValue[i].ID = _strDynamictabPart + "hf" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                _hfValue[i].ClientIDMode = ClientIDMode.Static;
 
 
                                 HtmlTable tblQuickLink = new HtmlTable();
@@ -3391,7 +3497,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                             {
                                 //this is drop down
                                 _ddlValue[i] = new DropDownList();
-                                _ddlValue[i].ID = "ddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                _ddlValue[i].ID = _strDynamictabPart + "ddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                _ddlValue[i].ClientIDMode = ClientIDMode.Static;
+
                                 _ddlValue[i].Width = 198;
                                 _ddlValue[i].CssClass = "NormalTextBox";
 
@@ -3425,7 +3533,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                             //filterted table
 
                             _ddlValue2[i] = new DropDownList();
-                            _ddlValue2[i].ID = "ddl2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _ddlValue2[i].ID = _strDynamictabPart + "ddl2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _ddlValue2[i].ClientIDMode = ClientIDMode.Static;
+
                             _ddlValue2[i].Width = 198;
                             _ddlValue2[i].CssClass = "NormalTextBox";
 
@@ -3433,7 +3543,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
                             _ddlValue[i] = new DropDownList();
-                            _ddlValue[i].ID = "ddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _ddlValue[i].ID = _strDynamictabPart + "ddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _ddlValue[i].ClientIDMode = ClientIDMode.Static;
                             _ddlValue[i].Width = 198;
                             _ddlValue[i].CssClass = "NormalTextBox";
 
@@ -3441,11 +3552,11 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
                             _ccddl[i] = new CascadingDropDown();
-                            _ccddl[i].ID = "ccddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-
+                            _ccddl[i].ID = _strDynamictabPart + "ccddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _ccddl[i].ClientIDMode = ClientIDMode.Static;
                             _ccddl[i].Category = _dtColumnsDetail.Rows[i]["ColumnID"].ToString() + "," + _dtColumnsDetail.Rows[i]["ParentColumnID"].ToString();
                             _ccddl[i].TargetControlID = _ddlValue[i].ID;
-                            _ccddl[i].ParentControlID = "ddl2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _ccddl[i].ParentControlID =_ddlValue2[i].ID;
 
                             _ccddl[i].ServicePath = "~/CascadeDropdown.asmx";
                             _ccddl[i].ServiceMethod = "GetFilteredData"; //filtered
@@ -3474,8 +3585,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         _radioList[i] = new RadioButtonList();
                         _radioList[i].RepeatDirection = System.Web.UI.WebControls.RepeatDirection.Horizontal;
                         _radioList[i].RepeatLayout = RepeatLayout.Flow;
-                        _radioList[i].ID = "radio" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-
+                        _radioList[i].ID = _strDynamictabPart + "radio" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _radioList[i].ClientIDMode = ClientIDMode.Static;
 
 
                         if (_dtColumnsDetail.Rows[i]["VerticalList"] != DBNull.Value)
@@ -3503,13 +3614,14 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "location")
                     {
                         _hfValue[i] = new HiddenField();
-                        _hfValue[i].ID = "hf" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-
+                        _hfValue[i].ID = _strDynamictabPart + "hf" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _hfValue[i].ClientIDMode = ClientIDMode.Static;
                         _hfValue2[i] = new HiddenField();
-                        _hfValue2[i].ID = "hf2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-
+                        _hfValue2[i].ID = _strDynamictabPart + "hf2" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _hfValue2[i].ClientIDMode = ClientIDMode.Static;
                         _hfValue3[i] = new HiddenField();
-                        _hfValue3[i].ID = "hf3" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _hfValue3[i].ID = _strDynamictabPart + "hf3" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _hfValue3[i].ClientIDMode = ClientIDMode.Static;
                         if (_theAccount.MapCentreLat != null)
                         {
                             _hfValue[i].Value = _theAccount.MapCentreLat.ToString();
@@ -3562,32 +3674,33 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                                 cell[(i * 2) + 1].Controls.Add(new LiteralControl("Address:&nbsp;"));
                                 _txtValue2[i] = new TextBox();
-                                _txtValue2[i].ID = "searchbox" + i.ToString();
+                                _txtValue2[i].ID = _strDynamictabPart + "searchbox" + i.ToString();
+                                _txtValue2[i].ClientIDMode = ClientIDMode.Static;
                                 _txtValue2[i].Width = 280;
                                 _txtValue2[i].CssClass = "NormalTextBox";
                                 cell[(i * 2) + 1].Controls.Add(_txtValue2[i]);
 
-//                                if (bShowMap)
-//                                {
-//                                    strSearchAddressJS = @"                                                   
-//                                                        function showAddress" + _strDynamictabPart + i.ToString() + @"() {                                                      
-//                                                        if(document.getElementById('" + _strDynamictabPart + "searchbox" + i.ToString() + @"')==null){return;};
-//                                                        var address = document.getElementById('" + _strDynamictabPart + "searchbox" + i.ToString() + @"').value;         
-//                                                        var geocoder = new google.maps.Geocoder();
-//                                                        geocoder.geocode({ 'address': address }, function (results, status) {
-//                                                            if (status == google.maps.GeocoderStatus.OK) {
-//                                                                results[0].geometry.location;
-//                                                                var b = new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
-//                                                                map" + _strDynamictabPart + i.ToString() + @".setCenter(b);
-//
-//                                                            } else {
-//                                                                alert('Google Maps had some trouble finding ' + address + '.');
-//                                                            }
-//                                                        });
-//                                                    };  showAddress" + _strDynamictabPart + i.ToString() + @"();
-//
-//                                                   ";
-//                                }
+                                if (bShowMap)
+                                {
+                                    strSearchAddressJS = @"                                                   
+                                                        function showAddress" + _strDynamictabPart + i.ToString() + @"() {                                                      
+                                                        if(document.getElementById('" + _strDynamictabPart + "searchbox" + i.ToString() + @"')==null){return;};
+                                                        var address = document.getElementById('" + _strDynamictabPart + "searchbox" + i.ToString() + @"').value;         
+                                                        var geocoder = new google.maps.Geocoder();
+                                                        geocoder.geocode({ 'address': address }, function (results, status) {
+                                                            if (status == google.maps.GeocoderStatus.OK) {
+                                                                results[0].geometry.location;
+                                                                var b = new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
+                                                                map" + _strDynamictabPart + i.ToString() + @".setCenter(b);
+
+                                                            } else {
+                                                                alert('Google Maps had some trouble finding ' + address + '.');
+                                                            }
+                                                        });
+                                                    };  showAddress" + _strDynamictabPart + i.ToString() + @"();
+
+                                                   ";
+                                }
 
                             }
                         }
@@ -3602,7 +3715,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 cell[(i * 2) + 1].Controls.Add(new LiteralControl("<br/>"));
                                 cell[(i * 2) + 1].Controls.Add(new LiteralControl("Latitude:&nbsp;"));
                                 _txtValue[i] = new TextBox();
-                                _txtValue[i].ID = "txtLat" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                _txtValue[i].ID = _strDynamictabPart + "txtLat" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                _txtValue[i].ClientIDMode = ClientIDMode.Static;
                                 _txtValue[i].Width = 145;
                                 _txtValue[i].CssClass = "NormalTextBox";
 
@@ -3612,7 +3726,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 cell[(i * 2) + 1].Controls.Add(new LiteralControl("&nbsp;&nbsp;Longitude:&nbsp;"));
 
                                 _txtTime[i] = new TextBox();
-                                _txtTime[i].ID = "txtLong" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                _txtTime[i].ID = _strDynamictabPart + "txtLong" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                _txtTime[i].ClientIDMode = ClientIDMode.Static;
                                 _txtTime[i].Width = 145;
                                 _txtTime[i].CssClass = "NormalTextBox";
 
@@ -3623,12 +3738,12 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                                 {
                                     strShowLatLong = @"  
                                        
-                                            var txtLatitude = document.getElementById('" + _strDynamictabPart + _txtValue[i].ID.ToString() + @"');
-                                            if(txtLatitude!=null){
-                                                txtLatitude.value = map" + _strDynamictabPart + i.ToString() + @".getCenter().lat();}
-                                            var txtLongitude = document.getElementById('" + _strDynamictabPart + _txtTime[i].ID.ToString() + @"');
-                                            if(txtLongitude!=null){
-                                                txtLongitude.value = map" + _strDynamictabPart + i.ToString() + @".getCenter().lng(); }
+                                            var txtLatitude" + _strDynamictabPart + i.ToString() + @" = document.getElementById('" + _txtValue[i].ID + @"');
+                                            if(txtLatitude" + _strDynamictabPart + i.ToString() + @"!=null){
+                                                txtLatitude" + _strDynamictabPart + i.ToString() + @".value = map" + _strDynamictabPart + i.ToString() + @".getCenter().lat();}
+                                            var txtLongitude" + _strDynamictabPart + i.ToString() + @" = document.getElementById('" + _txtTime[i].ID + @"');
+                                            if(txtLongitude" + _strDynamictabPart + i.ToString() + @"!=null){
+                                                txtLongitude" + _strDynamictabPart + i.ToString() + @".value = map" + _strDynamictabPart + i.ToString() + @".getCenter().lng(); }
                                         ";
 
                                 }
@@ -3641,25 +3756,25 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         {
 
                             string strMapJS = @"//$(document).ready(function () {
-                                    if(document.getElementById('" + _strDynamictabPart + _hfValue3[i].ID.ToString() + @"')!=null
+                                    if(document.getElementById('" +  _hfValue3[i].ID + @"')!=null
                                                 && document.getElementById('map" + _strDynamictabPart + i.ToString() + @"')!=null){
                                     try{
-                                            var mapOptions = {
-                                                zoom:parseFloat(document.getElementById('" + _strDynamictabPart + _hfValue3[i].ID.ToString() + @"').value),
+                                            var mapOptions" + _strDynamictabPart + i.ToString() + @" = {
+                                                zoom:parseFloat(document.getElementById('" +  _hfValue3[i].ID + @"').value),
                                                 mapTypeId: google.maps.MapTypeId.ROADMAP,scrollwheel: false,
-                                                center: new google.maps.LatLng(document.getElementById('" + _strDynamictabPart + _hfValue[i].ID.ToString() + @"').value, document.getElementById('" + _strDynamictabPart + _hfValue2[i].ID.ToString() + @"').value)          
+                                                center: new google.maps.LatLng(document.getElementById('" +  _hfValue[i].ID + @"').value, document.getElementById('" +  _hfValue2[i].ID + @"').value)          
                                             };
-                                             var map" + _strDynamictabPart + i.ToString() + @" = new google.maps.Map(document.getElementById('map" + _strDynamictabPart + i.ToString() + @"'), mapOptions);
-                                             var geocoder = new google.maps.Geocoder();" + strShowAddress + @"
+                                             var map" + _strDynamictabPart + i.ToString() + @" = new google.maps.Map(document.getElementById('map" + _strDynamictabPart + i.ToString() + @"'), mapOptions" + _strDynamictabPart + i.ToString() + @");
+                                             var geocoder" + _strDynamictabPart + i.ToString() + @" = new google.maps.Geocoder();" + strShowAddress + @"
 
                                              google.maps.event.addListener(map" + _strDynamictabPart + i.ToString() + @", 'center_changed', function () {
-                                                    document.getElementById('" + _strDynamictabPart + _hfValue[i].ID.ToString() + @"').value = map" + _strDynamictabPart + i.ToString() + @".getCenter().lat();
-                                                    document.getElementById('" + _strDynamictabPart + _hfValue2[i].ID.ToString() + @"').value = map" + _strDynamictabPart + i.ToString() + @".getCenter().lng();
+                                                    document.getElementById('" +  _hfValue[i].ID + @"').value = map" + _strDynamictabPart + i.ToString() + @".getCenter().lat();
+                                                    document.getElementById('" +  _hfValue2[i].ID + @"').value = map" + _strDynamictabPart + i.ToString() + @".getCenter().lng();
                                                           " + strShowLatLong + @" 
                                                 });
 
                                             google.maps.event.addListener(map" + _strDynamictabPart + i.ToString() + @", 'zoom_changed', function () {
-                                                      document.getElementById('" + _strDynamictabPart + _hfValue3[i].ID.ToString() + @"').value = map" + _strDynamictabPart + i.ToString() + @".getZoom();
+                                                      document.getElementById('" +  _hfValue3[i].ID + @"').value = map" + _strDynamictabPart + i.ToString() + @".getZoom();
                                                         });
                                         }
                                         catch (err) {
@@ -3670,7 +3785,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                                     ";
 
-                            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "AutoCompleteJS" + _strDynamictabPart + i.ToString(), strMapJS, true);
+                            ScriptManager.RegisterStartupScript(upChildDetail, upChildDetail.GetType(), "AutoCompleteJS" + _strDynamictabPart + i.ToString(), strMapJS, true);
                         }
 
 
@@ -3678,8 +3793,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "checkbox")
                     {
                         _chkValue[i] = new CheckBox();
-                        _chkValue[i].ID = "chk" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-
+                        _chkValue[i].ID = _strDynamictabPart + "chk" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _chkValue[i].ClientIDMode = ClientIDMode.Static;
                         cell[(i * 2) + 1].Controls.Add(_chkValue[i]);
                     }
 
@@ -3688,7 +3803,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     {
 
                         _htmValue[i] = new WYSIWYGEditor();
-                        _htmValue[i].ID = "htm" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _htmValue[i].ID = _strDynamictabPart + "htm" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _htmValue[i].ClientIDMode = ClientIDMode.Static;
                         _htmValue[i].AssetManager = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath + "/Editor/assetmanager/assetmanager.aspx";
                         _htmValue[i].ButtonFeatures = new string[] { "FullScreen", "XHTMLFullSource", "RemoveFormat", "Undo", "Redo", "|", "Paragraph", "FontName", "FontSize", "|", "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyFull", "Bold", "Italic", "Underline", "Hyperlink" };
                         _htmValue[i].scriptPath = "../../Editor/scripts/";
@@ -3712,8 +3828,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     {
                         _lbl[i].Visible = false;
                         _lblValue[i] = new Label();
-                        _lblValue[i].ID = "lblV" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-
+                        _lblValue[i].ID = _strDynamictabPart + "lblV" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _lblValue[i].ClientIDMode = ClientIDMode.Static;
                         cell[(i * 2) + 1].Controls.Add(_lblValue[i]);
                     }
 
@@ -3721,7 +3837,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         && _dtColumnsDetail.Rows[i]["DateCalculationType"].ToString() == "")
                     {
                         _lstValue[i] = new ListBox();
-                        _lstValue[i].ID = "lst" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _lstValue[i].ID = _strDynamictabPart + "lst" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _lstValue[i].ClientIDMode = ClientIDMode.Static;
                         _lstValue[i].SelectionMode = ListSelectionMode.Multiple;
                         _lstValue[i].Style.Add("min-width", "198px");
                         _lstValue[i].Style.Add("min-height", "100px");
@@ -3738,7 +3855,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                        && _dtColumnsDetail.Rows[i]["DateCalculationType"].ToString() == "checkbox")
                     {
                         _cblValue[i] = new CheckBoxList();
-                        _cblValue[i].ID = "cbl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _cblValue[i].ID = _strDynamictabPart + "cbl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _cblValue[i].ClientIDMode = ClientIDMode.Static;
                         //_cblValue[i].SelectionMode = ListSelectionMode.Multiple;
                         _cblValue[i].Style.Add("min-width", "198px");
                         _cblValue[i].Style.Add("min-height", "100px");
@@ -3763,7 +3881,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     {
                         _ddlValue[i] = new DropDownList();
                         _ddlValue[i].Width = 198;
-                        _ddlValue[i].ID = "ddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _ddlValue[i].ID = _strDynamictabPart + "ddl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _ddlValue[i].ClientIDMode = ClientIDMode.Static;
                         _ddlValue[i].CssClass = "NormalTextBox";
 
 
@@ -3785,7 +3904,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                     if (_dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "calculation")
                     {
                         _txtValue[i] = new TextBox();
-                        _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ID = _strDynamictabPart + "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ClientIDMode = ClientIDMode.Static;
                         _txtValue[i].Width = 198;
                         _txtValue[i].CssClass = "NormalTextBox";
 
@@ -3806,7 +3926,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         || _dtColumnsDetail.Rows[i]["ColumnType"].ToString() == "number")
                     {
                         _txtValue[i] = new TextBox();
-                        _txtValue[i].ID = "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ID = _strDynamictabPart + "txt" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                        _txtValue[i].ClientIDMode = ClientIDMode.Static;
                         _txtValue[i].Width = 198;
                         _txtValue[i].CssClass = "NormalTextBox";
 
@@ -3832,10 +3953,11 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                             _txtValue[i].Text = "0";
 
                             _lblValue[i] = new Label();
-                            _lblValue[i].ID = "lblV" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-
+                            _lblValue[i].ID = _strDynamictabPart + "lblV" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _lblValue[i].ClientIDMode = ClientIDMode.Static;
                             _seValue[i] = new SliderExtender();
-                            _seValue[i].ID = "se" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _seValue[i].ID = _strDynamictabPart + "se" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                            _seValue[i].ClientIDMode = ClientIDMode.Static;
                             _seValue[i].BehaviorID = _txtValue[i].ID;
                             _seValue[i].TargetControlID = _txtValue[i].ID;
                             _seValue[i].BoundControlID = _lblValue[i].ID;
@@ -3863,14 +3985,13 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                         {
                             if (_dtColumnsDetail.Rows[i]["TextType"] != DBNull.Value)
                             {
-                                if (_dtColumnsDetail.Rows[i]["TextType"].ToString() == "readonly")
-                                {
-                                    if (_txtValue[i] != null)
-                                        _txtValue[i].Enabled = false;
+                                //if (_dtColumnsDetail.Rows[i]["TextType"].ToString() == "readonly")
+                                //{
+                                //    if (_txtValue[i] != null)
+                                //        _txtValue[i].Enabled = false;
 
-                                }
-                                if (_dtColumnsDetail.Rows[i]["TextType"].ToString() != ""
-                                    && _dtColumnsDetail.Rows[i]["TextType"].ToString() != "readonly")
+                                //}
+                                if (_dtColumnsDetail.Rows[i]["TextType"].ToString() != "")
                                 {
 
                                     switch (_dtColumnsDetail.Rows[i]["TextType"].ToString().ToLower())
@@ -3878,7 +3999,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                                         case "link":
                                             _hlValue[i] = new HyperLink();
-                                            _hlValue[i].ID = "hl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                            _hlValue[i].ID = _strDynamictabPart + "hl" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                            _hlValue[i].ClientIDMode = ClientIDMode.Static;
                                             _hlValue[i].Target = "_blank";
                                             _hlValue[i].Text = "Go";
                                             cell[(i * 2) + 1].Controls.Add(new LiteralControl("&nbsp"));
@@ -3908,8 +4030,9 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
                             {
 
                                 _ftbExt[i] = new FilteredTextBoxExtender();
-                                _ftbExt[i].ID = "ftb" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-                                _ftbExt[i].TargetControlID = _txtValue[i].ClientID;
+                                _ftbExt[i].ID = _strDynamictabPart + "ftb" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                _ftbExt[i].ClientIDMode = ClientIDMode.Static;
+                                _ftbExt[i].TargetControlID = _txtValue[i].ID;
                                 _ftbExt[i].FilterType = FilterTypes.Custom;
                                 _ftbExt[i].FilterMode = FilterModes.ValidChars;
                                 _ftbExt[i].ValidChars = "-.0123456789";
@@ -3934,8 +4057,8 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
                                     _txtValue[i].Visible = false;
                                     _lblValue[i] = new Label();
-                                    _lblValue[i].ID = "lblV" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
-
+                                    _lblValue[i].ID = _strDynamictabPart + "lblV" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+                                    _lblValue[i].ClientIDMode = ClientIDMode.Static;
 
                                     cell[(i * 2) + 1].Controls.Add(_lblValue[i]);
 
@@ -3956,11 +4079,12 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
 
 
             trX[i] = new HtmlTableRow();
-
+            trX[i].ID = _strDynamictabPart + "trX" + _dtColumnsDetail.Rows[i]["SystemName"].ToString();
+            trX[i].ClientIDMode = ClientIDMode.Static; 
 
             trX[i].Cells.Add(cell[i * 2]);
             trX[i].Cells.Add(cell[(i * 2) + 1]);
-
+           
 
             if (_dtColumnsDetail.Rows[i]["TableTabID"] == DBNull.Value)
             {
@@ -4762,7 +4886,7 @@ public partial class Pages_UserControl_DetailEdit : System.Web.UI.UserControl
     //    {
     //        if (PerformSave())
     //        {
-    //            //ScriptManager.RegisterStartupScript(this, this.GetType(), "Problem", "alert('Successfully saved!');", true);
+    //            //ScriptManager.RegisterStartupScript(upChildDetail, upChildDetail.GetType(), "Problem", "alert('Successfully saved!');", true);
     //            lblMsg.Text = "Successfully saved!";
     //            lblMsg.ForeColor = System.Drawing.Color.Green;
     //            if (Mode.ToLower() == "add")

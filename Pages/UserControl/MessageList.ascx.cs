@@ -88,7 +88,7 @@ public partial class Pages_UserControl_MessageList : System.Web.UI.UserControl
 
                 ";
 
-            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strViewItemPop", strViewItemPop, true);
+            ScriptManager.RegisterStartupScript(upMsg, upMsg.GetType(), "strViewItemPop", strViewItemPop, true);
 
 
 
@@ -176,11 +176,11 @@ public partial class Pages_UserControl_MessageList : System.Web.UI.UserControl
                         $('#" + txtLowerDate.ClientID + @"').on('keyup',function () {
                                                                 var strLowerValue = $('#" + txtLowerDate.ClientID + @"').val();
                                                                  if (strLowerValue.trim() != '') {
-                                                                    $('#" + trUpperMessageDate.ClientID + @"').fadeIn();
+                                                                    $('#" + trUpperMessageDate.ClientID + @"').show();
                                                                 }
                                                                 else {
                                                                      $('#" + txtUpperDate.ClientID + @"').val('');
-                                                                    $('#" + trUpperMessageDate.ClientID + @"').fadeOut(); 
+                                                                    $('#" + trUpperMessageDate.ClientID + @"').hide(); 
                                                                 }
                                                             });
                          $('#" + txtLowerDate.ClientID + @"').trigger('keyup');
@@ -191,11 +191,11 @@ public partial class Pages_UserControl_MessageList : System.Web.UI.UserControl
                         $('#" + txtLowerDate.ClientID + @"').change(function () {
                                                                 var strLowerValue = $('#" + txtLowerDate.ClientID + @"').val();
                                                                  if (strLowerValue.trim() != '') {
-                                                                    $('#" + trUpperMessageDate.ClientID + @"').fadeIn();
+                                                                    $('#" + trUpperMessageDate.ClientID + @"').show();
                                                                 }
                                                                 else {
                                                                      $('#" + txtUpperDate.ClientID + @"').val('');
-                                                                    $('#" + trUpperMessageDate.ClientID + @"').fadeOut(); 
+                                                                    $('#" + trUpperMessageDate.ClientID + @"').hide(); 
                                                                 }
                                                             });
                          $('#" + txtLowerDate.ClientID + @"').trigger('change');
@@ -212,7 +212,7 @@ public partial class Pages_UserControl_MessageList : System.Web.UI.UserControl
                                 //do ntohing
                                 }
                             });";
-                ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strJSDynamicShowHideMessageDate" , strJSDynamicShowHide, true);
+                ScriptManager.RegisterStartupScript(upMsg, upMsg.GetType(), "strJSDynamicShowHideMessageDate", strJSDynamicShowHide, true);
             }
         }
         catch (Exception ex)
@@ -352,7 +352,7 @@ public partial class Pages_UserControl_MessageList : System.Web.UI.UserControl
                   }
              }
 
-
+             ViewState[gvTheGrid.ID + "PageIndex"] = (iStartIndex / gvTheGrid.PageSize) + 1;
             Message objMessage=new Message(null,hfRecordID.Value==""?null:(int?)int.Parse(hfRecordID.Value),
                 ddlTable.SelectedValue==""?null:(int?)int.Parse(ddlTable.SelectedValue),int.Parse(Session["AccountID"].ToString()),null,
                 ddlMessageType.SelectedValue==""?"":ddlMessageType.SelectedValue,"",
@@ -377,7 +377,12 @@ public partial class Pages_UserControl_MessageList : System.Web.UI.UserControl
             {
                 _gvPager = (Common_Pager)gvr.FindControl("Pager");
                 //_gvPager.AddURL = GetAddURL();
-                _gvPager.PageIndexTextSet = (int)(iStartIndex / iMaxRows + 1);
+                //_gvPager.PageIndexTextSet = (int)(iStartIndex / iMaxRows + 1);
+                if (ViewState[gvTheGrid.ID + "PageIndex"] != null)
+                    _gvPager.PageIndex = int.Parse(ViewState[gvTheGrid.ID + "PageIndex"].ToString());
+
+                _gvPager.PageSize = gvTheGrid.PageSize;
+                _gvPager.TotalRows = iTN;
             }
                        
             if(iTN>0 && tdTableFilter.Visible)
@@ -544,7 +549,7 @@ public partial class Pages_UserControl_MessageList : System.Web.UI.UserControl
 
     protected void Pager_BindTheGridAgain(object sender, EventArgs e)
     {
-        BindTheGrid(_gvPager.StartIndex, _gvPager._gridView.PageSize);
+        BindTheGrid(_gvPager.StartIndex, _gvPager.PageSize);
     }
 
     protected void Pager_OnApplyFilter(object sender, EventArgs e)

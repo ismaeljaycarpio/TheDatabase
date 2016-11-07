@@ -1,30 +1,57 @@
 ﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="Popup.master.cs" Inherits="Home_Popup" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" style="background-image:none; background-color:#ffffff;">
+<html xmlns="http://www.w3.org/1999/xhtml" style="background-image: none; background-color: #ffffff;">
 <head runat="server">
     <title>TheDatabase</title>
-        <meta name="Description" content="TheDatabase.net is an online database development platform to make getting your database on the web quick and easy with no upfront costs." />
+    <meta name="Description" content="TheDatabase.net is an online database development platform to make getting your database on the web quick and easy with no upfront costs." />
     <meta name="Keywords" content="Database, online, web, data, development, platform" />
-     <meta name="google" content="notranslate">
+    <meta name="google" content="notranslate">
     <meta http-equiv="Content-Language" content="en">
 
-            <link href="~/App_Themes/Default/StyleSheet.css?2" rel="stylesheet" type="text/css" />
-     <asp:Literal ID="ltMasterStyles" runat="server"></asp:Literal>
-     <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    <link href="~/App_Themes/Default/StyleSheet.css?2" rel="stylesheet" type="text/css" />
+    <asp:Literal ID="ltMasterStyles" runat="server"></asp:Literal>
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
     </asp:ContentPlaceHolder>
     <%--<link href="~/css/style.css" rel="stylesheet" type="text/css" />--%>
 </head>
-<body style="background-image:none; background-color:#ffffff;">
-    <script type="text/javascript" src="<%=ResolveUrl("~/JS/Common.js")%>"></script>
-
+<body style="background-image: none; background-color: #ffffff;">
+    <%--<script type="text/javascript" src="<%=ResolveUrl("~/Script/jquery-1.11.3.min.js")%>"></script>--%>
     <script type="text/javascript" src="<%=ResolveUrl("~/script/jquery.js")%>"></script>
-      <script type="text/javascript" src="<%=ResolveUrl("~/JS/modernizr.custom.80028.js")%>"></script>
-    <form id="form1" runat="server">
-    <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true">
-    </asp:ScriptManager>
+    <%--  <script type="text/javascript" src="<%=ResolveUrl("~/Script/jquery-migrate-1.4.1.min.js")%>"></script>--%>
+    <script type="text/javascript" src="<%=ResolveUrl("~/JS/Common.js")%>"></script>
+    <script type="text/javascript" src="<%=ResolveUrl("~/JS/modernizr.custom.80028.js")%>"></script>
+    <link type="text/css" rel="stylesheet" href="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.css")%>" />
+    <script type="text/javascript" src="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.pack.js")%>"></script>
+    <%-- <script type="text/javascript" src="<%=ResolveUrl("~/fancybox2/source/jquery.fancybox.js?v=2.1.5")%>"></script>
+    <link rel="stylesheet" type="text/css" href="<%=ResolveUrl("~/fancybox2/source/jquery.fancybox.css?v=2.1.5")%>" media="screen" />--%>
+    <script type="text/javascript">
+        $(".btn")
+                 .click(
+                   function () {
+                       $(".ajax-indicator-full").fadeIn();
+                   }
+                 );
+    </script>
 
- <asp:UpdatePanel ID="upNotificationMessage" runat="server" UpdateMode="Always">
+    <form id="form1" runat="server">
+        <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true">
+        </asp:ScriptManager>
+        <asp:UpdateProgress class="ajax-indicator-full" ID="upMaster" runat="server">
+            <ProgressTemplate>
+                <table style="width: 100%; height: 100%; text-align: center;">
+                    <tr valign="middle">
+                        <td>
+                            <p style="font-size: 12px;">
+                                Please wait...
+                            </p>
+                            <asp:Image runat="server" AlternateText="Processing..." ImageUrl="~/Images/ajax.gif" />
+                        </td>
+                    </tr>
+                </table>
+            </ProgressTemplate>
+        </asp:UpdateProgress>
+        <asp:UpdatePanel ID="upNotificationMessage" runat="server" UpdateMode="Always">
             <ContentTemplate>
                 <div id="divNotificationMessage" style="position: fixed; top: 0px;">
                     <asp:Label runat="server" ID="lblNotificationMessage"></asp:Label>
@@ -33,22 +60,19 @@
         </asp:UpdatePanel>
 
 
-    <div>
-        <table>
-            <tr style="text-align: left;">
-                <td style="text-align: left;">
-                    <div id="Content" style="text-align: left; padding-left: 25px; padding-right: 10px;
-                        min-height: 200px;" runat="server" clientidmode="Static">
-                        <asp:ContentPlaceHolder ID="HomeContentPlaceHolder" runat="server">
-
-
-
-                        </asp:ContentPlaceHolder>
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </div>
+        <div>
+            <table>
+                <tr style="text-align: left;">
+                    <td style="text-align: left;">
+                        <div id="Content" style="text-align: left; padding-left: 25px; padding-right: 10px; min-height: 200px;"
+                            runat="server" clientidmode="Static">
+                            <asp:ContentPlaceHolder ID="HomeContentPlaceHolder" runat="server">
+                            </asp:ContentPlaceHolder>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </form>
 </body>
 </html>

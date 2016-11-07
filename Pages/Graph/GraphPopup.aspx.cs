@@ -206,8 +206,8 @@ public partial class Pages_Graph_GraphPopup : SecurePage
         try
         {
             int iTN = 0;
-           
 
+            ViewState[gvTheGrid.ID + "PageIndex"] = (iStartIndex / gvTheGrid.PageSize) + 1;
             gvTheGrid.DataSource = GraphManager.ets_GraphOption_Select(int.Parse(Session["AccountID"].ToString()),
                 2, false,!chkIsActive.Checked,
                 gvTheGrid.GridViewSortColumn, gvTheGrid.GridViewSortDirection == SortDirection.Ascending ? "ASC" : "DESC",
@@ -223,7 +223,12 @@ public partial class Pages_Graph_GraphPopup : SecurePage
             {
                 _gvPager = (Common_Pager)gvr.FindControl("Pager");
                 _gvPager.AddURL = GetAddURL();
-                _gvPager.PageIndexTextSet = (int)(iStartIndex / iMaxRows + 1);
+                if (ViewState[gvTheGrid.ID + "PageIndex"] != null)
+                    _gvPager.PageIndex = int.Parse(ViewState[gvTheGrid.ID + "PageIndex"].ToString());
+
+                _gvPager.PageSize = gvTheGrid.PageSize;
+                _gvPager.TotalRows = iTN;
+                //_gvPager.PageIndexTextSet = (int)(iStartIndex / iMaxRows + 1);
             }
 
 
@@ -315,7 +320,7 @@ public partial class Pages_Graph_GraphPopup : SecurePage
 
     protected void Pager_BindTheGridAgain(object sender, EventArgs e)
     {
-        BindTheGrid(_gvPager.StartIndex, _gvPager._gridView.PageSize);
+        BindTheGrid(_gvPager.StartIndex, _gvPager.PageSize);
     }
 
     protected void Pager_OnApplyFilter(object sender, EventArgs e)

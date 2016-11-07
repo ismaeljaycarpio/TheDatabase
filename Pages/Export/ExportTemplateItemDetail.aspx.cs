@@ -151,31 +151,31 @@ public partial class Pages_Export_ExportTemplateItemDetail : SecurePage
 
     protected void PopulateListBoxes()
     {
-        DataTable dtNotUsed = Common.DataTableFromText(@"SELECT ColumnID,NameOnExport,Systemname FROM [Column] WHERE 
-            Systemname not in('IsActive','TableID')  AND NameOnExport IS NOT NULL AND LEN(NameOnExport) > 0  
+        DataTable dtNotUsed = Common.DataTableFromText(@"SELECT ColumnID,DisplayName,Systemname FROM [Column] WHERE 
+            Systemname not in('IsActive','TableID')  AND DisplayName IS NOT NULL AND LEN(DisplayName) > 0  
             AND ColumnType NOT IN ('staticcontent') AND TableID=" + _theExportTemplate.TableID.ToString()
-            + @" AND ColumnID NOT IN(SELECT ColumnID FROM ExportTemplateItem WHERE ExportTemplateID=" + _theExportTemplate.ExportTemplateID.ToString() + @") ORDER BY NameOnExport ASC");
+            + @" AND ColumnID NOT IN(SELECT ColumnID FROM ExportTemplateItem WHERE ExportTemplateID=" + _theExportTemplate.ExportTemplateID.ToString() + @") ORDER BY DisplayName ASC");
 
 
         lstNotUsed.Items.Clear();
 
         foreach (DataRow dr in dtNotUsed.Rows)
         {
-            ListItem liTemp = new ListItem(dr["NameOnExport"].ToString(), dr["ColumnID"].ToString());
+            ListItem liTemp = new ListItem(dr["DisplayName"].ToString(), dr["ColumnID"].ToString());
             lstNotUsed.Items.Add(liTemp);
         }
 
 
-        DataTable dtUsed = Common.DataTableFromText(@"SELECT ColumnID,NameOnExport,Systemname FROM [Column] WHERE 
-            Systemname not in('IsActive','TableID')   AND NameOnExport IS NOT NULL AND LEN(NameOnExport) > 0  
+        DataTable dtUsed = Common.DataTableFromText(@"SELECT ColumnID,DisplayName,Systemname FROM [Column] WHERE 
+            Systemname not in('IsActive','TableID')   AND DisplayName IS NOT NULL AND LEN(DisplayName) > 0  
             AND ColumnType NOT IN ('staticcontent') AND TableID=" + _theExportTemplate.TableID.ToString()
-    + @" AND ColumnID IN(SELECT ColumnID FROM ExportTemplateItem WHERE ExportTemplateID=" + _theExportTemplate.ExportTemplateID.ToString() + @") ORDER BY NameOnExport ASC");
+    + @" AND ColumnID IN(SELECT ColumnID FROM ExportTemplateItem WHERE ExportTemplateID=" + _theExportTemplate.ExportTemplateID.ToString() + @") ORDER BY DisplayName ASC");
 
         lstUsed.Items.Clear();
 
         foreach (DataRow dr in dtUsed.Rows)
         {
-            ListItem liTemp = new ListItem(dr["NameOnExport"].ToString(), dr["ColumnID"].ToString());
+            ListItem liTemp = new ListItem(dr["DisplayName"].ToString(), dr["ColumnID"].ToString());
             lstUsed.Items.Add(liTemp);
         }
 

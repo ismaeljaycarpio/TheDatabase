@@ -90,8 +90,8 @@ public partial class Pages_Security_Role : SecurePage
         try
         {
             int iTN = 0;
-           
 
+            ViewState[gvTheGrid.ID + "PageIndex"] = (iStartIndex / gvTheGrid.PageSize) + 1;
             gvTheGrid.DataSource = SecurityManager.Role_Select(null,
                 txtRoleSearch.Text.Trim(), "", "", null, null,
                 gvTheGrid.GridViewSortColumn, gvTheGrid.GridViewSortDirection == SortDirection.Ascending ? "ASC" : "DESC",
@@ -109,6 +109,11 @@ public partial class Pages_Security_Role : SecurePage
             {
                 _gvPager = (Common_Pager)gvr.FindControl("Pager");
                 _gvPager.AddURL = GetAddURL();
+                if (ViewState[gvTheGrid.ID + "PageIndex"] != null)
+                    _gvPager.PageIndex = int.Parse(ViewState[gvTheGrid.ID + "PageIndex"].ToString());
+
+                _gvPager.PageSize = gvTheGrid.PageSize;
+                _gvPager.TotalRows = iTN;
             }
             if (iTN == 0)
             {
@@ -168,7 +173,7 @@ public partial class Pages_Security_Role : SecurePage
 
     protected void Pager_BindTheGridAgain(object sender, EventArgs e)
     {
-        BindTheGrid(_gvPager.StartIndex, _gvPager._gridView.PageSize);
+        BindTheGrid(_gvPager.StartIndex, _gvPager.PageSize);
     }
 
     protected void Pager_OnApplyFilter(object sender, EventArgs e)
@@ -196,11 +201,11 @@ public partial class Pages_Security_Role : SecurePage
         {
             DeleteItem(sCheck);
             BindTheGrid(_gvPager.StartIndex, gvTheGrid.PageSize);
-            _gvPager._gridView.PageIndex = _gvPager.PageIndex - 1;
-            if (_gvPager._gridView.Rows.Count == 0 && _gvPager._gridView.PageIndex > 0)
-            {
-                BindTheGrid(_gvPager.StartIndex - gvTheGrid.PageSize, gvTheGrid.PageSize);
-            }
+            //_gvPager._gridView.PageIndex = _gvPager.PageIndex - 1;
+            //if (_gvPager._gridView.Rows.Count == 0 && _gvPager._gridView.PageIndex > 0)
+            //{
+            //    BindTheGrid(_gvPager.StartIndex - gvTheGrid.PageSize, gvTheGrid.PageSize);
+            //}
         }
 
     }

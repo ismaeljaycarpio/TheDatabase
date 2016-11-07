@@ -33,22 +33,22 @@ public partial class Pages_Record_ViewEditPage : SecurePage
     protected void Page_Load(object sender, EventArgs e)
     {
 
-        string strViewItemfancy = @"
-                    $(function () {
-                            $('.popuplinkVT').fancybox({
-                                scrolling: 'auto',
-                                type: 'iframe',
-                                'transitionIn': 'elastic',
-                                'transitionOut': 'none',
-                                width: 1000,
-                                height: 400,
-                                titleShow: false
-                            });
-                        });
+//        string strViewItemfancy = @"
+//                    $(function () {
+//                            $('.popuplinkVT').fancybox({
+//                                scrolling: 'auto',
+//                                type: 'iframe',
+//                                'transitionIn': 'elastic',
+//                                'transitionOut': 'none',
+//                                width: 1000,
+//                                height: 400,
+//                                titleShow: false
+//                            });
+//                        });
+//
+//                ";
 
-                ";
-
-        ScriptManager.RegisterStartupScript(this, this.GetType(), "strViewItemfancy", strViewItemfancy, true);
+//        ScriptManager.RegisterStartupScript(this, this.GetType(), "strViewItemfancy", strViewItemfancy, true);
 
         if(!IsPostBack)
         {

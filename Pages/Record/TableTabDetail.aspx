@@ -2,8 +2,8 @@
     CodeFile="TableTabDetail.aspx.cs" Inherits="Pages_Record_TableTabDetail" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HomeContentPlaceHolder" runat="Server">
-     <link href="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.css")%>" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.pack.js")%>"></script>
+   <%--  <link href="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.css")%>" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.pack.js")%>"></script>--%>
 
 
 
@@ -77,7 +77,7 @@
                         </td>
                         <td align="left">
                             <div style="width: 40px; height: 40px;">
-                                <asp:UpdateProgress class="ajax-indicator" ID="UpdateProgress2" runat="server">
+                                <%--<asp:UpdateProgress class="ajax-indicator" ID="UpdateProgress2" runat="server">
                                     <ProgressTemplate>
                                         <table style="width: 100%; text-align: center">
                                             <tr>
@@ -87,7 +87,7 @@
                                             </tr>
                                         </table>
                                     </ProgressTemplate>
-                                </asp:UpdateProgress>
+                                </asp:UpdateProgress>--%>
                             </div>
                         </td>
                     </tr>

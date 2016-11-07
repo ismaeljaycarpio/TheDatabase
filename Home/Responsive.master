@@ -33,10 +33,10 @@
 
 </head>
 <body>
-    <div id="loadingredirect" title="Click to hide!">
+   <%-- <div id="loadingredirect" title="Click to hide!">
         <img alt="loading..." src="../../Images/ajax.gif" />
-    </div>
-
+    </div>--%>
+     <%--<script type="text/javascript" src="<%=ResolveUrl("~/Script/jquery-1.11.3.min.js")%>"></script>--%>
     <script type="text/javascript" src="<%=ResolveUrl("~/script/jquery.js")%>"></script>
     <script type="text/javascript" src="<%=ResolveUrl("~/JS/Common.js")%>"></script>
     <script type="text/javascript" src="<%=ResolveUrl("~/JS/modernizr.custom.80028.js")%>"></script>
@@ -46,19 +46,19 @@
 
     <script type="text/javascript">
         $(window).load(function () {
-            $("#loadingredirect").fadeOut();
+            $(".ajax-indicator-full").fadeOut();
         })
 
         $(document).ready(function () {
 
             function ShowLoadingContent() {
-                $("#loadingredirect").fadeIn();
+                $(".ajax-indicator-full").fadeIn();
             }
 
-            $("#loadingredirect")
+            $(".ajax-indicator-full")
             .click(
               function () {
-                  $("#loadingredirect").fadeOut();
+                  $(".ajax-indicator-full").fadeOut();
                   //alert('test');
               }
             );
@@ -67,10 +67,13 @@
            .click(
              function () {
                  if ($(this).attr("href").indexOf('lkLogout') > 0) {
-                     //
+                     $(".ajax-indicator-full").fadeOut();
+                 }
+                 else if ($(this).attr("target") != null && $(this).attr("target").indexOf('blank') > 0) {
+                     $(".ajax-indicator-full").fadeOut();
                  }
                  else {
-                     $("#loadingredirect").fadeIn();
+                     $(".ajax-indicator-full").fadeIn();
                  }
              }
            );
@@ -78,14 +81,19 @@
             $(".staticmenuitem a")
               .click(
                 function () {
-                    $("#loadingredirect").fadeIn();
+                    if ($(this).attr("target") != null && $(this).attr("target").indexOf('blank') > 0) {
+                        $(".ajax-indicator-full").fadeOut();
+                    }
+                    else {
+                        $(".ajax-indicator-full").fadeIn();
+                    }
                 }
               );
 
             $(".staticmenuitemtop a")
              .click(
                function () {
-                   $("#loadingredirect").fadeIn();
+                   $(".ajax-indicator-full").fadeIn();
                }
              );
 
@@ -93,17 +101,23 @@
             .click(
               function () {
                   if (this.id.indexOf('EditHyperLink') > 0 || this.id.indexOf('viewHyperLink') > 0) {
-                      $("#loadingredirect").fadeIn();
+                      $(".ajax-indicator-full").fadeIn();
                   }
               }
             );
 
+            $(".btn")
+               .click(
+                 function () {
+                     $(".ajax-indicator-full").fadeIn();
+                 }
+               );
 
             $(".pagertable a")
            .click(
              function () {
                  if (this.id.indexOf('HyperAdd') > 0) {
-                     $("#loadingredirect").fadeIn();
+                     $(".ajax-indicator-full").fadeIn();
                  }
              }
            );
@@ -113,7 +127,7 @@
             function () {
                 if (this.id.indexOf('hlShowGraph') > 0 || this.id.indexOf('hlUpload') > 0
                     || this.id.indexOf('hlConfig') > 0) {
-                    $("#loadingredirect").fadeIn();
+                    $(".ajax-indicator-full").fadeIn();
                 }
             }
           );
@@ -122,13 +136,13 @@
            .click(
              function () {
                  if (this.id.indexOf('hlBack') > 0) {
-                     $("#loadingredirect").fadeIn();
+                     $(".ajax-indicator-full").fadeIn();
                  }
              }
            );
 
             $(document).ready(function () {
-                $("#loadingredirect").fadeOut();
+                $(".ajax-indicator-full").fadeOut();
             });
         });
 
@@ -138,6 +152,22 @@
 
         <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true" AsyncPostBackTimeout="36000">
         </asp:ScriptManager>
+
+        <asp:UpdateProgress class="ajax-indicator-full" ID="upMaster" runat="server">
+    <ProgressTemplate>
+        <table style="width: 100%; height: 100%; text-align: center;">
+            <tr valign="middle">
+                <td>
+                    <p style="font-size:12px;">
+                        Please wait...
+                    </p>
+                    <asp:Image runat="server" AlternateText="Processing..." ImageUrl="~/Images/ajax.gif" />
+                </td>
+            </tr>
+        </table>
+    </ProgressTemplate>
+</asp:UpdateProgress>
+
 
         <input id="Hidden1" type="hidden" />
         <asp:HiddenField runat="server" ID="hfFlashSupport" Value="no" />
@@ -152,7 +182,6 @@
         </asp:UpdatePanel>
 
         <div class="container MiddleBody">
-
             <%-- Renew --%>
             <div class="row row-no-padding">
                 <div class="col-md-12">
@@ -174,68 +203,119 @@
             </div>
 
             <%-- Header --%>
-            <div class="row">
-                <div class="navbar-header">                    
-                    <a class="navbar-brand visible-xs nounderline pull-right" href="#" id="lblAccountName"></a>
+            <div class="row row-no-padding">
+                <div class="navbar-header">
+                    <%--<a class="navbar-brand visible-xs nounderline pull-right text-right" href="#" id="lblAccountName" data-toggle="collapse" data-target="#userMenu" aria-expanded="false"></a>
                     <button type="button"
-                        class="navbar-toggle"
+                        class="navbar-toggle pull-right text-right"
                         data-toggle="collapse"
                         data-target="#userMenu"
                         aria-expanded="false">
                         <span class="sr-only">Toggle navigation</span>
-                        <asp:Image ID="Image1" runat="server" ImageUrl="~/Images/House.png" />
-                    </button>
+                        <asp:Image ID="Image1" runat="server" ImageUrl="~/Images/House.png"/>
+                    </button>--%>
+                    <div class="pull-right">
+                        <a class="navbar-brand visible-xs pull-right text-right" id="lnkMenuProfile">
+                            <asp:Image ID="Image4" runat="server" ImageUrl="~/Images/Head_Blue.png" />
+                            <div id="divMenuProfile" class="messagepop pop">
+                                <ul id="ulDivMenuProfile">
+                                </ul>
+                            </div>
+                        </a>
+                        <a class="navbar-brand visible-xs nounderline pull-right text-right" id="lnkMenuDocs">
+                            <asp:Image ID="Image3" runat="server" ImageUrl="~/Images/Doc_Menu.png" />
+                        </a>
+                        <a class="navbar-brand visible-xs nounderline pull-right text-right" id="lnkMenuAccounts">
+                            <asp:Image ID="imgResponsiveHouse" runat="server" ImageUrl="~/Images/House.png" />
+                            <div id="divMenuAccounts" class="messagepop pop">
+                                <ul id="ulDivMenuAccounts">
+                                </ul>
+                            </div>
+                        </a>
+
+                    </div>
+
                     <a class="navbar-brand" href="#">
-                        <asp:Image ID="imgLogo" runat="server" ImageUrl="~/Images/logo.png" alt="The Database Logo" />
+                        <asp:Image ID="imgLogo" runat="server" ImageUrl="~/Images/logo.png" alt="The Database Logo" CssClass="img-responsive" />
                     </a>
                 </div>
-                <div class="navbar-collapse collapse" id="userMenu">
-                    <div class="nav navbar-nav navbar-right">
 
-                        <%-- Profile --%>
-                        <div class="navbar-right">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <asp:Image ID="Image2" runat="server" ImageUrl="~/Images/Head_Blue.png" /></td>
-                                    <td>
-                                        <asp:Menu ID="menuProfile"
+                <%--<div class="navbar-collapse collapse nav navbar-nav navbar-right pull-right">--%>
+                <%-- Profile --%>
+                <div class="navbar-collapse collapse navbar-right" id="userMenuProfile">
+                    <table>
+                        <tr>
+                            <td>
+                                <asp:Image ID="Image2" runat="server" ImageUrl="~/Images/Head_Blue.png" /></td>
+                            <td>
+                                <asp:Menu ID="menuProfile"
+                                    runat="server"
+                                    IncludeStyleBlock="false"
+                                    Orientation="Horizontal"
+                                    EnableViewState="false"
+                                    RenderingMode="List"
+                                    SkipLinkText=""
+                                    StaticMenuStyle-CssClass="nav navbar-nav"
+                                    DynamicMenuStyle-CssClass="dropdown-menu">
+                                    <StaticMenuItemStyle CssClass="staticmenuitemtop" />
+                                    <StaticHoverStyle CssClass="staticmenuhover" />
+                                    <DynamicHoverStyle CssClass="dynamicmenuhover" />
+                                    <DynamicMenuItemStyle CssClass="dynamicmenuitem" />
+                                    <StaticSelectedStyle CssClass="staticselecteditem" />
+                                    <DynamicSelectedStyle CssClass="staticselecteditem" />
+                                </asp:Menu>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <%-- Docs --%>
+                <div class="navbar-collapse collapse navbar-right" id="userMenuDocs">
+                    <table>
+                        <tr>
+                            <td>
+                                <asp:Image ID="imgMenuOpen" runat="server" ImageUrl="~/Images/Doc_Menu.png" /></td>
+                            <td>
+                                <asp:Menu ID="menuOpen"
+                                    runat="server"
+                                    IncludeStyleBlock="false"
+                                    Orientation="Horizontal"
+                                    EnableViewState="false"
+                                    RenderingMode="List"
+                                    StaticMenuStyle-CssClass="nav navbar-nav"
+                                    DynamicMenuStyle-CssClass="dropdown-menu"
+                                    SkipLinkText="">
+                                    <StaticMenuItemStyle CssClass="staticmenuitem" />
+                                    <StaticHoverStyle CssClass="staticmenuhover" />
+                                    <DynamicHoverStyle CssClass="dynamicmenuhover" />
+                                    <DynamicMenuItemStyle CssClass="dynamicmenuitem" />
+                                    <StaticSelectedStyle CssClass="staticselecteditem" />
+                                    <DynamicSelectedStyle CssClass="staticselecteditem" />
+                                </asp:Menu>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <%-- Account --%>
+                <div class="navbar-collapse collapse navbar-right" id="userMenuAccount">
+                    <table>
+                        <tr>
+                            <td>
+                                <asp:Image ID="imgHouse" runat="server" ImageUrl="~/Images/House.png" />
+                            </td>
+                            <td>
+                                <asp:UpdatePanel ID="upMasterUpdatePanel1" runat="server" UpdateMode="Conditional">
+                                    <ContentTemplate>
+                                        <asp:Menu ID="menuAccount"
+                                            Visible="true"
                                             runat="server"
-                                            IncludeStyleBlock="false"
                                             Orientation="Horizontal"
                                             EnableViewState="false"
                                             RenderingMode="List"
                                             SkipLinkText=""
                                             StaticMenuStyle-CssClass="nav navbar-nav"
                                             DynamicMenuStyle-CssClass="dropdown-menu">
-                                            <StaticMenuItemStyle CssClass="staticmenuitemtop" />
-                                            <StaticHoverStyle CssClass="staticmenuhover" />
-                                            <DynamicHoverStyle CssClass="dynamicmenuhover" />
-                                            <DynamicMenuItemStyle CssClass="dynamicmenuitem" />
-                                            <StaticSelectedStyle CssClass="staticselecteditem" />
-                                            <DynamicSelectedStyle CssClass="staticselecteditem" />
-                                        </asp:Menu>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-
-                        <%-- Docs --%>
-                        <div class="navbar-right">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <asp:Image ID="imgMenuOpen" runat="server" ImageUrl="~/Images/Doc_Menu.png" /></td>
-                                    <td>
-                                        <asp:Menu ID="menuOpen"
-                                            runat="server"
-                                            IncludeStyleBlock="false"
-                                            Orientation="Horizontal"
-                                            EnableViewState="false"
-                                            RenderingMode="List"
-                                            StaticMenuStyle-CssClass="nav navbar-nav"
-                                            DynamicMenuStyle-CssClass="dropdown-menu"
-                                            SkipLinkText="">
                                             <StaticMenuItemStyle CssClass="staticmenuitem" />
                                             <StaticHoverStyle CssClass="staticmenuhover" />
                                             <DynamicHoverStyle CssClass="dynamicmenuhover" />
@@ -243,48 +323,16 @@
                                             <StaticSelectedStyle CssClass="staticselecteditem" />
                                             <DynamicSelectedStyle CssClass="staticselecteditem" />
                                         </asp:Menu>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-
-                        <%-- Account --%>
-                        <div class="navbar-right">
-                            <table>
-                                <tr>
-                                    <td>
-                                        <asp:Image ID="imgHouse" runat="server" ImageUrl="~/Images/House.png" />
-                                    </td>
-                                    <td>
-                                        <asp:UpdatePanel ID="upMasterUpdatePanel1" runat="server" UpdateMode="Conditional">
-                                            <ContentTemplate>
-                                                <asp:Menu ID="menuAccount"
-                                                    Visible="true"
-                                                    runat="server"
-                                                    Orientation="Horizontal"
-                                                    EnableViewState="false"
-                                                    RenderingMode="List"
-                                                    SkipLinkText=""
-                                                    StaticMenuStyle-CssClass="nav navbar-nav"
-                                                    DynamicMenuStyle-CssClass="dropdown-menu">
-                                                    <StaticMenuItemStyle CssClass="staticmenuitem" />
-                                                    <StaticHoverStyle CssClass="staticmenuhover" />
-                                                    <DynamicHoverStyle CssClass="dynamicmenuhover" />
-                                                    <DynamicMenuItemStyle CssClass="dynamicmenuitem" />
-                                                    <StaticSelectedStyle CssClass="staticselecteditem" />
-                                                    <DynamicSelectedStyle CssClass="staticselecteditem" />
-                                                </asp:Menu>
-                                                <asp:LinkButton ID="lkChangeAccount" runat="server" OnClick="lkChangeAccount_Click"
-                                                    CausesValidation="false" Style="display: none;"></asp:LinkButton>
-                                                <asp:HiddenField runat="server" ID="hfAccountIDToChangeAccount" Value="" ClientIDMode="Static" />
-                                            </ContentTemplate>
-                                        </asp:UpdatePanel>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
+                                        <asp:LinkButton ID="lkChangeAccount" runat="server" OnClick="lkChangeAccount_Click"
+                                            CausesValidation="false" Style="display: none;"></asp:LinkButton>
+                                        <asp:HiddenField runat="server" ID="hfAccountIDToChangeAccount" Value="" ClientIDMode="Static" />
+                                    </ContentTemplate>
+                                </asp:UpdatePanel>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
+                <%--</div>--%>
             </div>
 
             <%-- Main Navigation --%>
@@ -300,7 +348,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand visible-xs nounderline" href="#" id="lblSelectedMenu"></a>
+                    <a class="navbar-brand visible-xs nounderline" href="#" id="lblSelectedMenu" data-toggle="collapse" data-target="#userMenuETS" aria-expanded="false"></a>
                 </div>
                 <div class="navbar-collapse collapse navbar-right" id="userMenuETS">
                     <asp:Menu ID="menuETS"
@@ -330,9 +378,11 @@
 
             <%-- Content --%>
             <div class="row row-no-padding">
-                <div class="col-md-12 table-responsive"  id="Content">
-                    <asp:ContentPlaceHolder ID="HomeContentPlaceHolder" runat="server">
-                    </asp:ContentPlaceHolder>
+                <div class="table-responsive" id="Content">
+                    <div class="body-content-wrapper">
+                        <asp:ContentPlaceHolder ID="HomeContentPlaceHolder" runat="server">
+                        </asp:ContentPlaceHolder>
+                    </div>
                 </div>
             </div>
 
@@ -381,14 +431,16 @@
                             </ul>
                         </div>
                         <div class="copyright-text" id="divCopyright" runat="server">
-                            © 2012-2016. All rights reserved. <a href="http://www.thedatabase.net/">www.TheDatabase.net</a>
+                            © 2012-2016. All rights reserved. <a target="_blank" href="http://www.dbgurus.com.au/thedatabase.html">www.TheDatabase.net</a>
                         </div>
                     </div>
                 </div>
             </div>
 
+
         </div>
-        
+
+
         <script type="text/javascript">
             //Disable the default MouseOver functionality of ASP.Net Menu control.
             Sys.WebForms.Menu._elementObjectMapper.getMappedObject = function () {
@@ -403,7 +455,7 @@
                 $(".dropdown-menu").parent().removeClass().addClass('dropdown');
                 $(".dropdown-menu").addClass("sub-menu");
                 $(".dropdown>a").removeClass().addClass('dropdown-toggle').attr('data-toggle', 'dropdown').attr("aria-haspopup", "true").attr("aria-expanded", "false");
-                $(".dropdown>a").addClass("trigger right-caret");
+                $(".dropdown>a").addClass("trigger down-caret");
                 $(".dropdown>a").addClass("staticmenuitem");
 
                 //chk if has submenu then disable the redirect effect on parent
@@ -423,50 +475,117 @@
                 $(".dropdown-menu > li > a.trigger").on("click", function (e) {
                     var current = $(this).next();
                     var grandparent = $(this).parent().parent();
-                    if ($(this).hasClass('left-caret') || $(this).hasClass('right-caret'))
-                        $(this).toggleClass('right-caret left-caret');
-                    grandparent.find('.left-caret').not(this).toggleClass('right-caret left-caret');
+                    if ($(this).hasClass('down-caret') || $(this).hasClass('up-caret'))
+                        $(this).toggleClass('up-caret down-caret');
+                    grandparent.find('.up-caret').not(this).toggleClass('down-caret up-caret');
                     grandparent.find(".sub-menu:visible").not(current).hide();
                     current.toggle();
                     e.stopPropagation();
                 });
                 $(".dropdown-menu > li > a:not(.trigger)").on("click", function () {
                     var root = $(this).closest('.dropdown');
-                    root.find('.left-caret').toggleClass('right-caret left-caret');
+                    root.find('.up-caret').toggleClass('down-caret up-caret');
                     root.find('.sub-menu:visible').hide();
                 });
 
-                //menu account
-                if ($("#ctl00_menuAccount > ul.level1 > li > a").text() != "")
-                {
-                    lblAccountName.text = $("#ctl00_menuAccount > ul.level1 > li > a").text();
+                //for icon click
+                if ($("div#divMenuProfile ul li").length >= 1) {
+
                 }
-                else
-                {
-                    lblAccountName.text = $("#ctl00_menuProfile > ul.level1 > li > a").text();
+                else {
+                    $("#ctl00_menuProfile\\:submenu\\:2").children().clone().appendTo("#ulDivMenuProfile");
                 }
 
+                if ($("div#divMenuDocs ul li").length >= 1) {
+
+                }
+                else {
+                    lnkMenuDocs.href = $("#ctl00_menuOpen ul li a").attr("href");
+                }
+
+                if ($("div#divMenuAccounts ul li").length >= 1) {
+
+                }
+                else {
+                    $("#ctl00_menuAccount\\:submenu\\:10").children().clone().appendTo("#ulDivMenuAccounts");
+                }
+
+                function deselect(e, divId) {
+                    $(divId + '.pop').slideFadeToggle(function () {
+                        e.removeClass('selected');
+                    });
+                }
+
+                $("body").click(function () {
+                    $("#divMenuAccounts").css('display', 'none');
+                    $("#divMenuProfile").css('display', 'none');
+                });
+
+                $(function () {
+                    $("#lnkMenuProfile").on('click', function (e) {
+                        e.stopPropagation();
+                        $("#divMenuAccounts").css('display', 'none');
+                        if ($(this).hasClass('selected')) {
+                            deselect($(this), "#divMenuProfile");
+                        }
+                        else {
+                            $(this).addClass("selected");
+                            $("#divMenuProfile").slideFadeToggle();
+                        }
+                        return true;
+                    });
+
+
+                    $("#lnkMenuAccounts").on('click', function (e) {
+                        $("#divMenuProfile").css('display', 'none');
+                        e.stopPropagation();
+                        if ($(this).hasClass('selected')) {
+                            deselect($(this), "#divMenuAccounts");
+                        }
+                        else {
+                            $(this).addClass("selected");
+                            $("#divMenuAccounts").slideFadeToggle();
+                        }
+                        return true;
+                    });
+                });
+
+                $.fn.slideFadeToggle = function (easing, callback) {
+                    return this.animate({ opacity: 'toggle', height: 'toggle' }, 'fast', easing, callback);
+                };
+
+                //menu account
+                //if ($("#ctl00_menuAccount > ul.level1 > li > a").text() != "")
+                //{
+                //    lblAccountName.text = $("#ctl00_menuAccount > ul.level1 > li > a").text();
+                //}
+                //else
+                //{
+                //    lblAccountName.text = $("#ctl00_menuProfile > ul.level1 > li > a").text();
+                //}
+
                 //selected menu
-                if($(".TopTitle").is("select"))
-                {
+                if ($(".TopTitle").is("select")) {
                     lblSelectedMenu.text = $(".TopTitle").find(":selected").text();
                 }
-                else if ($(".TopTitle > span").text() != "")
-                {
+                else if ($(".TopTitle > span").text() != "") {
                     lblSelectedMenu.text = $(".TopTitle > span").text();
                 }
-                else if ($(".TopTitle").text() != "")
-                {
+                else if ($(".TopTitle").text() != "") {
                     lblSelectedMenu.text = $(".TopTitle").text();
                 }
-                else
-                {
+                else if ($("a.level1").parent(".static").hasClass("active")) {
+                    lblSelectedMenu.text = $("a.level1.active").text();
+                    //console.log(lblSelectedMenu.text);
+                }
+                else {
                     lblSelectedMenu.text = "Default";
                 }
 
-                console.log($(".TopTitle > span").text());
-                console.log($(".TopTitle > span").text());
-                console.log($(".TopTitle").text());
+                //console.log($(".TopTitle > span").text());
+                //console.log($(".TopTitle > span").text());
+                //console.log($("a.level1 active").text());
+                //console.log($(".TopTitle").text());
 
                 //$("#ctl00_menuETS > ul > li > a").on('click', function () {
                 //    $("#lblSelectedMenu").val($(this).text());
@@ -501,6 +620,5 @@
             }
         });
     </script>
-
 </body>
 </html>

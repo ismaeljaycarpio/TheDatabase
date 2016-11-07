@@ -60,7 +60,7 @@
 <body>
     <form id="form1" runat="server">
    <script type="text/javascript" src="<%=ResolveUrl("~/script/jquery.js")%>"></script>
-   
+    <%--<script type="text/javascript" src="<%=ResolveUrl("~/Script/jquery-1.11.3.min.js")%>"></script>--%>
     <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true">
     </asp:ScriptManager>
      <%--<div runat="server" id="divRenew" visible="false" class="divrenew">

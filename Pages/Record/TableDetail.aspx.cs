@@ -72,7 +72,26 @@ public partial class Pages_Record_TableDetail : SecurePage
         divHistory.Visible = false;
     }
 
+    protected void lnkImportTemplateSave_Click(object sender, EventArgs e)
+    {
+        Table editTable = RecordManager.ets_Table_Details(int.Parse(_qsTableID));
+        editTable.DefaultImportTemplateID = null;
+        if(ddlTemplate.SelectedValue!="")
+        {
+            editTable.DefaultImportTemplateID = int.Parse(ddlTemplate.SelectedValue);
+        }
+        RecordManager.ets_Table_Update(editTable);
 
+        if (editTable.DefaultImportTemplateID!=null)
+        {
+            Session["tdbmsgpb"] = "Default template saved.";
+        }
+        else
+        {
+            Session["tdbmsgpb"] = "Default template removed.";
+        }
+        
+    }
     protected void chkAnonymous_CheckedChanged(object sender, EventArgs e)
     {
         if (chkAnonymous.Checked)
@@ -152,7 +171,7 @@ public partial class Pages_Record_TableDetail : SecurePage
                                 width: 1200,
                                 height: 800,
                                 titleShow: false,
-                                onClosed: function () { $('#loadingredirect').fadeIn(); window.parent.location.reload();}
+                                onClosed: function () { $('.ajax-indicator-full').fadeIn(); window.parent.location.reload();}
                             });
                         }); 
 
@@ -768,7 +787,7 @@ public partial class Pages_Record_TableDetail : SecurePage
             //gvChangedLog.DataSource = RecordManager.ets_Record_Changes_Select(
             //        (int)_iRecordID,int.Parse(_qsTableID), iStartIndex, iMaxRows, ref  iTN, ref _iCLColumnCount);
 
-
+            ViewState[gvChangedLog.ID + "PageIndex"] = (iStartIndex / gvChangedLog.PageSize) + 1;
             gvChangedLog.DataSource = RecordManager.Table_Audit_Summary(
                    int.Parse(_qsTableID), iStartIndex, iMaxRows, ref  iTN);
 
@@ -788,7 +807,11 @@ public partial class Pages_Record_TableDetail : SecurePage
             if (gvr != null)
             {
                 _gvCL_Pager = (Common_Pager)gvr.FindControl("CL_Pager");
+                if (ViewState[gvChangedLog.ID + "PageIndex"] != null)
+                    _gvCL_Pager.PageIndex = int.Parse(ViewState[gvChangedLog.ID + "PageIndex"].ToString());
 
+                _gvCL_Pager.PageSize = gvChangedLog.PageSize;
+                _gvCL_Pager.TotalRows = iTN;
             }
 
 
@@ -806,7 +829,7 @@ public partial class Pages_Record_TableDetail : SecurePage
 
     protected void CL_Pager_BindTheGridAgain(object sender, EventArgs e)
     {
-        BindTheChangedLogGrid(_gvCL_Pager.StartIndex, _gvCL_Pager._gridView.PageSize);
+        BindTheChangedLogGrid(_gvCL_Pager.StartIndex, _gvCL_Pager.PageSize);
     }
 
    
@@ -902,24 +925,25 @@ public partial class Pages_Record_TableDetail : SecurePage
 
         gvTheGrid.Columns[1].Visible = p_bEnable;
         gvTheGrid.Columns[2].Visible = p_bEnable;
-        gvTheGrid.Columns[12].Visible = p_bEnable;
+        gvTheGrid.Columns[9].Visible = p_bEnable;
 
 
         ddlHeaderText.Enabled = p_bEnable;
-        ddlDataUpdateUniqueColumnID.Enabled = false;
+        //ddlDataUpdateUniqueColumnID.Enabled = false;
+
         txtHeaderColor.Enabled = p_bEnable;
 
         divUserAdd.Visible = p_bEnable;
 
         txtTable.Enabled = p_bEnable;
 
-        chkIsPosition.Enabled = p_bEnable;
+        //chkIsPosition.Enabled = p_bEnable;
         ddlPinImages.Visible = p_bEnable;
         txtMaxTimeBetweenRecords.Enabled = p_bEnable;
         txtLateDataDays.Enabled = p_bEnable;
 
-        txtImportDataStartRow.Enabled = p_bEnable;
-        txtImportColumnHeaderRow.Enabled = p_bEnable;
+        //txtImportDataStartRow.Enabled = p_bEnable;
+        //txtImportColumnHeaderRow.Enabled = p_bEnable;
         //chkAddMissingLocation.Enabled = p_bEnable;
         ddlMaxTimeBetweenRecordsUnit.Enabled = p_bEnable;
 
@@ -941,7 +965,7 @@ public partial class Pages_Record_TableDetail : SecurePage
 
 
         chkAddUserRecord.Enabled = p_bEnable;
-        chkDataUpdateUniqueColumnID.Enabled = false;
+        //chkDataUpdateUniqueColumnID.Enabled = false;
         ddlAddUserUserColumnID.Enabled = p_bEnable;
         ddlSortColumn.Enabled = p_bEnable;
         ddlAddUserPasswordColumnID.Enabled = p_bEnable;
@@ -1267,11 +1291,11 @@ public partial class Pages_Record_TableDetail : SecurePage
 
             if(theTable.AllowCopyRecords!=null && (bool)theTable.AllowCopyRecords)
             {
-                gvTheGrid.Columns[14].Visible = true;
+                gvTheGrid.Columns[11].Visible = true;
             }
             else
             {
-                gvTheGrid.Columns[14].Visible = false;
+                gvTheGrid.Columns[11].Visible = false;
             }
 
             if (_strActionMode == "edit")
@@ -1341,7 +1365,10 @@ public partial class Pages_Record_TableDetail : SecurePage
             {
                 chkAllowCopyRecords.Checked = (bool)theTable.AllowCopyRecords;
             }
-
+            if (theTable.ShowChildTabsOnAdd != null)
+            {
+                chkShowChildTabsOnAdd.Checked = (bool)theTable.ShowChildTabsOnAdd;
+            }
             if (theTable.ShowSentEmails != null)
                 chkShowSentEmails.Checked = (bool)theTable.ShowSentEmails;
 
@@ -1391,7 +1418,10 @@ public partial class Pages_Record_TableDetail : SecurePage
             //    chkDataUpdateUniqueColumnID.Checked = true;
             //    ddlDataUpdateUniqueColumnID.SelectedValue = theTable.DataUpdateUniqueColumnID.ToString();
             //}
-
+            if (theTable.DuplicateRecordAction != "" && ddlDuplicateRecordAction.Items.FindByValue(theTable.DuplicateRecordAction)!=null)
+            {
+                ddlDuplicateRecordAction.SelectedValue = theTable.DuplicateRecordAction;
+            }
             if (theTable.HeaderName != "")
             {
                 string strDisplayName = theTable.HeaderName.Replace("[", "");
@@ -1464,8 +1494,8 @@ public partial class Pages_Record_TableDetail : SecurePage
 
             hlPublicFormURL.NavigateUrl = Request.Url.Scheme +"://" + Request.Url.Authority + Request.ApplicationPath + "/Public.aspx?TableID=" + theTable.TableID.ToString();
             hlPublicFormURL.Text = hlPublicFormURL.NavigateUrl;
-            if (theTable.IsImportPositional != null)
-                chkIsPosition.Checked = (bool)theTable.IsImportPositional;
+            //if (theTable.IsImportPositional != null)
+            //    chkIsPosition.Checked = (bool)theTable.IsImportPositional;
 
             //if (theTable.MenuID!=null)
             //    hfMenuID.Value = theTable.MenuID.ToString();
@@ -1508,13 +1538,13 @@ public partial class Pages_Record_TableDetail : SecurePage
                     ddlUniqueColumnID2.SelectedValue = theTable.UniqueColumnID2.ToString();
             }
 
-            if (theTable.IsDataUpdateAllowed.HasValue && theTable.IsDataUpdateAllowed.Value)
-                chkDataUpdateUniqueColumnID.Checked = true;
+            //if (theTable.IsDataUpdateAllowed.HasValue && theTable.IsDataUpdateAllowed.Value)
+            //    chkDataUpdateUniqueColumnID.Checked = true;
 
-            if (theTable.ImportDataStartRow != null)
-            {
-                txtImportDataStartRow.Text = theTable.ImportDataStartRow.ToString();
-            }
+            //if (theTable.ImportDataStartRow != null)
+            //{
+            //    txtImportDataStartRow.Text = theTable.ImportDataStartRow.ToString();
+            //}
             if(theTable.DefaultImportTemplateID!=null)
             {
                 if (ddlTemplate.Items.FindByValue(theTable.DefaultImportTemplateID.ToString()) != null)
@@ -1522,10 +1552,10 @@ public partial class Pages_Record_TableDetail : SecurePage
             }
 
 
-            if (theTable.ImportColumnHeaderRow != null)
-            {
-                txtImportColumnHeaderRow.Text = theTable.ImportColumnHeaderRow.ToString();
-            }
+            //if (theTable.ImportColumnHeaderRow != null)
+            //{
+            //    txtImportColumnHeaderRow.Text = theTable.ImportColumnHeaderRow.ToString();
+            //}
             //if (theTable.AddMissingLocation != null)
             //{
             //    chkAddMissingLocation.Checked = (bool)theTable.AddMissingLocation;
@@ -2069,7 +2099,7 @@ public partial class Pages_Record_TableDetail : SecurePage
             //    {
 
             //        if (dtColumns.Rows[i]["DisplayTextSummary"] == DBNull.Value && dtColumns.Rows[i]["DisplayTextDetail"] == DBNull.Value
-            //           && dtColumns.Rows[i]["NameOnImport"] == DBNull.Value && dtColumns.Rows[i]["NameOnExport"] == DBNull.Value
+            //           && dtColumns.Rows[i]["ImportHeaderName"] == DBNull.Value && dtColumns.Rows[i]["NameOnExport"] == DBNull.Value
             //           && dtColumns.Rows[i]["MobileName"] == DBNull.Value)
             //        {
             //            dtColumns.Rows.RemoveAt(i);
@@ -2079,7 +2109,7 @@ public partial class Pages_Record_TableDetail : SecurePage
             //}
 
 
-
+            ViewState[gvTheGrid.ID + "PageIndex"] = (iStartIndex / gvTheGrid.PageSize) + 1;
             gvTheGrid.DataSource = dtColumns;
             gvTheGrid.VirtualItemCount = dtColumns.Rows.Count;
             gvTheGrid.DataBind();
@@ -2101,7 +2131,11 @@ public partial class Pages_Record_TableDetail : SecurePage
             if (gvr != null)
             {
                 _gvPager = (Common_Pager)gvr.FindControl("Pager");
+                if (ViewState[gvTheGrid.ID + "PageIndex"] != null)
+                    _gvPager.PageIndex = int.Parse(ViewState[gvTheGrid.ID + "PageIndex"].ToString());
 
+                _gvPager.PageSize = gvTheGrid.PageSize;
+                _gvPager.TotalRows = gvTheGrid.VirtualItemCount;
                 _gvPager.AddURL = GetAddURL();
 
                 if (_strSFTID != "")
@@ -2130,18 +2164,18 @@ public partial class Pages_Record_TableDetail : SecurePage
 
             Table theTable = RecordManager.ets_Table_Details(int.Parse(hfTableID.Value));
 
-            if (theTable.IsImportPositional == true)
-            {
-                gvTheGrid.Columns[11].Visible = false;
-                gvTheGrid.Columns[12].Visible = true;
+            //if (theTable.IsImportPositional == true)
+            //{
+            //    gvTheGrid.Columns[11].Visible = false;
+            //    gvTheGrid.Columns[12].Visible = true;
 
-            }
-            else
-            {
-                gvTheGrid.Columns[11].Visible = true;
-                gvTheGrid.Columns[12].Visible = false;
+            //}
+            //else
+            //{
+            //    gvTheGrid.Columns[11].Visible = true;
+            //    gvTheGrid.Columns[12].Visible = false;
 
-            }
+            //}
 
             if(_bIsAccountHolder==false)
             {
@@ -2211,15 +2245,15 @@ public partial class Pages_Record_TableDetail : SecurePage
             }
 
         }
-        if(chkDataUpdateUniqueColumnID.Checked)
-        {
+        //if(chkDataUpdateUniqueColumnID.Checked)
+        //{
             //if(ddlDataUpdateUniqueColumnID.SelectedValue=="")
             //{
             //    lblMsg.Text = "Please select Unique identifier for Allow data to be up updated.";
             //    ddlDataUpdateUniqueColumnID.Focus();
             //    return false;
             //}
-        }
+        //}
 
         //if (chkAnonymous.Checked)
         //{
@@ -2259,7 +2293,7 @@ public partial class Pages_Record_TableDetail : SecurePage
         }
 
 
-        BindTheGrid(_gvPager.StartIndex, _gvPager._gridView.PageSize);
+        BindTheGrid(_gvPager.StartIndex, _gvPager.PageSize);
     }
 
     protected void Pager_OnApplyFilter(object sender, EventArgs e)
@@ -2321,22 +2355,7 @@ public partial class Pages_Record_TableDetail : SecurePage
 
             }
 
-            //bool bDisplayRight = bool.Parse(DataBinder.Eval(e.Row.DataItem, "DisplayRight").ToString());
-
-            //if (DataBinder.Eval(e.Row.DataItem, "IsSystemColumn").ToString().ToLower() == "true")
-            //{
-            //    CheckBox chkDisplayTextSummary = (CheckBox)e.Row.FindControl("chkDisplayTextSummary");
-            //    chkDisplayTextSummary.Enabled = false;
-            //    CheckBox chkDisplayTextDetail = (CheckBox)e.Row.FindControl("chkDisplayTextDetail");
-            //    chkDisplayTextDetail.Enabled = false;
-            //    CheckBox chkNameOnImport = (CheckBox)e.Row.FindControl("chkNameOnImport");
-            //    chkNameOnImport.Enabled = false;
-            //    CheckBox chkDisplayRight = (CheckBox)e.Row.FindControl("chkDisplayRight");
-            //    chkDisplayRight.Enabled = false;
-            //    CheckBox chkNameOnExport = (CheckBox)e.Row.FindControl("chkNameOnExport");
-            //    chkNameOnExport.Enabled = false;
-
-            //}
+          
 
 
             if (bIsStandard)
@@ -2345,44 +2364,20 @@ public partial class Pages_Record_TableDetail : SecurePage
 
                 if (DataBinder.Eval(e.Row.DataItem, "SystemName").ToString() == "RecordID")
                 {
-                    //HyperLink hlEdit = (HyperLink)e.Row.FindControl("EditHyperLink");
-                    //hlEdit.Visible = false;
-
-                    //CheckBox chkDisplayTextSummary = (CheckBox)e.Row.FindControl("chkDisplayTextSummary");
-                    //chkDisplayTextSummary.Enabled = false;
-
-                    //CheckBox chkDisplayTextDetail = (CheckBox)e.Row.FindControl("chkDisplayTextDetail");
-                    //chkDisplayTextDetail.Enabled = false;
-
-
-                  
+                    
                     ddlImportance.Enabled = false;
 
-                    CheckBox chkNameOnImport = (CheckBox)e.Row.FindControl("chkNameOnImport");
-                    chkNameOnImport.Enabled = false;
-
-                    //CheckBox chkNameOnExport = (CheckBox)e.Row.FindControl("chkNameOnExport");
-                    //chkNameOnExport.Enabled = false;
+                    //CheckBox chkImportHeaderName = (CheckBox)e.Row.FindControl("chkImportHeaderName");
+                    //chkImportHeaderName.Enabled = false;
 
 
                 }
-                //if (DataBinder.Eval(e.Row.DataItem, "SystemName").ToString() == "LocationID")
-                //{
-                //    //CheckBox chkDisplayTextDetail = (CheckBox)e.Row.FindControl("chkDisplayTextDetail");
-                //    //chkDisplayTextDetail.Enabled = false;
-
-
-                //    //CheckBox chkGraph = (CheckBox)e.Row.FindControl("chkGraph");
-                //    //chkGraph.Enabled = false;
-
-                //}
-
+               
                 if (DataBinder.Eval(e.Row.DataItem, "SystemName").ToString() == "EnteredBy")
                 {
-                    //CheckBox chkDisplayTextDetail = (CheckBox)e.Row.FindControl("chkDisplayTextDetail");
-                    //chkDisplayTextDetail.Enabled = false;
-                    CheckBox chkNameOnImport = (CheckBox)e.Row.FindControl("chkNameOnImport");
-                    chkNameOnImport.Enabled = false;
+                   
+                    //CheckBox chkImportHeaderName = (CheckBox)e.Row.FindControl("chkImportHeaderName");
+                    //chkImportHeaderName.Enabled = false;
                     ddlImportance.Enabled = false;
                 }
 
@@ -2391,27 +2386,24 @@ public partial class Pages_Record_TableDetail : SecurePage
                     //CheckBox chkDisplayTextDetail = (CheckBox)e.Row.FindControl("chkDisplayTextDetail");
                     //chkDisplayTextDetail.Enabled = false;
 
-                    CheckBox chkNameOnImport = (CheckBox)e.Row.FindControl("chkNameOnImport");
-                    //chkNameOnImport.Enabled = false;
+                    //CheckBox chkImportHeaderName = (CheckBox)e.Row.FindControl("chkImportHeaderName");
+                    //chkImportHeaderName.Enabled = false;
 
                     //CheckBox chkGraph = (CheckBox)e.Row.FindControl("chkGraph");
                     //chkGraph.Enabled = false;
-                    if ((bool)_theTable.IsImportPositional)
-                    {
-                        if (DataBinder.Eval(e.Row.DataItem, "IsDateSingleColumn").ToString() == "False"
-                            && DataBinder.Eval(e.Row.DataItem, "PositionOnImport")!=null)
-                        {
-                            Label lblPositionOnImport = (Label)e.Row.FindControl("lblPositionOnImport");
-                            if (lblPositionOnImport != null)
-                            {
-                                lblPositionOnImport.Text = DataBinder.Eval(e.Row.DataItem, "PositionOnImport").ToString()
-                                    + "," + (int.Parse(DataBinder.Eval(e.Row.DataItem, "PositionOnImport").ToString()) + 1).ToString();
-                            }
-
-                        }
-
-                    }
-
+                    //if ((bool)_theTable.IsImportPositional)
+                    //{
+                    //    if (DataBinder.Eval(e.Row.DataItem, "IsDateSingleColumn").ToString() == "False"
+                    //        && DataBinder.Eval(e.Row.DataItem, "PositionOnImport")!=null)
+                    //    {
+                    //        Label lblPositionOnImport = (Label)e.Row.FindControl("lblPositionOnImport");
+                    //        if (lblPositionOnImport != null)
+                    //        {
+                    //            lblPositionOnImport.Text = DataBinder.Eval(e.Row.DataItem, "PositionOnImport").ToString()
+                    //                + "," + (int.Parse(DataBinder.Eval(e.Row.DataItem, "PositionOnImport").ToString()) + 1).ToString();
+                    //        }
+                    //    }
+                    //}
                 }
 
                 if (DataBinder.Eval(e.Row.DataItem, "SystemName").ToString() == "IsActive")
@@ -2442,18 +2434,18 @@ public partial class Pages_Record_TableDetail : SecurePage
 
             }
 
-            if (DataBinder.Eval(e.Row.DataItem, "ColumnType").ToString() == "file"
-                || DataBinder.Eval(e.Row.DataItem, "ColumnType").ToString() == "image")
-            {
-                CheckBox chkNameOnImport = (CheckBox)e.Row.FindControl("chkNameOnImport");
-                chkNameOnImport.Checked = false;
-                chkNameOnImport.Enabled = false;
+            //if (DataBinder.Eval(e.Row.DataItem, "ColumnType").ToString() == "file"
+            //    || DataBinder.Eval(e.Row.DataItem, "ColumnType").ToString() == "image")
+            //{
+            //    CheckBox chkImportHeaderName = (CheckBox)e.Row.FindControl("chkImportHeaderName");
+            //    chkImportHeaderName.Checked = false;
+            //    chkImportHeaderName.Enabled = false;
 
-            }
+            //}
             if (DataBinder.Eval(e.Row.DataItem, "ColumnType").ToString() == "data_retriever")
             {
-                CheckBox chkNameOnImport = (CheckBox)e.Row.FindControl("chkNameOnImport");
-                chkNameOnImport.Enabled = false;
+                //CheckBox chkImportHeaderName = (CheckBox)e.Row.FindControl("chkImportHeaderName");
+                //chkImportHeaderName.Enabled = false;
                 ddlImportance.Enabled = false;
             }
 
@@ -2465,26 +2457,26 @@ public partial class Pages_Record_TableDetail : SecurePage
 
             if (DataBinder.Eval(e.Row.DataItem, "ColumnType").ToString() == "content")
             {
-                CheckBox chkNameOnImport = (CheckBox)e.Row.FindControl("chkNameOnImport");
-                chkNameOnImport.Checked = false;
-                chkNameOnImport.Enabled = false;
+                //CheckBox chkImportHeaderName = (CheckBox)e.Row.FindControl("chkImportHeaderName");
+                //chkImportHeaderName.Checked = false;
+                //chkImportHeaderName.Enabled = false;
 
                 CheckBox chkDisplayTextSummary = (CheckBox)e.Row.FindControl("chkDisplayTextSummary");
                 chkDisplayTextSummary.Checked = false;
                 chkDisplayTextSummary.Enabled = false;
 
-                CheckBox chkNameOnExport = (CheckBox)e.Row.FindControl("chkNameOnExport");
-                chkNameOnExport.Checked = false;
-                chkNameOnExport.Enabled = false;
+                //CheckBox chkNameOnExport = (CheckBox)e.Row.FindControl("chkNameOnExport");
+                //chkNameOnExport.Checked = false;
+                //chkNameOnExport.Enabled = false;
                 ddlImportance.Enabled = false;
 
             }
 
             if (DataBinder.Eval(e.Row.DataItem, "ColumnType").ToString() == "calculation")
             {
-                CheckBox chkNameOnImport = (CheckBox)e.Row.FindControl("chkNameOnImport");
-                chkNameOnImport.Checked = false;
-                chkNameOnImport.Enabled = false;
+                //CheckBox chkImportHeaderName = (CheckBox)e.Row.FindControl("chkImportHeaderName");
+                //chkImportHeaderName.Checked = false;
+                //chkImportHeaderName.Enabled = false;
 
                 ddlImportance.Enabled = false;
 
@@ -2492,17 +2484,17 @@ public partial class Pages_Record_TableDetail : SecurePage
 
             if (DataBinder.Eval(e.Row.DataItem, "ColumnType").ToString() == "location")
             {
-                CheckBox chkNameOnImport = (CheckBox)e.Row.FindControl("chkNameOnImport");
-                chkNameOnImport.Checked = false;
-                chkNameOnImport.Enabled = false;
+                //CheckBox chkImportHeaderName = (CheckBox)e.Row.FindControl("chkImportHeaderName");
+                //chkImportHeaderName.Checked = false;
+                //chkImportHeaderName.Enabled = false;
 
                 //CheckBox chkDisplayTextSummary = (CheckBox)e.Row.FindControl("chkDisplayTextSummary");
                 //chkDisplayTextSummary.Checked = false;
                 //chkDisplayTextSummary.Enabled = false;
 
-                CheckBox chkNameOnExport = (CheckBox)e.Row.FindControl("chkNameOnExport");
-                chkNameOnExport.Checked = false;
-                chkNameOnExport.Enabled = false;
+                //CheckBox chkNameOnExport = (CheckBox)e.Row.FindControl("chkNameOnExport");
+                //chkNameOnExport.Checked = false;
+                //chkNameOnExport.Enabled = false;
 
                 //ddlImportance.Enabled = false;
 
@@ -2510,34 +2502,34 @@ public partial class Pages_Record_TableDetail : SecurePage
 
             if (DataBinder.Eval(e.Row.DataItem, "ColumnType").ToString() == "staticcontent")
             {
-                CheckBox chkNameOnImport = (CheckBox)e.Row.FindControl("chkNameOnImport");
-                chkNameOnImport.Checked = false;
-                chkNameOnImport.Enabled = false;
+                //CheckBox chkImportHeaderName = (CheckBox)e.Row.FindControl("chkImportHeaderName");
+                //chkImportHeaderName.Checked = false;
+                //chkImportHeaderName.Enabled = false;
 
                 CheckBox chkDisplayTextSummary = (CheckBox)e.Row.FindControl("chkDisplayTextSummary");
                 chkDisplayTextSummary.Checked = false;
                 chkDisplayTextSummary.Enabled = false;
 
-                CheckBox chkNameOnExport = (CheckBox)e.Row.FindControl("chkNameOnExport");
-                chkNameOnExport.Checked = false;
-                chkNameOnExport.Enabled = false;
+                //CheckBox chkNameOnExport = (CheckBox)e.Row.FindControl("chkNameOnExport");
+                //chkNameOnExport.Checked = false;
+                //chkNameOnExport.Enabled = false;
 
                 ddlImportance.Enabled = false;
 
             }
             if (DataBinder.Eval(e.Row.DataItem, "ColumnType").ToString() == "button")
             {
-                CheckBox chkNameOnImport = (CheckBox)e.Row.FindControl("chkNameOnImport");
-                chkNameOnImport.Checked = false;
-                chkNameOnImport.Enabled = false;
+                //CheckBox chkImportHeaderName = (CheckBox)e.Row.FindControl("chkImportHeaderName");
+                //chkImportHeaderName.Checked = false;
+                //chkImportHeaderName.Enabled = false;
 
                 CheckBox chkDisplayTextSummary = (CheckBox)e.Row.FindControl("chkDisplayTextSummary");
                 chkDisplayTextSummary.Checked = false;
                 chkDisplayTextSummary.Enabled = false;
 
-                CheckBox chkNameOnExport = (CheckBox)e.Row.FindControl("chkNameOnExport");
-                chkNameOnExport.Checked = false;
-                chkNameOnExport.Enabled = false;
+                //CheckBox chkNameOnExport = (CheckBox)e.Row.FindControl("chkNameOnExport");
+                //chkNameOnExport.Checked = false;
+                //chkNameOnExport.Enabled = false;
 
                 ddlImportance.Enabled = false;
 
@@ -2680,15 +2672,15 @@ public partial class Pages_Record_TableDetail : SecurePage
             //}
 
 
-            //Label lblNameOnImport = (Label)e.Row.FindControl("lblNameOnImport");
+            //Label lblImportHeaderName = (Label)e.Row.FindControl("lblImportHeaderName");
 
-            //if (DataBinder.Eval(e.Row.DataItem, "NameOnImport").ToString() == "")
+            //if (DataBinder.Eval(e.Row.DataItem, "ImportHeaderName").ToString() == "")
             //{
-            //    lblNameOnImport.Text = "";
+            //    lblImportHeaderName.Text = "";
             //}
             //else
             //{
-            //    lblNameOnImport.Text = "Yes";
+            //    lblImportHeaderName.Text = "Yes";
             //}
 
             //Position should be as it is
@@ -2720,11 +2712,11 @@ public partial class Pages_Record_TableDetail : SecurePage
 
                 BindTheGrid(_gvPager.StartIndex, gvTheGrid.PageSize);
 
-                _gvPager._gridView.PageIndex = _gvPager.PageIndex - 1;
-                if (_gvPager._gridView.Rows.Count == 0 && _gvPager._gridView.PageIndex > 0)
-                {
-                    BindTheGrid(_gvPager.StartIndex - gvTheGrid.PageSize, gvTheGrid.PageSize);
-                }
+                //_gvPager._gridView.PageIndex = _gvPager.PageIndex - 1;
+                //if (_gvPager._gridView.Rows.Count == 0 && _gvPager._gridView.PageIndex > 0)
+                //{
+                //    BindTheGrid(_gvPager.StartIndex - gvTheGrid.PageSize, gvTheGrid.PageSize);
+                //}
 
             }
             catch (Exception ex)
@@ -3695,29 +3687,29 @@ public partial class Pages_Record_TableDetail : SecurePage
                         }
                         break;
 
-                    case "chkNameOnImport":
-                        if (chkBx.Checked)
-                        {
-                            theColumn.NameOnImport = theColumn.DisplayName;
-                        }
-                        else
-                        {
-                            theColumn.NameOnImport = "";
-                        }
+                    //case "chkImportHeaderName":
+                    //    if (chkBx.Checked)
+                    //    {
+                    //        theColumn.ImportHeaderName = theColumn.DisplayName;
+                    //    }
+                    //    else
+                    //    {
+                    //        theColumn.ImportHeaderName = "";
+                    //    }
 
-                        break;
+                    //    break;
 
-                    case "chkNameOnExport":
-                        if (chkBx.Checked)
-                        {
-                            theColumn.NameOnExport = theColumn.DisplayName;
-                        }
-                        else
-                        {
-                            theColumn.NameOnExport = "";
-                        }
+                    //case "chkNameOnExport":
+                    //    if (chkBx.Checked)
+                    //    {
+                    //        theColumn.NameOnExport = theColumn.DisplayName;
+                    //    }
+                    //    else
+                    //    {
+                    //        theColumn.NameOnExport = "";
+                    //    }
 
-                        break;
+                    //    break;
 
 
 
@@ -4619,15 +4611,15 @@ public partial class Pages_Record_TableDetail : SecurePage
         ddlParentTable.Items.Insert(0, fItem);
     }
 
-    protected void chkIsPosition_CheckedChanged(object sender, EventArgs e)
-    {
-        //_bFirstChangePosition = true;
-        ViewState["Reload"] = true;
-        lnkSave_Click(null, null);
-        BindTheGrid(0, _gvPager.TotalRows);
-        ViewState["Reload"] = null;
+    //protected void chkIsPosition_CheckedChanged(object sender, EventArgs e)
+    //{
+    //    //_bFirstChangePosition = true;
+    //    ViewState["Reload"] = true;
+    //    lnkSave_Click(null, null);
+    //    BindTheGrid(0, _gvPager.TotalRows);
+    //    ViewState["Reload"] = null;
         
-    }
+    //}
 
     protected void PopulateTerminology()
     {
@@ -4635,7 +4627,7 @@ public partial class Pages_Record_TableDetail : SecurePage
 
         chkShowSystemFields.Text = chkShowSystemFields.Text.Replace("Fields", SecurityManager.etsTerminology(Request.Path.Substring(Request.Path.LastIndexOf("/") + 1), "Fields", "Fields"));
         gvTheGrid.Columns[4].HeaderText = gvTheGrid.Columns[4].HeaderText.Replace("Field", SecurityManager.etsTerminology(Request.Path.Substring(Request.Path.LastIndexOf("/") + 1), "Field", "Field"));
-        stgImportDataColumnHeader.InnerText = stgImportDataColumnHeader.InnerText.Replace("Field", SecurityManager.etsTerminology(Request.Path.Substring(Request.Path.LastIndexOf("/") + 1), "Field", "Field"));
+        //stgImportDataColumnHeader.InnerText = stgImportDataColumnHeader.InnerText.Replace("Field", SecurityManager.etsTerminology(Request.Path.Substring(Request.Path.LastIndexOf("/") + 1), "Field", "Field"));
         pInstruction.InnerText = pInstruction.InnerText.Replace("fields", SecurityManager.etsTerminology(Request.Path.Substring(Request.Path.LastIndexOf("/") + 1), "Fields", "Fields").ToLower());
         stgFieldsCap.InnerText = stgFieldsCap.InnerText.Replace("Fields", SecurityManager.etsTerminology(Request.Path.Substring(Request.Path.LastIndexOf("/") + 1), "Fields", "Fields"));
         stgDisplayHeader.InnerText = stgDisplayHeader.InnerText.Replace("Field", SecurityManager.etsTerminology(Request.Path.Substring(Request.Path.LastIndexOf("/") + 1), "Field", "Field"));
@@ -4663,8 +4655,8 @@ public partial class Pages_Record_TableDetail : SecurePage
                 CheckBox chkDisplayTextDetail = row.FindControl("chkDisplayTextDetail") as CheckBox;
                
                 CheckBox chkDisplayRight = row.FindControl("chkDisplayRight") as CheckBox;
-                CheckBox chkNameOnImport = row.FindControl("chkNameOnImport") as CheckBox;
-                CheckBox chkNameOnExport = row.FindControl("chkNameOnExport") as CheckBox;
+                //CheckBox chkImportHeaderName = row.FindControl("chkImportHeaderName") as CheckBox;
+                //CheckBox chkNameOnExport = row.FindControl("chkNameOnExport") as CheckBox;
                 CheckBox chkAllowCopy = row.FindControl("chkAllowCopy") as CheckBox;
 
                 DropDownList ddlImportance = row.FindControl("ddlImportance") as DropDownList;
@@ -4725,26 +4717,26 @@ public partial class Pages_Record_TableDetail : SecurePage
                     theColumn.DisplayRight = false;
                 }
 
-                if (chkNameOnImport.Checked)
-                {
-                    if (theColumn.NameOnImport == "")
-                        theColumn.NameOnImport = theColumn.DisplayName;
-                }
-                else
-                {
-                    theColumn.NameOnImport = "";
-                }
+                //if (chkImportHeaderName.Checked)
+                //{
+                //    if (theColumn.ImportHeaderName == "")
+                //        theColumn.ImportHeaderName = theColumn.DisplayName;
+                //}
+                //else
+                //{
+                //    theColumn.ImportHeaderName = "";
+                //}
 
 
-                if (chkNameOnExport.Checked)
-                {
-                    if (theColumn.NameOnExport == "")
-                        theColumn.NameOnExport = theColumn.DisplayName;
-                }
-                else
-                {
-                    theColumn.NameOnExport = "";
-                }
+                //if (chkNameOnExport.Checked)
+                //{
+                //    if (theColumn.NameOnExport == "")
+                //        theColumn.NameOnExport = theColumn.DisplayName;
+                //}
+                //else
+                //{
+                //    theColumn.NameOnExport = "";
+                //}
 
 
                 RecordManager.ets_Column_Update(theColumn);
@@ -4846,20 +4838,20 @@ public partial class Pages_Record_TableDetail : SecurePage
             }
         }
 
-        ddlDataUpdateUniqueColumnID.Items.Clear();
-        ListItem liSelect = new ListItem("--Please select--", "");
-        ddlDataUpdateUniqueColumnID.Items.Add(liSelect);
+        //ddlDataUpdateUniqueColumnID.Items.Clear();
+        //ListItem liSelect = new ListItem("--Please select--", "");
+        //ddlDataUpdateUniqueColumnID.Items.Add(liSelect);
 
 
-        foreach (Column eachColumn in lstColumns)
-        {
+        //foreach (Column eachColumn in lstColumns)
+        //{
 
-            if (eachColumn.IsStandard == false || eachColumn.SystemName.ToLower()=="recordid")
-            {
-                ListItem liTemp = new ListItem(eachColumn.DisplayName, eachColumn.ColumnID.ToString());
-                ddlDataUpdateUniqueColumnID.Items.Add(liTemp);
-            }
-        }
+        //    if (eachColumn.IsStandard == false || eachColumn.SystemName.ToLower()=="recordid")
+        //    {
+        //        ListItem liTemp = new ListItem(eachColumn.DisplayName, eachColumn.ColumnID.ToString());
+        //        ddlDataUpdateUniqueColumnID.Items.Add(liTemp);
+        //    }
+        //}
 
     }
 
@@ -5062,7 +5054,7 @@ public partial class Pages_Record_TableDetail : SecurePage
                         //Table editTable = (Table)ViewState["theTable"];
 
                         Table editTable=RecordManager.ets_Table_Details(int.Parse(_qsTableID));
-                        bool? bImportOld = editTable.IsImportPositional;
+                        //bool? bImportOld = editTable.IsImportPositional;
                         string strOldTableName = editTable.TableName;
                         //editTable.MenuID = iMenuID;
                         editTable.TableName = txtTable.Text.Trim();
@@ -5090,26 +5082,29 @@ public partial class Pages_Record_TableDetail : SecurePage
                             editTable.FilterType = ddlFilterType.SelectedValue;
                         }
 
-                        editTable.IsImportPositional = chkIsPosition.Checked;
+                        //editTable.IsImportPositional = chkIsPosition.Checked;
                         //editTable.IsRecordDateUnique = chkUniqueRecordedate.Checked;
                         editTable.UniqueColumnID = null;
                         editTable.UniqueColumnID2 = null;
-                        bool isUpdateAllowed = false;
+                        //bool isUpdateAllowed = false;
+                        editTable.DuplicateRecordAction = "";
                         if(chkUniqueRecordedate.Checked)
                         {
                             if (ddlUniqueColumnID.SelectedValue != "")
                             {
                                 editTable.UniqueColumnID = int.Parse(ddlUniqueColumnID.SelectedValue);
-                                isUpdateAllowed = true;
+                                //isUpdateAllowed = true;
+                                 editTable.DuplicateRecordAction=ddlDuplicateRecordAction.SelectedValue;
+                              
                             }
 
                             if (ddlUniqueColumnID2.SelectedValue != "")
                                 editTable.UniqueColumnID2 = int.Parse(ddlUniqueColumnID2.SelectedValue);
                         }
-                        if (isUpdateAllowed)
-                            editTable.IsDataUpdateAllowed = chkDataUpdateUniqueColumnID.Checked;
-                        else
-                            editTable.IsDataUpdateAllowed = false;
+                        //if (isUpdateAllowed)
+                        //    editTable.IsDataUpdateAllowed = chkDataUpdateUniqueColumnID.Checked;
+                        //else
+                        //    editTable.IsDataUpdateAllowed = false;
 
                         editTable.NavigationArrows = chkNavigationArrows.Checked;
                         editTable.SaveAndAdd = chkSaveAndAdd.Checked;
@@ -5172,6 +5167,7 @@ public partial class Pages_Record_TableDetail : SecurePage
                         }
 
                         editTable.AllowCopyRecords = chkAllowCopyRecords.Checked;
+                        editTable.ShowChildTabsOnAdd = chkShowChildTabsOnAdd.Checked;
                         editTable.ShowSentEmails = chkShowSentEmails.Checked;
                         editTable.ShowReceivedEmails = chkShowReceivedEmails.Checked;
                         //if (editTable.SaveAndAdd == null && chkSaveAndAdd.Checked == false)
@@ -5406,14 +5402,14 @@ public partial class Pages_Record_TableDetail : SecurePage
                             editTable.GraphOnStart = ddlGraphOnStart.SelectedValue;
                         }
 
-                        if (txtImportDataStartRow.Text.Trim() != "")
-                        {
-                            editTable.ImportDataStartRow = int.Parse(txtImportDataStartRow.Text.Trim());
-                        }
-                        else
-                        {
-                            editTable.ImportDataStartRow = null;
-                        }
+                        //if (txtImportDataStartRow.Text.Trim() != "")
+                        //{
+                        //    editTable.ImportDataStartRow = int.Parse(txtImportDataStartRow.Text.Trim());
+                        //}
+                        //else
+                        //{
+                        //    editTable.ImportDataStartRow = null;
+                        //}
                         if(ddlTemplate.SelectedItem!=null && ddlTemplate.SelectedValue!="")
                         {
                             editTable.DefaultImportTemplateID = int.Parse(ddlTemplate.SelectedValue);
@@ -5424,14 +5420,14 @@ public partial class Pages_Record_TableDetail : SecurePage
                         }
 
 
-                        if (txtImportColumnHeaderRow.Text.Trim() != "")
-                        {
-                            editTable.ImportColumnHeaderRow = int.Parse(txtImportColumnHeaderRow.Text.Trim());
-                        }
-                        else
-                        {
-                            editTable.ImportColumnHeaderRow = null;
-                        }
+                        //if (txtImportColumnHeaderRow.Text.Trim() != "")
+                        //{
+                        //    editTable.ImportColumnHeaderRow = int.Parse(txtImportColumnHeaderRow.Text.Trim());
+                        //}
+                        //else
+                        //{
+                        //    editTable.ImportColumnHeaderRow = null;
+                        //}
 
 
                         editTable.LastUpdatedUserID = (int)_ObjUser.UserID;

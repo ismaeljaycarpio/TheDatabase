@@ -73,7 +73,7 @@ div.biblica_verses
 <body style="background:white;">
  <script type="text/javascript" src="<%=ResolveUrl("~/script/jquery.js")%>"></script>
 
-
+     <%--<script type="text/javascript" src="<%=ResolveUrl("~/Script/jquery-1.11.3.min.js")%>"></script>--%>
     <form id="form1" runat="server">
      <div>
                                     <table>

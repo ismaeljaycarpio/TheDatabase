@@ -38,19 +38,53 @@ public class ImportManager
 
 
     #region ImportTemplate
-
-    public static void CreateDefaultImportTemplate(int TableID)
+    public static int? GetDefaultImportTemplate(int? iTableID)
     {
+        if (iTableID == null)
+            return null;
+        try
+        {
+            string strDID = Common.GetValueFromSQL("SELECT DefaultImportTemplateID FROM [Table] WHERE TableID=" + iTableID.ToString());
+
+            if (strDID != "")
+            {
+                return int.Parse(strDID);
+            }
+            string strID = Common.GetValueFromSQL("SELECT  TOP 1 ImportTemplateID  FROM ImportTemplate WHERE TableID="
+                + iTableID.ToString() + "  ORDER BY ImportTemplateID DESC");// the latest one
+
+            if (strID != "")
+            {
+                return int.Parse(strID);
+            }
+            else
+            {
+                //create one
+                return ImportManager.CreateDefaultImportTemplate((int)iTableID, "");
+            }
+        }
+        catch
+        {
+            //
+        }
+
+        return null;
+    }
+    public static int? CreateDefaultImportTemplate(int TableID, string strDisplayTextSummary)
+    {
+        if (strDisplayTextSummary == "")
+            strDisplayTextSummary = "DisplayTextSummary";
+
         ImportTemplate newImportTemplate = new ImportTemplate(null, (int)TableID,
-                              "Default", "This is the default import template which is auto created by the system.", "", "", "", "");
+                              "Automatically Created Template", "This is the default import template which is auto created by the system.", "", "", "", "");
+        int? iNewImportTemplateID = ImportManager.dbg_ImportTemplate_Insert(newImportTemplate);
 
-        int iNewImportTemplateID = ImportManager.dbg_ImportTemplate_Insert(newImportTemplate);
 
-
-        DataTable dtImportColumns = Common.DataTableFromText(@"SELECT ColumnID,NameOnImport FROM [Column] WHERE 
-            Systemname not in('IsActive','TableID') AND NameOnImport IS NOT NULL AND LEN(NameOnImport) > 0
+        DataTable dtImportColumns = Common.DataTableFromText(@"SELECT ColumnID,DisplayName FROM [Column] WHERE 
+            Systemname not in('IsActive','TableID') AND "+strDisplayTextSummary
+            +@" IS NOT NULL AND LEN("+strDisplayTextSummary+@") > 0
             AND ColumnType NOT IN ('staticcontent') AND TableID=" + TableID.ToString()
-     + @"  ORDER BY DisplayRight,DisplayOrder");
+            + @"  ORDER BY DisplayRight,DisplayOrder");
 
         int i = 0;
 
@@ -61,6 +95,7 @@ public class ImportManager
             ImportManager.dbg_ImportTemplateItem_Insert(newImportTemplateItem);
             i = i + 1;
         }
+        return iNewImportTemplateID;
     }
 
     public static int dbg_ImportTemplate_Insert(ImportTemplate p_ImportTemplate)
@@ -78,6 +113,10 @@ public class ImportManager
                 pRV.Direction = ParameterDirection.Output;
 
                 command.Parameters.Add(pRV);
+                
+                if (p_ImportTemplate.IsImportPositional != null)
+                    command.Parameters.Add(new SqlParameter("@bIsImportPositional", p_ImportTemplate.IsImportPositional));
+
 
                 if (p_ImportTemplate.ImportDataStartRow != null)
                     command.Parameters.Add(new SqlParameter("@nImportDataStartRow", p_ImportTemplate.ImportDataStartRow));
@@ -136,6 +175,8 @@ public class ImportManager
 
                command.Parameters.Add(new SqlParameter("@nImportTemplateID", p_ImportTemplate.ImportTemplateID));
 
+               if (p_ImportTemplate.IsImportPositional != null)
+                   command.Parameters.Add(new SqlParameter("@bIsImportPositional", p_ImportTemplate.IsImportPositional));
 
                 if (p_ImportTemplate.ImportDataStartRow != null)
                     command.Parameters.Add(new SqlParameter("@nImportDataStartRow", p_ImportTemplate.ImportDataStartRow));
@@ -363,6 +404,7 @@ public class ImportManager
                                 );
                             temp.ImportDataStartRow = reader["ImportDataStartRow"] == DBNull.Value ? null : (int?)reader["ImportDataStartRow"];
                             temp.ImportColumnHeaderRow = reader["ImportColumnHeaderRow"] == DBNull.Value ? null : (int?)reader["ImportColumnHeaderRow"];
+                            temp.IsImportPositional = reader["IsImportPositional"] == DBNull.Value ? null : (bool?)reader["IsImportPositional"];
 
 
                             connection.Close();
@@ -422,7 +464,10 @@ public class ImportManager
                 command.Parameters.Add(new SqlParameter("@sImportHeaderName", p_ImportTemplateItem.ImportHeaderName));
                 command.Parameters.Add(new SqlParameter("@nColumnIndex", p_ImportTemplateItem.ColumnIndex));
 
-
+                if (p_ImportTemplateItem.PositionOnImport != "")
+                    command.Parameters.Add(new SqlParameter("@sPositionOnImport", p_ImportTemplateItem.PositionOnImport));
+                //if (p_ImportTemplateItem.IsDateSingleColumn != null)
+                //    command.Parameters.Add(new SqlParameter("@bIsDateSingleColumn", p_ImportTemplateItem.IsDateSingleColumn));
 
 
                 connection.Open();
@@ -467,6 +512,12 @@ public class ImportManager
                 command.Parameters.Add(new SqlParameter("@nColumnIndex", p_ImportTemplateItem.ColumnIndex));
                 command.Parameters.Add(new SqlParameter("@nParentImportColumnID", p_ImportTemplateItem.ParentImportColumnID));
 
+                if (p_ImportTemplateItem.PositionOnImport != "")
+                    command.Parameters.Add(new SqlParameter("@sPositionOnImport", p_ImportTemplateItem.PositionOnImport));
+                //if (p_ImportTemplateItem.IsDateSingleColumn != null)
+                //    command.Parameters.Add(new SqlParameter("@bIsDateSingleColumn", p_ImportTemplateItem.IsDateSingleColumn));
+
+
                 int i = 1;
                 connection.Open();
                 try
@@ -509,6 +560,7 @@ public class ImportManager
 
                 if (nColumnID != null)
                     command.Parameters.Add(new SqlParameter("@nColumnID", nColumnID));
+
                 if (sImportHeaderName != "")
                     command.Parameters.Add(new SqlParameter("@sImportHeaderName", sImportHeaderName));
                 
@@ -632,6 +684,11 @@ public class ImportManager
                                 );
 
                             temp.ParentImportColumnID = reader["ParentImportColumnID"] == DBNull.Value ? null : (int?)reader["ParentImportColumnID"];
+                            temp.PositionOnImport = reader["PositionOnImport"] == DBNull.Value ? "" : (string)reader["PositionOnImport"];
+                            //temp.IsDateSingleColumn = reader["IsDateSingleColumn"] == DBNull.Value ? null : (bool?)reader["IsDateSingleColumn"];
+
+
+
                             connection.Close();
                             connection.Dispose();
                             return temp;

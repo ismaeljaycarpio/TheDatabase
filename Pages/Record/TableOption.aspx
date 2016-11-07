@@ -58,9 +58,9 @@
                                     <td>
                                      <asp:RadioButton runat="server" ID="optCreateFromSpreadSheet" GroupName="ST" Text="Upload Spreadsheet"
                                             ClientIDMode="Static" Font-Size="11pt" Checked="true" />
-                                         <br />    <br />
+                                       <%--  <br />    <br />--%>
                                         <asp:RadioButton runat="server" ID="optCopyFromTemplate" GroupName="ST" Text="Use Template"
-                                            ClientIDMode="Static" Font-Size="11pt"  />
+                                            ClientIDMode="Static" Font-Size="11pt" Visible="false"  />
                                          <br />   <br />
                                         <asp:RadioButton runat="server" ID="optBrandNew" GroupName="ST" Text="Brand New Table"
                                              ClientIDMode="Static" Font-Size="11pt" />
@@ -91,7 +91,7 @@
                                                     <div runat="server" id="divCancle">
                                                        
                                                                 <asp:HyperLink runat="server" ID="hlBack" 
-                                                                CssClass="btn"> <strong>Cancel</strong> </asp:HyperLink>
+                                                                CssClass="btn show-ajax-indicator"> <strong>Cancel</strong> </asp:HyperLink>
                                                                
                                                     </div>
                                                 </td>
@@ -99,7 +99,7 @@
                                                  <td>
                                                     <div runat="server" id="divContinue" clientidmode="Static">
                                                        
-                                                                    <asp:LinkButton runat="server" ID="lnkContinue" CssClass="btn" 
+                                                                    <asp:LinkButton runat="server" ID="lnkContinue" CssClass="btn show-ajax-indicator" 
                                                                     OnClick="lnkContinue_Click"><strong>Next&nbsp;&gt;</strong></asp:LinkButton>
                                                                
                                                     </div>

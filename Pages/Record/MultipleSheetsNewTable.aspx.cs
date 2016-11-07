@@ -165,31 +165,17 @@ public partial class Pages_Record_MultipleSheetsNewTable : SecurePage
                     lblRecordsData.Text = "No";
                 }
 
-                lblImportColumnHeaderRow.Text = xmlDoc.FirstChild["txtImportColumnHeaderRow"].InnerText;
-                lblImportDataStartRow.Text = xmlDoc.FirstChild["txtImportDataStartRow"].InnerText;
-                //lblShowunderMenu.Text = xmlDoc.FirstChild["ddlMenuText"].InnerText;
-
-
-                //hfShowMenu.Value = xmlDoc.FirstChild["ddlMenuValue"].InnerText;
-                //lblNewMenuName.Text = xmlDoc.FirstChild["txtNewMenuName"].InnerText;
+                //lblImportColumnHeaderRow.Text = xmlDoc.FirstChild["txtImportColumnHeaderRow"].InnerText;
+                //lblImportDataStartRow.Text = xmlDoc.FirstChild["txtImportDataStartRow"].InnerText;
                 ddlMenu.SelectedValue = xmlDoc.FirstChild["ddlMenuValue"].InnerText;
                 txtNewMenuName.Text = xmlDoc.FirstChild["txtNewMenuName"].InnerText; 
 
-
-                //if (lblNewMenuName.Text == "")
-                //    trNewMenuName.Visible = false;
-                //if (lblShowunderMenu.Text == "--None--")
-                //    trNewMenuName.Visible = false;
-
-                lblImportColumnHeaderRow.Text = xmlDoc.FirstChild["txtImportColumnHeaderRow"].InnerText;
-                lblImportDataStartRow.Text = xmlDoc.FirstChild["txtImportDataStartRow"].InnerText;
-
-
+                //lblImportColumnHeaderRow.Text = xmlDoc.FirstChild["txtImportColumnHeaderRow"].InnerText;
+                //lblImportDataStartRow.Text = xmlDoc.FirstChild["txtImportDataStartRow"].InnerText;
+                
                 hfguidNew.Value = xmlDoc.FirstChild["guidNew"].InnerText;
-                //ddlLocation.Text = xmlDoc.FirstChild["ddlLocation"].InnerText;
                 hfFileExtension.Value = "." + lblExcelFileName.Text.Substring(lblExcelFileName.Text.LastIndexOf('.') + 1).ToLower();
-                //if (lblBatchDesc.Text == "")
-                //    lblBatchDesc.Text = lblExcelFileName.Text;
+              
 
             }
         }
@@ -309,8 +295,9 @@ public partial class Pages_Record_MultipleSheetsNewTable : SecurePage
         try
         {
 
-
-
+            ViewState["ImportColumnHeaderRow"] = 1;
+            ViewState["ImportDataStartRow"] = 2;
+           
 
             if (ddlMenu.SelectedValue == "")
             {
@@ -365,7 +352,7 @@ public partial class Pages_Record_MultipleSheetsNewTable : SecurePage
 
             Table newTable = new Table(null,
                          lblTable.Text, 
-                         null, null, false, true);
+                         null, null, true);
             newTable.AccountID = int.Parse(Session["AccountID"].ToString());
 
 
@@ -376,14 +363,14 @@ public partial class Pages_Record_MultipleSheetsNewTable : SecurePage
 
             Table theTable = RecordManager.ets_Table_Details(iTableID);
 
-            if (lblImportColumnHeaderRow.Text.Trim() != ""
-            && lblImportDataStartRow.Text.Trim() != "")
-            {
+            //if (lblImportColumnHeaderRow.Text.Trim() != ""
+            //&& lblImportDataStartRow.Text.Trim() != "")
+            //{
                
-                theTable.ImportColumnHeaderRow = int.Parse(lblImportColumnHeaderRow.Text.Trim());
-                theTable.ImportDataStartRow = int.Parse(lblImportDataStartRow.Text.Trim());
-                RecordManager.ets_Table_Update(theTable);
-            }
+            //    theTable.ImportColumnHeaderRow = int.Parse(lblImportColumnHeaderRow.Text.Trim());
+            //    theTable.ImportDataStartRow = int.Parse(lblImportDataStartRow.Text.Trim());
+            //    RecordManager.ets_Table_Update(theTable);
+            //}
 
 
             iColulmnCount = 5;
@@ -476,8 +463,8 @@ public partial class Pages_Record_MultipleSheetsNewTable : SecurePage
                     m = m + 1;
                 }
 
-                theTable.ImportColumnHeaderRow = iMinIndex + 1;
-                theTable.ImportDataStartRow = iMinIndex + 2;
+                ViewState["ImportColumnHeaderRow"] = iMinIndex + 1;
+                ViewState["ImportDataStartRow"] = iMinIndex + 2;
 
 
 
@@ -487,15 +474,15 @@ public partial class Pages_Record_MultipleSheetsNewTable : SecurePage
             }
 
 
-            if (theTable.ImportColumnHeaderRow != null)
+            if (ViewState["ImportColumnHeaderRow"] != null)
             {
                 //if ((int)theTable.ImportColumnHeaderRow > 1)
                 //{
-                    if (dtImportFileTable.Rows.Count >= (int)theTable.ImportColumnHeaderRow)
+                if (dtImportFileTable.Rows.Count >= int.Parse(ViewState["ImportColumnHeaderRow"].ToString()))
                     {
                         for (int i = 0; i <= dtImportFileTable.Columns.Count - 1; i++)
                         {
-                            if (dtImportFileTable.Rows[(int)theTable.ImportColumnHeaderRow - 1][i].ToString() == "")
+                            if (dtImportFileTable.Rows[int.Parse(ViewState["ImportColumnHeaderRow"].ToString()) - 1][i].ToString() == "")
                             {
                                 //do nothing for it
                                 if (strFileExtension.ToLower() == ".csv")
@@ -515,7 +502,7 @@ public partial class Pages_Record_MultipleSheetsNewTable : SecurePage
 
                                 try
                                 {
-                                    dtImportFileTable.Columns[i].ColumnName = dtImportFileTable.Rows[(int)theTable.ImportColumnHeaderRow - 1][i].ToString();
+                                    dtImportFileTable.Columns[i].ColumnName = dtImportFileTable.Rows[int.Parse(ViewState["ImportColumnHeaderRow"].ToString()) - 1][i].ToString();
                                 }
                                 catch (Exception ex)
                                 {
@@ -526,7 +513,7 @@ public partial class Pages_Record_MultipleSheetsNewTable : SecurePage
                                             bool bOK = true;
                                             foreach (DataColumn dc in dtImportFileTable.Columns)
                                             {
-                                                if (dc.ColumnName == dtImportFileTable.Rows[(int)theTable.ImportColumnHeaderRow - 1][i].ToString() + j.ToString())
+                                                if (dc.ColumnName == dtImportFileTable.Rows[int.Parse(ViewState["ImportColumnHeaderRow"].ToString()) - 1][i].ToString() + j.ToString())
                                                 {
                                                     bOK = false;
                                                 }
@@ -534,7 +521,7 @@ public partial class Pages_Record_MultipleSheetsNewTable : SecurePage
 
                                             if (bOK)
                                             {
-                                                dtImportFileTable.Columns[i].ColumnName = dtImportFileTable.Rows[(int)theTable.ImportColumnHeaderRow - 1][i].ToString() + j.ToString();
+                                                dtImportFileTable.Columns[i].ColumnName = dtImportFileTable.Rows[int.Parse(ViewState["ImportColumnHeaderRow"].ToString()) - 1][i].ToString() + j.ToString();
                                                 dtImportFileTable.AcceptChanges();
                                                 break;
                                             }
@@ -576,9 +563,9 @@ public partial class Pages_Record_MultipleSheetsNewTable : SecurePage
             }
 
 
-            if (theTable.ImportDataStartRow != null)
+            if (ViewState["ImportDataStartRow"] != null)
             {
-                for (int i = 1; i <= (int)theTable.ImportDataStartRow - 1; i++)
+                for (int i = 1; i <= int.Parse(ViewState["ImportDataStartRow"].ToString()) - 1; i++)
                 {
                     dtImportFileTable.Rows.RemoveAt(0);
 
@@ -644,8 +631,8 @@ public partial class Pages_Record_MultipleSheetsNewTable : SecurePage
                     }
 
                     Column newColumn = new Column(null, iTableID,
-                  strAutoSystemName, iDisplayOrder + 1, strSummaryName, strColumnName, strColumnName, strColumnName,
-                   null, "", "", null, null, "", "", false, strColumnName, null, "", null,
+                  strAutoSystemName, iDisplayOrder + 1, strSummaryName, strColumnName,
+                   null, "", "", null, null, "", "", false, strColumnName, "", null,
                    null, null, strColumnName, "", null);
 
                     newColumn.ColumnType = "text";
@@ -699,10 +686,6 @@ public partial class Pages_Record_MultipleSheetsNewTable : SecurePage
                                     newColumn.NumberType = null;
                                 }
 
-
-
-
-
                             }
 
                         }
@@ -726,11 +709,17 @@ public partial class Pages_Record_MultipleSheetsNewTable : SecurePage
 
                 _theTable = RecordManager.ets_Table_Details(iTableID);
 
+                int? iDT = ImportManager.CreateDefaultImportTemplate((int)_theTable.TableID,"DisplayName");
+                ImportTemplate theImportTemplate = ImportManager.dbg_ImportTemplate_Detail((int)iDT);
+                theImportTemplate.ImportDataStartRow = int.Parse(ViewState["ImportDataStartRow"].ToString());
+                theImportTemplate.ImportColumnHeaderRow = int.Parse(ViewState["ImportColumnHeaderRow"].ToString());
+                ImportManager.dbg_ImportTemplate_Update(theImportTemplate);
+
 
                 UploadManager.UploadCSV(_ObjUser.UserID, _theTable, lblExcelFileName.Text,
               lblExcelFileName.Text, guidNew, _strFilesPhisicalPath + "\\UserFiles\\AppFiles",
               out strMsg, out iBatchID,  strFileExtension,
-              strSelectedSheet, int.Parse(Session["AccountID"].ToString()), null, null, null);
+              strSelectedSheet, int.Parse(Session["AccountID"].ToString()), null, theImportTemplate.ImportTemplateID, null);
 
                 theBatch = UploadManager.ets_Batch_Details(iBatchID);
               

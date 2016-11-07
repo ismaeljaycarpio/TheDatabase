@@ -35,16 +35,13 @@
             </td>
         </tr>
         <tr>
-            <td colspan="3" height="13">
-            </td>
+            <td colspan="3" height="13"></td>
         </tr>
         <tr>
-            <td colspan="3">
-            </td>
+            <td colspan="3"></td>
         </tr>
         <tr>
-            <td valign="top">
-            </td>
+            <td valign="top"></td>
             <td valign="top">
                 <div id="search" style="padding-bottom: 10px">
                     <asp:ValidationSummary ID="ValidationSummary1" runat="server" EnableClientScript="true"
@@ -54,15 +51,16 @@
                     <div runat="server" id="divDetail">
                         <table cellpadding="3">
                             <tr>
-                                <td align="right" style="vertical-align:top;">
-                                     <strong>Template</strong>
+                                <td align="right" style="vertical-align: top;">
+                                    <strong>Template</strong>
                                 </td>
                                 <td>
-                                    <asp:DropDownList runat="server" ID="ddlTemplate" CssClass="NormalTextBox" OnPreRender="ddlTemplate_PreRender" 
-                                                AutoPostBack="true"  OnSelectedIndexChanged="ddlTemplate_SelectedIndexChanged">
-                                            </asp:DropDownList>
-                                    <br /><asp:Label runat="server" ID="lblImportTemplateFile"></asp:Label>
-                                            <%--<asp:HyperLink runat="server" ID="hlImportTemplate" NavigateUrl="~/Pages/Import/ImportTemplate.aspx">Edit</asp:HyperLink>--%>
+                                    <asp:DropDownList runat="server" ID="ddlTemplate" CssClass="NormalTextBox" OnPreRender="ddlTemplate_PreRender"
+                                        AutoPostBack="true" OnSelectedIndexChanged="ddlTemplate_SelectedIndexChanged">
+                                    </asp:DropDownList>
+                                    <br />
+                                    <asp:Label runat="server" ID="lblImportTemplateFile"></asp:Label>
+                                    <%--<asp:HyperLink runat="server" ID="hlImportTemplate" NavigateUrl="~/Pages/Import/ImportTemplate.aspx">Edit</asp:HyperLink>--%>
                                 </td>
                             </tr>
                             <tr>
@@ -74,17 +72,17 @@
                                     <br />
                                     <div runat="server" id="divColumnName">
                                         <dbg:dbgGridView ID="gvTheGrid" runat="server" GridLines="Vertical" CssClass="gridviewborder"
-                                            AllowPaging="false" AllowSorting="false" DataKeyNames="DBGSystemRecordID" HeaderStyle-ForeColor="Black"
+                                            AllowPaging="false" AllowSorting="false"  HeaderStyle-ForeColor="Black"
                                             Width="100%" AutoGenerateColumns="true" OnRowDataBound="gvTheGrid_RowDataBound">
                                             <PagerSettings Position="Top" />
-                                            <Columns>
+                                            <%--<Columns>
                                                 <asp:TemplateField Visible="false">
                                                     <ItemStyle Width="10px" HorizontalAlign="Center" />
                                                     <ItemTemplate>
                                                         <asp:Label ID="LblID" runat="server" Text='<%# Eval("DBGSystemRecordID") %>'></asp:Label>
                                                     </ItemTemplate>
                                                 </asp:TemplateField>
-                                            </Columns>
+                                            </Columns>--%>
                                             <HeaderStyle CssClass="gridviewborder_header" />
                                             <RowStyle CssClass="gridviewborder_row" />
                                         </dbg:dbgGridView>
@@ -110,19 +108,17 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                </td>
-                                <td valign="top">
-                                </td>
+                                <td></td>
+                                <td valign="top"></td>
                             </tr>
-                             <tr>
-                                <td align="right" style="padding-bottom:5px;">
+                            <tr>
+                                <td align="right" style="padding-bottom: 5px;">
                                     <strong>Upload File:</strong>
                                 </td>
                                 <td>
                                     <asp:FileUpload ID="fuRecordFile" runat="server" Style="width: 500px;" size="70" />
                                     <br />
-                                   <span style="font-style:italic;">Please select a CSV/XLS/XLSX file to upload.</span> 
+                                    <span style="font-style: italic;">Please select a CSV/XLS/XLSX file to upload.</span>
                                 </td>
                             </tr>
 
@@ -132,20 +128,20 @@
                                 </td>
                                 <td>
                                     <div runat="server" id="divUploadFiles">
-                                    <asp:LinkButton runat="server" ID="lnkDownloadTemplate" Text="CSV " NavigateUrl="#"
-                                        OnClick="lnkDownloadTemplate_Click" CssClass="NormalTextBox"></asp:LinkButton>
-                                    or
+                                        <asp:LinkButton runat="server" ID="lnkDownloadTemplate" Text="CSV " NavigateUrl="#"
+                                            OnClick="lnkDownloadTemplate_Click" CssClass="NormalTextBox"></asp:LinkButton>
+                                        or
                                     <asp:LinkButton runat="server" ID="lnkDownloadXLS" Text="XLS" NavigateUrl="#" OnClick="lnkDownloadXLS_Click"
                                         CssClass="NormalTextBox"></asp:LinkButton>
-                                    <asp:LinkButton runat="server" ID="lnkDownloadXLSX" Text="XLSX" Visible="false" NavigateUrl="#"
-                                        OnClick="lnkDownloadXLSX_Click" CssClass="NormalTextBox"></asp:LinkButton>
-                                        </div>
-                                        <div runat="server" id="divCustomUploadFiles" visible="false">
-                                            <%--<asp:HyperLink runat="server" ID="hlCustomUploadSheet" Target="_blank"
+                                        <asp:LinkButton runat="server" ID="lnkDownloadXLSX" Text="XLSX" Visible="false" NavigateUrl="#"
+                                            OnClick="lnkDownloadXLSX_Click" CssClass="NormalTextBox"></asp:LinkButton>
+                                    </div>
+                                    <div runat="server" id="divCustomUploadFiles" visible="false">
+                                        <%--<asp:HyperLink runat="server" ID="hlCustomUploadSheet" Target="_blank"
                                                                          Text="Download"></asp:HyperLink>--%>
-                                                                          <asp:LinkButton runat="server" ID="hlCustomUploadSheet" Text="View"
-                                                                         OnClick="hlCustomUploadSheet_Click" ></asp:LinkButton>
-                                        </div>
+                                        <asp:LinkButton runat="server" ID="hlCustomUploadSheet" Text="View"
+                                            OnClick="hlCustomUploadSheet_Click"></asp:LinkButton>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
@@ -167,15 +163,15 @@
                                     </asp:DropDownList>
                                 </td>
                             </tr>--%>
-                           
-                            <tr runat="server" id="trDataUpdateUniqueColumnID" visible="false">
+
+                            <%--  <tr runat="server" id="trDataUpdateUniqueColumnID" visible="false">
                                 <td></td>
                                 <td>
                                     <asp:CheckBox runat="server" ID="chkDataUpdateUniqueColumnID" ClientIDMode="Static" Checked="false"
                                         TextAlign="Right" Font-Bold="true" Text="Update existing data, matching on [ColumnName]" />
 
                                 </td>
-                            </tr>
+                            </tr>--%>
                         </table>
                     </div>
                     <div>
@@ -200,12 +196,10 @@
                     </div>
                 </asp:Panel>
             </td>
-            <td>
-            </td>
+            <td></td>
         </tr>
         <tr>
-            <td colspan="3" height="13">
-            </td>
+            <td colspan="3" height="13"></td>
         </tr>
     </table>
 </asp:Content>

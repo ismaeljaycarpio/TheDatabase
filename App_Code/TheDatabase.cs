@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using System.Text;
 using System.Web.UI;
+using System.IO;
 /// <summary>
 /// Summary description for TheDatabase
 /// </summary>
@@ -60,7 +61,7 @@ public static class TheDatabaseS
     }
 
 
-
+   
     static void PopulateSubMenu(ref DropDownList ddlShowUnder, int iParentMenuID, int iLD)
     {
         DataTable dtSubMenu = Common.DataTableFromText(@"SELECT MenuID,Menu FROM Menu WHERE IsActive=1 AND 
@@ -412,7 +413,7 @@ public static class TheDatabaseS
             }
         }
     }
-
+   
     public static string EscapeStringValue(string s)
     {
         if (s == null || s.Length == 0)
@@ -2250,8 +2251,179 @@ public class TheDatabase
 		//
 	}
 
+    public static string RecordToXML(Record theRecord, DataTable _dtColumnsAll)
+    {
+        string strReturn = "";
+        try
+        {
+            if (_dtColumnsAll == null)
+                _dtColumnsAll = RecordManager.ets_Table_Columns_All((int)theRecord.TableID);
+
+            string strXML = "<TheRecord>";
+            for (int i = 0; i < _dtColumnsAll.Rows.Count; i++)
+            {
+                //_dtColumnsAll.Rows[i]["SystemName"].ToString()
+                strXML += "<EachColumn>";
+                      strXML += "<ColumnID>" + _dtColumnsAll.Rows[i]["ColumnID"].ToString() + "</ColumnID>";
+                      strXML += "<SystemName>" + _dtColumnsAll.Rows[i]["SystemName"].ToString() + "</SystemName>";
+                      strXML += "<CurrentValue>" + RecordManager.GetRecordValue(ref theRecord, _dtColumnsAll.Rows[i]["SystemName"].ToString()) + "</CurrentValue>";
+                strXML += "</EachColumn>";
+            }
+            strXML += "</TheRecord>";
+            strReturn = strXML;
+        }
+        catch
+        {
+            //
+        }
+        return strReturn;
+    }
+
+    public static DataTable XMLtoDataTableDetail(string strXML,int? iTableID)
+    {
+        DataTable _dtSysWithValue = null; ;
+        try
+        {
+            DataTable dtDetail = RecordManager.ets_Table_Columns_Detail((int)iTableID);
+            DataSet ds = new DataSet();
+            StringReader sr = new StringReader(strXML);
+            ds.ReadXml(sr);
+            DataTable dtRecord = ds.Tables[0];
+            _dtSysWithValue = new DataTable();
+
+            foreach (DataRow drR in dtDetail.Rows)
+            {
+                foreach (DataRow dr in dtRecord.Rows)
+                {
+                    if (drR["SystemName"].ToString() == dr["SystemName"].ToString())
+                    {
+                        _dtSysWithValue.Columns.Add(dr["SystemName"].ToString());
+                    }
+                }
+            }
+            
+          _dtSysWithValue.Columns.Add("WarningResults");
+             _dtSysWithValue.Columns.Add("validationresults");
+            _dtSysWithValue.Rows.Add();
 
 
+            foreach (DataRow dr in dtRecord.Rows)
+            {
+                if (_dtSysWithValue.Columns.Contains(dr["SystemName"].ToString()))
+                    _dtSysWithValue.Rows[0][dr["SystemName"].ToString()] = dr["CurrentValue"].ToString();
+            }
+              _dtSysWithValue.AcceptChanges();
+        }
+        catch
+        {
+            //
+        }
+        return _dtSysWithValue;
+    }
+
+    public static Record XMLtoRecord(string strXML, DataTable _dtColumnsAll,int? iTableID)
+    {
+        Record theRecord = null;
+
+        try
+        {
+            if (_dtColumnsAll == null)
+                _dtColumnsAll = RecordManager.ets_Table_Columns_All((int)iTableID);
+
+           
+            DataSet ds = new DataSet();
+            StringReader sr = new StringReader(strXML);
+            ds.ReadXml(sr);
+            DataTable dtRecord = ds.Tables[0];
+
+            foreach(DataRow dr in dtRecord.Rows)
+            {
+                RecordManager.MakeTheRecord(ref theRecord, dr["SystemName"].ToString(), dr["CurrentValue"].ToString());
+            }
+
+        }
+        catch
+        {
+            //
+        }
+        return theRecord;
+    }
+
+    public static string SP_ControlValueChangeService(string spName, bool AddMode, int? RecordID, int? UserID, int? TableID,
+       string xmlRecord, ref string xmlUpdatedRecord)
+    {
+        string strReturnMessage = "";
+        SearchCriteria theSC = new SearchCriteria(null, xmlRecord);
+        int? iSC = SystemData.SearchCriteria_Insert(theSC);
+        
+
+        using (SqlConnection connection = new SqlConnection(DBGurus.strGlobalConnectionString))
+        {
+
+            using (SqlCommand command = new SqlCommand(spName, connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+
+
+                SqlParameter pReturnSCid = new SqlParameter("@ReturnRecordInSeachCriteria", SqlDbType.Int);
+                pReturnSCid.Direction = ParameterDirection.Output;
+
+                command.Parameters.Add(pReturnSCid);
+
+             
+
+                command.Parameters.Add(new SqlParameter("@AddMode", AddMode));
+                if (RecordID != null)
+                    command.Parameters.Add(new SqlParameter("@RecordID", RecordID));
+                if (UserID != null)
+                    command.Parameters.Add(new SqlParameter("@UserID", UserID));
+                if (TableID != null)
+                    command.Parameters.Add(new SqlParameter("@TableID", TableID));
+
+                if (iSC != null)
+                    command.Parameters.Add(new SqlParameter("@RecordInSeachCriteria", iSC));
+                connection.Open();
+                try
+                {
+                    command.ExecuteNonQuery();
+                    iSC =int.Parse( pReturnSCid.Value.ToString());
+                }
+                catch
+                {
+
+                }
+
+
+                connection.Close();
+                connection.Dispose();
+
+                SearchCriteria theSearchCriteria = SystemData.SearchCriteria_Detail((int)iSC);
+
+                if (theSearchCriteria != null)
+                {
+
+                    System.Xml.XmlDocument xmlSC_Doc = new System.Xml.XmlDocument();
+
+                    xmlSC_Doc.Load(new StringReader(theSearchCriteria.SearchText));
+
+                    
+                    strReturnMessage = xmlSC_Doc.FirstChild["message"].InnerText;
+                    xmlUpdatedRecord = xmlSC_Doc.FirstChild["xmlUpdatedRecord"].InnerXml;
+                }
+
+                return strReturnMessage;
+            }
+
+
+        }
+
+    }
+    public static DataTable GetDataRetrieverByTable(int iTableID)
+    {
+        return Common.DataTableFromText(@" SELECT DocTemplateID,SPName,FileName FROM DocTemplate INNER JOIN DataRetriever
+                            ON DocTemplate.DataRetrieverID=DataRetriever.DataRetrieverID
+                            WHERE TableID=" + iTableID.ToString());
+    }
     public static DataTable spBulkExportColumns(int TableID)
     {
         using (SqlConnection connection = new SqlConnection(DBGurus.strGlobalConnectionString))
@@ -2428,6 +2600,31 @@ public class TheDatabase
         CausesValidationFalse(_control.Controls);
 
     }
+
+    public static void SetEnabled(ControlCollection _collection, bool bEnabled)
+    {
+        foreach (Control _control in _collection)
+        {
+            // set each child
+            SetEnabled(_control, bEnabled);
+        }
+
+    }
+    public static void SetEnabled(Control _control, bool bEnabled)
+    {
+
+        // the logic of scanning
+        if (_control.GetType().GetProperty("Enabled") != null && !string.IsNullOrEmpty(_control.ID))
+        {
+            _control.GetType().GetProperty("Enabled").SetValue(_control, bEnabled);
+
+        }
+        // recursive search within children
+        SetEnabled(_control.Controls, bEnabled);
+
+    }
+
+
     public static bool IsRecordDuplicate(Record theRecord, string strUniqueColumnIDSys, string strUniqueColumnID2Sys,int iRecordID)
     {
         if (strUniqueColumnIDSys != "" || strUniqueColumnID2Sys != "")

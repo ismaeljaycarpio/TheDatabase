@@ -95,8 +95,8 @@ public partial class Pages_SystemData_VisitorLog : SecurePage
         try
         {
             int iTN = 0;
-           
 
+            ViewState[gvTheGrid.ID + "PageIndex"] = (iStartIndex / gvTheGrid.PageSize) + 1;
             gvTheGrid.DataSource = SystemData.ets_VisitorLog_Select(null,null,
                  txtIPAddress.Text.Replace("'", "''"),
                 txtBrowser.Text.Replace("'","''"),
@@ -111,6 +111,16 @@ public partial class Pages_SystemData_VisitorLog : SecurePage
             gvTheGrid.DataBind();
             if (gvTheGrid.TopPagerRow != null)
                 gvTheGrid.TopPagerRow.Visible = true;
+
+
+            GridViewRow gvr = gvTheGrid.TopPagerRow;
+            if (gvr != null)
+                _gvPager = (Common_Pager)gvr.FindControl("Pager");
+            if (ViewState[gvTheGrid.ID + "PageIndex"] != null)
+                _gvPager.PageIndex = int.Parse(ViewState[gvTheGrid.ID + "PageIndex"].ToString());
+
+            _gvPager.PageSize = gvTheGrid.PageSize;
+            _gvPager.TotalRows = iTN;
 
             if (iTN == 0)
             {
@@ -171,7 +181,7 @@ public partial class Pages_SystemData_VisitorLog : SecurePage
 
     protected void Pager_BindTheGridAgain(object sender, EventArgs e)
     {
-        BindTheGrid(_gvPager.StartIndex, _gvPager._gridView.PageSize);
+        BindTheGrid(_gvPager.StartIndex, _gvPager.PageSize);
     }
 
     protected void Pager_OnApplyFilter(object sender, EventArgs e)

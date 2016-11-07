@@ -1363,7 +1363,7 @@ public partial class Pages_Security_AccountDetail : SecurePage
             //gvInvoice.DataSource = RecordManager.ets_Record_Changes_Select(
             //        (int)_iRecordID,int.Parse(_qsTableID), iStartIndex, iMaxRows, ref  iTN, ref _iCLColumnCount);
 
-
+            ViewState[gvInvoice.ID + "PageIndex"] = (iStartIndex / gvInvoice.PageSize) + 1;
             gvInvoice.DataSource = InvoiceManager.ets_Invoice_Select(_iAccountID, "", null, null, null, "", null,
                 "",  "","","","",null,null,"DateAdded","DESC", iStartIndex, iMaxRows, ref iTN);                
             gvInvoice.VirtualItemCount = iTN;         
@@ -1376,7 +1376,11 @@ public partial class Pages_Security_AccountDetail : SecurePage
             if (gvr != null)
             {
                 _gvPager = (Common_Pager)gvr.FindControl("Pager");
+                if (ViewState[gvInvoice.ID + "PageIndex"] != null)
+                    _gvPager.PageIndex = int.Parse(ViewState[gvInvoice.ID + "PageIndex"].ToString());
 
+                _gvPager.PageSize = gvInvoice.PageSize;
+                _gvPager.TotalRows = iTN;
             }
 
 
@@ -1393,11 +1397,11 @@ public partial class Pages_Security_AccountDetail : SecurePage
 
     protected void Pager_BindTheGridAgain(object sender, EventArgs e)
     {
-        BindTheInvoiceGrid(_gvPager.StartIndex, _gvPager._gridView.PageSize);
+        BindTheInvoiceGrid(_gvPager.StartIndex, _gvPager.PageSize);
     }
     protected void Pager_OnApplyFilter(object sender, EventArgs e)
     {
-        BindTheInvoiceGrid(_gvPager.StartIndex, _gvPager._gridView.PageSize);
+        BindTheInvoiceGrid(_gvPager.StartIndex, _gvPager.PageSize);
     }
 
 

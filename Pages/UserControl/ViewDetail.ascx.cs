@@ -190,7 +190,7 @@ public partial class Pages_UserControl_ViewDetail : System.Web.UI.UserControl
 
                         ";
 
-        ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strJSForSortingViewItem", strJSForSortingViewItem, true);
+        ScriptManager.RegisterStartupScript(upViewItem, upViewItem.GetType(), "strJSForSortingViewItem", strJSForSortingViewItem, true);
 
 
 
@@ -209,7 +209,26 @@ public partial class Pages_UserControl_ViewDetail : System.Web.UI.UserControl
 
                 ";
 
-        ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "strViewItemPop", strViewItemPop, true);
+        ScriptManager.RegisterStartupScript(upViewItem, upViewItem.GetType(), "strViewItemPop", strViewItemPop, true);
+
+
+//        string strViewItemfancy = @"
+//                    $(function () {
+//                            $('.popuplinkVT').fancybox({
+//                                scrolling: 'auto',
+//                                type: 'iframe',
+//                                'transitionIn': 'elastic',
+//                                'transitionOut': 'none',
+//                                width: 1000,
+//                                height: 400,
+//                                titleShow: false
+//                            });
+//                        });
+//
+//                ";
+
+//        ScriptManager.RegisterStartupScript(this, this.GetType(), "strViewItemfancy", strViewItemfancy, true);
+
 
 
         if (!IsPostBack)
@@ -262,13 +281,13 @@ public partial class Pages_UserControl_ViewDetail : System.Web.UI.UserControl
 
         //lnkAndOr1.Attributes.Add("text", "and");
 
-        lnkAddSearch1.Attributes.Add("onclick", "$('#" + trSearch1.ClientID + "').fadeIn();$('#" + lnkAddSearch1.ClientID + "').fadeOut();if ($('#" + hfAndOr1.ClientID + "').val()==''){ $('#" + hfAndOr1.ClientID + "').val(document.getElementById('" + lnkAndOr1.ClientID + "').text)};return false;");//return false;
-        lnkAddSearch2.Attributes.Add("onclick", "$('#" + trSearch2.ClientID + "').fadeIn();$('#" + lnkAddSearch2.ClientID + "').fadeOut();if ($('#" + hfAndOr2.ClientID + "').val()==''){$('#" + hfAndOr2.ClientID + "').val(document.getElementById('" + lnkAndOr2.ClientID + "').text)};return false;");//return false;
-        lnkAddSearch3.Attributes.Add("onclick", "$('#" + trSearch3.ClientID + "').fadeIn();$('#" + lnkAddSearch3.ClientID + "').fadeOut();if ($('#" + hfAndOr3.ClientID + "').val()==''){$('#" + hfAndOr3.ClientID + "').val(document.getElementById('" + lnkAndOr3.ClientID + "').text)};return false;");//return false;
+        lnkAddSearch1.Attributes.Add("onclick", "$('#" + trSearch1.ClientID + "').show();$('#" + lnkAddSearch1.ClientID + "').hide();if ($('#" + hfAndOr1.ClientID + "').val()==''){ $('#" + hfAndOr1.ClientID + "').val(document.getElementById('" + lnkAndOr1.ClientID + "').text)};return false;");//return false;
+        lnkAddSearch2.Attributes.Add("onclick", "$('#" + trSearch2.ClientID + "').show();$('#" + lnkAddSearch2.ClientID + "').hide();if ($('#" + hfAndOr2.ClientID + "').val()==''){$('#" + hfAndOr2.ClientID + "').val(document.getElementById('" + lnkAndOr2.ClientID + "').text)};return false;");//return false;
+        lnkAddSearch3.Attributes.Add("onclick", "$('#" + trSearch3.ClientID + "').show();$('#" + lnkAddSearch3.ClientID + "').hide();if ($('#" + hfAndOr3.ClientID + "').val()==''){$('#" + hfAndOr3.ClientID + "').val(document.getElementById('" + lnkAndOr3.ClientID + "').text)};return false;");//return false;
 
-        lnkMinusSearch1.Attributes.Add("onclick", "$('#" + trSearch1.ClientID + "').fadeOut();$('#" + lnkAddSearch1.ClientID + "').fadeIn();$('#" + hfAndOr1.ClientID + "').val('');return false;");
-        lnkMinusSearch2.Attributes.Add("onclick", "$('#" + trSearch2.ClientID + "').fadeOut();$('#" + lnkAddSearch2.ClientID + "').fadeIn();$('#" + hfAndOr2.ClientID + "').val('');return false;");
-        lnkMinusSearch3.Attributes.Add("onclick", "$('#" + trSearch3.ClientID + "').fadeOut();$('#" + lnkAddSearch3.ClientID + "').fadeIn();$('#" + hfAndOr3.ClientID + "').val('');return false;");
+        lnkMinusSearch1.Attributes.Add("onclick", "$('#" + trSearch1.ClientID + "').hide();$('#" + lnkAddSearch1.ClientID + "').show();$('#" + hfAndOr1.ClientID + "').val('');return false;");
+        lnkMinusSearch2.Attributes.Add("onclick", "$('#" + trSearch2.ClientID + "').hide();$('#" + lnkAddSearch2.ClientID + "').show();$('#" + hfAndOr2.ClientID + "').val('');return false;");
+        lnkMinusSearch3.Attributes.Add("onclick", "$('#" + trSearch3.ClientID + "').hide();$('#" + lnkAddSearch3.ClientID + "').show();$('#" + hfAndOr3.ClientID + "').val('');return false;");
 
 
         GridViewRow ViewItemPager = grdViewItem.TopPagerRow;
@@ -336,7 +355,7 @@ public partial class Pages_UserControl_ViewDetail : System.Web.UI.UserControl
                 {
                     Session["viewtabindex"] = null;
                 }
-                ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "ReloadRecordListPage", "parent.$.fancybox.close();", true);
+                ScriptManager.RegisterStartupScript(upViewItem, upViewItem.GetType(), "ReloadRecordListPage", "parent.$.fancybox.close();", true);
             }            
         }
     }
@@ -929,7 +948,7 @@ public partial class Pages_UserControl_ViewDetail : System.Web.UI.UserControl
         //if (ViewState["Reset"] !=null && ViewState["ResetViewConfirm"] == null)
         //{
         //    //trResetViews.Visible = true;
-        //    ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "jsShowDefaultCofrimForView", "OpenDefaultConfirm();", true);
+        //    ScriptManager.RegisterStartupScript(upViewItem, upViewItem.GetType(), "jsShowDefaultCofrimForView", "OpenDefaultConfirm();", true);
         //    return;
 
         //}      
@@ -1131,22 +1150,22 @@ public partial class Pages_UserControl_ViewDetail : System.Web.UI.UserControl
 
         if (hfAndOr1.Value != "")
         {
-            strJSSearchShowHide = "$('#" + trSearch1.ClientID + "').fadeIn();$('#" + lnkAddSearch1.ClientID + "').fadeOut();document.getElementById('" + lnkAndOr1.ClientID + "').text=$('#" + hfAndOr1.ClientID + "').val();";
+            strJSSearchShowHide = "$('#" + trSearch1.ClientID + "').show();$('#" + lnkAddSearch1.ClientID + "').hide();document.getElementById('" + lnkAndOr1.ClientID + "').text=$('#" + hfAndOr1.ClientID + "').val();";
         }
 
         if (hfAndOr2.Value != "")
         {
-            strJSSearchShowHide = strJSSearchShowHide + "$('#" + trSearch2.ClientID + "').fadeIn();$('#" + lnkAddSearch2.ClientID + "').fadeOut();document.getElementById('" + lnkAndOr2.ClientID + "').text=$('#" + hfAndOr2.ClientID + "').val();";
+            strJSSearchShowHide = strJSSearchShowHide + "$('#" + trSearch2.ClientID + "').show();$('#" + lnkAddSearch2.ClientID + "').hide();document.getElementById('" + lnkAndOr2.ClientID + "').text=$('#" + hfAndOr2.ClientID + "').val();";
         }
 
         if (hfAndOr3.Value != "")
         {
-            strJSSearchShowHide = strJSSearchShowHide + "$('#" + trSearch3.ClientID + "').fadeIn();$('#" + lnkAddSearch3.ClientID + "').fadeOut();document.getElementById('" + lnkAndOr3.ClientID + "').text=$('#" + hfAndOr3.ClientID + "').val();";
+            strJSSearchShowHide = strJSSearchShowHide + "$('#" + trSearch3.ClientID + "').show();$('#" + lnkAddSearch3.ClientID + "').hide();document.getElementById('" + lnkAndOr3.ClientID + "').text=$('#" + hfAndOr3.ClientID + "').val();";
         }
 
 
         if (strJSSearchShowHide != "")
-            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "PutDefaultSearcUI_PB", strJSSearchShowHide, true);
+            ScriptManager.RegisterStartupScript(upViewItem, upViewItem.GetType(), "PutDefaultSearcUI_PB", strJSSearchShowHide, true);
      }
 
 
@@ -1186,6 +1205,7 @@ public partial class Pages_UserControl_ViewDetail : System.Web.UI.UserControl
         if (gvr != null)
         {
             _ViewItemPager = (Common_Pager)gvr.FindControl("ViewItemPager");
+            _ViewItemPager.TotalRows = iTN;
             _ViewItemPager.AddURL = GetAddViewItemURL(iViewID);
             _ViewItemPager.HyperAdd_CSS = "popuplinkVT";
             _ViewItemPager.AddToolTip = "Add/Remove";
@@ -1232,14 +1252,14 @@ public partial class Pages_UserControl_ViewDetail : System.Web.UI.UserControl
     {
         if (cbcSearchMain.ddlYAxisV == "")
         {
-            //lnkAddSearch1.Visible = false;// $('#" + lnkAddSearch1.ClientID + "').fadeOut();
-            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "cbcSearchMain_OnddlYAxis_Changed1", "$('#" + lnkAddSearch1.ClientID + "').fadeOut();", true);
+            //lnkAddSearch1.Visible = false;// $('#" + lnkAddSearch1.ClientID + "').hide();
+            ScriptManager.RegisterStartupScript(upViewItem, upViewItem.GetType(), "cbcSearchMain_OnddlYAxis_Changed1", "$('#" + lnkAddSearch1.ClientID + "').hide();", true);
 
         }
         else
         {
-            //lnkAddSearch1.Visible = true; //$('#" + lnkAddSearch1.ClientID + "').fadeIn();
-            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "cbcSearchMain_OnddlYAxis_Changed2", "$('#" + lnkAddSearch1.ClientID + "').fadeIn();", true);
+            //lnkAddSearch1.Visible = true; //$('#" + lnkAddSearch1.ClientID + "').show();
+            ScriptManager.RegisterStartupScript(upViewItem, upViewItem.GetType(), "cbcSearchMain_OnddlYAxis_Changed2", "$('#" + lnkAddSearch1.ClientID + "').show();", true);
         }
 
 
@@ -1251,12 +1271,12 @@ public partial class Pages_UserControl_ViewDetail : System.Web.UI.UserControl
         if (cbcSearch1.ddlYAxisV == "")
         {
             //lnkAddSearch2.Visible = false;
-            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "cbcSearch1_OnddlYAxis_Changed1", "$('#" + lnkAddSearch2.ClientID + "').fadeOut();", true);
+            ScriptManager.RegisterStartupScript(upViewItem, upViewItem.GetType(), "cbcSearch1_OnddlYAxis_Changed1", "$('#" + lnkAddSearch2.ClientID + "').hide();", true);
         }
         else
         {
             //lnkAddSearch2.Visible = true;
-            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "cbcSearch1_OnddlYAxis_Changed2", "$('#" + lnkAddSearch2.ClientID + "').fadeIn();", true);
+            ScriptManager.RegisterStartupScript(upViewItem, upViewItem.GetType(), "cbcSearch1_OnddlYAxis_Changed2", "$('#" + lnkAddSearch2.ClientID + "').show();", true);
         }
 
         //if (IsPostBack)
@@ -1268,12 +1288,12 @@ public partial class Pages_UserControl_ViewDetail : System.Web.UI.UserControl
         if (cbcSearch2.ddlYAxisV == "")
         {
             //lnkAddSearch3.Visible = false;
-            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "cbcSearch2_OnddlYAxis_Changed1", "$('#" + lnkAddSearch3.ClientID + "').fadeOut();", true);
+            ScriptManager.RegisterStartupScript(upViewItem, upViewItem.GetType(), "cbcSearch2_OnddlYAxis_Changed1", "$('#" + lnkAddSearch3.ClientID + "').hide();", true);
         }
         else
         {
             //lnkAddSearch3.Visible = true;
-            ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "cbcSearch2_OnddlYAxis_Changed2", "$('#" + lnkAddSearch3.ClientID + "').fadeIn();", true);
+            ScriptManager.RegisterStartupScript(upViewItem, upViewItem.GetType(), "cbcSearch2_OnddlYAxis_Changed2", "$('#" + lnkAddSearch3.ClientID + "').show();", true);
         }
 
         //if (IsPostBack)
@@ -1778,6 +1798,8 @@ public partial class Pages_UserControl_ViewDetail : System.Web.UI.UserControl
             //populate Filter control
 
             PopulateFilterControl(theView.FilterControlsInfo, (int)theView.TableID);
+            if(!IsPostBack)
+                Session["ViewItemID" + theView.ViewID.ToString()] = Common.Get_Comma_Sep_IDs("ViewItemID", "[ViewItem]", " ViewID=" + theView.ViewID.ToString() + " AND SearchField=1");
         }
         else
         {
@@ -1816,9 +1838,9 @@ public partial class Pages_UserControl_ViewDetail : System.Web.UI.UserControl
             PopulateViewItem(-1);
             divEmptyAddViewItem.Visible = false;
 
-            //string strJSSearchShowHide = "$('#" + trSearch1.ClientID + "').fadeOut();$('#" + trSearch2.ClientID + "').fadeOut();$('#" + trSearch3.ClientID + "').fadeOut();";
+            //string strJSSearchShowHide = "$('#" + trSearch1.ClientID + "').hide();$('#" + trSearch2.ClientID + "').hide();$('#" + trSearch3.ClientID + "').hide();";
 
-            //ScriptManager.RegisterStartupScript(this.Page, this.GetType(), "PutDefaultSearcUI_CS", strJSSearchShowHide, true);
+            //ScriptManager.RegisterStartupScript(upViewItem, upViewItem.GetType(), "PutDefaultSearcUI_CS", strJSSearchShowHide, true);
 
         }
 

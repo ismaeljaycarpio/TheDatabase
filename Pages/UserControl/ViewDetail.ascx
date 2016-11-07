@@ -17,7 +17,7 @@
         border-bottom: 2px solid #00FFFF;
     }
 </style>
-
+ <asp:ScriptManagerProxy runat="server" ID="ScriptManagerProxy1"></asp:ScriptManagerProxy>
 <script type="text/javascript">
     function toggleAndOr(t, hf) {
         // alert(hf);
@@ -36,7 +36,7 @@
 </script>
 
 <div>
-    <asp:UpdateProgress class="ajax-indicator-full" ID="UpdateProgress3" runat="server" AssociatedUpdatePanelID="upViewItem">
+   <%-- <asp:UpdateProgress class="ajax-indicator-full" ID="UpdateProgress3" runat="server" AssociatedUpdatePanelID="upViewItem">
         <ProgressTemplate>
             <table style="width: 100%; height: 100%; text-align: center;">
                 <tr valign="middle">
@@ -47,7 +47,7 @@
                 </tr>
             </table>
         </ProgressTemplate>
-    </asp:UpdateProgress>
+    </asp:UpdateProgress>--%>
 
     <asp:UpdatePanel ID="upViewItem" runat="server" UpdateMode="Conditional">
         <ContentTemplate>
@@ -67,7 +67,7 @@
                     <tr>
                         <td></td>
                         <td colspan="2" align="left">
-                            <table >
+                            <table>
                                 <tr>
                                     <td>
 
@@ -79,30 +79,30 @@
 
 
                                     </td>
-                                    <td  style="padding-left:10px;">
+                                    <td style="padding-left: 10px;">
                                         <%--<asp:LinkButton runat="server" ID="lnkResetDefault" OnClick="lnkResetDefault_Click" CausesValidation="true">
                                                         Reset
                                         </asp:LinkButton>--%>
-                                          <asp:HyperLink ID="hlSaveDefault" ClientIDMode="Static" runat="server"  CssClass="popupsavedefault">Reset</asp:HyperLink>
+                                        <asp:HyperLink ID="hlSaveDefault" ClientIDMode="Static" runat="server" CssClass="popupsavedefault">Reset</asp:HyperLink>
                                     </td>
-                                    <td style="padding-left:10px;">
+                                    <td style="padding-left: 10px;">
                                         <asp:LinkButton runat="server" ID="lnkAddView" OnClick="lnkAddView_Click" CausesValidation="true"
                                             Text="Add"> </asp:LinkButton>
                                     </td>
-                                    <td style="padding-left:10px;">
+                                    <td style="padding-left: 10px;">
                                         <asp:LinkButton runat="server" ID="lnlDeleteView" OnClick="lnlDeleteView_Click" CausesValidation="true"
                                             Text="Delete"> </asp:LinkButton>
                                     </td>
-                                    
-                                     <td style="padding-left:10px;">
+
+                                    <td style="padding-left: 10px;">
                                         <asp:LinkButton runat="server" ID="lnkSaveView" OnClick="lnkSaveView_Click" CausesValidation="true">
                                             <asp:Image runat="server" ID="imgSave" ImageUrl="~/App_Themes/Default/images/Save.png"
                                                 ToolTip="Save View" />
                                         </asp:LinkButton>
                                     </td>
 
-                                  
-                                    <td style="padding-left:10px;">
+
+                                    <td style="padding-left: 10px;">
                                         <asp:LinkButton runat="server" ID="lnkNavigatePrev" OnClick="lnkNavigatePrev_Click">
                                             <asp:Image ID="Image14" runat="server" ImageUrl="~/App_Themes/Default/Images/bullet_arrow_left.png"
                                                 ToolTip="Previous Record" />
@@ -186,17 +186,17 @@
                                         </asp:DropDownList>
                                     </td>
                                 </tr>
-                                <tr >
+                                <tr>
                                     <td align="right">
                                         <strong>Rows per page</strong>
                                     </td>
                                     <td align="left">
                                         <asp:TextBox runat="server" ID="txtRowsPerPage" CssClass="NormalTextBox" Width="50px" MaxLength="3"></asp:TextBox>
-                                         <asp:RegularExpressionValidator ID="revRowsPerPage" ControlToValidate="txtRowsPerPage"
+                                        <asp:RegularExpressionValidator ID="revRowsPerPage" ControlToValidate="txtRowsPerPage"
                                             runat="server" ErrorMessage="Numeric." Display="Dynamic" ValidationExpression="(^-?\d{1,18}\.$)|(^-?\d{1,18}$)|(^-?\d{0,18}\.\d{1,4}$)">
                                         </asp:RegularExpressionValidator>
                                         <asp:RangeValidator ID="rngRowsPerPage" runat="server" ControlToValidate="txtRowsPerPage"
-                                             ErrorMessage="Must be between 5 and 100" Font-Bold="true" Display="Dynamic" Type="Integer"
+                                            ErrorMessage="Must be between 5 and 100" Font-Bold="true" Display="Dynamic" Type="Integer"
                                             MinimumValue="5" MaximumValue="100"></asp:RangeValidator>
                                     </td>
                                 </tr>
@@ -286,11 +286,11 @@
                                             Text="Bulk Edit Icon" Checked="true" />
                                     </td>
                                 </tr>
-                                 <tr>
+                                <tr>
                                     <td></td>
                                     <td align="right">
                                         <asp:CheckBox runat="server" ID="chkShowFixedHeader" TextAlign="Left" Font-Bold="true"
-                                            Text="Show Fixed Header"  />
+                                            Text="Show Fixed Header" />
                                     </td>
                                 </tr>
                             </table>
@@ -470,7 +470,8 @@
                             <ItemTemplate>
                                 <div style="padding-left: 10px;">
                                     <asp:DropDownList runat="server" ID="ddlAlignment" CssClass="NormalTextBox">
-                                        <asp:ListItem Value="left" Text="Left" Selected="True"></asp:ListItem>
+                                        <asp:ListItem Value="" Text="Auto"></asp:ListItem>
+                                        <asp:ListItem Value="left" Text="Left" ></asp:ListItem>
                                         <asp:ListItem Value="right" Text="Right"></asp:ListItem>
                                         <asp:ListItem Value="center" Text="Center"></asp:ListItem>
                                     </asp:DropDownList>
@@ -500,7 +501,7 @@
                     <HeaderStyle CssClass="gridview_header" />
                     <PagerTemplate>
                         <asp:GridViewPager runat="server" ID="ViewItemPager" HideDelete="false" HideFilter="true"
-                            HidePageSizeButton="true" HideGo="true" HideNavigation="true" HideRefresh="true"  DelConfirmation="Are you sure you want to remove selected field(s) from this view?" 
+                            HidePageSizeButton="true" HideGo="true" HideNavigation="true" HideRefresh="true" DelConfirmation="Are you sure you want to remove selected field(s) from this view?"
                             HideExport="true" OnBindTheGridAgain="ViewItemPager_BindTheGridAgain" OnDeleteAction="ViewItemPager_DeleteAction" />
                     </PagerTemplate>
                 </dbg:dbgGridView>
@@ -519,7 +520,7 @@
 
             <div style="text-align: center">
                 <asp:HyperLink runat="server" ID="hlShowThisView" Target="_parent" Visible="false"></asp:HyperLink>
-               
+
 
                 <asp:Button runat="server" ID="btnSaveDefaultOK" ClientIDMode="Static" Style="display: none;" OnClick="lnkOK_Click" />
 
@@ -530,7 +531,7 @@
         </ContentTemplate>
         <Triggers>
             <asp:AsyncPostBackTrigger ControlID="grdViewItem" />
-          
+
         </Triggers>
 
 

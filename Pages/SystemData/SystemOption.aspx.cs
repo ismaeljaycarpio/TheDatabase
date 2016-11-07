@@ -229,8 +229,8 @@ public partial class Pages_SystemData_SystemOption : SecurePage
         try
         {
             int iTN = 0;
-           
 
+            ViewState[gvTheGrid.ID + "PageIndex"] = (iStartIndex / gvTheGrid.PageSize) + 1;
             gvTheGrid.DataSource = SystemData.SystemOption_Select(txtOptionKeySearch.Text.Trim().Replace("'", "''"), 
                 ddlAccount.SelectedValue==""?null:(int?)int.Parse(ddlAccount.SelectedValue),
                  ddlTable.SelectedValue == "" ? null : (int?)int.Parse(ddlTable.SelectedValue),
@@ -248,7 +248,12 @@ public partial class Pages_SystemData_SystemOption : SecurePage
             {
                 _gvPager = (Common_Pager)gvr.FindControl("Pager");
                 _gvPager.AddURL = GetAddURL();
-                _gvPager.PageIndexTextSet = (int)(iStartIndex / iMaxRows + 1);
+
+                if (ViewState[gvTheGrid.ID + "PageIndex"] != null)
+                    _gvPager.PageIndex = int.Parse(ViewState[gvTheGrid.ID + "PageIndex"].ToString());
+                //_gvPager.PageIndexTextSet = (int)(iStartIndex / iMaxRows + 1);
+                _gvPager.PageSize = gvTheGrid.PageSize;
+                _gvPager.TotalRows = iTN;
             }
 
 
@@ -363,7 +368,7 @@ public partial class Pages_SystemData_SystemOption : SecurePage
 
     protected void Pager_BindTheGridAgain(object sender, EventArgs e)
     {
-        BindTheGrid(_gvPager.StartIndex, _gvPager._gridView.PageSize);
+        BindTheGrid(_gvPager.StartIndex, _gvPager.PageSize);
     }
 
     protected void Pager_OnApplyFilter(object sender, EventArgs e)
@@ -395,11 +400,11 @@ public partial class Pages_SystemData_SystemOption : SecurePage
         {
             DeleteItem(sCheck);
             BindTheGrid(_gvPager.StartIndex, gvTheGrid.PageSize);
-            _gvPager._gridView.PageIndex = _gvPager.PageIndex - 1;
-            if (_gvPager._gridView.Rows.Count == 0 && _gvPager._gridView.PageIndex > 0)
-            {
-                BindTheGrid(_gvPager.StartIndex - gvTheGrid.PageSize, gvTheGrid.PageSize);
-            }
+            //_gvPager._gridView.PageIndex = _gvPager.PageIndex - 1;
+            //if (_gvPager._gridView.Rows.Count == 0 && _gvPager._gridView.PageIndex > 0)
+            //{
+            //    BindTheGrid(_gvPager.StartIndex - gvTheGrid.PageSize, gvTheGrid.PageSize);
+            //}
         }
 
     }

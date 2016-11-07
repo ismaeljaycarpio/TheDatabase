@@ -3,7 +3,7 @@
  Inherits="Pages_Help_ValidationTest" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HomeContentPlaceHolder" Runat="Server">
-  <asp:UpdateProgress ID="UpdateProgress1" runat="server" AssociatedUpdatePanelID="UpdatePanel1">
+  <%--<asp:UpdateProgress ID="UpdateProgress1" runat="server" AssociatedUpdatePanelID="UpdatePanel1">
             <ProgressTemplate>
                 <table style="width:100%; text-align:center">
                 <tr>
@@ -11,7 +11,7 @@
                 </tr>
                 </table>
             </ProgressTemplate>
-        </asp:UpdateProgress>
+        </asp:UpdateProgress>--%>
  
   <asp:UpdatePanel ID="UpdatePanel1" runat="server">
  <ContentTemplate>

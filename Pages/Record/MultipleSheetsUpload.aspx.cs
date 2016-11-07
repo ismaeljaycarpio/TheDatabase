@@ -53,30 +53,25 @@ public partial class Pages_Record_MultipleSheetsUpload : SecurePage
             if(!IsPostBack)
             {
 
-                //if (_theTable.DataUpdateUniqueColumnID != null)
+                
+                //if (_theTable.IsDataUpdateAllowed != null && (bool)(_theTable.IsDataUpdateAllowed))
                 //{
                 //    trDataUpdateUniqueColumnID.Visible = true;
-                //    Column theDataUpdateUniqueColumn = RecordManager.ets_Column_Details((int)_theTable.DataUpdateUniqueColumnID);
-                //    chkDataUpdateUniqueColumnID.Text = "Update existing data, matching on [" + theDataUpdateUniqueColumn.DisplayName + "]";
-                //}
-                if (_theTable.IsDataUpdateAllowed != null && (bool)(_theTable.IsDataUpdateAllowed))
-                {
-                    trDataUpdateUniqueColumnID.Visible = true;
-                    chkDataUpdateUniqueColumnID.Checked = true;
-                    string strMatchColumn = "";
-                    if (_theTable.UniqueColumnID != null)
-                    {
-                        Column theUniqueColumn = RecordManager.ets_Column_Details((int)_theTable.UniqueColumnID);
-                        strMatchColumn = theUniqueColumn.DisplayName;
-                    }
-                    if (_theTable.UniqueColumnID2 != null)
-                    {
-                        Column theUniqueColumn2 = RecordManager.ets_Column_Details((int)_theTable.UniqueColumnID2);
-                        strMatchColumn = strMatchColumn == "" ? theUniqueColumn2.DisplayName : strMatchColumn + " and " + theUniqueColumn2.DisplayName;
-                    }
+                //    chkDataUpdateUniqueColumnID.Checked = true;
+                //    string strMatchColumn = "";
+                //    if (_theTable.UniqueColumnID != null)
+                //    {
+                //        Column theUniqueColumn = RecordManager.ets_Column_Details((int)_theTable.UniqueColumnID);
+                //        strMatchColumn = theUniqueColumn.DisplayName;
+                //    }
+                //    if (_theTable.UniqueColumnID2 != null)
+                //    {
+                //        Column theUniqueColumn2 = RecordManager.ets_Column_Details((int)_theTable.UniqueColumnID2);
+                //        strMatchColumn = strMatchColumn == "" ? theUniqueColumn2.DisplayName : strMatchColumn + " and " + theUniqueColumn2.DisplayName;
+                //    }
 
-                    chkDataUpdateUniqueColumnID.Text = "Update existing data, matching on [" + strMatchColumn + "]";
-                }
+                //    chkDataUpdateUniqueColumnID.Text = "Update existing data, matching on [" + strMatchColumn + "]";
+                //}
 
                 if (Request.QueryString["FileInfo"] != null)
                 {
@@ -146,7 +141,7 @@ public partial class Pages_Record_MultipleSheetsUpload : SecurePage
 //        else
 //        {
 //            DataTable dtTemp = Common.DataTableFromText(@"Select Columnid from [Column] WHERE   
-//                                TableID=" + _theTable.TableID.ToString() + " AND SystemName='LocationID' AND NameOnImport is not null");
+//                                TableID=" + _theTable.TableID.ToString() + " AND SystemName='LocationID' AND Name_OnImport is not null");
 
 //            if (dtTemp.Rows.Count > 0)
 //            {
@@ -191,8 +186,8 @@ public partial class Pages_Record_MultipleSheetsUpload : SecurePage
                 lblExcelFileName.Text = xmlDoc.FirstChild["FileName"].InnerText;
                 lblBatchDesc.Text = xmlDoc.FirstChild["txtBatchDescription"].InnerText;
                 hfguidNew.Value = xmlDoc.FirstChild["guidNew"].InnerText;
-                if (xmlDoc.FirstChild["chkDataUpdateUniqueColumnID"]!=null)
-                    chkDataUpdateUniqueColumnID.Checked = bool.Parse( xmlDoc.FirstChild["chkDataUpdateUniqueColumnID"].InnerText);
+                //if (xmlDoc.FirstChild["chkDataUpdateUniqueColumnID"]!=null)
+                //    chkDataUpdateUniqueColumnID.Checked = bool.Parse( xmlDoc.FirstChild["chkDataUpdateUniqueColumnID"].InnerText);
 
                 hfFileExtension.Value ="." + lblExcelFileName.Text.Substring(lblExcelFileName.Text.LastIndexOf('.') + 1).ToLower();
                 if (lblBatchDesc.Text == "")
@@ -272,7 +267,7 @@ public partial class Pages_Record_MultipleSheetsUpload : SecurePage
             UploadManager.UploadCSV(_ObjUser.UserID, _theTable, lblBatchDesc.Text,
           lblExcelFileName.Text, guidNew, _strFilesPhisicalPath + "\\UserFiles\\AppFiles", 
            out strMsg, out iBatchID,  strFileExtension, strSelectedSheet,
-           int.Parse(Session["AccountID"].ToString()), chkDataUpdateUniqueColumnID.Checked,
+           int.Parse(Session["AccountID"].ToString()), null,
            hfImportTemlateID.Value == "" ? null : (int?)int.Parse(hfImportTemlateID.Value), null);
 
             if (strMsg == "")

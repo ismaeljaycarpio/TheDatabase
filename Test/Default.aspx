@@ -122,10 +122,7 @@
         <div style="padding: 20px;">
             Test page
         <br />
-            <div class="demo">
-
-
-
+            <div class="demo">                
                  <br />
                 <br />
                  Old BatchID<asp:TextBox runat="server" ID="txtBatchID" Width="70px"></asp:TextBox>

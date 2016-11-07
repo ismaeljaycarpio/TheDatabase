@@ -84,14 +84,7 @@
                                 </td>
                             </tr>
 
-                             <tr runat="server" id="trDataUpdateUniqueColumnID" visible="false">
-                                <td></td>
-                                <td>
-                                    <asp:CheckBox runat="server" ID="chkDataUpdateUniqueColumnID" ClientIDMode="Static" Checked="false"
-                                        TextAlign="Right" Text="Update existing data, matching on [ColumnName]" Font-Bold="true" />
-
-                                </td>
-                            </tr>
+                           
                           
                         </table>
                     </div>

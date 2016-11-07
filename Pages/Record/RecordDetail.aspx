@@ -2,8 +2,7 @@
     ValidateRequest="false" CodeFile="RecordDetail.aspx.cs" Inherits="Record_Record_Detail"
     EnableEventValidation="false" %>
 
-<%@ Register Namespace="DBGServerControl" Assembly="DBGServerControl" TagPrefix="dbg" %>
-<%@ Register Src="~/Pages/Pager/Pager.ascx" TagName="GridViewPager" TagPrefix="asp" %>
+
 <%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
 <%@ Register Src="~/Pages/UserControl/RecordList.ascx" TagName="ChildTable" TagPrefix="asp" %>
 <%--<%@ Register Src="~/Pages/UserControl/DetailView.ascx" TagName="CTDetail" TagPrefix="asp" %>--%>
@@ -12,15 +11,20 @@
 
 <%@ Register TagPrefix="editor" Assembly="WYSIWYGEditor" Namespace="InnovaStudio" %>
 <asp:Content ID="Content2" ContentPlaceHolderID="HeadContent" runat="server">
+
+
     <asp:Literal ID="ltTextStyles" runat="server"></asp:Literal>
 </asp:Content>
 <asp:Content ID="Content1" ContentPlaceHolderID="HomeContentPlaceHolder" runat="Server">
+    <asp:ScriptManagerProxy runat="server" ID="ScriptManagerProxy1"></asp:ScriptManagerProxy>
+
+
     <script src="../Document/Uploadify/jquery.uploadify.v2.1.4.js" type="text/javascript"></script>
     <script src="../Document/Uploadify/swfobject.js" type="text/javascript"></script>
     <link href="../Document/Uploadify/uploadify.css" rel="stylesheet" type="text/css" />
-        <script type="text/javascript" src="<%=Request.Url.Scheme+@"://maps.google.com/maps/api/js?sensor=false" %>"></script>
 
-    <script src="<%=Request.Url.Scheme+@"://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js" %>"></script>
+    <script type="text/javascript" src="<%=Request.Url.Scheme+@"://maps.google.com/maps/api/js?sensor=false" %>"></script>
+    <script type="text/javascript" src="<%=Request.Url.Scheme+@"://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js" %>"></script>
     <link href="<%=Request.Url.Scheme+@"://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/themes/base/jquery-ui.css" %>" rel="stylesheet" type="text/css" />
 
     <style type="text/css">
@@ -39,19 +43,22 @@
             padding-left: 10px;
             padding-right: 10px;
         }
+
+        .HeadingClass {
+            color: rgb(0,0,0);
+            font-size: larger;
+            text-decoration: none;
+        }
+
+        .TableDetailClass {
+            border: 1px solid #505050;
+            padding: 10px;
+            overflow: auto;
+        }
     </style>
     <script type="text/javascript">
         function ValidatorUpdateDisplay(val) {
-            //            if (typeof (val.display) == "string") {
-            //                if (val.display == "None") {
-            //                    return;
-            //                }
-            //                if (val.display == "Dynamic") {
-            //                    val.style.display = val.isvalid ? "none" : "inline";
-            //                    return;
-            //                }
-
-            //            } //radioV
+          
             try {
                 val.style.visibility = val.isvalid ? "hidden" : "visible";
                 if (val.isvalid) {
@@ -87,7 +94,7 @@
 
         //function ShowHideMainDivs(divSelected, lnk) {
         //    var lblCurrentSelectedTabLink = document.getElementsByName('lblCurrentSelectedTabLink');
-        //    $('.showhidedivs_hide').hide();
+        //    $('.eachtabletab_hide').hide();
         //    if (divSelected == null)
         //    {
         //        return;
@@ -95,7 +102,7 @@
         //    if (lnk != null) {
         //        document.getElementsByName('hfCurrentSelectedTabLink').value = lnk.id;               
         //    }
-        //    $('.showhidedivs').hide();
+        //    $('.eachtabletab').hide();
         //    divSelected.style.display = 'block';
         //    if ($(".TablLinkClass") != null && lnk != null) {
         //        $(".TablLinkClass").css('font-weight', 'normal');
@@ -110,7 +117,7 @@
         //    var hfCurrentSelectedTabLink = document.getElementsByName('hfCurrentSelectedTabLink');
         //    var divSelected = document.getElementsByName(divSelectedN);
         //    var lnk = document.getElementsByName(lnkN);
-           
+
         //    if (divSelected == null) {
         //        return;
         //    }
@@ -129,12 +136,12 @@
 
 
 
-        //    $(".showhidedivs_hide").hide();
-        //    $(".showhidedivs").hide();
+        //    $(".eachtabletab_hide").hide();
+        //    $(".eachtabletab").hide();
         //    if (divSelected.style != null) {
         //        divSelected.style.display = 'block';
         //    }
-           
+
 
         //    if ($(".TablLinkClass") != null && lnk != null) {
         //        $(".TablLinkClass").css('font-weight', 'normal');
@@ -250,10 +257,14 @@
 
         }
 
-      
+
     </script>
-   
-    <asp:UpdateProgress class="ajax-indicator-full" ID="UpdateProgress3" runat="server">
+
+
+
+
+
+    <%--<asp:UpdateProgress class="ajax-indicator-full" ID="UpdateProgress3" runat="server">
         <ProgressTemplate>
             <table style="width: 100%; height: 100%; text-align: center;">
                 <tr valign="middle">
@@ -266,13 +277,14 @@
                 </tr>
             </table>
         </ProgressTemplate>
-    </asp:UpdateProgress>
+    </asp:UpdateProgress>--%>
 
-    <asp:UpdatePanel ID="upDetailDynamic" runat="server"  UpdateMode="Always">
-        <ContentTemplate >
+    <asp:UpdatePanel ID="upDetailDynamic" runat="server" UpdateMode="Conditional">
+        <ContentTemplate>
+
             <div runat="server" id="divHeaderColorDetail" style="">
-                
-             
+
+                <asp:Button runat="server" ID="btnSaveRecord" ClientIDMode="Static" Style="display: none;" OnClick="btnSaveRecord_Click" />
                 <table width="100%" cellpadding="0" cellspacing="0">
                     <tr>
                         <td align="left" style="width: 500px;">
@@ -280,9 +292,12 @@
                                 <asp:Label runat="server" ID="lblTitle"></asp:Label></span>
                             <br />
                             <br />
-                            <asp:Label runat="server" ID="lblHeaderName" Style="padding-left: 5px;"> </asp:Label>
+                            <asp:Label runat="server" ID="lblHeaderName" Style="padding-left: 5px;" ClientIDMode="Static"> </asp:Label>
                             <asp:HiddenField runat="server" ID="hfRecordID" Value="-1" ClientIDMode="Static" />
-                             
+                             <asp:HiddenField runat="server" ID="hfPostback" Value="0" ClientIDMode="Static" />
+                            <asp:HiddenField runat="server" ID="hfUserRoleName" Value="None" ClientIDMode="Static" />
+                            <asp:HiddenField runat="server" ID="hfRecordAddEditView" Value="view" ClientIDMode="Static" />
+                             <asp:HiddenField runat="server" ID="hfRecordTableID" Value="-1" ClientIDMode="Static" />
                         </td>
                         <td align="left">
                             <table class="DetailPageControls">
@@ -340,8 +355,8 @@
                                                                            
                                                                         </asp:UpdatePanel>--%>
                                                                             </div>
-                                                                            <asp:Button Style="display: none;" runat="server" ID="lnkHiddenSave" ClientIDMode="Static"
-                                                                                OnClick="tabDetail_ActiveTabChanged" CausesValidation="true"></asp:Button>
+                                                                            <%--<asp:Button Style="display: none;" runat="server" ID="lnkHiddenSave" ClientIDMode="Static"
+                                                                                OnClick="tabDetail_ActiveTabChanged" CausesValidation="true"></asp:Button>--%>
                                                                         </td>
                                                                         <td>
                                                                             <div runat="server" id="divSaveAndStay" visible="false">
@@ -366,10 +381,10 @@
                                                                         </td>
                                                                         <td>
                                                                             <div runat="server" id="divWordExport" visible="false">
-                                                                                <asp:LinkButton runat="server" ID="lnkWordWxport" OnClick="lnkWordWxport_Click">
+                                                                                <asp:HyperLink runat="server" ID="lnkWordWxport"  CssClass="popuplinkWE">
                                                                             <asp:Image runat="server" ID="Image3" ImageUrl="~/App_Themes/Default/images/WordExport.png"
                                                                                 ToolTip="Document Generation" />
-                                                                                </asp:LinkButton>
+                                                                                </asp:HyperLink>
                                                                             </div>
                                                                         </td>
                                                                         <td>
@@ -532,54 +547,61 @@
                                                         <div id="search" style="padding-bottom: 10px">
                                                             <asp:ValidationSummary ID="ValidationSummary1" runat="server" EnableClientScript="true"
                                                                 ShowMessageBox="true" ShowSummary="false" HeaderText="Please correct the following errors:" />
-                                                           
+
                                                         </div>
                                                         <asp:Panel ID="Panel2" runat="server">
                                                             <table>
                                                                 <tr>
                                                                     <td>
-                                                                        <div runat="server" id="divDynamic" class="NormalTextBox">
-                                                                            <ajaxToolkit:TabContainer ID="tabDetail" runat="server" ActiveTabIndex="0" CssClass="DBGTab"
-                                                                                Visible="true">
-                                                                                <ajaxToolkit:TabPanel ID="tpDetail" runat="server">
-                                                                                    <HeaderTemplate>
-                                                                                        <%--<strong>Detail</strong> style="display:none;" --%>
-                                                                                        
-                                                                                       
+                                                                        <div runat="server" id="divDynamic" class="DBGTab ajax__tab_container ajax__tab_default">
 
-                                                                                        <asp:Label runat="server" Font-Bold="true" ID="lblFristTabTableName" Text="Detail"></asp:Label>
-                                                                                    </HeaderTemplate>
-                                                                                    <ContentTemplate>
-                                                                                        <asp:Panel runat="server" ID="pnlDetail">
-                                                                                            <table>
-                                                                                                <tr>
-                                                                                                    <td valign="top">
-                                                                                                        <asp:Panel runat="server" ID="pnlMain">
-                                                                                                             <asp:Label runat="server" ID="lblCurrentSelectedTabLink" ClientIDMode="Static"  ></asp:Label>
-                                                                                                             <asp:HiddenField runat="server" ID="hfCurrentSelectedTabLink" ClientIDMode="Static" />
-                                                                                                            <asp:Panel runat="server" ID="pnlTabHeading">
-                                                                                                            </asp:Panel>
-                                                                                                            <asp:Panel runat="server" ID="pnlDetailTab" CssClass="showhidedivs">
-                                                                                                                <table runat="server" id="tblMain">
-                                                                                                                    <tr>
-                                                                                                                        <td valign="top">
-                                                                                                                            <table id="tblLeft" runat="server" visible="true" cellpadding="3">
-                                                                                                                            </table>
-                                                                                                                        </td>
-                                                                                                                        <td valign="top">
-                                                                                                                            <table id="tblRight" runat="server" visible="true" cellpadding="3" style="margin-left: 10px;">
-                                                                                                                            </table>
-                                                                                                                        </td>
-                                                                                                                    </tr>
-                                                                                                                    <tr>
-                                                                                                                        <td colspan="2" align="right">
-                                                                                                                            <div runat="server" id="divSaveBottom" visible="false">
-                                                                                                                                <table cellpadding="0" cellspacing="0">
-                                                                                                                                    <tr>
-                                                                                                                                        <td></td>
-                                                                                                                                        <td valign="middle">
-                                                                                                                                            <div runat="server" id="divSaveBottonSave" style="padding: 5px 15px 5px 15px;">
-                                                                                                                                                <asp:LinkButton runat="server" ID="lnkSaveRRP" OnClick="lnkSaveClose_Click" CausesValidation="true">
+                                                                            <table border="0" cellpadding="0" cellspacing="0">
+                                                                                <tr>
+                                                                                    <td></td>
+                                                                                    <td>
+                                                                                        <asp:Panel runat="server" ID="pnlHeadingHor" ClientIDMode="Static" style="display:inline-block;" > 
+                                                                                        </asp:Panel>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td style="vertical-align: top;">
+                                                                                        <asp:Panel runat="server" ID="pnlHeadingVer" ClientIDMode="Static"  Style="vertical-align: top;">
+                                                                                        </asp:Panel>
+
+                                                                                    </td>
+                                                                                    <td style="vertical-align: top;">
+                                                                                        <asp:Panel runat="server" ID="pnlAllTables" CssClass="ajax__tab_body">
+                                                                                            <asp:Panel runat="server" ID="pnlDetail" ClientIDMode="Static" CssClass="ajax__tab_panel">
+                                                                                                <table>
+                                                                                                    <tr>
+                                                                                                        <td valign="top">
+                                                                                                            <asp:Panel runat="server" ID="pnlEachTable">
+                                                                                                               
+                                                                                                               
+                                                                                                                
+                                                                                                                <asp:Panel runat="server" ID="pnlTabHeading">
+                                                                                                                </asp:Panel>
+                                                                                                                <asp:Panel runat="server" ID="pnlDetailTab" CssClass="eachtabletab" ClientIDMode="Static">
+                                                                                                                    <table runat="server" id="tblMain">
+                                                                                                                        <tr>
+                                                                                                                            <td valign="top">
+                                                                                                                                <table id="tblLeft" runat="server" visible="true" cellpadding="3">
+                                                                                                                                </table>
+                                                                                                                            </td>
+                                                                                                                            <td valign="top">
+                                                                                                                                <table id="tblRight" runat="server" visible="true" cellpadding="3" style="margin-left: 10px;">
+                                                                                                                                </table>
+                                                                                                                            </td>
+                                                                                                                        </tr>
+                                                                                                                        <tr>
+                                                                                                                            <td colspan="2" align="right">
+                                                                                                                                <div runat="server" id="divSaveBottom" visible="false">
+                                                                                                                                    <table cellpadding="0" cellspacing="0">
+                                                                                                                                        <tr>
+                                                                                                                                            <td></td>
+                                                                                                                                            <td valign="middle">
+                                                                                                                                                <div runat="server" id="divSaveBottonSave" style="padding: 5px 15px 5px 15px;">
+                                                                                                                                                    <asp:LinkButton runat="server" ID="lnkSaveRRP" OnClick="lnkSaveClose_Click" CausesValidation="true">
                                                                                                                                             <table>
                                                                                                                                                 <tr>
                                                                                                                                                     <td>
@@ -592,100 +614,75 @@
                                                                                                                                                     </td>
                                                                                                                                                 </tr>
                                                                                                                                             </table>
-                                                                                                                                                </asp:LinkButton>
-                                                                                                                                            </div>
-                                                                                                                                        </td>
-                                                                                                                                    </tr>
-                                                                                                                                </table>
-                                                                                                                            </div>
+                                                                                                                                                    </asp:LinkButton>
+                                                                                                                                                </div>
+                                                                                                                                            </td>
+                                                                                                                                        </tr>
+                                                                                                                                    </table>
+                                                                                                                                </div>
+                                                                                                                            </td>
+                                                                                                                        </tr>
+                                                                                                                    </table>
+                                                                                                                </asp:Panel>
+                                                                                                            </asp:Panel>
+                                                                                                        </td>
+
+                                                                                                    </tr>
+                                                                                                </table>
+                                                                                                <div>
+                                                                                                    <table>
+                                                                                                        <tr>
+                                                                                                            <td style="width: 50px;"></td>
+                                                                                                            <td colspan="2"></td>
+                                                                                                            <td style="width: 30px;"></td>
+                                                                                                            <td>
+                                                                                                                <table runat="server" id="trReasonForChange" visible="false">
+                                                                                                                    <tr>
+                                                                                                                        <td>
+                                                                                                                            <strong runat="server" id="stgReasonForChange">Reason for change</strong>
+                                                                                                                        </td>
+                                                                                                                    </tr>
+                                                                                                                    <tr>
+                                                                                                                        <td>
+                                                                                                                            <asp:TextBox runat="server" ID="txtReasonForChange" Width="300px" CssClass="NormalTextBox"
+                                                                                                                                TextMode="MultiLine" Height="50px"></asp:TextBox>
+                                                                                                                            <asp:RequiredFieldValidator runat="server" ID="rfvReasonForChange" ControlToValidate="txtReasonForChange"
+                                                                                                                                ErrorMessage="Reason for change is Required" Display="None" Enabled="false"></asp:RequiredFieldValidator>
                                                                                                                         </td>
                                                                                                                     </tr>
                                                                                                                 </table>
-                                                                                                            </asp:Panel>
-                                                                                                        </asp:Panel>
-                                                                                                    </td>
-                                                                                                    <td style="width: 10px;"></td>
-                                                                                                    <td>
-                                                                                                        <div runat="server" id="divProgressHisotry" visible="false" class="topview">
-                                                                                                            <strong style="color: #0299C6; font-size: 15px;">Progress History</strong><br />
-                                                                                                            <br />
-                                                                                                            <asp:GridView ID="grdProgressHisotry" runat="server" AutoGenerateColumns="false"
-                                                                                                                HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center" CssClass="gridview"
-                                                                                                                OnRowDataBound="grdProgressHisotry_RowDataBound">
-                                                                                                                <RowStyle CssClass="gridview_row" />
-                                                                                                                <Columns>
-                                                                                                                    <%--<asp:TemplateField Visible="true">   DataKeyNames="ProgressColumnID"
-                                                                                                            <ItemStyle HorizontalAlign="Left" />
-                                                                                                            <ItemTemplate>
-                                                                                                                <asp:CheckBox ID="chkProgressStatus" runat="server" AutoPostBack="false" Enabled="false" />
-                                                                                                                <asp:Label runat="server" ID="lblFormSetName"></asp:Label>
-                                                                                                                <asp:HyperLink runat="server" ID="hlProgressColumnID"></asp:HyperLink>
-                                                                                                            </ItemTemplate>
-                                                                                                        </asp:TemplateField>--%>
-                                                                                                                </Columns>
-                                                                                                                <HeaderStyle CssClass="gridview_header" />
-                                                                                                            </asp:GridView>
-                                                                                                            <br />
-                                                                                                            <br />
-                                                                                                            <strong>Key:</strong>
-                                                                                                            <br />
-                                                                                                            <asp:Image ID="Image1" runat="server" ImageUrl="~/App_Themes/Default/Images/empty.png" />
-                                                                                                            &nbsp Not done - click to start
-                                                                                                    <br />
-                                                                                                            <asp:Image ID="Image4" runat="server" ImageUrl="~/App_Themes/Default/Images/incomplete.png" />
-                                                                                                            &nbsp Part done - click to Resume
-                                                                                                    <br />
-                                                                                                            <asp:Image ID="Image5" runat="server" ImageUrl="~/App_Themes/Default/Images/complete.png" />
-                                                                                                            &nbsp Complete - click to view
-                                                                                                    <br />
-                                                                                                        </div>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            </table>
-                                                                                            <div>
-                                                                                                <table>
-                                                                                                    <tr>
-                                                                                                        <td style="width: 50px;"></td>
-                                                                                                        <td colspan="2"></td>
-                                                                                                        <td style="width: 30px;"></td>
-                                                                                                        <td>
-                                                                                                            <table runat="server" id="trReasonForChange" visible="false">
-                                                                                                                <tr>
-                                                                                                                    <td>
-                                                                                                                        <strong runat="server" id="stgReasonForChange">Reason for change</strong>
-                                                                                                                    </td>
-                                                                                                                </tr>
-                                                                                                                <tr>
-                                                                                                                    <td>
-                                                                                                                        <asp:TextBox runat="server" ID="txtReasonForChange" Width="300px" CssClass="NormalTextBox"
-                                                                                                                            TextMode="MultiLine" Height="50px"></asp:TextBox>
-                                                                                                                        <asp:RequiredFieldValidator runat="server" ID="rfvReasonForChange" ControlToValidate="txtReasonForChange"
-                                                                                                                            ErrorMessage="Reason for change is Required" Display="None" Enabled="false"></asp:RequiredFieldValidator>
-                                                                                                                    </td>
-                                                                                                                </tr>
-                                                                                                            </table>
-                                                                                                        </td>
-                                                                                                    </tr>
-                                                                                                </table>
-                                                                                            </div>
-                                                                                            <br />
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    </table>
+                                                                                                </div>
+                                                                                                <br />
+                                                                                            </asp:Panel>
+
                                                                                         </asp:Panel>
-                                                                                    </ContentTemplate>
-                                                                                </ajaxToolkit:TabPanel>
-                                                                            </ajaxToolkit:TabContainer>
+
+
+
+
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </table>
+                                                                            <%--<asp:Panel runat="server" ID="pnlHeading" ClientIDMode="Static">
+                                                                                    <asp:Label runat="server" Font-Bold="true" ID="lblFristTabTableName" Text="Detail"></asp:Label>
+                                                                                    <asp:LinkButton runat="server" ID="lnkHeading" ClientIDMode="Static" OnClientClick=""></asp:LinkButton>
+                                                                                </asp:Panel>--%>
                                                                         </div>
                                                                         <%--//oliver <begin> Ticket 1476--%>
                                                                         <div style="margin: 10px;">
-                                                                            <div style="float:left; margin-left:-30px;">
-                                                                                <asp:LinkButton runat="server" ID="lnkShowHistory" ClientIDMode="Static" Text="Show Change History"
-                                                                                    OnClick="lnkShowHistory_Click" CausesValidation="false"></asp:LinkButton>
-                                                                                <asp:LinkButton runat="server" ID="lnkHideHistory" ClientIDMode="Static" Text="Hide Change History"
-                                                                                    Visible="false" CausesValidation="false" OnClick="lnkHideHistory_Click"></asp:LinkButton>
+                                                                            <div style="float: left; margin-left: -30px;" id="divHistory">
+                                                                                  <asp:HyperLink runat="server" ID="lnkShowHistory" ClientIDMode="Static" Text="Show Change History" CssClass="popuplinkCH"
+                                                                                         CausesValidation="false"></asp:HyperLink>
+
                                                                             </div>
-                                                                            <div style="float:right; color: #C0C0C0;">
-                                                                                Record ID: <asp:Label ID="lblRecordID" runat="server" Text=""></asp:Label>
+                                                                            <div style="float: right; color: #C0C0C0;">
+                                                                                Record ID:
+                                                                                <asp:Label ID="lblUIRecordID" runat="server" Text=""></asp:Label>
                                                                             </div>
-                                                                            <div style="float:left;"></div>
+                                                                            <div style="float: left;"></div>
                                                                         </div>
                                                                         <%--//oliver <end>--%>
                                                                     </td>
@@ -708,170 +705,14 @@
                     </table>
                 </div>
             </asp:Panel>
-        
+            
+            <br />
+            <%-- OnClick="btnReloadMe_Click"--%>
+            <asp:Button ID="btnReloadMe" runat="server" ClientIDMode="Static" OnClientClick="ReloadMe();return false;"
+                Style="display: none;" />
+            <asp:Literal ID="ltTextJS" runat="server"></asp:Literal>
+
         </ContentTemplate>
-        <Triggers>
-            <asp:PostBackTrigger ControlID="lnkWordWxport" />
-            <asp:AsyncPostBackTrigger ControlID="tabDetail" />
-        </Triggers>
+       
     </asp:UpdatePanel>
-    <br />
-    <div>
-        <asp:UpdatePanel ID="upChangeHistory" runat="server" UpdateMode="Conditional">
-            <ContentTemplate>
-                <div id="divChangeHistory">
-                    <table runat="server" id="tblChangeHistory" visible="false">
-                        <%--<tr>
-                            <td colspan="3">
-                                <asp:LinkButton runat="server" ID="lnkShowHistory" ClientIDMode="Static" Text="Show Change History"
-                                    OnClick="lnkShowHistory_Click" CausesValidation="false"></asp:LinkButton>
-                                <asp:LinkButton runat="server" ID="lnkHideHistory" ClientIDMode="Static" Text="Hide Change History"
-                                    Visible="false" CausesValidation="false" OnClick="lnkHideHistory_Click"></asp:LinkButton>
-                            </td>
-                        </tr>--%>
-                        <tr runat="server" id="trTab" visible="false">
-                            <td colspan="3">
-                                <div id="divHistory">
-                                    <div style="float: left; width: 55%;">
-                                        <strong>Change History</strong>
-                                        <br />
-                                        <dbg:dbgGridView ID="gvChangedLog" runat="server" GridLines="Both" CssClass="gridview"
-                                            HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center" AllowPaging="True"
-                                            AllowSorting="false" DataKeyNames="DateAdded" HeaderStyle-ForeColor="Black" Width="100%"
-                                            AutoGenerateColumns="false" PageSize="15" OnPreRender="gvChangedLog_PreRender"
-                                            OnRowDataBound="gvChangedLog_RowDataBound">
-                                            <PagerSettings Position="Top" />
-                                            <Columns>
-                                                <asp:TemplateField>
-                                                    <ItemStyle Width="10px" HorizontalAlign="Center" />
-                                                    <ItemTemplate>
-                                                        <asp:HyperLink runat="server" ID="hlView" CssClass="popuplink">
-                                                        <asp:Image runat="server" ID="imgView" ImageUrl="~/App_Themes/Default/Images/iconShow.png" />
-                                                        </asp:HyperLink>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-                                                <asp:TemplateField Visible="true" HeaderText="Updated Date" HeaderStyle-HorizontalAlign="Center">
-                                                    <ItemStyle HorizontalAlign="Center" />
-                                                    <ItemTemplate>
-                                                        <asp:Label ID="UpdateDate" runat="server" Text='<%# Eval("DateAdded") %>'></asp:Label>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-                                                <asp:TemplateField Visible="true" HeaderText="User">
-                                                    <ItemTemplate>
-                                                        <asp:Label ID="lblUser" runat="server" Text='<%# Eval("User") %>'></asp:Label>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-                                                <asp:TemplateField Visible="true" HeaderText="Changed Column List">
-                                                    <ItemTemplate>
-                                                        <asp:Label ID="lblColumnList" runat="server"></asp:Label>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-                                                <asp:TemplateField Visible="true" HeaderText="Reason for change">
-                                                    <ItemTemplate>
-                                                        <asp:Label ID="lblResonForChange" runat="server" Text='<%# Eval("ResonForChange") %>'></asp:Label>
-                                                    </ItemTemplate>
-                                                </asp:TemplateField>
-                                            </Columns>
-                                            <HeaderStyle CssClass="gridview_header" />
-                                            <RowStyle CssClass="gridview_row" />
-                                            <PagerTemplate>
-                                                <asp:GridViewPager runat="server" ID="CL_Pager" HideFilter="true" HideAdd="true"
-                                                    HideDelete="true" OnBindTheGridToExport="CL_Pager_BindTheGridToExport" OnApplyFilter="CL_Pager_OnApplyFilter"
-                                                    OnBindTheGridAgain="CL_Pager_BindTheGridAgain" OnExportForCSV="CL_Pager_OnExportForCSV" />
-                                            </PagerTemplate>
-                                            <EmptyDataTemplate>
-                                                <div style="padding-left: 100px;">
-                                                    No changes have been made yet.
-                                                </div>
-                                            </EmptyDataTemplate>
-                                        </dbg:dbgGridView>
-                                    </div>
-                                    <div runat="server" id="divLastUpdatedInfo" visible="true" style="float:right; width: 45%; margin-top:50px; position:relative;">
-                                        <!--oliver: additional fields here...-->
-                                            <div style="width:100%; margin-left: 60px;">
-                                                <div style="float:left; width:100px; padding:10px 0 0;"><b>Created By:</b></div>
-                                                <div style="float:left; width:180px; padding:10px 0 0;"><asp:Label ID="lblCreatedBy" runat="server" Text=""></asp:Label></div>
-                                                <div style="clear:both;"></div>
-                                            </div>
-                                            <div style="width:100%; margin-left: 60px;">
-                                                <div style="float:left; width:100px; padding:10px 0 0;"><b>Date Created:</b></div>
-                                                <div style="float:left; width:180px; padding:10px 0 0;"><asp:Label ID="lblDateCreated" runat="server" Text=""></asp:Label></div>
-                                                <div style="clear:both;"></div>
-                                            </div>
-                                            <div style="width:100%; margin-left: 60px;">
-                                                <div style="float:left; width:100px; padding:10px 0 0;"><asp:Label ID="lblUpdatedByText" runat="server" Text="<b>Updated By:</b>"></asp:Label></div>
-                                                <div style="float:left; width:180px; padding:10px 0 0;"><asp:Label ID="lblUpdatedBy" runat="server" Text=""></asp:Label></div>
-                                                <div style="clear:both;"></div>
-                                            </div>
-                                            <div style="width:100%; margin-left: 60px;">
-                                                <div style="float:left; width:100px; padding:10px 0 0;"><asp:Label ID="lblDateUpdatedText" runat="server" Text="<b>Date Updated:</b>"></asp:Label></div>
-                                                <div style="float:left; width:180px; padding:10px 0 0;"><asp:Label ID="lblDateUpdated" runat="server" Text=""></asp:Label></div>
-                                                <div style="clear:both;"></div>
-                                            </div>
-                                    </div>
-                                    <div style="clear:both;"></div>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </ContentTemplate>
-            <Triggers>
-                <asp:AsyncPostBackTrigger ControlID="gvChangedLog" />
-            </Triggers>
-        </asp:UpdatePanel>
-    </div>
-    <br />
-    <asp:Label runat="server" ID="lblModalWordExport" />
-    <ajaxToolkit:ModalPopupExtender ID="mpeModalWordExport" ClientIDMode="Static" runat="server"
-        BehaviorID="popup" TargetControlID="lblModalWordExport" PopupControlID="pnlModalWordExport"
-        BackgroundCssClass="modalBackground" OkControlID="lnkWordExportCancel" />
-    <asp:Panel ID="pnlModalWordExport" runat="server" Style="display: none">
-        <div style="border-width: 5px; background-color: #ffffff; border-color: #4F8FDD; height: 200px; border-style: outset;">
-            <div style="padding-top: 50px; padding: 20px;">
-                <table>
-                    <tr>
-                        <td colspan="2">
-                            <h3>Document Generation</h3>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="right">
-                            <strong>Template:</strong>
-                        </td>
-                        <td>
-                            <asp:DropDownList runat="server" ID="ddlDataRetriever" DataTextField="FileName" DataValueField="DocTemplateID"
-                                AutoPostBack="false" CssClass="NormalTextBox" Width="350px">
-                            </asp:DropDownList>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td>
-                            <table style="padding: 50px 0 0 85px;">
-                                <tr>
-                                    <td>
-                                        <asp:LinkButton runat="server" ID="lnkWordExportOK" CssClass="btn" CausesValidation="false"
-                                            OnClick="lnkWordExportOK_Click"> <strong>OK</strong></asp:LinkButton>
-                                    </td>
-                                    <td>
-                                        <asp:LinkButton runat="server" ID="lnkWordExportCancel" CssClass="btn" CausesValidation="false"> <strong>Cancel</strong></asp:LinkButton>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-                <%--<asp:HyperLink runat="server" ID="hlChangeAccountType" NavigateUrl="#" CssClass="popuplink"
-                    onclick="$find('popup').hide(); return false;"> click here.</asp:HyperLink>--%>
-            </div>
-            <%--<div style="text-align: center; padding-left: 250px;">
-                
-            </div>--%>
-        </div>
-    </asp:Panel>
-    <br />
-    <%-- OnClick="btnReloadMe_Click"--%>
-    <asp:Button ID="btnReloadMe" runat="server" ClientIDMode="Static" OnClientClick="ReloadMe();return false;"
-        Style="display: none;" />
 </asp:Content>

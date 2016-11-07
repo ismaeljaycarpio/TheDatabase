@@ -2,7 +2,7 @@
     CodeFile="AuditDetail.aspx.cs" Inherits="Pages_Record_AuditDetail" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HomeContentPlaceHolder" runat="Server">
-    <div style="min-width: 450px; min-height: 500px; padding-top: 10px;">
+    <div style="min-width: 450px;  padding-top: 10px;">
         <h2>Change History Detail</h2>
         <asp:GridView ID="grdAuditDetail" runat="server" AutoGenerateColumns="false" CssClass="gridview"
             HeaderStyle-HorizontalAlign="Center" RowStyle-HorizontalAlign="Center"

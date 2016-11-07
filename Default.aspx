@@ -342,11 +342,12 @@ CodeFile="Default.aspx.cs" Inherits="DocGen.Document.DashBoard" %>
 
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="HomeContentPlaceHolder" runat="server">
-    <link href="<%=ResolveUrl("~/Styles/jquery-ui-1.7.3.custom.css")%>" rel="stylesheet" 
-    type="text/css" />     
+    <link href="<%=ResolveUrl("~/Styles/jquery-ui-1.7.3.custom.css")%>" rel="stylesheet" type="text/css" />     
     <script type="text/javascript" src="<%=ResolveUrl("~/Script/jquery-ui-1.9.2.custom.min.js")%>"></script>
-
-
+   
+    <%-- <link href="<%=ResolveUrl("~/Styles/jquery-ui-1.11.3.min.css")%>" rel="stylesheet"
+        type="text/css" />
+     <script type="text/javascript" src="<%=ResolveUrl("~/Styles/jquery-ui-1.11.3.min.js")%>"></script> --%>
 
    
  <script type="text/javascript" language="JavaScript">
@@ -428,7 +429,10 @@ CodeFile="Default.aspx.cs" Inherits="DocGen.Document.DashBoard" %>
        
      }
 
-
+     function TestAlart()
+     {
+         alert('from default page.');
+     }
 
 
      $(document).ready(function () {
@@ -1025,7 +1029,7 @@ CodeFile="Default.aspx.cs" Inherits="DocGen.Document.DashBoard" %>
 
         function  Readonlymode()
         {
-             // $("#EditArea .Toolbar").fadeOut();
+             // $("#EditArea .Toolbar").hide();
               $("#lnkNoEditDashboard").css({ "display": 'none'});
               $("#lnkEditDashboard").css({ "display": 'block'});
               $("#Toolbox").css({ "display": 'none'});
@@ -1036,7 +1040,7 @@ CodeFile="Default.aspx.cs" Inherits="DocGen.Document.DashBoard" %>
 
           function  EditMode()
         {
-              //$("#EditArea .Toolbar").fadeIn();
+              //$("#EditArea .Toolbar").show();
               $("#lnkNoEditDashboard").css({ "display": 'block'});
               $("#lnkEditDashboard").css({ "display": 'none'});
                $("#Toolbox").css({ "display": 'block'});

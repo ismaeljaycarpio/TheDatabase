@@ -10,7 +10,7 @@
      </script>--%>
             <script type="text/javascript" src="<%=Request.Url.Scheme+@"://maps.google.com/maps/api/js?sensor=false" %>"></script>
 
-
+     <%--<script type="text/javascript" src="<%=ResolveUrl("~/Script/jquery-1.11.3.min.js")%>"></script>--%>
     <script type="text/javascript" src="../../script/jquery.js"></script>
 
  

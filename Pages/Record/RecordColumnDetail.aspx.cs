@@ -94,8 +94,8 @@ public partial class Pages_Record_ColumnDetail : SecurePage
         rfvColumnName.ErrorMessage = rfvColumnName.ErrorMessage.Replace("Field", SecurityManager.etsTerminology(Request.Path.Substring(Request.Path.LastIndexOf("/") + 1), "Field", "Field"));
 
         lblColumnMessage.Text = lblColumnMessage.Text.Replace("Field", SecurityManager.etsTerminology(Request.Path.Substring(Request.Path.LastIndexOf("/") + 1), "Field", "Field").ToLower());
-        optSingle.Text = optSingle.Text.Replace("Field", SecurityManager.etsTerminology(Request.Path.Substring(Request.Path.LastIndexOf("/") + 1), "Field", "Field"));
-        optDouble.Text = optDouble.Text.Replace("Fields", SecurityManager.etsTerminology(Request.Path.Substring(Request.Path.LastIndexOf("/") + 1), "Fields", "Fields"));
+        //optSingle.Text = optSingle.Text.Replace("Field", SecurityManager.etsTerminology(Request.Path.Substring(Request.Path.LastIndexOf("/") + 1), "Field", "Field"));
+        //optDouble.Text = optDouble.Text.Replace("Fields", SecurityManager.etsTerminology(Request.Path.Substring(Request.Path.LastIndexOf("/") + 1), "Fields", "Fields"));
 
         lblFieldType.Text = lblFieldType.Text.Replace("Field", SecurityManager.etsTerminology(Request.Path.Substring(Request.Path.LastIndexOf("/") + 1), "Field", "Field"));
         string strConditions_TL = SecurityManager.etsTerminology(Request.Path.Substring(Request.Path.LastIndexOf("/") + 1), "Conditions", "Conditions");
@@ -110,15 +110,21 @@ public partial class Pages_Record_ColumnDetail : SecurePage
     {
         ddlRecordCountTable.Items.Clear();
 
-        ddlRecordCountTable.DataSource = Common.DataTableFromText(@"SELECT   DISTINCT  [Table].TableID, [Table].TableName
+       DataTable dtCT  = Common.DataTableFromText(@"SELECT   DISTINCT  [Table].TableID, [Table].TableName
 FROM         [Table] INNER JOIN
                       TableChild ON [Table].TableID = TableChild.ChildTableID
                       WHERE TableChild.ParentTableID=" + _qsTableID + @" ORDER BY [Table].TableName");
 
+
+       ddlRecordCountTable.DataSource = dtCT;
         ddlRecordCountTable.DataBind();
 
 
-
+        ddlButtonChild.Items.Clear();
+        ddlButtonChild.DataSource=dtCT;
+        ddlButtonChild.DataBind();
+        ListItem liS = new ListItem("--Please Select--", "");
+        ddlButtonChild.Items.Insert(0, liS);
     }
 
     protected void PopulateTabs()
@@ -809,6 +815,16 @@ FROM         [Table] INNER JOIN
                             });
                         });
 
+                         $(function () {
+                            $("".columnvaluechange"").fancybox({
+                                scrolling: 'auto',
+                                type: 'iframe',
+                                width: 800,
+                                height: 800,
+                                titleShow: false
+                            });
+                        });
+
                      $(function () {
                                 $("".showfilteredlink"").fancybox({
                                     scrolling: 'auto',
@@ -978,6 +994,8 @@ FROM         [Table] INNER JOIN
             Session["DataReminderCount"] = null;
             Session["dtShowWhen"] = null;
             Session["dtColumnColour"] = null;
+            Session["ControlValueChangeService"] = null;
+
 
             DataTable dtOptionImage = new DataTable();
 
@@ -1074,7 +1092,8 @@ FROM         [Table] INNER JOIN
                     //PopulateRetriverDDL();
 
                     hlColumnColour.NavigateUrl = "~/Pages/Record/ColumnColourList.aspx?Context=columnid&ID=" + _qsColumnID + "&TableID=" + _qsTableID;
-
+                    hlControlValueChangeService.NavigateUrl = "~/Pages/Help/ColumnService.aspx?ID=" + _qsColumnID + "&TableID=" + _qsTableID;
+                 
                     PopulateAvgColumn();
                     PopulateMapPinHoverColumn();
 
@@ -1089,21 +1108,21 @@ FROM         [Table] INNER JOIN
                     //PopulateCompareDDL();
                 }
 
-                if (_theTable.IsImportPositional == true)
-                {
-                    hfIsImportPositional.Value = "1";
-                    lblImport.Text = "Position";
+                //if (_theTable.IsImportPositional == true)
+                //{
+                //    hfIsImportPositional.Value = "1";
+                //    lblImport.Text = "Position";
 
-                    int iNext = RecordManager.ets_Table_MaxPosition((int)_theTable.TableID);
-                    iNext = iNext + 1;
-                    hfMaxPosition.Value = iNext.ToString();
+                //    int iNext = RecordManager.ets_Table_MaxPosition((int)_theTable.TableID);
+                //    iNext = iNext + 1;
+                //    hfMaxPosition.Value = iNext.ToString();
 
-                }
-                else
-                {
-                    hfIsImportPositional.Value = "0";
-                    lblImport.Text = "Heading";
-                }
+                //}
+                //else
+                //{
+                //    hfIsImportPositional.Value = "0";
+                //    lblImport.Text = "Heading";
+                //}
 
                 if (!IsPostBack)
                 {
@@ -1120,10 +1139,7 @@ FROM         [Table] INNER JOIN
                         {
                             hlBack.NavigateUrl = Request.UrlReferrer.ToString();
                         }
-
                     }
-
-
                 }
 
             }
@@ -1232,8 +1248,8 @@ FROM         [Table] INNER JOIN
                 if (!IsPostBack)
                 {
                     chkDetailPage.Checked = true;
-                    chkImport.Checked = true;
-                    chkExport.Checked = true;
+                    //chkImport.Checked = true;
+                    //chkExport.Checked = true;
                 }
                 divHistoryRoot.Visible = false;
                 hlShowWhen.NavigateUrl = "~/Pages/Record/ShowHide.aspx?ColumnID=-1&TableID=" + _qsTableID;
@@ -1311,7 +1327,7 @@ FROM         [Table] INNER JOIN
             //gvChangedLog.DataSource = RecordManager.ets_Record_Changes_Select(
             //        (int)_iRecordID,int.Parse(_qsTableID), iStartIndex, iMaxRows, ref  iTN, ref _iCLColumnCount);
 
-
+            ViewState[gvChangedLog.ID + "PageIndex"] = (iStartIndex / gvChangedLog.PageSize) + 1;
             gvChangedLog.DataSource = RecordManager.Column_Audit_Summary(
                    (int)_iColumnID, iStartIndex, iMaxRows, ref  iTN);
 
@@ -1332,6 +1348,11 @@ FROM         [Table] INNER JOIN
             {
                 _gvCL_Pager = (Common_Pager)gvr.FindControl("CL_Pager");
 
+                if (ViewState[gvChangedLog.ID + "PageIndex"] != null)
+                    _gvCL_Pager.PageIndex = int.Parse(ViewState[gvChangedLog.ID + "PageIndex"].ToString());
+
+                _gvCL_Pager.PageSize = gvChangedLog.PageSize;
+                _gvCL_Pager.TotalRows = iTN;
             }
 
 
@@ -1349,7 +1370,7 @@ FROM         [Table] INNER JOIN
 
     protected void CL_Pager_BindTheGridAgain(object sender, EventArgs e)
     {
-        BindTheChangedLogGrid(_gvCL_Pager.StartIndex, _gvCL_Pager._gridView.PageSize);
+        BindTheChangedLogGrid(_gvCL_Pager.StartIndex, _gvCL_Pager.PageSize);
     }
 
     protected void CL_Pager_BindTheGridToExport(object sender, EventArgs e)
@@ -1621,6 +1642,16 @@ FROM         [Table] INNER JOIN
 
         Session["Mappopup"] = theColumn.MapPopup;
 
+        if(theColumn.IsReadOnly!=null && (bool)theColumn.IsReadOnly)
+        {
+            chkReadOnly.Checked = true;
+        }
+        if(!string.IsNullOrEmpty(theColumn.ControlValueChangeService))
+        {
+            Session["ControlValueChangeService"] = theColumn.ControlValueChangeService;
+            chkControlValueChangeService.Checked = true;
+        }
+
         if (theColumn.CompareColumnID != null && theColumn.CompareOperator != "")
         {
             ddlCompareColumnIDC.Category = _qsColumnID + ",edit";
@@ -1816,90 +1847,99 @@ FROM         [Table] INNER JOIN
         if (theColumn.ValidationCanIgnore != null)
             chkValidationCanIgnore.Checked = (bool)theColumn.ValidationCanIgnore;
 
-        if (_theTable.IsImportPositional == true)
+        if (theColumn.SystemName.ToLower() == "datetimerecorded")
         {
-            if (theColumn.PositionOnImport != null)
-            {
-
-                chkImport.Checked = true;
-                if (theColumn.SystemName.ToLower() == "datetimerecorded")
-                {
-
-                    tblDateOptions.Style.Add("display", "block");
-                    trDateFormat.Style.Add("display", "block");
-
-
-
-                    if (theColumn.IsDateSingleColumn != null && theColumn.IsDateSingleColumn == true)
-                    {
-                        txtNameOnImport.Text = theColumn.PositionOnImport.ToString();
-                        optSingle.Checked = true;
-                        lblImport.Text = "Position";
-                        lblImportTime.Text = "Time Position";
-                    }
-                    else
-                    {
-                        //txtNameOnImport.Text = theColumn.PositionOnImport.ToString() + "," + (int.Parse(theColumn.PositionOnImport.ToString()) + 1).ToString();
-                        txtNameOnImport.Text = theColumn.PositionOnImport.ToString();
-                        txtNameOnImportTime.Text = (int.Parse(theColumn.PositionOnImport.ToString()) + 1).ToString();
-                        optDouble.Checked = true;
-                        lblImport.Text = "Date Position";
-                        lblImportTime.Text = "Time Position";
-                    }
-
-
-                }
-                else
-                {
-                    //trDateFormat.Style.Add("display", "none");
-                    txtNameOnImport.Text = theColumn.PositionOnImport.ToString();
-                }
-            }
+            trDateFormat.Style.Add("display", "block");
         }
         else
         {
-            if (theColumn.NameOnImport != string.Empty)
-            {
-
-
-                chkImport.Checked = true;
-                if (theColumn.SystemName.ToLower() == "datetimerecorded")
-                {
-                    tblDateOptions.Style.Add("display", "block");
-                    trDateFormat.Style.Add("display", "block");
-
-                    string strDT = theColumn.NameOnImport;
-                    if (strDT.IndexOf(",") > 0)
-                    {
-                        txtNameOnImport.Text = strDT.Substring(0, strDT.IndexOf(","));
-                        txtNameOnImportTime.Text = strDT.Substring(strDT.IndexOf(",") + 1);
-                        optDouble.Checked = true;
-                        lblImport.Text = "Date Label";
-                        lblImportTime.Text = "Time Label";
-                    }
-                    else
-                    {
-                        txtNameOnImport.Text = theColumn.NameOnImport;
-                        txtNameOnImportTime.Text = "";
-                        optSingle.Checked = true;
-                        lblImport.Text = "Label";
-                        lblImportTime.Text = "Time Label";
-                    }
-
-
-                }
-                else
-                {
-                    //trDateFormat.Style.Add("display", "none");
-                    txtNameOnImport.Text = theColumn.NameOnImport;
-                }
-            }
-            else
-            {
-                lblImportTime.Text = "Time Label";
-            }
 
         }
+        
+        //if (_theTable.IsImportPositional == true)
+        //{
+        //    if (theColumn.PositionOnImport != null)
+        //    {
+
+        //        chkImport.Checked = true;
+        //        if (theColumn.SystemName.ToLower() == "datetimerecorded")
+        //        {
+
+        //            tblDateOptions.Style.Add("display", "block");
+        //            trDateFormat.Style.Add("display", "block");
+
+
+
+        //            if (theColumn.IsDateSingleColumn != null && theColumn.IsDateSingleColumn == true)
+        //            {
+        //                txtNameOnImport.Text = theColumn.PositionOnImport.ToString();
+        //                optSingle.Checked = true;
+        //                lblImport.Text = "Position";
+        //                lblImportTime.Text = "Time Position";
+        //            }
+        //            else
+        //            {
+        //                //txtNameOnImport.Text = theColumn.PositionOnImport.ToString() + "," + (int.Parse(theColumn.PositionOnImport.ToString()) + 1).ToString();
+        //                txtNameOnImport.Text = theColumn.PositionOnImport.ToString();
+        //                txtNameOnImportTime.Text = (int.Parse(theColumn.PositionOnImport.ToString()) + 1).ToString();
+        //                optDouble.Checked = true;
+        //                lblImport.Text = "Date Position";
+        //                lblImportTime.Text = "Time Position";
+        //            }
+
+
+        //        }
+        //        else
+        //        {
+        //            //trDateFormat.Style.Add("display", "none");
+        //            txtNameOnImport.Text = theColumn.PositionOnImport.ToString();
+        //        }
+        //    }
+        //}
+        //else
+        //{
+        //    if (theColumn.Name_OnImport != string.Empty)
+        //    {
+
+
+        //        chkImport.Checked = true;
+        //        if (theColumn.SystemName.ToLower() == "datetimerecorded")
+        //        {
+        //            tblDateOptions.Style.Add("display", "block");
+        //            trDateFormat.Style.Add("display", "block");
+
+        //            string strDT = theColumn.Name_OnImport;
+        //            if (strDT.IndexOf(",") > 0)
+        //            {
+        //                txtNameOnImport.Text = strDT.Substring(0, strDT.IndexOf(","));
+        //                txtNameOnImportTime.Text = strDT.Substring(strDT.IndexOf(",") + 1);
+        //                optDouble.Checked = true;
+        //                lblImport.Text = "Date Label";
+        //                lblImportTime.Text = "Time Label";
+        //            }
+        //            else
+        //            {
+        //                txtNameOnImport.Text = theColumn.Name_OnImport;
+        //                txtNameOnImportTime.Text = "";
+        //                optSingle.Checked = true;
+        //                lblImport.Text = "Label";
+        //                lblImportTime.Text = "Time Label";
+        //            }
+
+
+        //        }
+        //        else
+        //        {
+        //            //trDateFormat.Style.Add("display", "none");
+        //            txtNameOnImport.Text = theColumn.Name_OnImport;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        lblImportTime.Text = "Time Label";
+        //    }
+
+        //}
 
         //if (theColumn.ColumnType == "data_retriever")
         //{
@@ -1919,11 +1959,11 @@ FROM         [Table] INNER JOIN
 
         }
 
-        if (theColumn.NameOnExport != string.Empty)
-        {
-            chkExport.Checked = true;
-            txtNameOnExport.Text = theColumn.NameOnExport;
-        }
+        //if (theColumn.NameOnExport != string.Empty)
+        //{
+        //    chkExport.Checked = true;
+        //    txtNameOnExport.Text = theColumn.NameOnExport;
+        //}
 
         if (theColumn.MobileName != string.Empty)
         {
@@ -2068,10 +2108,6 @@ FROM         [Table] INNER JOIN
         if (theColumn.ColumnType != "")
         {
             //chkIsNumeric.Checked = (bool)theColumn.IsNumeric;
-
-
-
-
 
             if (theColumn.ColumnType == "datetime" || theColumn.ColumnType == "date")
             {
@@ -2464,13 +2500,9 @@ FROM         [Table] INNER JOIN
                 {
                     //table                    
 
-
-
                     ddlDDTableC.SelectedValue = theColumn.TableTableID.ToString();
-
-
+                    
                     hf_ddlDDTable.Value = theColumn.TableTableID.ToString();
-
                     ViewState["Old_TableTableID"] = theColumn.TableTableID.ToString();
 
                     hfDisplayColumnsFormula.Value = theColumn.DisplayColumn;
@@ -2622,11 +2654,39 @@ FROM         [Table] INNER JOIN
                             chkSPToRun.Checked = true;
                             txtSPToRun.Text = theButtonInfo.SPToRun;
                         }
-                        if (!string.IsNullOrEmpty(theButtonInfo.OpenLink))
+                        if (!string.IsNullOrEmpty(theButtonInfo.OnClick))
                         {
-                            chkButtonOpenLink.Checked = true;
-                            txtButtonOpenLink.Text = theButtonInfo.OpenLink;
+                            if (ddlButtonOnClick.Items.FindByValue(theButtonInfo.OnClick) != null)
+                                ddlButtonOnClick.SelectedValue = theButtonInfo.OnClick;
+
+                            if (theButtonInfo.OnClick == "StayCurrent" || theButtonInfo.OnClick == "Goback")
+                            {
+
+                            }
+                            else
+                            {
+                                if (!string.IsNullOrEmpty(theButtonInfo.AdditionalParams))
+                                    txtButtonParamas.Text = theButtonInfo.AdditionalParams;
+
+                                if(theButtonInfo.OnClick == "AddChild" )
+                                {
+                                    if(theButtonInfo.ChildTableID!=null)
+                                    {
+                                        if (ddlButtonChild.Items.FindByValue(theButtonInfo.ChildTableID.ToString()) != null)
+                                            ddlButtonChild.SelectedValue = theButtonInfo.ChildTableID.ToString();
+                                    }
+                                    
+                                }
+                                else
+                                {
+                                    if (!string.IsNullOrEmpty(theButtonInfo.Link))
+                                        txtButtonLink.Text = theButtonInfo.Link;
+                                }
+
+                            }
                         }
+
+
                         if (!string.IsNullOrEmpty(theButtonInfo.ImageFullPath))
                         {
                             //txtButtonImage.Text = theButtonInfo.ImageFullPath;
@@ -2722,18 +2782,13 @@ FROM         [Table] INNER JOIN
         if (theColumn.SystemName.ToLower() == "recordid")
         {
             chkSummaryPage.Enabled = false;
-            //txtDisplayTextSummary.Enabled = false;
-            ////chkDetailPage.Enabled = false;           
-            //txtDisplayTextDetail.Enabled = false;
+            
             hfColumnSystemname.Value = "recordid";
 
-            chkImport.Enabled = false;
-            txtNameOnImport.Enabled = false;
+            //chkImport.Enabled = false;
+            //txtNameOnImport.Enabled = false;
 
-            //chkExport.Enabled = false;
-
-            //txtNameOnExport.Enabled = false;
-
+            
 
             chkGraph.Enabled = false;
             txtGraph.Enabled = false;
@@ -2754,15 +2809,13 @@ FROM         [Table] INNER JOIN
         {
             chkSummaryPage.Enabled = false;
             txtDisplayTextSummary.Enabled = false;
-            //txtViewName.Enabled = false;
             chkDetailPage.Enabled = false;
-            chkImport.Enabled = false;
-            chkExport.Enabled = false;
+            //chkImport.Enabled = false;
+            //chkExport.Enabled = false;
             txtDisplayTextDetail.Enabled = false;
             txtGraph.Enabled = false;
-            txtNameOnImport.Enabled = false;
-            txtNameOnExport.Enabled = false;
-            //chkValidationEntry.Enabled = false;
+            //txtNameOnImport.Enabled = false;
+            //txtNameOnExport.Enabled = false;
             txtValidationOnWarning.Enabled = false;
             txtValidationOnExceedance.Enabled = false;
             divSave.Visible = false;
@@ -2802,10 +2855,8 @@ FROM         [Table] INNER JOIN
         }
         if (theColumn.SystemName.ToLower() == "enteredby")
         {
-            chkImport.Checked = false;
-            chkImport.Enabled = false;
-            //chkDetailPage.Checked = false;
-            //chkDetailPage.Enabled = false;
+            //chkImport.Checked = false;
+            //chkImport.Enabled = false;
 
             hfColumnSystemname.Value = "enteredby";
             txtColumnName.Enabled = false;
@@ -3090,23 +3141,20 @@ FROM         [Table] INNER JOIN
     {
         txtSymbol.Enabled = p_bEnable;
         ddlOnlyForAdmin.Enabled = p_bEnable;
-        //chkReminders.Enabled = p_bEnable;
-        //hlReminders.Enabled = p_bEnable;
 
         txtTable.Enabled = p_bEnable;
         txtColumnName.Enabled = p_bEnable;
         txtDisplayTextSummary.Enabled = p_bEnable;
-        //txtViewName.Enabled = p_bEnable;
         txtDisplayTextDetail.Enabled = p_bEnable;
         txtGraph.Enabled = p_bEnable;
-        txtNameOnExport.Enabled = p_bEnable;
-        txtNameOnImport.Enabled = p_bEnable;
+        //txtNameOnExport.Enabled = p_bEnable;
+        //txtNameOnImport.Enabled = p_bEnable;
         txtValidationEntry.Enabled = p_bEnable;
         txtValidationOnWarning.Enabled = p_bEnable;
         txtValidationOnExceedance.Enabled = p_bEnable;
-        optSingle.Enabled = p_bEnable;
-        optDouble.Enabled = p_bEnable;
-        txtNameOnImportTime.Enabled = p_bEnable;
+        //optSingle.Enabled = p_bEnable;
+        //optDouble.Enabled = p_bEnable;
+        //txtNameOnImportTime.Enabled = p_bEnable;
 
         chkExceedence.Enabled = p_bEnable;
         chkWarning.Enabled = p_bEnable;
@@ -3125,9 +3173,8 @@ FROM         [Table] INNER JOIN
 
         chkDetailPage.Enabled = p_bEnable;
         chkSummaryPage.Enabled = p_bEnable;
-        chkExport.Enabled = p_bEnable;
-        chkImport.Enabled = p_bEnable;
-        //chkIsNumeric.Enabled = p_bEnable;
+        //chkExport.Enabled = p_bEnable;
+        //chkImport.Enabled = p_bEnable;
         ddlType.Enabled = p_bEnable;
         ddlDateTimeType.Enabled = p_bEnable;
         ddlNumberType.Enabled = p_bEnable;
@@ -3145,10 +3192,7 @@ FROM         [Table] INNER JOIN
             txtConstant.Enabled = p_bEnable;
         }
 
-        hlCalculationEdit.Enabled = p_bEnable;
-        //hlValidEdit.Enabled = p_bEnable;
-        //hlWarningEdit.Enabled = p_bEnable;
-        //hlExceedanceEdit.Enabled = p_bEnable;
+        hlCalculationEdit.Enabled = p_bEnable;      
 
         txtMaxWrning.Enabled = p_bEnable;
         txtMinWaring.Enabled = p_bEnable;
@@ -3210,9 +3254,6 @@ FROM         [Table] INNER JOIN
         txtTextHeight.Enabled = p_bEnable;
         txtTextWidth.Enabled = p_bEnable;
         ddlDDType.Enabled = p_bEnable;
-        //ddlSumXCellBackColour.Disabled = !p_bEnable;
-        //ddlDDTable.Enabled = p_bEnable;
-        //ddlDDTableC.Enabled = p_bEnable;
         ddlDDTable.Enabled = p_bEnable;
         ddDDDisplayColumn.Enabled = p_bEnable;
         ddDDLinkedParentColumn.Enabled = p_bEnable;
@@ -3448,31 +3489,31 @@ FROM         [Table] INNER JOIN
 
 
 
-        if (txtNameOnImport.Text != "")
-        {
-            DataTable dtTemp = Common.DataTableFromText("SELECT DisplayName FROM  [Column] WHERE   TableID=" + hfTableID.Value
-                + " AND ColumnID!=" + hfColumnID.Value + " AND NameOnImport='" + txtNameOnImport.Text.Replace("'", "''") + "'");
-            if (dtTemp.Rows.Count > 0)
-            {
-                lblMsg.Text = "'" + txtNameOnImport.Text + "' name is already used in '" + dtTemp.Rows[0][0].ToString() + "' Import Label, please try another name or change '" + dtTemp.Rows[0][0].ToString() + "' field.";
-                txtNameOnImport.Focus();
-                return false;
-            }
+        //if (txtNameOnImport.Text != "")
+        //{
+        //    DataTable dtTemp = Common.DataTableFromText("SELECT DisplayName FROM  [Column] WHERE   TableID=" + hfTableID.Value
+        //        + " AND ColumnID!=" + hfColumnID.Value + " AND Name_OnImport='" + txtNameOnImport.Text.Replace("'", "''") + "'");
+        //    if (dtTemp.Rows.Count > 0)
+        //    {
+        //        lblMsg.Text = "'" + txtNameOnImport.Text + "' name is already used in '" + dtTemp.Rows[0][0].ToString() + "' Import Label, please try another name or change '" + dtTemp.Rows[0][0].ToString() + "' field.";
+        //        txtNameOnImport.Focus();
+        //        return false;
+        //    }
 
-        }
+        //}
 
-        if (txtNameOnExport.Text != "")
-        {
-            DataTable dtTemp = Common.DataTableFromText("SELECT DisplayName FROM  [Column] WHERE   TableID=" + hfTableID.Value
-                + " AND ColumnID!=" + hfColumnID.Value + " AND NameOnExport='" + txtNameOnExport.Text.Replace("'", "''") + "'");
-            if (dtTemp.Rows.Count > 0)
-            {
-                lblMsg.Text = "'" + txtNameOnExport.Text + "' name is already used in '" + dtTemp.Rows[0][0].ToString() + "' Export Label, please try another name or change '" + dtTemp.Rows[0][0].ToString() + "' field.";
-                txtNameOnExport.Focus();
-                return false;
-            }
+        //if (txtNameOnExport.Text != "")
+        //{
+        //    DataTable dtTemp = Common.DataTableFromText("SELECT DisplayName FROM  [Column] WHERE   TableID=" + hfTableID.Value
+        //        + " AND ColumnID!=" + hfColumnID.Value + " AND NameOnExport='" + txtNameOnExport.Text.Replace("'", "''") + "'");
+        //    if (dtTemp.Rows.Count > 0)
+        //    {
+        //        lblMsg.Text = "'" + txtNameOnExport.Text + "' name is already used in '" + dtTemp.Rows[0][0].ToString() + "' Export Label, please try another name or change '" + dtTemp.Rows[0][0].ToString() + "' field.";
+        //        txtNameOnExport.Focus();
+        //        return false;
+        //    }
 
-        }
+        //}
 
 
         if (txtGraph.Text != "")
@@ -3510,16 +3551,16 @@ FROM         [Table] INNER JOIN
 
         //}
 
-        if (txtNameOnExport.Text != "")
-        {
-            if (txtNameOnExport.Text.IndexOf(",") > -1)
-            {
-                lblMsg.Text = "Export Name can not have comma (,)!";
-                txtNameOnExport.Focus();
-                return false;
-            }
+        //if (txtNameOnExport.Text != "")
+        //{
+        //    if (txtNameOnExport.Text.IndexOf(",") > -1)
+        //    {
+        //        lblMsg.Text = "Export Name can not have comma (,)!";
+        //        txtNameOnExport.Focus();
+        //        return false;
+        //    }
 
-        }
+        //}
 
         if (txtConstant.Text != "")
         {
@@ -4097,7 +4138,7 @@ FROM         [Table] INNER JOIN
                 theAccountHolder = _ObjUser;
 
             string strColumn_DisplayName = txtColumnName.Text.Replace("'", "''");
-            Table newParentTable = new Table(null, strColumn_DisplayName, null, null, false, true);
+            Table newParentTable = new Table(null, strColumn_DisplayName, null, null, true);
             newParentTable.AccountID = _theTable.AccountID;
             newParentTable.PinImage = _theTable.PinImage;
 
@@ -4127,8 +4168,8 @@ FROM         [Table] INNER JOIN
 
 
                 Column newParentjoinfield = new Column(null, newParentTable.TableID,
-                      strParentjoinfieldSystemName, iDisplayOrder + 1, theColumn.DisplayName, theColumn.DisplayName, "", "", null, "",
-                       "", null, null, "", "", false, theColumn.DisplayName, null, "", null, null, false, "", "", "");
+                      strParentjoinfieldSystemName, iDisplayOrder + 1, theColumn.DisplayName, theColumn.DisplayName,null, "",
+                       "", null, null, "", "", false, theColumn.DisplayName,  "", null, null, false, "", "", "");
 
                 newParentjoinfield.ColumnType = "text";
 
@@ -4154,8 +4195,8 @@ FROM         [Table] INNER JOIN
 
 
                 Column newBUColumn = new Column(null, theColumn.TableID,
-                      strBUSystemName, iDisplayOrder + 1, theColumn.DisplayName + " Orig", theColumn.DisplayName + " Orig", "", "", null, "",
-                       "", null, null, "", "", false, theColumn.DisplayName + " Orig", null, "", null, null, false, "", "", "");
+                      strBUSystemName, iDisplayOrder + 1, theColumn.DisplayName + " Orig", theColumn.DisplayName + " Orig",  null, "",
+                       "", null, null, "", "", false, theColumn.DisplayName + " Orig", "", null, null, false, "", "", "");
 
                 newBUColumn.ColumnType = "text";
 
@@ -4250,7 +4291,7 @@ FROM         [Table] INNER JOIN
                     }
 
 
-                    Table newTable = new Table(null, _theTable.TableName + txtColumnName.Text.Replace("'", "''"), null, null, false, true);
+                    Table newTable = new Table(null, _theTable.TableName + txtColumnName.Text.Replace("'", "''"), null, null, true);
                     newTable.AccountID = _theTable.AccountID;
                     newTable.PinImage = _theTable.PinImage;
 
@@ -4276,8 +4317,8 @@ FROM         [Table] INNER JOIN
                     strAutoSystemName = RecordManager.ets_Column_NextSystemName(iTableID);
 
                     Column newColumn = new Column(null, iTableID,
-                      strAutoSystemName, iDisplayOrder + 1, theColumn.DisplayName, theColumn.DisplayName, "", "", null, "",
-                       "", null, null, "", "", false, theColumn.DisplayName, null, "", null, null, false, "", "", "");
+                      strAutoSystemName, iDisplayOrder + 1, theColumn.DisplayName, theColumn.DisplayName,  null, "",
+                       "", null, null, "", "", false, theColumn.DisplayName, "", null, null, false, "", "", "");
 
                     newColumn.ColumnType = "text";
 
@@ -4414,7 +4455,11 @@ FROM         [Table] INNER JOIN
                 txtDisplayTextDetail.Text = txtColumnName.Text;
             }
 
-
+            string strControlValueChangeService = "";
+            if (Session["ControlValueChangeService"]!=null)
+            {
+                strControlValueChangeService = Session["ControlValueChangeService"].ToString();
+            }
 
             switch (_strActionMode.ToLower())
             {
@@ -4449,9 +4494,8 @@ FROM         [Table] INNER JOIN
                     Column newColumn = new Column(null, int.Parse(hfTableID.Value),
                    strAutoSystemName, iDisplayOrder + 1,
                     txtDisplayTextSummary.Text.Trim(), txtDisplayTextDetail.Text,
-                    "", txtNameOnExport.Text.Trim(),
                     null, GetWarningValidation(),
-                    GetValidValidation(), null, null, "", "", false, txtColumnName.Text.Trim(), null, txtNotes.Text, chkRound.Checked,
+                    GetValidValidation(), null, null, "", "", false, txtColumnName.Text.Trim(),  txtNotes.Text, chkRound.Checked,
                     txtRoundNumber.Text == "" ? null : (int?)int.Parse(txtRoundNumber.Text), chkCheckUnlikelyValue.Checked, txtGraph.Text.Trim(),
                     "", ddlImportance.SelectedValue
                     );
@@ -4461,7 +4505,9 @@ FROM         [Table] INNER JOIN
                     newColumn.SummarySearch = chkSummarySearch.Checked;
 
                     newColumn.QuickAddLink = chkQuickAddLink.Checked;
-
+                   
+                    newColumn.IsReadOnly = chkReadOnly.Checked;
+                    newColumn.ControlValueChangeService = strControlValueChangeService;
                     if (chkCompareOperator.Checked)
                     {
                         if (ddlCompareColumnID.SelectedValue != "" && ddlCompareOperator.SelectedValue != "")
@@ -4572,10 +4618,10 @@ FROM         [Table] INNER JOIN
 
                     newColumn.MobileName = txtMobile.Text.Trim();
 
-                    if (chkImport.Checked)
-                    {
-                        txtConstant.Text = "";
-                    }
+                    //if (chkImport.Checked)
+                    //{
+                    //    txtConstant.Text = "";
+                    //}
                     newColumn.Constant = txtConstant.Text;
                     if (txtConstant.Text != "")
                     {
@@ -5133,26 +5179,26 @@ FROM         [Table] INNER JOIN
                     }
 
 
-                    if (chkImport.Checked)
-                    {
-                        if (_theTable.IsImportPositional == true)
-                        {
-                            newColumn.PositionOnImport = int.Parse(txtNameOnImport.Text.Trim());
-                        }
-                        else
-                        {
+                    //if (chkImport.Checked)
+                    //{
+                    //    if (_theTable.IsImportPositional == true)
+                    //    {
+                    //        newColumn.PositionOnImport = int.Parse(txtNameOnImport.Text.Trim());
+                    //    }
+                    //    else
+                    //    {
 
-                            newColumn.NameOnImport = txtNameOnImport.Text.Trim();
+                    //        newColumn.Name_OnImport = txtNameOnImport.Text.Trim();
 
-                        }
+                    //    }
 
-                        if (txtCalculation.Text.Trim() != "")
-                        {
-                            newColumn.NameOnImport = "";
-                            //lblMsg.Text = "This field has been configured on the import which would cause a conflict with this formula. Please un check import field name or remove calculation formula!";
-                            //return;
-                        }
-                    }
+                    //    if (txtCalculation.Text.Trim() != "")
+                    //    {
+                    //        newColumn.Name_OnImport = "";
+                    //        //lblMsg.Text = "This field has been configured on the import which would cause a conflict with this formula. Please un check import field name or remove calculation formula!";
+                    //        //return;
+                    //    }
+                    //}
 
                     if (newColumn.ColumnType == "image")
                     {
@@ -5165,11 +5211,7 @@ FROM         [Table] INNER JOIN
                     if (ddlType.SelectedValue == "button")
                     {
                         newColumn.ColumnType = ddlType.SelectedValue;
-                        //if (txtSPToRun.Text.Trim() == "")
-                        //{
-                        //    lblMsg.Text = "Please enter a SP name.";
-                        //    return;
-                        //}
+                       
                         ColumnButtonInfo aButtonInfo = new ColumnButtonInfo();
 
                         if (chkSPToRun.Checked)
@@ -5180,14 +5222,53 @@ FROM         [Table] INNER JOIN
                         {
                             aButtonInfo.SPToRun = "";
                         }
-                        if (chkButtonOpenLink.Checked)
-                        {
-                            aButtonInfo.OpenLink = txtButtonOpenLink.Text;
-                        }
-                        else
-                        {
-                            aButtonInfo.OpenLink = "";
-                        }
+                        aButtonInfo.OnClick = ddlButtonOnClick.SelectedValue;
+
+
+
+                        if (aButtonInfo.OnClick == "" || aButtonInfo.OnClick == "StayCurrent" || aButtonInfo.OnClick == "Goback")
+                            {
+
+                            }
+                            else
+                            {
+                               
+                                  aButtonInfo.AdditionalParams =txtButtonParamas.Text.Trim();
+                                  if (aButtonInfo.OnClick == "AddChild")
+                                  {
+                                      if (ddlButtonChild.SelectedValue != "")
+                                      {
+                                          aButtonInfo.ChildTableID = int.Parse(ddlButtonChild.SelectedValue);
+                                      }
+                                      else
+                                      {
+                                          Session["tdbmsgpb"] = "Please select a child table.";
+                                          ddlButtonChild.Focus();
+                                          return;
+                                      }
+
+                                  }
+                                  else
+                                  {
+                                      if (txtButtonLink.Text.Trim() != "")
+                                      {
+                                          aButtonInfo.Link = txtButtonLink.Text.Trim();
+                                      }
+                                      else
+                                      {
+                                          Session["tdbmsgpb"] = "Please enter link.";
+                                          txtButtonLink.Focus();
+                                          return;
+                                      }
+
+
+
+                                  }
+                               
+
+                            }
+                        
+                       
 
                         aButtonInfo.ImageFullPath = hfButtonValue.Value;// txtButtonImage.Text;
                         if (chkButtonWarningMessage.Checked && txtButtonWarningMessage.Text != "")
@@ -5529,7 +5610,7 @@ FROM         [Table] INNER JOIN
                     editColumn.DisplayRight = chkDisplayOnRight.Checked;
 
                     editColumn.ShowViewLink = "";
-
+                    editColumn.IsReadOnly = chkReadOnly.Checked;
                     if (Session["Mappopup"] != null)
                     {
                         editColumn.MapPopup = Session["Mappopup"].ToString();
@@ -5570,17 +5651,15 @@ FROM         [Table] INNER JOIN
                     }
 
 
-                    if (chkExport.Checked)
-                    {
-                        editColumn.NameOnExport = txtNameOnExport.Text.Trim();
-                    }
-                    else
-                    {
-                        editColumn.NameOnExport = "";
-                    }
-                    //editColumn.NameOnImport = txtNameOnImport.Text.Trim();
-                    //editColumn.DropdownValues = chkDropdownValues.Checked == true ? txtDropdownValues.Text : "";
-                    //editColumn.IsMandatory = chkMandatory.Checked;
+                    //if (chkExport.Checked)
+                    //{
+                    //    editColumn.NameOnExport = txtNameOnExport.Text.Trim();
+                    //}
+                    //else
+                    //{
+                    //    editColumn.NameOnExport = "";
+                    //}
+                   
 
                     editColumn.Importance = ddlImportance.SelectedValue;
                     editColumn.OnlyForAdmin = int.Parse(ddlOnlyForAdmin.SelectedValue);
@@ -5698,7 +5777,7 @@ FROM         [Table] INNER JOIN
 
                     editColumn.DisplayName = txtColumnName.Text.Trim();
                     editColumn.ValidationCanIgnore = chkValidationCanIgnore.Checked;
-
+                    editColumn.ControlValueChangeService = strControlValueChangeService;
 
                     if (ddlTextType.Text == "own")
                     {
@@ -5715,122 +5794,113 @@ FROM         [Table] INNER JOIN
 
 
                     //editColumn.DisplayOrder - dont change it.
-                    int iPosition = 1;
-                    if (_theTable.IsImportPositional == true)
-                    {
-                        try
-                        {
-                            if (chkImport.Checked)
-                            {
-                                if (editColumn.SystemName.ToLower() == "datetimerecorded")
-                                {
-                                    if (optSingle.Checked == true)
-                                    {
-                                        editColumn.IsDateSingleColumn = true;
-                                        iPosition = int.Parse(txtNameOnImport.Text.Trim());
-                                    }
-                                    else
-                                    {
-                                        editColumn.IsDateSingleColumn = false;
-                                        iPosition = int.Parse(txtNameOnImport.Text.Trim());
-                                    }
-                                    //if(txtNameOnImport.Text.Trim().IndexOf(",")>-1)
-                                    //{
-                                    //    iPosition = int.Parse(txtNameOnImport.Text.Trim().Substring(0,txtNameOnImport.Text.Trim().IndexOf(",")));
-                                    //    editColumn.IsDateSingleColumn = false;
-                                    //}
-                                    //else
-                                    //{
-                                    //    iPosition = int.Parse(txtNameOnImport.Text.Trim());
-                                    //    editColumn.IsDateSingleColumn = true;
-                                    //}
-                                }
-                                else
-                                {
-                                    iPosition = int.Parse(txtNameOnImport.Text.Trim());
-                                }
-                                //check if position is duplicate and suggest the max
+                    //int iPosition = 1;
+                    //if (_theTable.IsImportPositional == true)
+                    //{
+                    //    try
+                    //    {
+                    //        if (chkImport.Checked)
+                    //        {
+                    //            if (editColumn.SystemName.ToLower() == "datetimerecorded")
+                    //            {
+                    //                if (optSingle.Checked == true)
+                    //                {
+                    //                    editColumn.IsDateSingleColumn = true;
+                    //                    iPosition = int.Parse(txtNameOnImport.Text.Trim());
+                    //                }
+                    //                else
+                    //                {
+                    //                    editColumn.IsDateSingleColumn = false;
+                    //                    iPosition = int.Parse(txtNameOnImport.Text.Trim());
+                    //                }
+                                   
+                    //            }
+                    //            else
+                    //            {
+                    //                iPosition = int.Parse(txtNameOnImport.Text.Trim());
+                    //            }
+                    //            //check if position is duplicate and suggest the max
 
-                                if (editColumn.PositionOnImport != null)
-                                {
-                                    if (editColumn.PositionOnImport != iPosition)
-                                    {
-                                        Column dupPosColumn = RecordManager.ets_Column_Details_Position((int)_theTable.TableID, iPosition);
+                    //            if (editColumn.PositionOnImport != null)
+                    //            {
+                    //                if (editColumn.PositionOnImport != iPosition)
+                    //                {
+                    //                    Column dupPosColumn = RecordManager.ets_Column_Details_Position((int)_theTable.TableID, iPosition);
 
-                                        if (dupPosColumn != null)
-                                        {
-                                            lblMsg.Text = dupPosColumn.DisplayName + " " + "has import field position at " + iPosition.ToString().Trim() + ", you can try " + hfMaxPosition.Value + "!";
-                                            return;
-                                        }
+                    //                    if (dupPosColumn != null)
+                    //                    {
+                    //                        lblMsg.Text = dupPosColumn.DisplayName + " " + "has import field position at " + iPosition.ToString().Trim() + ", you can try " + hfMaxPosition.Value + "!";
+                    //                        return;
+                    //                    }
 
-                                    }
-                                }
+                    //                }
+                    //            }
 
-                            }
-                        }
-                        catch
-                        {
-                            lblMsg.Text = "Please enter an integer number for Import Position!";
-                            return;
+                    //        }
+                    //    }
+                    //    catch
+                    //    {
+                    //        lblMsg.Text = "Please enter an integer number for Import Position!";
+                    //        return;
 
-                        }
-                    }
-                    else
-                    {
-                        //do nothing
-                    }
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    //do nothing
+                    //}
 
 
 
 
-                    if (chkImport.Checked)
-                    {
-                        if (_theTable.IsImportPositional == true)
-                        {
-                            editColumn.PositionOnImport = iPosition;// int.Parse(txtNameOnImport.Text.Trim());
-                        }
-                        else
-                        {
-                            if (editColumn.SystemName.ToLower() == "datetimerecorded")
-                            {
-                                if (txtNameOnImport.Text == "")
-                                {
-                                    lblMsg.Text = "Please enter Date Label.";
-                                    return;
-                                }
+                    //if (chkImport.Checked)
+                    //{
+                    //    if (_theTable.IsImportPositional == true)
+                    //    {
+                    //        editColumn.PositionOnImport = iPosition;// int.Parse(txtNameOnImport.Text.Trim());
+                    //    }
+                    //    else
+                    //    {
+                    //        if (editColumn.SystemName.ToLower() == "datetimerecorded")
+                    //        {
+                    //            if (txtNameOnImport.Text == "")
+                    //            {
+                    //                lblMsg.Text = "Please enter Date Label.";
+                    //                return;
+                    //            }
 
-                                if (optSingle.Checked == true)
-                                {
-                                    editColumn.NameOnImport = txtNameOnImport.Text.Trim();
-                                }
-                                else
-                                {
-                                    if (txtNameOnImportTime.Text == "")
-                                    {
-                                        lblMsg.Text = "Please enter Time Label.";
-                                        return;
-                                    }
-                                    editColumn.NameOnImport = txtNameOnImport.Text.Trim() + "," + txtNameOnImportTime.Text.Trim();
-                                }
-                            }
-                            else
-                            {
-                                editColumn.NameOnImport = txtNameOnImport.Text.Trim();
-                            }
-                        }
+                    //            if (optSingle.Checked == true)
+                    //            {
+                    //                editColumn.Name_OnImport = txtNameOnImport.Text.Trim();
+                    //            }
+                    //            else
+                    //            {
+                    //                if (txtNameOnImportTime.Text == "")
+                    //                {
+                    //                    lblMsg.Text = "Please enter Time Label.";
+                    //                    return;
+                    //                }
+                    //                editColumn.Name_OnImport = txtNameOnImport.Text.Trim() + "," + txtNameOnImportTime.Text.Trim();
+                    //            }
+                    //        }
+                    //        else
+                    //        {
+                    //            editColumn.Name_OnImport = txtNameOnImport.Text.Trim();
+                    //        }
+                    //    }
 
-                        if (txtCalculation.Text.Trim() != "")
-                        {
-                            lblMsg.Text = "This field has been configured on the import which would cause a conflict with this formula. Please uncheck import field name or remove calculation formula!";
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        editColumn.NameOnImport = "";
-                        editColumn.PositionOnImport = null;
+                    //    if (txtCalculation.Text.Trim() != "")
+                    //    {
+                    //        lblMsg.Text = "This field has been configured on the import which would cause a conflict with this formula. Please uncheck import field name or remove calculation formula!";
+                    //        return;
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    editColumn.Name_OnImport = "";
+                    //    editColumn.PositionOnImport = null;
 
-                    }
+                    //}
                     editColumn.ColumnType = ddlType.Text;
                     string strOldCalculation = editColumn.Calculation;
                     if (editColumn.ColumnType == "calculation")
@@ -5951,10 +6021,10 @@ FROM         [Table] INNER JOIN
 
 
                     ViewState["perform_validation"] = null;
-                    if (chkImport.Checked)
-                    {
-                        txtConstant.Text = "";
-                    }
+                    //if (chkImport.Checked)
+                    //{
+                    //    txtConstant.Text = "";
+                    //}
 
                     if (txtConstant.Text != "")
                     {
@@ -6759,14 +6829,51 @@ FROM         [Table] INNER JOIN
                         {
                             aButtonInfo.SPToRun = "";
                         }
-                        if (chkButtonOpenLink.Checked)
+
+                        aButtonInfo.OnClick = ddlButtonOnClick.SelectedValue;
+
+
+
+                        if (aButtonInfo.OnClick == "" || aButtonInfo.OnClick == "StayCurrent" || aButtonInfo.OnClick == "Goback")
                         {
-                            aButtonInfo.OpenLink = txtButtonOpenLink.Text;
+
                         }
                         else
                         {
-                            aButtonInfo.OpenLink = "";
+
+                            aButtonInfo.AdditionalParams = txtButtonParamas.Text.Trim();
+                            if (aButtonInfo.OnClick == "AddChild")
+                            {
+                                if (ddlButtonChild.SelectedValue != "")
+                                {
+                                    aButtonInfo.ChildTableID = int.Parse(ddlButtonChild.SelectedValue);
+                                }
+                                else
+                                {
+                                    Session["tdbmsgpb"] = "Please select a child table.";
+                                    ddlButtonChild.Focus();
+                                    return;
+                                }
+
+                            }
+                            else
+                            {
+                                if (txtButtonLink.Text.Trim() != "")
+                                {
+                                    aButtonInfo.Link = txtButtonLink.Text.Trim();
+                                }
+                                else
+                                {
+                                    Session["tdbmsgpb"] = "Please enter link.";
+                                    txtButtonLink.Focus();
+                                    return;
+                                }
+
+                            }
+
                         }
+
+
                         aButtonInfo.ImageFullPath = hfButtonValue.Value;// txtButtonImage.Text;
                         if (chkButtonWarningMessage.Checked && txtButtonWarningMessage.Text != "")
                         {
@@ -6960,35 +7067,35 @@ FROM         [Table] INNER JOIN
                                 RecordManager.ets_Table_Update(_theTable);
                             }
 
-                            if (_theTable.IsImportPositional == true)
-                            {
-                                //if positional then reserve a field for Time Samled
-                                if (editColumn.PositionOnImport != null)
-                                {
-                                    DataTable dtTemp = Common.DataTableFromText(@"SELECT ColumnID, 
-                                    PositionOnImport FROM [Column] WHERE   ColumnID<>" + editColumn.ColumnID.ToString() + " AND TableID=" + _theTable.TableID.ToString() + " AND PositionOnImport=" + (editColumn.PositionOnImport + 1).ToString());
+//                            if (_theTable.IsImportPositional == true)
+//                            {
+//                                //if positional then reserve a field for Time Samled
+//                                if (editColumn.PositionOnImport != null)
+//                                {
+//                                    DataTable dtTemp = Common.DataTableFromText(@"SELECT ColumnID, 
+//                                    PositionOnImport FROM [Column] WHERE   ColumnID<>" + editColumn.ColumnID.ToString() + " AND TableID=" + _theTable.TableID.ToString() + " AND PositionOnImport=" + (editColumn.PositionOnImport + 1).ToString());
 
-                                    if (dtTemp.Rows.Count > 0)
-                                    {
-                                        //found so lets increase
+//                                    if (dtTemp.Rows.Count > 0)
+//                                    {
+//                                        //found so lets increase
 
-                                        dtTemp = Common.DataTableFromText(@"SELECT ColumnID, 
-                                    PositionOnImport FROM [Column] WHERE   TableID=" + _theTable.TableID.ToString() + " AND PositionOnImport>" + editColumn.PositionOnImport.ToString());
+//                                        dtTemp = Common.DataTableFromText(@"SELECT ColumnID, 
+//                                    PositionOnImport FROM [Column] WHERE   TableID=" + _theTable.TableID.ToString() + " AND PositionOnImport>" + editColumn.PositionOnImport.ToString());
 
-                                        if (dtTemp.Rows.Count > 0)
-                                        {
-                                            foreach (DataRow dr in dtTemp.Rows)
-                                            {
-                                                Common.ExecuteText("UPDATE Column SET PositionOnImport=" + (int.Parse(dr["PositionOnImport"].ToString()) + 1).ToString() + " WHERE ColumnID=" + dr["ColumnID"].ToString());
+//                                        if (dtTemp.Rows.Count > 0)
+//                                        {
+//                                            foreach (DataRow dr in dtTemp.Rows)
+//                                            {
+//                                                Common.ExecuteText("UPDATE Column SET PositionOnImport=" + (int.Parse(dr["PositionOnImport"].ToString()) + 1).ToString() + " WHERE ColumnID=" + dr["ColumnID"].ToString());
 
-                                            }
-                                        }
+//                                            }
+//                                        }
 
-                                    }
+//                                    }
                                  
-                                }
+//                                }
 
-                            }
+//                            }
                           
 
                         }

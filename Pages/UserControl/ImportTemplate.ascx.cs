@@ -209,7 +209,7 @@ public partial class Pages_UserControl_ImportTemplate : System.Web.UI.UserContro
             int iTN = 0;
 
             gvTheGrid.Columns[4].HeaderText = gvTheGrid.Columns[4].HeaderText.Replace("Table", SecurityManager.etsTerminology(Request.Path.Substring(Request.Path.LastIndexOf("/") + 1), "Table", "Table"));
-
+            ViewState[gvTheGrid.ID + "PageIndex"] = (iStartIndex / gvTheGrid.PageSize) + 1;
             DataTable dtTemp = ImportManager.dbg_ImportTemplate_Select(int.Parse(Session["AccountID"].ToString()),
                 ddlTable.SelectedValue == "" ? null : (int?)int.Parse(ddlTable.SelectedValue),
                 txtSearch.Text.Replace("'", "''"),"","","","","", gvTheGrid.GridViewSortColumn, gvTheGrid.GridViewSortDirection == SortDirection.Ascending ? "ASC" : "DESC",
@@ -219,7 +219,7 @@ public partial class Pages_UserControl_ImportTemplate : System.Web.UI.UserContro
 
             if (iTN == 0 & !IsPostBack & txtSearch.Text == "" & ddlTable.SelectedValue != "")
             {
-                ImportManager.CreateDefaultImportTemplate(int.Parse(ddlTable.SelectedValue));
+                ImportManager.CreateDefaultImportTemplate(int.Parse(ddlTable.SelectedValue),"");
 
                 //always copy above
                 dtTemp = ImportManager.dbg_ImportTemplate_Select(int.Parse(Session["AccountID"].ToString()),
@@ -241,7 +241,11 @@ public partial class Pages_UserControl_ImportTemplate : System.Web.UI.UserContro
             {
                 _gvPager = (Common_Pager)gvr.FindControl("Pager");
                 _gvPager.AddURL = GetAddURL();
-                _gvPager.PageIndexTextSet = (int)(iStartIndex / iMaxRows + 1);
+                if (ViewState[gvTheGrid.ID + "PageIndex"] != null)
+                    _gvPager.PageIndex = int.Parse(ViewState[gvTheGrid.ID + "PageIndex"].ToString());
+                _gvPager.PageSize = gvTheGrid.PageSize;
+                _gvPager.TotalRows = iTN;
+                //_gvPager.PageIndexTextSet = (int)(iStartIndex / iMaxRows + 1);
             }
 
 
@@ -373,7 +377,7 @@ public partial class Pages_UserControl_ImportTemplate : System.Web.UI.UserContro
 
     protected void Pager_BindTheGridAgain(object sender, EventArgs e)
     {
-        BindTheGrid(_gvPager.StartIndex, _gvPager._gridView.PageSize);
+        BindTheGrid(_gvPager.StartIndex, _gvPager.PageSize);
     }
 
     protected void Pager_OnApplyFilter(object sender, EventArgs e)
@@ -406,11 +410,11 @@ public partial class Pages_UserControl_ImportTemplate : System.Web.UI.UserContro
         {
             DeleteItem(sCheck);
             BindTheGrid(_gvPager.StartIndex, gvTheGrid.PageSize);
-            _gvPager._gridView.PageIndex = _gvPager.PageIndex - 1;
-            if (_gvPager._gridView.Rows.Count == 0 && _gvPager._gridView.PageIndex > 0)
-            {
-                BindTheGrid(_gvPager.StartIndex - gvTheGrid.PageSize, gvTheGrid.PageSize);
-            }
+            //_gvPager._gridView.PageIndex = _gvPager.PageIndex - 1;
+            //if (_gvPager._gridView.Rows.Count == 0 && _gvPager._gridView.PageIndex > 0)
+            //{
+            //    BindTheGrid(_gvPager.StartIndex - gvTheGrid.PageSize, gvTheGrid.PageSize);
+            //}
         }
 
     }

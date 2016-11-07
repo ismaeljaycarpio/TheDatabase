@@ -74,7 +74,7 @@
                         </asp:Panel>
                         <div class="epraybackground">
                             <div class="onlyrounded" style="background-color: #ffffff;">
-                                <asp:UpdateProgress ID="UpdateProgress1" runat="server" AssociatedUpdatePanelID="UpdatePanel1">
+                                <%--<asp:UpdateProgress ID="UpdateProgress1" runat="server" AssociatedUpdatePanelID="UpdatePanel1">
                                     <ProgressTemplate>
                                         <table style="width: 100%; text-align: center">
                                             <tr>
@@ -84,7 +84,7 @@
                                             </tr>
                                         </table>
                                     </ProgressTemplate>
-                                </asp:UpdateProgress>
+                                </asp:UpdateProgress>--%>
                                 <dbg:dbgGridView ID="gvTheGrid" runat="server" GridLines="Both" CssClass="gridview"
                                     AllowPaging="True" AllowSorting="True" DataKeyNames="LookupDataID" HeaderStyle-ForeColor="Black"
                                     Width="100%" AutoGenerateColumns="false" PageSize="15" OnSorting="gvTheGrid_Sorting"

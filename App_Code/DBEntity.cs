@@ -593,7 +593,7 @@ public class Table
     private DateTime? _dateAdded;
     private DateTime? _dateUpdated;
    
-    private bool? _bIsImportPositional=false;
+    //private bool? _bIsImportPositional=false;
     private bool? _bIsActive;
     private int? _iAccountID;
    
@@ -602,18 +602,18 @@ public class Table
     private string _strMaxTimeBetweenRecordsUnit;
     private int? _iLastUpdatedUserID;
     private int? _iLateDataDays;
-    private int? _iImportDataStartRow;
+    //private int? _iImportDataStartRow;
 
     private string _strDateFormat;
 
     public int? DisplayOrder { get; set; }
 
-    public bool? IsRecordDateUnique { get; set; }
+    //public bool? IsRecordDateUnique { get; set; }
     public int? UniqueColumnID { get; set; }
     public int? UniqueColumnID2 { get; set; }
-    public bool? IsDataUpdateAllowed { get; set; }
+    //public bool? IsDataUpdateAllowed { get; set; }
 
-
+    public string DuplicateRecordAction { get; set; }
     public bool? FlashAlerts { get; set; }
 
 
@@ -630,10 +630,10 @@ public class Table
 	public int? AddUserPasswordColumnID  { get; set; }
     public bool? AddUserNotification { get; set; }
 
-    public int? ImportColumnHeaderRow { get; set; }
+    //public int? ImportColumnHeaderRow { get; set; }
 
-    public int? TempImportColumnHeaderRow { get; set; }
-    public int? TempImportDataStartRow { get; set; }
+    //public int? TempImportColumnHeaderRow { get; set; }
+    //public int? TempImportDataStartRow { get; set; }
     public string TempFullUniqueFileName { get; set; }
 
     public int? SortColumnID { get; set; }
@@ -673,7 +673,7 @@ public class Table
     public bool? HideFilter { get; set; }
     public bool? NavigationArrows { get; set; }
 
-    public int? DataUpdateUniqueColumnID { get; set; }
+    //public int? DataUpdateUniqueColumnID { get; set; }
 
     public bool? AllowCopyRecords { get; set; }
 
@@ -682,7 +682,7 @@ public class Table
     public string SPUpdateConfirm { get; set; }
     public bool? ShowSentEmails { get; set; }
     public bool? ShowReceivedEmails { get; set; }
-    public string SPAfterImport { get; set; }
+    //public string SPAfterImport { get; set; }
 
     public int? PinDisplayOrder { get; set; }
 
@@ -693,16 +693,18 @@ public class Table
 
     public int? DefaultImportTemplateID { get; set; }
 
+    public string SPSearchGo { get; set; }
+    public string SPSearchReset { get; set; }
+    public bool? ShowChildTabsOnAdd { get; set; }
 
     public Table(int? p_iTableID, string p_strTableName, 
         DateTime? p_dateAdded, DateTime? p_dateUpdated
-        ,   bool? p_bIsImportPositional, bool? p_bIsActive)
+        , bool? p_bIsActive)
     {
         _iTableID = p_iTableID;       
         _strTableName = p_strTableName;
         _dateAdded = p_dateAdded;
         _dateUpdated = p_dateUpdated;       
-        _bIsImportPositional = p_bIsImportPositional;
         _bIsActive = p_bIsActive;
 
     }
@@ -715,11 +717,11 @@ public class Table
         set { _strDateFormat = value; }
     }
 
-    public int? ImportDataStartRow
-    {
-        get { return _iImportDataStartRow; }
-        set { _iImportDataStartRow = value; }
-    }
+    //public int? ImportDataStartRow
+    //{
+    //    get { return _iImportDataStartRow; }
+    //    set { _iImportDataStartRow = value; }
+    //}
 
     public int? LateDataDays
     {
@@ -776,11 +778,11 @@ public class Table
 
   
 
-    public bool? IsImportPositional
-    {
-        get { return _bIsImportPositional; }
-        set { _bIsImportPositional = value; }
-    }
+    //public bool? IsImportPositional
+    //{
+    //    get { return _bIsImportPositional; }
+    //    set { _bIsImportPositional = value; }
+    //}
 
     public string PinImage
     {
@@ -1527,8 +1529,8 @@ public class Column
     private int? _iDisplayOrder;
     private string _strDisplayTextSummary;
     private string _strDisplayTextDetail;
-    private string _strNameOnImport;
-    private string _strNameOnExport;
+    //private string _strImportHeaderName;
+    //private string _strNameOnExport;
     private int? _iGraphTypeID;
     private string _strValidationOnWarning;
     private string _strValidationOnEntry;
@@ -1536,7 +1538,6 @@ public class Column
     private DateTime? _dateAdded;
     private DateTime? _dateUpdated;
     private string _strDisplayName;
-    private int? _iPositionOnImport;
     private string _strConstant;
     private string _strCalculation;
     //private int? _iSensorID;
@@ -1569,7 +1570,6 @@ public class Column
 
     private string _strMobileName;
 
-    private bool? _bIsDateSingleColumn;
     private double? _dShowGraphExceedance;
     private double? _dShowGraphWarning;
 
@@ -1637,17 +1637,24 @@ public class Column
     public bool? ColourCells { set; get; }
 
     public string ButtonInfo { set; get; }
+
+    public bool? IsReadOnly { set; get; }
+    public string ControlValueChangeService { set; get; }
+
+    public string SystemName_2nd { set; get; } //not in DB
+    public string FileColumnName_Import { set; get; }//not in DB
+
     private string _strImportance="";
     public Column()
     {
     }
     public Column(int? p_iColumnID, int? p_iTableID, string p_strSystemName,
         int? p_iDisplayOrder, string p_strDisplayTextSummary,string p_strDisplayTextDetail,
-        string p_strNameOnImport,string p_strNameOnExport,int? p_iGraphTypeID,
+       int? p_iGraphTypeID,
         string p_strValidationOnWarning, string p_strValidationOnEntry,
         DateTime? p_dateAdded, DateTime? p_dateUpdated,
         string p_strGraphTypeName, string p_strTableName, bool? p_bIsStandard,
-        string p_strDisplayName, int? p_iPositionOnImport, string p_strNotes,
+        string p_strDisplayName, string p_strNotes,
         bool? p_bIsRound, int? p_iRoundNumber, bool? p__bCheckUnlikelyValue,
         string p_strGraphLabel, string p_strDropdownValues,
         string p_strImportance)
@@ -1658,8 +1665,6 @@ public class Column
         _strSystemName = p_strSystemName;
         _strDisplayTextSummary = p_strDisplayTextSummary;
         _strDisplayTextDetail = p_strDisplayTextDetail;
-        _strNameOnImport = p_strNameOnImport;
-        _strNameOnExport = p_strNameOnExport;
         _iGraphTypeID = p_iGraphTypeID;
         _strValidationOnWarning = p_strValidationOnWarning;
         _strValidationOnEntry = p_strValidationOnEntry;
@@ -1669,7 +1674,6 @@ public class Column
         _strTableName = p_strTableName;
         _bIsStandard = p_bIsStandard;
         _strDisplayName = p_strDisplayName;
-        _iPositionOnImport = p_iPositionOnImport;
         _strNotes = p_strNotes;
         _bIsRound = p_bIsRound;
         _iRoundNumber = p_iRoundNumber;
@@ -1711,11 +1715,11 @@ public class Column
         set { _iDefaultGraphDefinitionID = value; }
     }
 
-    public bool? IsDateSingleColumn
-    {
-        get { return _bIsDateSingleColumn; }
-        set { _bIsDateSingleColumn = value; }
-    }
+    //public bool? IsDateSingleColumn
+    //{
+    //    get { return _bIsDateSingleColumn; }
+    //    set { _bIsDateSingleColumn = value; }
+    //}
 
     public string MobileName
     {
@@ -1814,11 +1818,11 @@ public class Column
         set { _iRoundNumber = value; }
     }
 
-    public int? PositionOnImport
-    {
-        get { return _iPositionOnImport; }
-        set { _iPositionOnImport = value; }
-    }
+    //public int? PositionOnImport
+    //{
+    //    get { return _iPositionOnImport; }
+    //    set { _iPositionOnImport = value; }
+    //}
 
 
     public int? ColumnID
@@ -1857,16 +1861,16 @@ public class Column
         get { return _strDisplayTextDetail; }
         set { _strDisplayTextDetail = value; }
     }
-    public string NameOnImport
-    {
-        get { return _strNameOnImport; }
-        set { _strNameOnImport = value; }
-    }
-    public string NameOnExport
-    {
-        get { return _strNameOnExport; }
-        set { _strNameOnExport = value; }
-    }
+    //public string ImportHeaderName
+    //{
+    //    get { return _strImportHeaderName; }
+    //    set { _strImportHeaderName = value; }
+    //}
+    //public string NameOnExport
+    //{
+    //    get { return _strNameOnExport; }
+    //    set { _strNameOnExport = value; }
+    //}
     public int? GraphTypeID
     {
         get { return _iGraphTypeID; }
@@ -2032,14 +2036,14 @@ public class Batch
     private int? _iUserIDUploaded;
     private int? _iAccountID;
     private bool? _bIsImported;
-    private bool? _bIsImportPositional = false;
+    //private bool? _bIsImportPositional = false;
 
-    public bool? AllowDataUpdate { get; set; }
+    //public bool? AllowDataUpdate { get; set; }
 
     public int? ImportTemplateID { get; set; }
     public Batch(int? p_iBatchID, int? p_iTableID, string p_strBatchDescription,
         string p_strUploadedFileName, DateTime? p_dateAdded, Guid? p_guidUniqueName,
-        int? p_iUserIDUploaded, int? p_iAccountID, bool? p_bIsImportPositional)
+        int? p_iUserIDUploaded, int? p_iAccountID)
     {
         _iBatchID = p_iBatchID;
         _iTableID = p_iTableID;
@@ -2049,14 +2053,14 @@ public class Batch
         _guidUniqueName = p_guidUniqueName;
         _iUserIDUploaded = p_iUserIDUploaded;
         _iAccountID = p_iAccountID;
-        _bIsImportPositional = p_bIsImportPositional;
+        
 
     }
-    public bool? IsImportPositional
-    {
-        get { return _bIsImportPositional; }
-        set { _bIsImportPositional = value; }
-    }
+    //public bool? IsImportPositional
+    //{
+    //    get { return _bIsImportPositional; }
+    //    set { _bIsImportPositional = value; }
+    //}
 
     public int? BatchID
     {
@@ -4557,7 +4561,22 @@ public class LookupType
 //}
 
 
+[Serializable]
+public class StackRoom
+{
+    public string ID { get; set; }
+    public string Text { get; set; }
+    public string TableTabID { get; set; }
+    public StackRoom()
+    {
 
+    }
+    public StackRoom(string p_ID, string p_Text)
+    {
+        ID = p_ID;
+        Text = p_Text;
+    }  
+}
 
 [Serializable]
 public class IDnText
@@ -5490,6 +5509,23 @@ public class SpeedLog
 
 
 [Serializable]
+public class ExportClass
+{
+   
+    public string strRecords { get; set; }
+    public string strExportFiletype { get; set; }
+
+    public List<IDnText> objCheckBoxList { get; set; }
+    public ExportClass()
+    {
+
+    }
+
+
+}
+
+
+[Serializable]
 public class XMLData
 {
     public int? XMLDataID { get; set; }
@@ -5509,6 +5545,32 @@ public class XMLData
     }
 
 }
+
+[Serializable]
+public class UserSearch
+{
+    public int? UserSearchID { get; set; }
+    public int? UserID { get; set; }
+    public int? ViewID { get; set; }
+    public string SearchXML { get; set; }
+    public DateTime? DateUpdated { get; set; }
+
+    public UserSearch()
+    {
+
+    }
+
+    public UserSearch(int? iUserSearchID, int? iUserID, int? iViewID, string sSearchXML, DateTime? dDateUpdated)
+    {
+        UserSearchID = iUserSearchID;
+        UserID = iUserID;
+        ViewID = iViewID;
+        SearchXML = sSearchXML;
+        DateUpdated = dDateUpdated;
+    }
+
+}
+
 
 [Serializable]
 public class ContentType
@@ -5547,6 +5609,10 @@ public class ImportTemplate
 
     public int? ImportDataStartRow { get; set; }
     public int? ImportColumnHeaderRow { get; set; }
+    public int? TempImportColumnHeaderRow { get; set; }
+    public int? TempImportDataStartRow { get; set; }
+    public bool? IsImportPositional { get; set; }
+    public string SPAfterImport { get; set; }
 
     public ImportTemplate()
     {
@@ -5576,6 +5642,8 @@ public class ImportTemplateItem
     public string ImportHeaderName { get; set; }
     public int? ColumnIndex { get; set; }
     public int? ParentImportColumnID { get; set; }
+    public string PositionOnImport { get; set; }
+    //public bool? IsDateSingleColumn { get; set; }
     public ImportTemplateItem()
     {
 

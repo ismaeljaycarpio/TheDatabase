@@ -195,7 +195,7 @@ public class EcotechBlastDataImport
             theUser=SecurityManager.User_AccountHolder(accountID);
             newSourceBatch = new Batch(null, (int)iTableID,
               "NA",
-              "NA", null, Guid.NewGuid(), theUser.UserID, accountID, false);
+              "NA", null, Guid.NewGuid(), theUser.UserID, accountID);
             int iBatchID = UploadManager.ets_Batch_Insert(newSourceBatch);
             newSourceBatch.BatchID = iBatchID;
             if (iBatchID<0)
@@ -303,7 +303,7 @@ public class EcotechBlastDataImport
                 DateTime? dtLastDataImportedOn = Common.GetDateTimeFromString(rec.LastDataImportedOn,"");
 
                 if (dtLastDataImportedOn!=null && rec.ImportData == "Yes" &&
-                    Convert.ToInt32(rec.NumberEventsToFetch) > 0 && Common.DaysBetween((DateTime)dtLastDataImportedOn, DateTime.Now) > 0)
+                    Convert.ToInt32(Common.IgnoreSymbols(rec.NumberEventsToFetch)) > 0 && Common.DaysBetween((DateTime)dtLastDataImportedOn, DateTime.Now) > 0)
                 {
                     try
                     {

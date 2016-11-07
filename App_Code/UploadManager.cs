@@ -22,26 +22,28 @@ public class UploadManager
         // TODO: Add constructor logic here
         //
     }
-
+    protected static void CheckUpdate_SystemName_2nd(ref DataTable dtRecordTypleColumns, string strColumnName,string strSystemName)
+    {
+        for (int i = 0; i < dtRecordTypleColumns.Rows.Count; i++)
+        {
+            if(dtRecordTypleColumns.Rows[i]["SystemName_2nd"].ToString()==strColumnName)
+            {
+                dtRecordTypleColumns.Rows[i]["SystemName_2nd"] = strSystemName;
+            }
+        }
+    }
     public static void UploadCSV(int? iUserID, Table theTable, string strBatchDescription,
      string strOriginalFileName, Guid? guidNew, string strImportFolder, out string strMsg, out int iBatchID,
         string strFileExtension, string strSelectedSheet, int? iAccountID,
         bool? bAllowDataUpload, int? iImportTemplateID, int? iSourceBatchID)
     {
-        //try
-        //{
-        //    System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("en-GB");
-           
-        //}
-        //catch
-        //{
-
-        //}
        
-
-
-        string strDateRecordedColumnName = "Date Recorded";
-        string strTimeSamledColumnName = "Time Recorded";
+        //bool bIsDateSingleColumn = false;
+        bool bHas_SystemName_2nd = false;
+        //int? iDatePosition = null;
+        //int? iTimePosition=null;
+        //string strDateRecordedColumnName = "Date Recorded";
+        //string strTimeSamledColumnName = "Time Recorded";
         string strDBName = Common.GetDatabaseName();
         iBatchID = -1;
         strMsg = "";
@@ -52,7 +54,7 @@ public class UploadManager
             if (theTable != null && iAccountID != null && theTable.AccountID != iAccountID)
                 iAccountID = theTable.AccountID;
 
-            string strNameOnImport = "NameOnImport";
+            //string strImportHeaderName = "ImportHeaderName";
             Batch theSourceBatch = null;
             if (iSourceBatchID != null)
             {
@@ -62,8 +64,7 @@ public class UploadManager
                     return;
                 }
 
-                //strNameOnImport = "DisplayName";
-
+         
                 if (theTable == null)
                     theTable = RecordManager.ets_Table_Details((int)theSourceBatch.TableID);
 
@@ -78,13 +79,13 @@ public class UploadManager
                     iAccountID = theSourceBatch.AccountID;
             }
 
-            int? iAutoUserID = int.Parse(SystemData.SystemOption_ValueByKey_Account("AutoUploadUserID", null, null));
-            if (strFileExtension.ToLower()!="virtual" && iImportTemplateID == null && theTable.DefaultImportTemplateID != null
-                && (iSourceBatchID != null || iUserID == iAutoUserID)) 
-            {
-                iImportTemplateID = theTable.DefaultImportTemplateID;
+            //int? iAutoUserID = int.Parse(SystemData.SystemOption_ValueByKey_Account("AutoUploadUserID", null, null));
+            //if (strFileExtension.ToLower()!="virtual" && iImportTemplateID == null && theTable.DefaultImportTemplateID != null
+            //    && (iSourceBatchID != null || iUserID == iAutoUserID)) 
+            //{
+            //    iImportTemplateID = theTable.DefaultImportTemplateID;
 
-            }
+            //}
 
             //if (strFileExtension.ToLower()=="virtual" && iImportTemplateID == null
             //    && theTable.DefaultImportTemplateID != null && strImportFolder!="") //ALS Labdata only
@@ -93,6 +94,10 @@ public class UploadManager
             //}
 
 
+            if(iImportTemplateID==null)
+            {
+                iImportTemplateID = ImportManager.GetDefaultImportTemplate((int)theTable.TableID);
+            }
 
             bool bCheckIgnoreMidnight = false;
             string strIgnoreMidnight = SystemData.SystemOption_ValueByKey_Account("Time Calculation Ignore Midnight", (int)theTable.AccountID, theTable.TableID);
@@ -125,48 +130,95 @@ public class UploadManager
             if (iImportTemplateID != null)
                 theImportTemplate = ImportManager.dbg_ImportTemplate_Detail((int)iImportTemplateID);
 
-            if (theImportTemplate != null)
-            {
-                theTable.ImportColumnHeaderRow = theImportTemplate.ImportColumnHeaderRow;
-                theTable.ImportDataStartRow = theImportTemplate.ImportDataStartRow;
-            }
+            //if (theImportTemplate != null)
+            //{
+            //    theTable.ImportColumnHeaderRow = theImportTemplate.ImportColumnHeaderRow;
+            //    theTable.ImportDataStartRow = theImportTemplate.ImportDataStartRow;
+            //}
 
             //lets get date and time column name
-            DataTable dtDateTimeColumnName = null;
+//            string strDateTimeColumnName = "";
+//            bool bIsImportPositional = false;
+//            if (theImportTemplate != null && theImportTemplate.IsImportPositional != null && (bool)theImportTemplate.IsImportPositional)
+//            {
+//                bIsImportPositional = true;
+//            }
 
-           if(iImportTemplateID!=null)
-           {
-               dtDateTimeColumnName = Common.DataTableFromText(@"SELECT      ITI.ImportHeaderName FROM ImportTemplateItem ITI INNER JOIN [Column] C
-                            ON ITI.ColumnID=C.ColumnID WHERE ITI.ImportTemplateID="+iImportTemplateID.ToString()+@"                   
-                    AND C.SystemName='DateTimeRecorded' AND C.TableID=" + theTable.TableID.ToString());               
+//            if (bIsImportPositional == false)
+//            {
+//                if (iImportTemplateID != null)
+//                {
+//                    strDateTimeColumnName = Common.GetValueFromSQL(@"SELECT      ITI.Name_OnImport FROM ImportTemplateItem ITI INNER JOIN [Column] C
+//                            ON ITI.ColumnID=C.ColumnID WHERE ITI.ImportTemplateID=" + iImportTemplateID.ToString() + @"                   
+//                    AND C.SystemName='DateTimeRecorded' AND C.TableID=" + theTable.TableID.ToString());
 
-           }
+//                }
 
-           if (dtDateTimeColumnName==null)
-           {
-               dtDateTimeColumnName = Common.DataTableFromText(@"SELECT      NameOnImport 
-                    FROM  [Column]
-                    WHERE SystemName='DateTimeRecorded' AND TableID=" + theTable.TableID.ToString());
+////                if (strDateTimeColumnName == "")
+////                {
+////                    strDateTimeColumnName = Common.GetValueFromSQL(@"SELECT      Name_OnImport 
+////                    FROM  [Column]
+////                    WHERE SystemName='DateTimeRecorded' AND TableID=" + theTable.TableID.ToString());
 
-           }          
-          
-
+////                }
 
 
-            if (dtDateTimeColumnName.Rows.Count > 0 && dtDateTimeColumnName.Rows[0][0] != DBNull.Value)
-            {
-                string strDT = dtDateTimeColumnName.Rows[0][0].ToString();
-                if (strDT.IndexOf(",") > 0)
-                {
-                    strDateRecordedColumnName = strDT.Substring(0, strDT.IndexOf(","));
-                    strTimeSamledColumnName = strDT.Substring(strDT.IndexOf(",") + 1);
-                }
-                else
-                {
-                    strDateRecordedColumnName = strDT;
-                    strTimeSamledColumnName = "";
-                }
-            }
+
+
+//                if (strDateTimeColumnName != "")
+//                {
+
+//                    if (strDateTimeColumnName.IndexOf(",") > 0)
+//                    {
+//                        strDateRecordedColumnName = strDateTimeColumnName.Substring(0, strDateTimeColumnName.IndexOf(","));
+//                        strTimeSamledColumnName = strDateTimeColumnName.Substring(strDateTimeColumnName.IndexOf(",") + 1);
+//                    }
+//                    else
+//                    {
+//                        //bIsDateSingleColumn = true;
+//                        strDateRecordedColumnName = strDateTimeColumnName;
+//                        strTimeSamledColumnName = "";
+//                    }
+//                }
+//            }
+//            else
+//            {
+
+               
+//                DataTable dtDateTimeColumnName = Common.DataTableFromText(@"SELECT      
+//                        PositionOnImport FROM  [ImportTemplateItem] ITI JOIN [Column] C ON C.ColumnID=ITI.ColumnID
+//                        JOIN [Table] T ON C.TableID=T.TableID
+//                        WHERE SystemName='DateTimeRecorded' AND C.TableID=" + theTable.TableID.ToString()
+//                           + " AND ITI.ImportTemplateID="+ iImportTemplateID.ToString());
+//                if (dtDateTimeColumnName.Rows.Count > 0 && dtDateTimeColumnName.Rows[0][0] != DBNull.Value)
+//                {
+
+//                    //if (dtDateTimeColumnName.Rows[0]["IsDateSingleColumn"].ToString().ToLower() == "true")
+//                    //{
+//                    //    bIsDateSingleColumn = true;
+//                    //}
+//                    string strPositionOnImport = dtDateTimeColumnName.Rows[0]["PositionOnImport"].ToString();
+//                    string sD = "";
+//                    string sT = "";
+//                    if (strPositionOnImport.IndexOf(",") > 0)
+//                    {
+//                        sD = strPositionOnImport.Substring(0, strPositionOnImport.IndexOf(","));
+//                        sT = strPositionOnImport.Substring(strPositionOnImport.IndexOf(",") + 1);
+//                    }
+//                    else
+//                    {
+//                        //bIsDateSingleColumn = true;
+//                        sD = strPositionOnImport;
+//                        sT = "";
+//                    }
+//                    iDatePosition = int.Parse(sD);
+//                    if (sT != "")
+//                        iTimePosition = int.Parse(sT);
+//                }
+
+//            }
+
+           
 
             DataTable dtImportFileTable;
 
@@ -187,11 +239,6 @@ public class UploadManager
 
                 string strFileUniqueName = guidNew.ToString() + strFileExtension;
 
-                if (theTable.TempImportColumnHeaderRow != null)
-                    theTable.ImportColumnHeaderRow = theTable.TempImportColumnHeaderRow;
-
-                if (theTable.TempImportDataStartRow != null)
-                    theTable.ImportDataStartRow = theTable.TempImportDataStartRow;
 
                 switch (strFileExtension.ToLower())
                 {
@@ -217,7 +264,7 @@ public class UploadManager
 
                     case ".xml":
                         dtImportFileTable = UploadManager.GetImportFileTableFromXML(strImportFolder, strFileUniqueName);
-                        strNameOnImport = "DisplayName";
+                        //"ImportHeaderName" = "DisplayName";
 
                         break;
 
@@ -225,15 +272,15 @@ public class UploadManager
                         dtImportFileTable = UploadManager.GetVirtualImportFileTable(BitConverter.ToInt32(((Guid)guidNew).ToByteArray(), 8),
                             theTable.TableID.Value,
                             BitConverter.ToInt32(((Guid)guidNew).ToByteArray(), 0));
-                        theTable.ImportColumnHeaderRow = 1;
-                        theTable.ImportDataStartRow = 2;
+                        theImportTemplate.ImportColumnHeaderRow = 1;
+                        theImportTemplate.ImportDataStartRow = 2;
 
-                        if (theImportTemplate != null)
-                        {
+                        //if (theImportTemplate != null)
+                        //{
 
-                            theImportTemplate.ImportColumnHeaderRow = null;
-                            theImportTemplate.ImportDataStartRow = null;
-                        }
+                        //    theImportTemplate.ImportColumnHeaderRow = null;
+                        //    theImportTemplate.ImportDataStartRow = null;
+                        //}
                           
                         
                         
@@ -256,20 +303,20 @@ public class UploadManager
 
                 if (strFileExtension.ToLower() != ".dbf")
                 {
-                    if (theTable.ImportColumnHeaderRow == null)
-                        theTable.ImportColumnHeaderRow = 1;
-                    if (theTable.ImportDataStartRow == null)
-                        theTable.ImportDataStartRow = 2;
+                    if (theImportTemplate.ImportColumnHeaderRow == null)
+                        theImportTemplate.ImportColumnHeaderRow = 1;
+                    if (theImportTemplate.ImportDataStartRow == null)
+                        theImportTemplate.ImportDataStartRow = 2;
 
-                    if (theTable.ImportColumnHeaderRow != null)
+                    if (theImportTemplate.ImportColumnHeaderRow != null)
                     {
                         //if ((int)theTable.ImportColumnHeaderRow > 1)
                         //{
-                        if (dtImportFileTable.Rows.Count >= (int)theTable.ImportColumnHeaderRow)
+                        if (dtImportFileTable.Rows.Count >= (int)theImportTemplate.ImportColumnHeaderRow)
                         {
                             for (int i = 0; i <= dtImportFileTable.Columns.Count - 1; i++)
                             {
-                                if (dtImportFileTable.Rows[(int)theTable.ImportColumnHeaderRow - 1][i].ToString() == "")
+                                if (dtImportFileTable.Rows[(int)theImportTemplate.ImportColumnHeaderRow - 1][i].ToString() == "")
                                 {
                                     //do nothing for it
                                     if (strFileExtension.ToLower() == ".csv")
@@ -288,7 +335,7 @@ public class UploadManager
                                 {
                                     try
                                     {
-                                        dtImportFileTable.Columns[i].ColumnName = dtImportFileTable.Rows[(int)theTable.ImportColumnHeaderRow - 1][i].ToString();
+                                        dtImportFileTable.Columns[i].ColumnName = dtImportFileTable.Rows[(int)theImportTemplate.ImportColumnHeaderRow - 1][i].ToString();
                                     }
                                     catch (Exception ex)
                                     {
@@ -299,7 +346,7 @@ public class UploadManager
                                                 bool bOK = true;
                                                 foreach (DataColumn dc in dtImportFileTable.Columns)
                                                 {
-                                                    if (dc.ColumnName == dtImportFileTable.Rows[(int)theTable.ImportColumnHeaderRow - 1][i].ToString() + j.ToString())
+                                                    if (dc.ColumnName == dtImportFileTable.Rows[(int)theImportTemplate.ImportColumnHeaderRow - 1][i].ToString() + j.ToString())
                                                     {
                                                         bOK = false;
                                                     }
@@ -307,7 +354,7 @@ public class UploadManager
 
                                                 if (bOK)
                                                 {
-                                                    dtImportFileTable.Columns[i].ColumnName = dtImportFileTable.Rows[(int)theTable.ImportColumnHeaderRow - 1][i].ToString() + j.ToString();
+                                                    dtImportFileTable.Columns[i].ColumnName = dtImportFileTable.Rows[(int)theImportTemplate.ImportColumnHeaderRow - 1][i].ToString() + j.ToString();
                                                     dtImportFileTable.AcceptChanges();
                                                     break;
                                                 }
@@ -326,9 +373,9 @@ public class UploadManager
 
 
 
-                    if (theTable.ImportDataStartRow != null)
+                    if (theImportTemplate.ImportDataStartRow != null)
                     {
-                        for (int i = 1; i <= (int)theTable.ImportDataStartRow - 1; i++)
+                        for (int i = 1; i <= (int)theImportTemplate.ImportDataStartRow - 1; i++)
                         {
                             dtImportFileTable.Rows.RemoveAt(0);
 
@@ -350,35 +397,35 @@ public class UploadManager
            
 
 
-            if(strFileExtension.ToLower()=="virtual" && theImportTemplate!=null)
-            {
-                DataTable dtIT_Columns = RecordManager.ets_Table_Columns_Import((int)theTable.TableID, iImportTemplateID);
-                DataTable dtNoI_Columns = RecordManager.ets_Table_Columns_Import((int)theTable.TableID, null);
+            //if(strFileExtension.ToLower()=="virtual" && theImportTemplate!=null)
+            //{
+            //    DataTable dtIT_Columns = RecordManager.ets_Table_Columns_Import((int)theTable.TableID, iImportTemplateID);
+            //    //DataTable dtNoI_Columns = RecordManager.ets_Table_Columns_Import((int)theTable.TableID, null);
 
+            //    //need Alex
+            //    for (int i = 0; i <= dtImportFileTable.Columns.Count - 1; i++)
+            //    {
+            //        //foreach (DataRow drNoI in dtNoI_Columns.Rows)
+            //        //{
 
-                for (int i = 0; i <= dtImportFileTable.Columns.Count - 1; i++)
-                {
-                    foreach (DataRow drNoI in dtNoI_Columns.Rows)
-                    {
-
-                        if (dtImportFileTable.Columns[i].ColumnName.ToLower() ==
-                           drNoI["NameOnImport"].ToString().ToLower())
-                        {
-                            foreach (DataRow drIT in dtIT_Columns.Rows)
-                            {
-                                if (int.Parse(drNoI["ColumnID"].ToString()) == int.Parse(drIT["ColumnID"].ToString()))
-                                {
-                                    dtImportFileTable.Columns[i].ColumnName = drIT["NameOnImport"].ToString();
-                                    dtImportFileTable.AcceptChanges();
-                                    break;
-                                }
-                            }
-                            break;
-                        }
-                    }
-                }
+            //            //if (dtImportFileTable.Columns[i].ColumnName.ToLower() ==
+            //            //   drNoI["Name_OnImport"].ToString().ToLower())
+            //            //{
+            //                //foreach (DataRow drIT in dtIT_Columns.Rows)
+            //                //{
+            //                //    if (int.Parse(drNoI["ColumnID"].ToString()) == int.Parse(drIT["ColumnID"].ToString()))
+            //                //    {
+            //                //        dtImportFileTable.Columns[i].ColumnName = drIT["Name_OnImport"].ToString();
+            //                //        dtImportFileTable.AcceptChanges();
+            //                //        break;
+            //                //    }
+            //                //}
+            //                //break;
+            //            //}
+            //        //}
+            //    }
                            
-            }
+            //}
 
 
 
@@ -388,7 +435,7 @@ public class UploadManager
 
 
 
-            string strListOfNoNeedColumns = "";
+            //string strListOfNoNeedColumns = "";
             bool bHasValidationOnEntry = false;
             bool bHasValidationOnWarning = false;
             bool bHasCheckUnlikelyValue = false;
@@ -431,22 +478,22 @@ public class UploadManager
 
 
 
-            if (iImportTemplateID != null)
-            {
-                strNameOnImport = "NameOnImport";
+            //if (iImportTemplateID != null)
+            //{
+                //strImportHedaderName = "ImportHeaderName";
                 dtRecordTypleColumns = RecordManager.ets_Table_Columns_Import((int)theTable.TableID, iImportTemplateID);
-            }
-            else if (strNameOnImport == "DisplayName")
-            {
-                dtRecordTypleColumns = RecordManager.ets_Table_Columns_DisplayName((int)theTable.TableID);
-            }
-            else
-            {
-                dtRecordTypleColumns = RecordManager.ets_Table_Columns_Import((int)theTable.TableID, null);
-            }
-
-          
-
+            //}
+            //else if (strImpdortHeaderName == "DisplayName")
+            //{
+            //    dtRecordTypleColumns = RecordManager.ets_Table_Columns_DisplayName((int)theTable.TableID);
+            //}
+            //else
+            //{
+            //    dtRecordTypleColumns = RecordManager.ets_Table_Columns_Import((int)theTable.TableID, null);
+            //}
+            dtRecordTypleColumns.Columns.Add("FileColumnName_Import");
+            dtRecordTypleColumns.Columns.Add("SystemName_2nd");
+            dtRecordTypleColumns.AcceptChanges();
 
             if (iSourceBatchID == null)
             {
@@ -463,126 +510,248 @@ public class UploadManager
 
                 }
 
-                for (int r = 0; r < dtImportFileTable.Columns.Count; r++)
-                {
-                    bool bIsFound = false;
-                    for (int i = 0; i < dtRecordTypleColumns.Rows.Count; i++)
-                    {
-                        if (Common.RemoveSpecialCharacters(dtImportFileTable.Columns[r].ColumnName.Trim().ToLower()) ==
-                            Common.RemoveSpecialCharacters(dtRecordTypleColumns.Rows[i][strNameOnImport].ToString().Trim().ToLower()))
-                        {
-                            bIsFound = true;
-                            break;
-                        }
-                    }
-                    if (bIsFound == false)
-                    {
-                        if (dtImportFileTable.Columns[r].ColumnName.ToLower() != strTimeSamledColumnName.ToLower() && dtImportFileTable.Columns[r].ColumnName.ToLower() != strDateRecordedColumnName.ToLower())
-                        {
-                            strListOfNoNeedColumns += dtImportFileTable.Columns[r].ColumnName + ",";
-                        }
-                    }
-                }
+              
 
-                if (strFileExtension == ".txt")
-                {
-                    strListOfNoNeedColumns = "";
-                }
+                //for (int r = 0; r < dtImportFileTable.Columns.Count; r++)
+                //{
+                //    bool bIsFound = false;
+                //    for (int i = 0; i < dtRecordTypleColumns.Rows.Count; i++)
+                //    {
+                //        if (Common.RemoveSpecialCharacters(dtImportFileTable.Columns[r].ColumnName.Trim().ToLower()) ==
+                //            Common.RemoveSpecialCharacters(dtRecordTypleColumns.Rows[i][strImportHedaderName].ToString().Trim().ToLower()))
+                //        {
+                //            bIsFound = true;
+                //            break;
+                //        }
+                //    }
+                //    if (bIsFound == false)
+                //    {
+                //        if (dtImportFileTable.Columns[r].ColumnName.ToLower() != strTimeSamledColumnName.ToLower() && dtImportFileTable.Columns[r].ColumnName.ToLower() != strDateRecordedColumnName.ToLower())
+                //        {
+                //            strListOfNoNeedColumns += dtImportFileTable.Columns[r].ColumnName + ",";
+                //        }
+                //    }
+                //}
 
-                List<string> strRemoveIndexes = strListOfNoNeedColumns.Split(',').Where(s => (!String.IsNullOrEmpty(s))).ToList();
+                //if (strFileExtension == ".txt")
+                //{
+                //    strListOfNoNeedColumns = "";
+                //}
 
-
-                foreach (string item in strRemoveIndexes)
-                {
-                    try
-                    {
-                        dtImportFileTable.Columns.Remove(item);
-                    }
-                    catch
-                    {
-                        //
-                    }
-                }
+                //List<string> strRemoveIndexes = strListOfNoNeedColumns.Split(',').Where(s => (!String.IsNullOrEmpty(s))).ToList();
 
 
-                string strListOfMissingColumns = "";
-                for (int i = 0; i < dtRecordTypleColumns.Rows.Count; i++)
-                {
+                //foreach (string item in strRemoveIndexes)
+                //{
+                //    try
+                //    {
+                //        dtImportFileTable.Columns.Remove(item);
+                //    }
+                //    catch
+                //    {
+                //        //
+                //    }
+                //}
 
 
-                    bool bMissingColumnFound = false;
-
-                    for (int ic = 0; ic < dtImportFileTable.Columns.Count; ic++)
-                    {
-                        if (Common.RemoveSpecialCharacters(dtImportFileTable.Columns[ic].ColumnName.Trim().ToLower()) ==
-                    Common.RemoveSpecialCharacters(dtRecordTypleColumns.Rows[i][strNameOnImport].ToString().Trim().ToLower()))
-                        {
-                            bMissingColumnFound = true;
-                            break;
-                        }
-
-                    }
-
-                    if (bMissingColumnFound == false)
-                    {
-                        strListOfMissingColumns += dtRecordTypleColumns.Rows[i][strNameOnImport].ToString() + ",";
-                    }
+                //string strListOfMissingColumns = "";
+                //for (int i = 0; i < dtRecordTypleColumns.Rows.Count; i++)
+                //{
 
 
-                }
+                //    bool bMissingColumnFound = false;
 
-                if (strFileExtension == ".txt")
-                {
-                    strListOfMissingColumns = "";
-                }
-                if (strListOfMissingColumns.Length > 0)
-                {
-                    List<string> strMissingColumns = strListOfMissingColumns.Split(',').Where(s => (!String.IsNullOrEmpty(s))).ToList();
-                    foreach (string item in strMissingColumns)
-                    {
-                        try
-                        {
-                            dtImportFileTable.Columns.Add(item);
-                        }
-                        catch
-                        {
-                            //
-                        }
-                    }
+                //    for (int ic = 0; ic < dtImportFileTable.Columns.Count; ic++)
+                //    {
+                //        if (Common.RemoveSpecialCharacters(dtImportFileTable.Columns[ic].ColumnName.Trim().ToLower()) ==
+                //    Common.RemoveSpecialCharacters(dtRecordTypleColumns.Rows[i][strImportHdeaderName].ToString().Trim().ToLower()))
+                //        {
+                //            bMissingColumnFound = true;
+                //            break;
+                //        }
+                //    }
 
-                }
+                //    if (bMissingColumnFound == false)
+                //    {
+                //        strListOfMissingColumns += dtRecordTypleColumns.Rows[i][strImportHeadderName].ToString() + ",";
+                //    }
+                //}
+
+                //if (strFileExtension == ".txt")
+                //{
+                //    strListOfMissingColumns = "";
+                //}
+                //if (strListOfMissingColumns.Length > 0)
+                //{
+                //    List<string> strMissingColumns = strListOfMissingColumns.Split(',').Where(s => (!String.IsNullOrEmpty(s))).ToList();
+                //    foreach (string item in strMissingColumns)
+                //    {
+                //        try
+                //        {
+                //            dtImportFileTable.Columns.Add(item);
+                //        }
+                //        catch
+                //        {
+                //            //
+                //        }
+                //    }
+
+                //}
 
                 dtImportFileTable.AcceptChanges();
 
+                //IDnText aIDnText
 
+                List<IDnText> lstFileColumn_Sys = new List<IDnText>();
 
                 for (int r = 0; r < dtImportFileTable.Columns.Count; r++)
                 {
-                    for (int i = 0; i < dtRecordTypleColumns.Rows.Count; i++)
-                    {
-                        if (Common.RemoveSpecialCharacters(dtImportFileTable.Columns[r].ColumnName.Trim().ToLower()) ==
-                            Common.RemoveSpecialCharacters(dtRecordTypleColumns.Rows[i][strNameOnImport].ToString().Trim().ToLower()))
-                        {
-                            try
-                            {
-                                dtImportFileTable.Columns[r].ColumnName = dtRecordTypleColumns.Rows[i]["SystemName"].ToString();
-                                break;
-                            }
-                            catch
-                            {
-                                //
-                            }
-                        }
-                        if (Common.RemoveSpecialCharacters(dtImportFileTable.Columns[r].ColumnName.Trim().ToLower()) ==
-                          strDateRecordedColumnName.ToLower())
-                        {
-                            dtImportFileTable.Columns[r].ColumnName = "DateTimeRecorded";
-                            break;
-                        }
-                    }
+                    
+                       if(theImportTemplate!=null && theImportTemplate.IsImportPositional!=null && (bool)theImportTemplate.IsImportPositional)
+                       {
+
+                           for (int i = 0; i < dtRecordTypleColumns.Rows.Count; i++)
+                           {
+                               int iPositon = 0;
+                               if (dtRecordTypleColumns.Rows[i]["PositionOnImport"] != DBNull.Value && dtRecordTypleColumns.Rows[i]["PositionOnImport"].ToString().IndexOf(",") == -1)
+                               {
+                                   if (int.TryParse(dtRecordTypleColumns.Rows[i]["PositionOnImport"].ToString(), out iPositon))
+                                   {
+                                       if (r == (iPositon - 1))
+                                       {
+                                           //dtImportFileTable.Columns[r].ColumnName = dtRecordTypleColumns.Rows[i]["SystemName"].ToString();
+                                           dtRecordTypleColumns.Rows[i]["FileColumnName_Import"] = dtImportFileTable.Columns[r].ColumnName;
+                                           //lstFileColumn_Sys.Add(new IDnText(dtRecordTypleColumns.Rows[i]["SystemName"].ToString(), dtImportFileTable.Columns[r].ColumnName));
+                                           //break;
+                                       }
+                                   }
+                               }
+
+                               if (dtRecordTypleColumns.Rows[i]["PositionOnImport"] != DBNull.Value && dtRecordTypleColumns.Rows[i]["PositionOnImport"].ToString().IndexOf(",") > -1)
+                               {
+                                   string strBeforeComma = Common.BeforeComma(dtRecordTypleColumns.Rows[i]["PositionOnImport"].ToString());
+                                   int iBeforeCommaPosition = 0;
+                                   if (int.TryParse(strBeforeComma, out iBeforeCommaPosition))
+                                   {
+                                       if (r == (iBeforeCommaPosition - 1))
+                                       {
+                                           //dtImportFileTable.Columns[r].ColumnName = dtRecordTypleColumns.Rows[i]["SystemName"].ToString();
+                                           dtRecordTypleColumns.Rows[i]["FileColumnName_Import"] = dtImportFileTable.Columns[r].ColumnName;
+                                           //lstFileColumn_Sys.Add(new IDnText(dtRecordTypleColumns.Rows[i]["SystemName"].ToString(), dtImportFileTable.Columns[r].ColumnName));
+
+                                           string strAfterComma = Common.AferComma(dtRecordTypleColumns.Rows[i]["PositionOnImport"].ToString());
+                                           int iAfterCommaPosition = 0;
+                                           if (int.TryParse(strAfterComma, out iAfterCommaPosition))
+                                           {
+
+                                               if (dtImportFileTable.Columns.Count >= iAfterCommaPosition)
+                                               {
+                                                   dtRecordTypleColumns.Rows[i]["SystemName_2nd"] = dtImportFileTable.Columns[iAfterCommaPosition - 1].ColumnName;
+                                                   bHas_SystemName_2nd = true;
+                                               }
+                                                  
+                                               //time column
+                                           }
+                                           //break;
+                                       }
+                                   }
+                               }
+                           }                        
+                       }
+                       else
+                       {
+                           for (int i = 0; i < dtRecordTypleColumns.Rows.Count; i++)
+                           {
+
+                               if (dtRecordTypleColumns.Rows[i]["ImportHeaderName"].ToString().Trim().IndexOf(",") == -1)
+                               {
+                                   
+                                    if (Common.RemoveSpecialCharacters(dtImportFileTable.Columns[r].ColumnName.Trim().ToLower()) ==
+                                                                                        Common.RemoveSpecialCharacters(dtRecordTypleColumns.Rows[i]["ImportHeaderName"].ToString().Trim().ToLower()))
+                                    {
+                                        try
+                                        {
+                                            //over write if this is used by any other 2nd column, need to find and change those SystemName_2nd
+                                            //dtImportFileTable.Columns[r].ColumnName = dtRecordTypleColumns.Rows[i]["SystemName"].ToString();
+                                            dtRecordTypleColumns.Rows[i]["FileColumnName_Import"] = dtImportFileTable.Columns[r].ColumnName;
+                                            //lstFileColumn_Sys.Add(new IDnText(dtRecordTypleColumns.Rows[i]["SystemName"].ToString(), dtImportFileTable.Columns[r].ColumnName));
+
+                                            //break;
+                                        }
+                                        catch
+                                        {
+                                            //
+                                        }
+                                    }
+                                                              
+                               }
+                               else
+                               {
+                                   //2 columns
+                                   string strBeforeComma = Common.BeforeComma(dtRecordTypleColumns.Rows[i]["ImportHeaderName"].ToString());
+                                   if (Common.RemoveSpecialCharacters(dtImportFileTable.Columns[r].ColumnName.Trim().ToLower()) ==
+                                                                                       Common.RemoveSpecialCharacters(strBeforeComma.Trim().ToLower()))
+                                   {
+                                       try
+                                       {
+                                           //over write if this is used by any other 2nd column, need to find and change those SystemName_2nd
+                                           //dtImportFileTable.Columns[r].ColumnName = dtRecordTypleColumns.Rows[i]["SystemName"].ToString();
+                                           dtRecordTypleColumns.Rows[i]["FileColumnName_Import"] = dtImportFileTable.Columns[r].ColumnName;
+                                           
+                                           //lstFileColumn_Sys.Add(new IDnText(dtRecordTypleColumns.Rows[i]["SystemName"].ToString(), dtImportFileTable.Columns[r].ColumnName));
+
+                                           string strAfterComma = Common.AferComma(dtRecordTypleColumns.Rows[i]["ImportHeaderName"].ToString());
+                                           dtRecordTypleColumns.Rows[i]["ImportHeaderName"] = dtImportFileTable.Columns[r].ColumnName;
+                                           if (strAfterComma!="")
+                                           {
+                                               dtRecordTypleColumns.Rows[i]["SystemName_2nd"] = strAfterComma;
+                                               bHas_SystemName_2nd = true;
+                                           }
+
+                                           //break;
+                                       }
+                                       catch
+                                       {
+                                           //
+                                       }
+                                   }                                          
+                               }                               
+                           }
+                       }
                 }
 
-            }
+                //if(lstFileColumn_Sys.Count>0)
+                //{
+                //    for (int r = 0; r < dtImportFileTable.Columns.Count; r++)
+                //    {
+                //        foreach(IDnText aFileColumn in lstFileColumn_Sys)
+                //        {
+                //            if(dtImportFileTable.Columns[r].ColumnName==aFileColumn.Text)
+                //            {
+                //                dtImportFileTable.Columns[r].ColumnName = aFileColumn.ID;
+                //            }
+                //        }
+                //    }
+                //}
+                //if(bHas_SystemName_2nd)
+                //{
+                //    for (int i = 0; i < dtRecordTypleColumns.Rows.Count; i++)
+                //    {
+                //        if( dtRecordTypleColumns.Rows[i]["SystemName_2nd"].ToString()!="")
+                //        {
+                //            foreach(IDnText aFileColumn in lstFileColumn_Sys)
+                //            {
+                //                if (dtRecordTypleColumns.Columns[i].ColumnName == aFileColumn.Text)
+                //                {
+                //                    dtRecordTypleColumns.Columns[i].ColumnName = aFileColumn.ID;
+                //                }
+                //            }
+                //        } 
+                //    }
+                //}
+                //dtImportFileTable.AcceptChanges();
+                dtRecordTypleColumns.AcceptChanges();
+            }//SourceBatcID NULL
 
 
             if (theSourceBatch != null)
@@ -592,6 +761,9 @@ public class UploadManager
 
                 dtImportFileTable = ets_TempRecord_List((int)theSourceBatch.TableID, (int)theSourceBatch.BatchID, null, null, null, null, null, "", "", null, null,
                     ref iTN_Temp, ref iTN_Temp, "", null, "system");
+
+               
+                //dtRecordTypleColumns.ToString();
 
                 if (dtImportFileTable == null)
                     return;
@@ -605,18 +777,33 @@ public class UploadManager
                     guidNew = Guid.NewGuid(); //may be we can remove this
             }
 
+            for (int r = 0; r < dtImportFileTable.Columns.Count; r++)
+            {
+                for (int i = 0; i < dtRecordTypleColumns.Rows.Count; i++)
+                {
+                    if (Common.RemoveSpecialCharacters(dtImportFileTable.Columns[r].ColumnName.Trim().ToLower()) ==
+                        Common.RemoveSpecialCharacters(dtRecordTypleColumns.Rows[i]["SystemName"].ToString().Trim().ToLower()))
+                    {
+                        if (dtRecordTypleColumns.Rows[i]["FileColumnName_Import"].ToString() == "")
+                            dtRecordTypleColumns.Rows[i]["FileColumnName_Import"] = dtRecordTypleColumns.Rows[i]["SystemName"].ToString();
+                       
+                    }                    
+                }
+            }
+            dtRecordTypleColumns.AcceptChanges();
+           
 
             //now dtCSV is ready to be imported into Batch & TempRecord
 
             Batch newBatch = new Batch(null, (int)theTable.TableID,
                 strBatchDescription.Trim() == "" ? strOriginalFileName : strBatchDescription.Trim(),
-                strOriginalFileName, null, guidNew, iUserID, theTable.AccountID, theTable.IsImportPositional);
+                strOriginalFileName, null, guidNew, iUserID, theTable.AccountID);
 
 
-            if (bAllowDataUpload.HasValue)
-            {
-                newBatch.AllowDataUpdate = bAllowDataUpload;
-            }
+            //if (bAllowDataUpload.HasValue)
+            //{
+            //    newBatch.AllowDataUpdate = bAllowDataUpload;
+            //}
             //else
             //{
             //    if (Common.GetDatabaseName() == "thedatabase_emd")
@@ -668,7 +855,7 @@ public class UploadManager
                                 if (lookupColumnName == "[Site Name]")
                                 {
                                     lookupSystemName = Common.GetValueFromSQL("SELECT SystemName FROM [Column] WHERE TableID=" + drC["TableTableID"].ToString()
-                                        + " AND (DisplayName='Site Name On Import File' OR NameOnImport='Site Name On Import File')");
+                                        + " AND (DisplayName='Site Name On Import File' OR DisplayTextSummary='Site Name On Import File')");
                                 }                                   
                             }
 
@@ -698,13 +885,14 @@ public class UploadManager
             if (bNeedAcceptChange)
                 dtRecordTypleColumns.AcceptChanges();
 
-
+            DataColumnCollection dccIFT = dtImportFileTable.Columns;
             for (int r = z; r < dtImportFileTable.Rows.Count; r++)
             {
                 TempRecord newTempRecord = new TempRecord();
                 newTempRecord.AccountID = theTable.AccountID;
                 newTempRecord.BatchID = iBatchID;
                 newTempRecord.TableID = (int)theTable.TableID;
+                newTempRecord.DateFormat = theTable.DateFormat;
                 //bool bIsBlank = false;
                 string strRejectReason = "";
                 string strWarningReason = "";
@@ -715,80 +903,151 @@ public class UploadManager
                 {
                     string strColumnName = "";
                     strColumnName = dc.ColumnName;
-                    if (strColumnName.ToLower() != strTimeSamledColumnName.ToLower())
-                    {
+                    string strFileCellToColumnRow = "";
+                    //if (strColumnName.ToLower() != strTimeSamledColumnName.ToLower())
+                    //{
 
+                      
+                        //if (dc.ColumnName.ToUpper() == "DATETIMERECORDED")
+                        //{
+                        //    //newTempRecord.DateFormat = theTable.DateFormat;
+                        //    try
+                        //    {
+                        //        strFileCellToColumnRow = dtImportFileTable.Rows[r][dc.ColumnName].ToString();
+                                
+                                
+                        //        //if (strFileExtension == ".csv")
+                        //        //{
+                        //        //    if (strTimeSamledColumnName == "")
+                        //        //    {
+                        //        //        UploadManager.MakeTheTempRecord(ref newTempRecord, strColumnName, dtImportFileTable.Rows[r][dc.ColumnName].ToString());
+                        //        //    }
+                        //        //    else
+                        //        //    {
 
-                        if (dc.ColumnName.ToUpper() == "DATETIMERECORDED")
-                        {
-                            newTempRecord.DateFormat = theTable.DateFormat;
-                            try
-                            {
-                                if (strFileExtension == ".csv")
-                                {
-                                    if (strTimeSamledColumnName == "")
-                                    {
-                                        UploadManager.MakeTheTempRecord(ref newTempRecord, strColumnName, dtImportFileTable.Rows[r][dc.ColumnName].ToString());
-                                    }
-                                    else
-                                    {
+                        //        //        UploadManager.MakeTheTempRecord(ref newTempRecord, strColumnName, dtImportFileTable.Rows[r][dc.ColumnName].ToString() + " " + dtImportFileTable.Rows[r][strTimeSamledColumnName].ToString());
+                        //        //    }
 
-                                        UploadManager.MakeTheTempRecord(ref newTempRecord, strColumnName, dtImportFileTable.Rows[r][dc.ColumnName].ToString() + " " + dtImportFileTable.Rows[r][strTimeSamledColumnName].ToString());
-                                    }
+                        //        //}
+                        //        //else if (strFileExtension == ".xml" || iSourceBatchID != null)
+                        //        //{
+                        //        //    UploadManager.MakeTheTempRecord(ref newTempRecord, strColumnName, dtImportFileTable.Rows[r][dc.ColumnName].ToString());
+                        //        //}
+                        //        //else
+                        //        //{
+                        //        //    string strDateTimeTemp = "";
+                        //        //    if (strTimeSamledColumnName == "")
+                        //        //    {
+                        //        //        UploadManager.MakeTheTempRecord(ref newTempRecord, strColumnName, dtImportFileTable.Rows[r][dc.ColumnName].ToString().Substring(0));
+                        //        //    }
+                        //        //    else
+                        //        //    {
+                        //        //        strDateTimeTemp = dtImportFileTable.Rows[r][strTimeSamledColumnName].ToString();
 
-                                }
-                                else if (strFileExtension == ".xml" || iSourceBatchID != null)
-                                {
-                                    UploadManager.MakeTheTempRecord(ref newTempRecord, strColumnName, dtImportFileTable.Rows[r][dc.ColumnName].ToString());
-                                }
-                                else
-                                {
-                                    string strDateTimeTemp = "";
-                                    if (strTimeSamledColumnName == "")
-                                    {
-                                        UploadManager.MakeTheTempRecord(ref newTempRecord, strColumnName, dtImportFileTable.Rows[r][dc.ColumnName].ToString().Substring(0));
-                                    }
-                                    else
-                                    {
-                                        strDateTimeTemp = dtImportFileTable.Rows[r][strTimeSamledColumnName].ToString();
+                        //        //        if (dtImportFileTable.Rows[r][strTimeSamledColumnName].ToString().Length > 10)
+                        //        //        {
+                        //        //            strDateTimeTemp = strDateTimeTemp.Substring(11);
+                        //        //        }
+                        //        //        if (dtImportFileTable.Rows[r][dc.ColumnName].ToString().Trim() != "")
+                        //        //        {
+                        //        //            if (dtImportFileTable.Rows[r][dc.ColumnName].ToString().IndexOf(" ") != -1)
+                        //        //            {
+                        //        //                UploadManager.MakeTheTempRecord(ref newTempRecord, strColumnName, dtImportFileTable.Rows[r][dc.ColumnName].ToString().Substring(0, dtImportFileTable.Rows[r][dc.ColumnName].ToString().IndexOf(" ")) + " " + strDateTimeTemp);
+                        //        //            }
+                        //        //            else
+                        //        //            {
+                        //        //                UploadManager.MakeTheTempRecord(ref newTempRecord, strColumnName, dtImportFileTable.Rows[r][dc.ColumnName].ToString().Substring(0) + " " + strDateTimeTemp);
+                        //        //            }
+                        //        //        }
+                        //        //    }
+                        //        //}
+                        //    }
+                        //    catch
+                        //    {
+                        //        newTempRecord.DateTimeRecorded = DateTime.Now;
+                        //    }
 
-                                        if (dtImportFileTable.Rows[r][strTimeSamledColumnName].ToString().Length > 10)
-                                        {
-                                            strDateTimeTemp = strDateTimeTemp.Substring(11);
-                                        }
-                                        if (dtImportFileTable.Rows[r][dc.ColumnName].ToString().Trim() != "")
-                                        {
-                                            if (dtImportFileTable.Rows[r][dc.ColumnName].ToString().IndexOf(" ") != -1)
-                                            {
-                                                UploadManager.MakeTheTempRecord(ref newTempRecord, strColumnName, dtImportFileTable.Rows[r][dc.ColumnName].ToString().Substring(0, dtImportFileTable.Rows[r][dc.ColumnName].ToString().IndexOf(" ")) + " " + strDateTimeTemp);
-                                            }
-                                            else
-                                            {
-                                                UploadManager.MakeTheTempRecord(ref newTempRecord, strColumnName, dtImportFileTable.Rows[r][dc.ColumnName].ToString().Substring(0) + " " + strDateTimeTemp);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            catch
-                            {
-                                //if (strRejectReason.IndexOf("Invalid Date Recorded") == -1)
-                                //    strRejectReason = strRejectReason + " Invalid Date Recorded.";
-                                newTempRecord.DateTimeRecorded = DateTime.Now;
-                            }
-
-                        }
-                        else
-                        {
-                            UploadManager.MakeTheTempRecord(ref newTempRecord, strColumnName, dtImportFileTable.Rows[r][dc.ColumnName].ToString());
-                        }
+                        //}
+                        //else
+                        //{
+                        //    UploadManager.MakeTheTempRecord(ref newTempRecord, strColumnName, dtImportFileTable.Rows[r][dc.ColumnName].ToString());
+                        //}
 
 
                         for (int i = 0; i < dtRecordTypleColumns.Rows.Count; i++)
                         {
                             if (dc.ColumnName.ToLower() ==
-                                dtRecordTypleColumns.Rows[i]["SystemName"].ToString().Trim().ToLower())
+                               dtRecordTypleColumns.Rows[i]["FileColumnName_Import"].ToString().Trim().ToLower())
                             {
+                                strFileCellToColumnRow = dtImportFileTable.Rows[r][dc.ColumnName].ToString();
+                                if (dtRecordTypleColumns.Rows[i]["SystemName_2nd"].ToString() != "")
+                                {
+                                    string strConcatenate = "";
+                                    if (dccIFT.Contains(dtRecordTypleColumns.Rows[i]["SystemName_2nd"].ToString()))
+                                   {
+                                       if (strFileCellToColumnRow.IndexOf(" ") > 0)
+                                         {
+                                             strFileCellToColumnRow = strFileCellToColumnRow.Substring(0, strFileCellToColumnRow.IndexOf(" ")+1) ;
+                                         }
+                                        
+                                       string str2ndValue = dtImportFileTable.Rows[r][dtRecordTypleColumns.Rows[i]["SystemName_2nd"].ToString()].ToString();
+                                       if (dtRecordTypleColumns.Rows[i]["ColumnType"].ToString() == "datetime")
+                                       {
+                                           strConcatenate = " ";
+                                           DateTime? dtt = Common.GetDateTimeFromString(str2ndValue, newTempRecord.DateFormat);// Convert.ToDateTime(dtImportFileTable.Rows[r][dc.ColumnName].ToString());
+                                           if(dtt!=null)
+                                           {
+
+                                               str2ndValue = ((DateTime)dtt).ToString("HH:mm:ss");
+                                           }
+
+                                       }
+                                       strFileCellToColumnRow = strFileCellToColumnRow + strConcatenate + str2ndValue;
+                                   }
+                                }
+                                if (strFileCellToColumnRow != "")
+                                {
+                                    try
+                                    {
+                                        if (dtRecordTypleColumns.Rows[i]["ColumnType"].ToString() == "datetime")
+                                        {
+                                            DateTime? dtt = Common.GetDateTimeFromString(strFileCellToColumnRow, newTempRecord.DateFormat);// Convert.ToDateTime(dtImportFileTable.Rows[r][dc.ColumnName].ToString());
+                                            if (dtt != null)
+                                            {
+                                                if (dtRecordTypleColumns.Rows[i]["ColumnType"].ToString().ToUpper() == "DATETIMERECORDED")
+                                                {
+                                                    newTempRecord.DateTimeRecorded = dtt;
+                                                }
+                                                else
+                                                {
+                                                    UploadManager.MakeTheTempRecord(ref newTempRecord, dtRecordTypleColumns.Rows[i]["SystemName"].ToString(), ((DateTime)dtt).ToString("dd/MM/yyyy HH:mm:ss"));
+                                                }                                                
+                                            } 
+                                            else
+                                            {
+                                                strRejectReason = strRejectReason + TheDatabase.GetInvalid_msg(dtRecordTypleColumns.Rows[i]["DisplayName"].ToString());
+                                            }
+
+                                        }
+                                        else if (dtRecordTypleColumns.Rows[i]["ColumnType"].ToString() == "date"
+                                            || dtRecordTypleColumns.Rows[i]["ColumnType"].ToString() == "time"
+                                            )
+                                        {
+                                            //
+                                        }
+                                        else
+                                        {
+                                            UploadManager.MakeTheTempRecord(ref newTempRecord, dtRecordTypleColumns.Rows[i]["SystemName"].ToString(), strFileCellToColumnRow);
+                                        }
+                                       
+                                    }
+                                    catch
+                                    {
+                                        strRejectReason = strRejectReason + TheDatabase.GetInvalid_msg(dtRecordTypleColumns.Rows[i]["DisplayName"].ToString());
+                                    }
+                                }
+
+
 
                                 if (dtImportFileTable.Rows[r][dc.ColumnName].ToString().Length == 0)
                                 {
@@ -798,42 +1057,73 @@ public class UploadManager
                                             || dtRecordTypleColumns.Rows[i]["ColumnType"].ToString().Trim().ToLower() == "date"
                                             || dtRecordTypleColumns.Rows[i]["ColumnType"].ToString().Trim().ToLower() == "time")
                                         {
-                                            dtImportFileTable.Rows[r][dc.ColumnName] = DateTime.Now;
-
-                                            UploadManager.MakeTheTempRecord(ref newTempRecord, strColumnName, DateTime.Now);
+                                            //dtImportFileTable.Rows[r][dc.ColumnName] = DateTime.Now;
+                                            UploadManager.MakeTheTempRecord(ref newTempRecord, dtRecordTypleColumns.Rows[i]["SystemName"].ToString(), DateTime.Now);
                                         }
                                         else
                                         {
-
-                                            dtImportFileTable.Rows[r][dc.ColumnName] = dtRecordTypleColumns.Rows[i]["DefaultValue"].ToString();
-
-                                            UploadManager.MakeTheTempRecord(ref newTempRecord, strColumnName, dtRecordTypleColumns.Rows[i]["DefaultValue"].ToString());
-                                        }
-                                        dtImportFileTable.AcceptChanges();
+                                            //dtImportFileTable.Rows[r][dc.ColumnName] = dtRecordTypleColumns.Rows[i]["DefaultValue"].ToString();
+                                            UploadManager.MakeTheTempRecord(ref newTempRecord, dtRecordTypleColumns.Rows[i]["SystemName"].ToString(), dtRecordTypleColumns.Rows[i]["DefaultValue"].ToString());
+                                        }                                      
                                     }
-
                                 }
+                            }                           
+                        }
+
+
+                        //dtImportFileTable.AcceptChanges();
+                        for (int i = 0; i < dtRecordTypleColumns.Rows.Count; i++)
+                        {
+                            if (dc.ColumnName.ToLower() ==
+                                dtRecordTypleColumns.Rows[i]["FileColumnName_Import"].ToString().Trim().ToLower())
+                            {
+
+                                //if (dtImportFileTable.Rows[r][dc.ColumnName].ToString().Length == 0)
+                                //{
+                                //    if (dtRecordTypleColumns.Rows[i]["DefaultValue"].ToString() != "")
+                                //    {
+                                //        if (dtRecordTypleColumns.Rows[i]["ColumnType"].ToString().Trim().ToLower() == "datetime"
+                                //            || dtRecordTypleColumns.Rows[i]["ColumnType"].ToString().Trim().ToLower() == "date"
+                                //            || dtRecordTypleColumns.Rows[i]["ColumnType"].ToString().Trim().ToLower() == "time")
+                                //        {
+                                //            dtImportFileTable.Rows[r][dc.ColumnName] = DateTime.Now;
+                                //            UploadManager.MakeTheTempRecord(ref newTempRecord, strColumnName, DateTime.Now);
+                                //        }
+                                //        else
+                                //        {
+
+                                //            dtImportFileTable.Rows[r][dc.ColumnName] = dtRecordTypleColumns.Rows[i]["DefaultValue"].ToString();
+                                //            UploadManager.MakeTheTempRecord(ref newTempRecord, strColumnName, dtRecordTypleColumns.Rows[i]["DefaultValue"].ToString());
+                                //        }
+                                //        dtImportFileTable.AcceptChanges();
+                                //    }
+                                //}
 
 
 
                                 if (dtImportFileTable.Rows[r][dc.ColumnName].ToString().Length > 0)
                                 {
-
-
-
-                                    if (dtRecordTypleColumns.Rows[i]["ColumnType"].ToString() == "datetime"
-                                        || dtRecordTypleColumns.Rows[i]["ColumnType"].ToString() == "date")
+                                    if (dtRecordTypleColumns.Rows[i]["ColumnType"].ToString() == "date")
                                     {
                                         if (dtImportFileTable.Rows[r][dc.ColumnName].ToString() != "")
                                         {
                                             try
                                             {
-                                                DateTime dtt = Convert.ToDateTime(dtImportFileTable.Rows[r][dc.ColumnName].ToString());
-                                                UploadManager.MakeTheTempRecord(ref newTempRecord, strColumnName, dtt.ToString("dd/MM/yyyy HH:mm:ss"));
+                                                DateTime? dtt = Common.GetDateTimeFromString(dtImportFileTable.Rows[r][dc.ColumnName].ToString(), newTempRecord.DateFormat);// Convert.ToDateTime(dtImportFileTable.Rows[r][dc.ColumnName].ToString());
+
+                                                if (dtt!=null)
+                                                {
+                                                    UploadManager.MakeTheTempRecord(ref newTempRecord, dtRecordTypleColumns.Rows[i]["SystemName"].ToString(), ((DateTime)dtt).ToString("dd/MM/yyyy"));
+                                                }
+                                                else
+                                                {
+                                                    strRejectReason = strRejectReason + TheDatabase.GetInvalid_msg(dtRecordTypleColumns.Rows[i]["DisplayName"].ToString());
+                                                }
+                                                    
                                             }
                                             catch
                                             {
-                                                strRejectReason = strRejectReason +  TheDatabase.GetInvalid_msg(dtRecordTypleColumns.Rows[i]["DisplayName"].ToString());
+                                                
                                             }
                                         }
                                     }
@@ -844,11 +1134,22 @@ public class UploadManager
                                         {
                                             try
                                             {
-                                                Convert.ToDateTime(DateTime.Now.ToShortDateString() + " " + dtImportFileTable.Rows[r][dc.ColumnName].ToString());
+                                                //Convert.ToDateTime(DateTime.Now.ToShortDateString() + " " + dtImportFileTable.Rows[r][dc.ColumnName].ToString());
+                                                DateTime? dtt = Common.GetDateTimeFromString(DateTime.Now.ToShortDateString() + " " + dtImportFileTable.Rows[r][dc.ColumnName].ToString(), newTempRecord.DateFormat);// Convert.ToDateTime(dtImportFileTable.Rows[r][dc.ColumnName].ToString());
+
+                                                if (dtt != null)
+                                                {
+                                                    UploadManager.MakeTheTempRecord(ref newTempRecord, dtRecordTypleColumns.Rows[i]["SystemName"].ToString(), ((DateTime)dtt).ToString("HH:mm:ss"));
+                                                }
+                                                else
+                                                {
+                                                    strRejectReason = strRejectReason + TheDatabase.GetInvalid_msg(dtRecordTypleColumns.Rows[i]["DisplayName"].ToString());
+                                                }
+                                                    
                                             }
                                             catch
                                             {
-                                                strRejectReason = strRejectReason +TheDatabase.GetInvalid_msg(dtRecordTypleColumns.Rows[i]["DisplayName"].ToString());
+                                                
                                             }
                                         }
                                     }
@@ -875,7 +1176,7 @@ public class UploadManager
                                             string strParentRecordID = Common.GetValueFromSQL(strRecordIDSQL);
                                             if (strParentRecordID != "")
                                             {
-                                                UploadManager.MakeTheTempRecord(ref newTempRecord, strColumnName, strParentRecordID);
+                                                UploadManager.MakeTheTempRecord(ref newTempRecord, dtRecordTypleColumns.Rows[i]["SystemName"].ToString(), strParentRecordID);
                                             }
                                             else
                                             {
@@ -890,16 +1191,12 @@ public class UploadManager
                                     if (dtImportFileTable.Rows[r][dc.ColumnName].ToString() == "")
                                     {
                                         strRejectReason = strRejectReason + "MANDATORY:" + dtRecordTypleColumns.Rows[i]["DisplayName"].ToString() + ".";
-
                                     }
-
                                 }
-
-                                break;
+                                //break;
                             }// END of dc.ColumnName.ToLower() ===dtRecordTypleColumns.Rows[i]["SystemName"].ToString().Trim().ToLower()
                         }
-
-                    }
+                    //}
                 }
 
 
@@ -1145,7 +1442,6 @@ public class UploadManager
                                 }
                             }
                         }
-
                     }
 
                     //check SD
@@ -1185,13 +1481,8 @@ public class UploadManager
 
                                 }
                             }
-
                         }
                     }
-
-
-
-
                 }
 
 
@@ -1246,13 +1537,21 @@ public class UploadManager
 
             // if ((strUniqueColumnIDSys != "") && (!theTable.IsDataUpdateAllowed.HasValue || !theTable.IsDataUpdateAllowed.Value))
 
-            if ((strUniqueColumnIDSys != "") && 
-                (newBatch.AllowDataUpdate == null || 
-                            (newBatch.AllowDataUpdate != null && (bool)newBatch.AllowDataUpdate==false)))
+            if (strUniqueColumnIDSys != "")//to avoid a process if not needed
             {
-                RecordManager.ets_Batch_Duplicate(iBatchID, strUniqueColumnIDSys, strUniqueColumnID2Sys);
+                //if ((strUniqueColumnIDSys != "") && 
+                //    (newBatch.AllowDataUpdate == null || 
+                //                (newBatch.AllowDataUpdate != null && (bool)newBatch.AllowDataUpdate==false)))
+                //{
+                    //RecordManager.ets_Batch_Duplicate(iBatchID, strUniqueColumnIDSys, strUniqueColumnID2Sys);
+                //}
+                //else
+                //{
+                    //RecordManager.ets_Batch_Duplicate_Self(iBatchID, strUniqueColumnIDSys, strUniqueColumnID2Sys);
+                    RecordManager.ets_Batch_Duplicate_UniqueKey(iBatchID);
+                //}
             }
-
+           
 
 
             if (theTable.MaxTimeBetweenRecords != null && theTable.MaxTimeBetweenRecordsUnit != null)
@@ -1260,9 +1559,9 @@ public class UploadManager
                 //NEED JB's HELP
             }
 
-            if (theTable.SPAfterImport != "" && theTable.SPAfterImport.Length > 0)
+            if ( !string.IsNullOrEmpty( theImportTemplate.SPAfterImport) && theImportTemplate.SPAfterImport.Length > 0)
             {
-                SPAfterImport(iBatchID, theTable.SPAfterImport);
+                SPAfterImport(iBatchID, theImportTemplate.SPAfterImport);
             }
 
         }
@@ -1279,10 +1578,10 @@ public class UploadManager
             {
                 strMsg = "Unknown error occurred please review your import data.";
             }
-            else if (ex.Message.IndexOf(strTimeSamledColumnName) > -1)
-            {
-                strMsg = "The file must have a Time Recorded column just after Date Recorded column.";
-            }
+            //else if (ex.Message.IndexOf(strTimeSamledColumnName) > -1)
+            //{
+            //    strMsg = "The file must have a Time Recorded column just after Date Recorded column.";
+            //}
             else
             {
                 strMsg = "UNKNOWN:" + ex.Message + ex.StackTrace;
@@ -1330,11 +1629,11 @@ public class UploadManager
 
                 command.Parameters.Add(new SqlParameter("@nAccountID ", p_Batch.AccountID));
 
-                if (p_Batch.IsImportPositional != null)
-                    command.Parameters.Add(new SqlParameter("@bIsImportPositional", p_Batch.IsImportPositional));
+                //if (p_Batch.IsImportPositional != null)
+                //    command.Parameters.Add(new SqlParameter("@bIsImportPositional", p_Batch.IsImportPositional));
 
-                if (p_Batch.AllowDataUpdate != null)
-                    command.Parameters.Add(new SqlParameter("@bAllowDataUpdate", p_Batch.AllowDataUpdate));
+                //if (p_Batch.AllowDataUpdate != null)
+                //    command.Parameters.Add(new SqlParameter("@bAllowDataUpdate", p_Batch.AllowDataUpdate));
 
 
 
@@ -1598,7 +1897,7 @@ public class UploadManager
 
 //            //lets get date and time column name
 
-//            DataTable dtDateTimeColumnName = Common.DataTableFromText(@"SELECT      NameOnImport 
+//            DataTable dtDateTimeColumnName = Common.DataTableFromText(@"SELECT      Name_OnImport 
 //                        FROM  [Column]
 //                        WHERE SystemName='DateTimeRecorded' AND TableID=" + theTable.TableID.ToString(), ref connection, ref tn);
 
@@ -1622,7 +1921,7 @@ public class UploadManager
 
 //            DataTable dtImportFileTable;
 
-//            string strNameOnImport = "NameOnImport";
+//            string strImportHeaderName = "Name_OnImport";
 
 //            dtImportFileTable = null;
 
@@ -1747,10 +2046,10 @@ public class UploadManager
 
 //            if (iImportTemplateID != null)
 //            {
-//                strNameOnImport = "NameOnImport";
+//                strImportHeaderName = "Name_OnImport";
 //                dtRecordTypleColumns = RecordManager.ets_Table_Columns_Import((int)theTable.TableID, iImportTemplateID, ref connection, ref tn);
 //            }
-//            else if (strNameOnImport == "DisplayName")
+//            else if (strImportHeaderName == "DisplayName")
 //            {
 //                dtRecordTypleColumns = RecordManager.ets_Table_Columns_DisplayName((int)theTable.TableID, ref connection, ref tn);
 //            }
@@ -1767,7 +2066,7 @@ public class UploadManager
 //                for (int i = 0; i < dtRecordTypleColumns.Rows.Count; i++)
 //                {
 //                    if (Common.RemoveSpecialCharacters(dtImportFileTable.Columns[r].ColumnName.Trim().ToLower()) ==
-//                        Common.RemoveSpecialCharacters(dtRecordTypleColumns.Rows[i][strNameOnImport].ToString().Trim().ToLower()))
+//                        Common.RemoveSpecialCharacters(dtRecordTypleColumns.Rows[i][strImportHeaderName].ToString().Trim().ToLower()))
 //                    {
 //                        bIsFound = true;
 //                        break;
@@ -1808,7 +2107,7 @@ public class UploadManager
 //                for (int ic = 0; ic < dtImportFileTable.Columns.Count; ic++)
 //                {
 //                    if (Common.RemoveSpecialCharacters(dtImportFileTable.Columns[ic].ColumnName.Trim().ToLower()) ==
-//                Common.RemoveSpecialCharacters(dtRecordTypleColumns.Rows[i][strNameOnImport].ToString().Trim().ToLower()))
+//                Common.RemoveSpecialCharacters(dtRecordTypleColumns.Rows[i][strImportHeaderName].ToString().Trim().ToLower()))
 //                    {
 //                        bMissingColumnFound = true;
 //                        break;
@@ -1818,7 +2117,7 @@ public class UploadManager
 
 //                if (bMissingColumnFound == false)
 //                {
-//                    strListOfMissingColumns += dtRecordTypleColumns.Rows[i][strNameOnImport].ToString() + ",";
+//                    strListOfMissingColumns += dtRecordTypleColumns.Rows[i][strImportHeaderName].ToString() + ",";
 //                }
 
 
@@ -1848,7 +2147,7 @@ public class UploadManager
 //                for (int i = 0; i < dtRecordTypleColumns.Rows.Count; i++)
 //                {
 //                    if (Common.RemoveSpecialCharacters(dtImportFileTable.Columns[r].ColumnName.Trim().ToLower()) ==
-//                        Common.RemoveSpecialCharacters(dtRecordTypleColumns.Rows[i][strNameOnImport].ToString().Trim().ToLower()))
+//                        Common.RemoveSpecialCharacters(dtRecordTypleColumns.Rows[i][strImportHeaderName].ToString().Trim().ToLower()))
 //                    {
 //                        try
 //                        {
@@ -2531,7 +2830,7 @@ public class UploadManager
 
 //                //lets get date and time column name
 
-//                DataTable dtDateTimeColumnName = Common.DataTableFromText(@"SELECT      NameOnImport 
+//                DataTable dtDateTimeColumnName = Common.DataTableFromText(@"SELECT      Name_OnImport 
 //                        FROM  [Column]
 //                        WHERE SystemName='DateTimeRecorded' AND TableID=" + theTable.TableID.ToString(), null, null);
 
@@ -2569,7 +2868,7 @@ public class UploadManager
 
 //                DataTable dtImportFileTable;
 
-//                string strNameOnImport = "NameOnImport";
+//                string strImportHeaderName = "Name_OnImport";
 
 //                dtImportFileTable = null;
 
@@ -2597,7 +2896,7 @@ public class UploadManager
 
 //                    case ".xml":
 //                        dtImportFileTable = UploadManager.GetImportFileTableFromXML(strImportFolder, strFileUniqueName);
-//                        strNameOnImport = "DisplayName";
+//                        strImportHeaderName = "DisplayName";
 
 //                        break;
 
@@ -2739,10 +3038,10 @@ public class UploadManager
 
 //                if (iImportTemplateID != null)
 //                {
-//                    strNameOnImport = "NameOnImport";
+//                    strImportHeaderName = "Name_OnImport";
 //                    dtRecordTypleColumns = RecordManager.ets_Table_Columns_Import((int)theTable.TableID, iImportTemplateID);
 //                }
-//                else if (strNameOnImport == "DisplayName")
+//                else if (strImportHeaderName == "DisplayName")
 //                {
 //                    dtRecordTypleColumns = RecordManager.ets_Table_Columns_DisplayName((int)theTable.TableID,null,null);
 //                }
@@ -2759,7 +3058,7 @@ public class UploadManager
 //                    for (int i = 0; i < dtRecordTypleColumns.Rows.Count; i++)
 //                    {
 //                        if (Common.RemoveSpecialCharacters(dtImportFileTable.Columns[r].ColumnName.Trim().ToLower()) ==
-//                            Common.RemoveSpecialCharacters(dtRecordTypleColumns.Rows[i][strNameOnImport].ToString().Trim().ToLower()))
+//                            Common.RemoveSpecialCharacters(dtRecordTypleColumns.Rows[i][strImportHeaderName].ToString().Trim().ToLower()))
 //                        {
 //                            bIsFound = true;
 //                            break;
@@ -2805,7 +3104,7 @@ public class UploadManager
 //                    for (int ic = 0; ic < dtImportFileTable.Columns.Count; ic++)
 //                    {
 //                        if (Common.RemoveSpecialCharacters(dtImportFileTable.Columns[ic].ColumnName.Trim().ToLower()) ==
-//                    Common.RemoveSpecialCharacters(dtRecordTypleColumns.Rows[i][strNameOnImport].ToString().Trim().ToLower()))
+//                    Common.RemoveSpecialCharacters(dtRecordTypleColumns.Rows[i][strImportHeaderName].ToString().Trim().ToLower()))
 //                        {
 //                            bMissingColumnFound = true;
 //                            break;
@@ -2815,7 +3114,7 @@ public class UploadManager
 
 //                    if (bMissingColumnFound == false)
 //                    {
-//                        strListOfMissingColumns += dtRecordTypleColumns.Rows[i][strNameOnImport].ToString() + ",";
+//                        strListOfMissingColumns += dtRecordTypleColumns.Rows[i][strImportHeaderName].ToString() + ",";
 //                    }
 
 
@@ -2857,7 +3156,7 @@ public class UploadManager
 //                        //}
 
 //                        if (Common.RemoveSpecialCharacters(dtImportFileTable.Columns[r].ColumnName.Trim().ToLower()) ==
-//                            Common.RemoveSpecialCharacters(dtRecordTypleColumns.Rows[i][strNameOnImport].ToString().Trim().ToLower()))
+//                            Common.RemoveSpecialCharacters(dtRecordTypleColumns.Rows[i][strImportHeaderName].ToString().Trim().ToLower()))
 //                        {
 //                            try
 //                            {
@@ -4236,8 +4535,8 @@ public class UploadManager
 
                 command.Parameters.Add(new SqlParameter("@nAccountID ", p_Batch.AccountID));
 
-                if (p_Batch.IsImportPositional != null)
-                    command.Parameters.Add(new SqlParameter("@bIsImportPositional", p_Batch.IsImportPositional));
+                //if (p_Batch.IsImportPositional != null)
+                //    command.Parameters.Add(new SqlParameter("@bIsImportPositional", p_Batch.IsImportPositional));
 
 
 
@@ -4430,6 +4729,58 @@ public class UploadManager
             }
         }
     }
+
+
+
+    public static int Record_Set_UniqueKey(string sUpdateRecord, int? nTableID, int? nBatchID, int? nRecordID, string @sRecordIDs)
+    {
+
+
+        using (SqlConnection connection = new SqlConnection(DBGurus.strGlobalConnectionString))
+        {
+
+            using (SqlCommand command = new SqlCommand("Record_Set_UniqueKey", connection))
+            {
+
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandTimeout = 3600;
+
+                command.Parameters.Add(new SqlParameter("@sUpdateRecord", sUpdateRecord));
+                if (nTableID != null)
+                    command.Parameters.Add(new SqlParameter("@nTableID", nTableID));
+                if (nBatchID != null)
+                    command.Parameters.Add(new SqlParameter("@nBatchID", nBatchID));
+                if (nRecordID != null)
+                    command.Parameters.Add(new SqlParameter("@nRecordID", nRecordID));
+                if (@sRecordIDs != "")
+                    command.Parameters.Add(new SqlParameter("@sRecordIDs", sRecordIDs));
+               
+
+                int i = 1;
+                connection.Open();
+                try
+                {
+                    command.ExecuteNonQuery();
+                }
+                catch
+                {
+                    i = -1;
+                }
+
+                connection.Close();
+                connection.Dispose();
+
+                return i;
+
+            }
+        }
+
+
+
+    }
+
+    
+    
     public static int ets_Record_ImportByBatch(int nBatchID)
     {
 
@@ -4686,13 +5037,13 @@ public class UploadManager
             {
                 Table theTable = RecordManager.ets_Table_Details((int)oBatch.TableID);
 
-                if (oBatch.AllowDataUpdate.HasValue && oBatch.AllowDataUpdate.Value &&
-                    theTable.IsDataUpdateAllowed.HasValue && theTable.IsDataUpdateAllowed.Value)
-                {
-                    UploadManager.ets_Record_UpdateByBatch((int)oBatch.BatchID);
+                //if (oBatch.AllowDataUpdate.HasValue && oBatch.AllowDataUpdate.Value &&
+                //    theTable.IsDataUpdateAllowed.HasValue && theTable.IsDataUpdateAllowed.Value)
+                //{
+                //    UploadManager.ets_Record_UpdateByBatch((int)oBatch.BatchID);
 
 
-                }
+                //}
                     
 
                 DataTable dtRecordTypleColumns = RecordManager.ets_Table_Columns_All((int)oBatch.TableID);
@@ -6630,10 +6981,10 @@ public class UploadManager
                                  (DateTime)reader["DateAdded"],
                                  (Guid)reader["UniqueName"],
                                  reader["UserIDUploaded"] == DBNull.Value ? null : (int?)reader["UserIDUploaded"],
-                                 (int)reader["AccountID"], (bool)reader["IsImportPositional"]
+                                 (int)reader["AccountID"]
                                  );
                             temp.IsImported = reader["IsImported"] == DBNull.Value ? null : (bool?)reader["IsImported"];
-                            temp.AllowDataUpdate = reader["AllowDataUpdate"] == DBNull.Value ? null : (bool?)reader["AllowDataUpdate"];
+                            //temp.AllowDataUpdate = reader["AllowDataUpdate"] == DBNull.Value ? null : (bool?)reader["AllowDataUpdate"];
                             temp.ImportTemplateID = reader["ImportTemplateID"] == DBNull.Value ? null : (int?)reader["ImportTemplateID"];
 
                             connection.Close();
@@ -11255,76 +11606,76 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
                 }
                 else
                 {
+                    objTempRecord.DateTimeRecorded = Common.GetDateTimeFromString(objValue.ToString(), objTempRecord.DateFormat);
+                    //switch (objTempRecord.DateFormat)
+                    //{
+                    //    case "MM/DD/YYYY":
 
-                    switch (objTempRecord.DateFormat)
-                    {
-                        case "MM/DD/YYYY":
+                    //        System.Globalization.CultureInfo culture2 = new System.Globalization.CultureInfo("en-US");
+                    //        if (objValue.ToString().IndexOf(" ") > 0)
+                    //        {
+                    //            if (objValue.ToString().Substring(0, objValue.ToString().IndexOf(" ")).Length < 7)
+                    //            {
+                    //                string strTempDateTime = objValue.ToString().Substring(0, objValue.ToString().IndexOf(" ")) + "-" + DateTime.Now.Year.ToString() + " " + objValue.ToString().Substring(objValue.ToString().IndexOf(" ") + 1);
+                    //                objTempRecord.DateTimeRecorded = Convert.ToDateTime(strTempDateTime, culture2);
+                    //            }
+                    //            else
+                    //            {
+                    //                if (objValue.ToString().Length == 16)
+                    //                {
+                    //                    //objTempRecord.DateTimeRecorded = DateTime.ParseExact(objValue.ToString(), "MM/dd/yyyy HH:mm", CultureInfo.InvariantCulture);
+                    //                    objTempRecord.DateTimeRecorded = DateTime.ParseExact(objValue.ToString(), "MM/dd/yyyy HH:mm", CultureInfo.InvariantCulture);
+                    //                }
+                    //                else
+                    //                {
+                    //                    objTempRecord.DateTimeRecorded = Convert.ToDateTime(objValue.ToString(), culture2);
+                    //                }
+                    //            }
+                    //        }
+                    //        else
+                    //        {
+                    //            objTempRecord.DateTimeRecorded = Convert.ToDateTime(objValue.ToString(), culture2);
+                    //        }
 
-                            System.Globalization.CultureInfo culture2 = new System.Globalization.CultureInfo("en-US");
-                            if (objValue.ToString().IndexOf(" ") > 0)
-                            {
-                                if (objValue.ToString().Substring(0, objValue.ToString().IndexOf(" ")).Length < 7)
-                                {
-                                    string strTempDateTime = objValue.ToString().Substring(0, objValue.ToString().IndexOf(" ")) + "-" + DateTime.Now.Year.ToString() + " " + objValue.ToString().Substring(objValue.ToString().IndexOf(" ") + 1);
-                                    objTempRecord.DateTimeRecorded = Convert.ToDateTime(strTempDateTime, culture2);
-                                }
-                                else
-                                {
-                                    if (objValue.ToString().Length == 16)
-                                    {
-                                        //objTempRecord.DateTimeRecorded = DateTime.ParseExact(objValue.ToString(), "MM/dd/yyyy HH:mm", CultureInfo.InvariantCulture);
-                                        objTempRecord.DateTimeRecorded = DateTime.ParseExact(objValue.ToString(), "MM/dd/yyyy HH:mm", CultureInfo.InvariantCulture);
-                                    }
-                                    else
-                                    {
-                                        objTempRecord.DateTimeRecorded = Convert.ToDateTime(objValue.ToString(), culture2);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                objTempRecord.DateTimeRecorded = Convert.ToDateTime(objValue.ToString(), culture2);
-                            }
-
-                            break;
-                        case "YYYY-MM-DD":
+                    //        break;
+                    //    case "YYYY-MM-DD":
 
 
-                            if (objValue.ToString().IndexOf(" ") > 0)
-                            {
-                                if (objValue.ToString().Substring(0, objValue.ToString().IndexOf(" ")).Length < 7)
-                                {
-                                    string strTempDateTime = objValue.ToString().Substring(0, objValue.ToString().IndexOf(" ")) + "-" + DateTime.Now.Year.ToString() + " " + objValue.ToString().Substring(objValue.ToString().IndexOf(" ") + 1);
-                                    objTempRecord.DateTimeRecorded = Convert.ToDateTime(strTempDateTime, CultureInfo.InvariantCulture);
-                                }
-                                else
-                                {
-                                    if (objValue.ToString().Length == 16)
-                                    {
-                                        //objTempRecord.DateTimeRecorded = DateTime.ParseExact(objValue.ToString(), "MM/dd/yyyy HH:mm", CultureInfo.InvariantCulture);
-                                        objTempRecord.DateTimeRecorded = DateTime.ParseExact(objValue.ToString(), "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
-                                    }
-                                    else
-                                    {
-                                        objTempRecord.DateTimeRecorded = Convert.ToDateTime(objValue.ToString(), CultureInfo.InvariantCulture);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                objTempRecord.DateTimeRecorded = Convert.ToDateTime(objValue.ToString(), CultureInfo.InvariantCulture);
-                            }
+                    //        if (objValue.ToString().IndexOf(" ") > 0)
+                    //        {
+                    //            if (objValue.ToString().Substring(0, objValue.ToString().IndexOf(" ")).Length < 7)
+                    //            {
+                    //                string strTempDateTime = objValue.ToString().Substring(0, objValue.ToString().IndexOf(" ")) + "-" + DateTime.Now.Year.ToString() + " " + objValue.ToString().Substring(objValue.ToString().IndexOf(" ") + 1);
+                    //                objTempRecord.DateTimeRecorded = Convert.ToDateTime(strTempDateTime, CultureInfo.InvariantCulture);
+                    //            }
+                    //            else
+                    //            {
+                    //                if (objValue.ToString().Length == 16)
+                    //                {
+                    //                    //objTempRecord.DateTimeRecorded = DateTime.ParseExact(objValue.ToString(), "MM/dd/yyyy HH:mm", CultureInfo.InvariantCulture);
+                    //                    objTempRecord.DateTimeRecorded = DateTime.ParseExact(objValue.ToString(), "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+                    //                }
+                    //                else
+                    //                {
+                    //                    objTempRecord.DateTimeRecorded = Convert.ToDateTime(objValue.ToString(), CultureInfo.InvariantCulture);
+                    //                }
+                    //            }
+                    //        }
+                    //        else
+                    //        {
+                    //            objTempRecord.DateTimeRecorded = Convert.ToDateTime(objValue.ToString(), CultureInfo.InvariantCulture);
+                    //        }
 
-                            break;
+                    //        break;
 
-                        default:
+                    //    default:
 
-                            objTempRecord.DateTimeRecorded = Common.GetDateTimeFromString(objValue.ToString(), "");
-                            if (objTempRecord.DateTimeRecorded == null)
-                                objTempRecord.DateTimeRecorded = DateTime.Now;
+                    //        objTempRecord.DateTimeRecorded = Common.GetDateTimeFromString(objValue.ToString(), "");
+                    //        if (objTempRecord.DateTimeRecorded == null)
+                    //            objTempRecord.DateTimeRecorded = DateTime.Now;
 
-                            break;
-                    }
+                    //        break;
+                    //}
 
 
 
@@ -13760,8 +14111,8 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
     public static DataTable GetVirtualImportFileTable(int tableID, int targetTableID, int batchID)
     {
 
-       
 
+        int? iImportTemplateID = ImportManager.GetDefaultImportTemplate(tableID);
         int iTN = 0;
 
         DataTable dt = new DataTable();
@@ -13784,7 +14135,7 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
             command.Parameters.Add(new SqlParameter("@bHasRejectReason", false));
             command.Parameters.Add(new SqlParameter("@sTextSearch", sSearch));
             command.Parameters.Add(new SqlParameter("@sOrder", "[DBGSystemRecordID] ASC"));
-
+            command.Parameters.Add(new SqlParameter("@nImportTemplateID", iImportTemplateID));
             SqlDataAdapter dataAdapter = new SqlDataAdapter();
             dataAdapter.SelectCommand = command;
             DataSet ds = new DataSet();
@@ -13821,24 +14172,24 @@ string sOrderDirection, int? nStartRow, int? nMaxRows, ref int iTotalRowsNum, st
 
                 if (sourceData.Rows.Count > 0)
                 {
-                    DataTable columns = RecordManager.ets_Table_Columns_All(tableID);
+                    DataTable columns = RecordManager.ets_Table_Columns_Import(tableID,iImportTemplateID);//  RecordManager.ets_Table_Columns_All(tableID);
                     if (columns != null)
                     {
                         foreach (DataRow dr in columns.Rows)
                         {
                             if (dr["DisplayName"].ToString() == "Incoming Sample Type")
-                                sourceSampleTypeColumnName = dr["NameOnImport"].ToString();
+                                sourceSampleTypeColumnName = dr["ImportHeaderName"].ToString();
                             else if (dr["DisplayName"].ToString() == "Incoming Site")
-                                sourceSiteColumnName = dr["NameOnImport"].ToString();
+                                sourceSiteColumnName = dr["ImportHeaderName"].ToString();
 
                             else if (dr["DisplayName"].ToString() == "Sample Point Name")
-                                sourceLocationColumnName = dr["NameOnImport"].ToString();
+                                sourceLocationColumnName = dr["ImportHeaderName"].ToString();
                             else if (dr["DisplayName"].ToString() == "Sample Event Date")
-                                sourceDateTimeColumnName = dr["NameOnImport"].ToString();
+                                sourceDateTimeColumnName = dr["ImportHeaderName"].ToString();
                             else if (dr["DisplayName"].ToString() == "Sample Value")
-                                sourceSampleValueColumnName = dr["NameOnImport"].ToString();
+                                sourceSampleValueColumnName = dr["ImportHeaderName"].ToString();
                             else if (dr["DisplayName"].ToString() == "Quality Score")
-                                sourceQualityScoreColumnName = dr["NameOnImport"].ToString();
+                                sourceQualityScoreColumnName = dr["ImportHeaderName"].ToString();
                         }
                     }
 

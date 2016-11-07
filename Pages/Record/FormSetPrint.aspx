@@ -25,6 +25,7 @@
     <title>Print</title>
 </head>
 <body>
+     <%--<script type="text/javascript" src="<%=ResolveUrl("~/Script/jquery-1.11.3.min.js")%>"></script>--%>
       <script type="text/javascript" src="<%=ResolveUrl("~/script/jquery.js")%>"></script>
     <script type="text/javascript" src="<%=ResolveUrl("~/JS/Common.js")%>"></script>
     <link href="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.css")%>" rel="stylesheet"

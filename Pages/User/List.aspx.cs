@@ -145,10 +145,13 @@ public partial class User_List : SecurePage
                
             }
 
+            
             GridViewRow gvr = gvTheGrid.TopPagerRow;
             if (gvr != null)
                 _gvPager = (Common_Pager)gvr.FindControl("Pager");
 
+            
+            
         }
         catch (Exception ex)
         {
@@ -222,15 +225,15 @@ public partial class User_List : SecurePage
     }
     protected void gvTheGrid_PreRender(object sender, EventArgs e)
     {
-        GridView grid = (GridView)sender;
-        if (grid != null)
-        {
-            GridViewRow pagerRow = (GridViewRow)grid.TopPagerRow;
-            if (pagerRow != null)
-            {
-                pagerRow.Visible = true;
-            }
-        }
+        //GridView grid = (GridView)sender;
+        //if (grid != null)
+        //{
+        //    GridViewRow pagerRow = (GridViewRow)grid.TopPagerRow;
+        //    if (pagerRow != null)
+        //    {
+        //        pagerRow.Visible = true;
+        //    }
+        //}
     }
     protected void chkIsActive_CheckedChanged(object sender, EventArgs e)
     {
@@ -270,8 +273,8 @@ public partial class User_List : SecurePage
             }
 
             //End Searchcriteria
-            
-
+        
+            ViewState[gvTheGrid.ID + "PageIndex"] = (iStartIndex / gvTheGrid.PageSize) + 1;
 
             int iTN = 0;
 
@@ -315,14 +318,29 @@ public partial class User_List : SecurePage
             {
                 gvTheGrid.TopPagerRow.Visible = true;               
             }
+
+
+           
             GridViewRow gvr = gvTheGrid.TopPagerRow;
             if (gvr != null)
-            {
                 _gvPager = (Common_Pager)gvr.FindControl("Pager");
-                _gvPager.AddURL = GetAddURL();
-                _gvPager.PageIndexTextSet = (int)(iStartIndex / iMaxRows + 1);
+            
 
-                string strVirtualUsersTableID = SystemData.SystemOption_ValueByKey_Account("VirtualUsersTableID", int.Parse(Session["AccountID"].ToString()), null);
+
+
+            if (_gvPager != null)
+            {
+
+
+                _gvPager.AddURL = GetAddURL();
+                //_gvPager.PageIndexTextSet = (int)(iStartIndex / iMaxRows + 1);
+                if (ViewState[gvTheGrid.ID + "PageIndex"] != null)
+                    _gvPager.PageIndex = int.Parse(ViewState[gvTheGrid.ID + "PageIndex"].ToString());
+
+                _gvPager.PageSize = gvTheGrid.PageSize;
+                _gvPager.TotalRows = iTN;
+                    
+                    string strVirtualUsersTableID = SystemData.SystemOption_ValueByKey_Account("VirtualUsersTableID", int.Parse(Session["AccountID"].ToString()), null);
 
                     if(strVirtualUsersTableID!="")
                     {
@@ -367,7 +385,7 @@ public partial class User_List : SecurePage
 
     protected void Pager_BindTheGridAgain(object sender, EventArgs e)
     {
-        BindTheGrid(_gvPager.StartIndex, _gvPager._gridView.PageSize);
+        BindTheGrid(_gvPager.StartIndex, _gvPager.PageSize);
     }
 
     protected void Pager_OnApplyFilter(object sender, EventArgs e)
@@ -403,11 +421,11 @@ public partial class User_List : SecurePage
         {
             DeleteItem(sCheck);
             BindTheGrid(_gvPager.StartIndex, gvTheGrid.PageSize);
-            _gvPager._gridView.PageIndex = _gvPager.PageIndex - 1;
-            if (_gvPager._gridView.Rows.Count == 0 && _gvPager._gridView.PageIndex > 0)
-            {
-                BindTheGrid(_gvPager.StartIndex - gvTheGrid.PageSize, gvTheGrid.PageSize);
-            }
+            //_gvPager._gridView.PageIndex = _gvPager.PageIndex - 1;
+            //if (_gvPager._gridView.Rows.Count == 0 && _gvPager._gridView.PageIndex > 0)
+            //{
+            //    BindTheGrid(_gvPager.StartIndex - gvTheGrid.PageSize, gvTheGrid.PageSize);
+            //}
         }
 
     }

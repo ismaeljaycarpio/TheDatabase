@@ -30,8 +30,8 @@
             var chkSummaryPage = document.getElementById("ctl00_HomeContentPlaceHolder_chkSummaryPage");
             var chkDetailPage = document.getElementById("ctl00_HomeContentPlaceHolder_chkDetailPage");
             var chkGraph = document.getElementById("ctl00_HomeContentPlaceHolder_chkGraph");
-            var chkImport = document.getElementById("ctl00_HomeContentPlaceHolder_chkImport");
-            var chkExport = document.getElementById("ctl00_HomeContentPlaceHolder_chkExport");
+            //var chkImport = document.getElementById("ctl00_HomeContentPlaceHolder_chkImport");
+            //var chkExport = document.getElementById("ctl00_HomeContentPlaceHolder_chkExport");
             var chkMobile = document.getElementById("ctl00_HomeContentPlaceHolder_chkMobile");
 
             var hfColumnSystemname = document.getElementById("hfColumnSystemname");
@@ -41,9 +41,9 @@
             var txtDisplayTextSummary = document.getElementById("ctl00_HomeContentPlaceHolder_txtDisplayTextSummary");
             var txtDisplayTextDetail = document.getElementById("ctl00_HomeContentPlaceHolder_txtDisplayTextDetail");
             var txtGraph = document.getElementById("ctl00_HomeContentPlaceHolder_txtGraph");
-            var txtNameOnImport = document.getElementById("ctl00_HomeContentPlaceHolder_txtNameOnImport");
-            var hfIsImportPositional = document.getElementById("ctl00_HomeContentPlaceHolder_hfIsImportPositional");
-            var txtNameOnExport = document.getElementById("ctl00_HomeContentPlaceHolder_txtNameOnExport");
+            //var txtNameOnImport = document.getElementById("ctl00_HomeContentPlaceHolder_txtNameOnImport");
+            //var hfIsImportPositional = document.getElementById("ctl00_HomeContentPlaceHolder_hfIsImportPositional");
+            //var txtNameOnExport = document.getElementById("ctl00_HomeContentPlaceHolder_txtNameOnExport");
             var txtMobile = document.getElementById("ctl00_HomeContentPlaceHolder_txtMobile");
             //Warning
 
@@ -76,12 +76,12 @@
 
             //function showUnrequiredControlsForContentType(bVal) {
             //    if (bVal) {
-            //        $("#divchkCompareOperator").fadeIn();
-            //        $("#divchkValidationCanIgnore").fadeIn();
+            //        $("#divchkCompareOperator").show();
+            //        $("#divchkValidationCanIgnore").show();
             //    }
             //    else {
-            //        $("#divchkCompareOperator").fadeOut();
-            //        $("#divchkValidationCanIgnore").fadeOut();
+            //        $("#divchkCompareOperator").hide();
+            //        $("#divchkValidationCanIgnore").hide();
             //    }
             //}
 
@@ -102,9 +102,9 @@
                 }
 
                 if (bShowValidationRoot) {
-                    //$("#divchkValidationCanIgnore").fadeIn();
-                    $("#divValidationRoot").fadeIn();
-                    $("#divGraphOptions").fadeIn();
+                    //$("#divchkValidationCanIgnore").show();
+                    $("#divValidationRoot").show();
+                    $("#divGraphOptions").show();
                     ShowWarningMinMax();
 
                     if (hfShowExceedance.value == 'yes') {
@@ -113,9 +113,9 @@
                     ShowValidMinMax();
                 }
                 else {
-                    //$("#divchkValidationCanIgnore").fadeOut();
-                    $("#divValidationRoot").fadeOut();
-                    $("#divGraphOptions").fadeOut();
+                    //$("#divchkValidationCanIgnore").hide();
+                    $("#divValidationRoot").hide();
+                    $("#divGraphOptions").hide();
 
                     var chkWarning = document.getElementById("ctl00_HomeContentPlaceHolder_chkWarning");
                     chkWarning.checked = false;
@@ -123,33 +123,23 @@
                     chkExceedence.checked = false;
                     var chkMaximumValueat = document.getElementById("ctl00_HomeContentPlaceHolder_chkMaximumValueat");
                     chkMaximumValueat.checked = false;
-
-                    
-                    //var txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtMinValid");
+                   
                     txtMinValid.value = '';
 
-                    //txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtMaxValid");
                     txtMaxValid.value = '';
 
-                    //txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtValidationEntry");
                     txtValidationEntry.value = '';
 
-                    //txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtMinWaring");
                     txtMinWaring.value = '';
 
-                    //txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtMaxWrning");
                     txtMaxWrning.value = '';
 
-                    //txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtValidationOnWarning");
                     txtValidationOnWarning.value = '';
 
-                    //txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtMinExceedance");
                     txtMinExceedance.value = '';
 
-                    //txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtMaxExceedance");
                     txtMaxExceedance.value = '';
 
-                    //txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtValidationOnExceedance");
                     txtValidationOnExceedance.value = '';
                 }
                 chkWarningClick(false);
@@ -203,36 +193,45 @@
                 var chkButtonWarningMessage = document.getElementById("chkButtonWarningMessage");
                 var txtButtonWarningMessage = document.getElementById("txtButtonWarningMessage");
                 if (chkButtonWarningMessage != null && chkButtonWarningMessage.checked == true) {
-                    $("#txtButtonWarningMessage").fadeIn();
+                    $("#txtButtonWarningMessage").show();
                 }
                 else {
-                    $("#txtButtonWarningMessage").fadeOut();
+                    $("#txtButtonWarningMessage").hide();
                     if (txtButtonWarningMessage != null) {
                         txtButtonWarningMessage.value = '';
                     }
                 }
             }
-            function chkButtonOpenLinkClick() {
-                var chk = document.getElementById("chkButtonOpenLink");
-                var txt = document.getElementById("txtButtonOpenLink");
-                if (chk != null && chk.checked == true) {
-                    $("#txtButtonOpenLink").fadeIn();
+            function ButtonOnClickProc() {
+                var sBtnOnClick = $('#ctl00_HomeContentPlaceHolder_ddlButtonOnClick').val();
+                if (sBtnOnClick == '' || sBtnOnClick == 'StayCurrent' || sBtnOnClick == 'Goback')
+                {
+                    $("#trButton4_Child").hide();
+                    $("#trButton4_Link").hide();
+                    $("#trButton4_Param").hide();
                 }
-                else {
-                    $("#txtButtonOpenLink").fadeOut();
-                    if (txt != null) {
-                        txt.value = '';
+                else
+                {
+                    $("#trButton4_Param").show();
+                    if (sBtnOnClick == 'AddChild') {
+                        $("#trButton4_Child").show();
+                        $("#trButton4_Link").hide();
+                    }
+                    else {
+                        $("#trButton4_Child").hide();
+                        $("#trButton4_Link").show();
                     }
                 }
+                                
             }
             function chkSPToRunClick() {
                 var chk = document.getElementById("chkSPToRun");
                 var txt = document.getElementById("txtSPToRun");
                 if (chk != null && chk.checked == true) {
-                    $("#txtSPToRun").fadeIn();
+                    $("#txtSPToRun").show();
                 }
                 else {
-                    $("#txtSPToRun").fadeOut();
+                    $("#txtSPToRun").hide();
                     if (txt != null) {
                         txt.value = '';
                     }
@@ -244,7 +243,7 @@
 
                 if (chk != null) {
                     if (chk.checked == true) {
-                        $("#tblImageOnSummaryMaxHeight").fadeIn();
+                        $("#tblImageOnSummaryMaxHeight").show();
                     }
                     else {
 
@@ -252,7 +251,7 @@
                             txt.value = '';
                         }
 
-                        $("#tblImageOnSummaryMaxHeight").fadeOut();
+                        $("#tblImageOnSummaryMaxHeight").hide();
                     }
                 }
             }
@@ -283,45 +282,45 @@
                 document.getElementById('ctl00_HomeContentPlaceHolder_hlCalculationEdit').href = document.getElementById('hfCalculationType').value ;
 
                 if (strCalType == 'n' || strCalType == 'f') {
-                    $("#trGraphOption").fadeIn();
+                    $("#trGraphOption").show();
                     if (bEvent = true)
                         chkGraph.checked = true;
-                    $("#tblDateCal").fadeOut();
-                    $("#lblCheckForFlat").fadeIn();
-                    $("#chkFlatLine").fadeIn();
-                    $("#trFlatLine").fadeIn();
-                    $("#trRound").fadeIn();
+                    $("#tblDateCal").hide();
+                    $("#lblCheckForFlat").show();
+                    $("#chkFlatLine").show();
+                    $("#trFlatLine").show();
+                    $("#trRound").show();
 
-                    $("#trCheckUnlikelyValue").fadeIn();
+                    $("#trCheckUnlikelyValue").show();
                 }
                 else {
-                    $("#trGraphOption").fadeOut();
+                    $("#trGraphOption").hide();
                     chkGraph.checked = false;
                 }
                 if (strCalType == 'n') {
-                    $("#tblFinancialSymbol").fadeOut();
+                    $("#tblFinancialSymbol").hide();
 
                 }
                 if (strCalType == 'f') {
-                    $("#tblFinancialSymbol").fadeIn();
+                    $("#tblFinancialSymbol").show();
 
                 }
                 if (strCalType == 'd' || strCalType == 't') {
-                    $("#tblFinancialSymbol").fadeOut();
+                    $("#tblFinancialSymbol").hide();
 
-                    $("#lblCheckForFlat").fadeOut();
-                    $("#chkFlatLine").fadeOut();
-                    $("#trFlatLine").fadeOut();
-                    $("#trRound").fadeOut();
+                    $("#lblCheckForFlat").hide();
+                    $("#chkFlatLine").hide();
+                    $("#trFlatLine").hide();
+                    $("#trRound").hide();
 
-                    $("#trCheckUnlikelyValue").fadeOut();
+                    $("#trCheckUnlikelyValue").hide();
 
                     if (strCalType == 'd') {
-                        $("#tblDateCal").fadeIn();
+                        $("#tblDateCal").show();
                         document.getElementById('ctl00_HomeContentPlaceHolder_hlCalculationEdit').href = document.getElementById('hfCalculationType').value + '&date=yes';
                     }
                     else {
-                        $("#tblDateCal").fadeOut();
+                        $("#tblDateCal").hide();
                     }
 
                 }
@@ -406,23 +405,23 @@
 
 
                 if (ColumnTypeIn(strTypeV, 'text,number')) {
-                    $("#trTextDimension").fadeIn();
+                    $("#trTextDimension").show();
                     if (ColumnTypeIn(strTypeV, 'text')) {
-                        $('#tdHeightLabel').fadeIn();
-                        $('#tdHeight').fadeIn();
+                        $('#tdHeightLabel').show();
+                        $('#tdHeight').show();
                     }
                     else {
-                        $('#tdHeightLabel').fadeOut();
-                        $('#tdHeight').fadeOut();
+                        $('#tdHeightLabel').hide();
+                        $('#tdHeight').hide();
                     }
                 }
                 else {
-                    $("#trTextDimension").fadeOut();
+                    $("#trTextDimension").hide();
                 }
 
 
-                $("#trDetailPage1").fadeIn();
-                $("#trDetailPage2").fadeIn();
+                $("#trDetailPage1").show();
+                $("#trDetailPage2").show();
                 if (bEvent)
                     chkDetailPage.checked = true;
 
@@ -433,236 +432,231 @@
 
                 chkDetailPageClick();
                 if (ColumnTypeIn(strTypeV, 'staticcontent,button,calculation,checkbox,trafficlight') == false) {
-                    $("#trMandatory").fadeIn();
+                    $("#trMandatory").show();
                 }
                 else {
                     $(ddlImportance).val('');
-                    $("#trMandatory").fadeOut();
+                    $("#trMandatory").hide();
 
                 }
 
                 if (ColumnTypeIn(strTypeV, 'number,calculation')) {
-                    $("#trGraphOption").fadeIn();
+                    $("#trGraphOption").show();
                     if (bEvent)
                         chkGraph.checked = true;
                 }
                 else {
-                    $("#trGraphOption").fadeOut();
+                    $("#trGraphOption").hide();
                     chkGraph.checked = false;
-                    $("#trFlatLine").fadeOut();
+                    $("#trFlatLine").hide();
                 }
                 chkGraphClick();
                 if (ColumnTypeIn(strTypeV, 'staticcontent,button')) {
-                    $("#trImportOption").fadeOut();
-                    $("#trExportOption").fadeOut();
-                    $("#trMobileSiteSummary").fadeOut();
-                    $("#trSummaryPage1").fadeOut();
+                    //$("#trImportOption").hide();
+                    //$("#trExportOption").hide();
+                    $("#trMobileSiteSummary").hide();
+                    $("#trSummaryPage1").hide();
                     chkSummaryPage.checked = false;
-                    chkImport.checked = false;
-                    chkExport.checked = false;
+                    //chkImport.checked = false;
+                    //chkExport.checked = false;
                     chkMobile.checked = false;
-                    $("#divchkCompareOperator").fadeOut();
-                    $("#divchkValidationCanIgnore").fadeOut();
+                    $("#divchkCompareOperator").hide();
+                    $("#divchkValidationCanIgnore").hide();
                     var chkValidationCanIgnore = document.getElementById("ctl00_HomeContentPlaceHolder_chkValidationCanIgnore");
                     chkValidationCanIgnore.checked = false;
 
                 }
                 else {
 
-                    if (ColumnTypeIn(strTypeV, 'calculation')) {
-                        $("#trImportOption").fadeOut(); chkImport.checked = false;
-                    }
-                    else {
-                        $("#trImportOption").fadeIn();
-                    }
+                    //if (ColumnTypeIn(strTypeV, 'calculation')) {
+                    //    $("#trImportOption").hide(); chkImport.checked = false;
+                    //}
+                    //else {
+                    //    $("#trImportOption").show();
+                    //}
 
-                    $("#trExportOption").fadeIn();
-                    $("#trMobileSiteSummary").fadeIn();
-                    $("#trSummaryPage1").fadeIn();
-                    $("#divchkValidationCanIgnore").fadeIn();
+                    //$("#trExportOption").show();
+                    $("#trMobileSiteSummary").show();
+                    $("#trSummaryPage1").show();
+                    $("#divchkValidationCanIgnore").show();
                     //chkSummaryPage.checked = true;
                     if (bEvent) {
-                        chkImport.checked = true;
-                        chkExport.checked = true;
+                        //chkImport.checked = true;
+                        //chkExport.checked = true;
                         chkMobile.checked = false;
                     }
 
 
-                    $("#divchkCompareOperator").fadeIn();
+                    $("#divchkCompareOperator").show();
 
                     //chkCompareOperatorClick();
                 }
                 chkSummaryPageClick();
-                chkImportClick();
-                chkExportClick();
+                //chkImportClick();
+                //chkExportClick();
                 chkMobileClick();
                 if (ColumnTypeIn(strTypeV, 'calculation')) {
-                    $("#trCalculationType").fadeIn();
-                    $("#trCalculation").fadeIn();
+                    $("#trCalculationType").show();
+                    $("#trCalculation").show();
                     ddlCalculationTypeChange(false);
                 }
                 else {
-                    $("#trCalculationType").fadeOut();
-                    $("#trCalculation").fadeOut();
+                    $("#trCalculationType").hide();
+                    $("#trCalculation").hide();
                 }
 
                 if (ColumnTypeIn(strTypeV, 'trafficlight')) {
-                    $("#trTrafficLight").fadeIn();
+                    $("#trTrafficLight").show();
                 }
                 else {
-                    $("#trTrafficLight").fadeOut();
+                    $("#trTrafficLight").hide();
                 }
 
                 if (ColumnTypeIn(strTypeV, 'staticcontent')) {
-                    $("#trStaticContent").fadeIn();
+                    $("#trStaticContent").show();
                 }
                 else {
-                    $("#trStaticContent").fadeOut();
+                    $("#trStaticContent").hide();
                 }
 
 
                 if (ColumnTypeIn(strTypeV, 'button')) {
-                    $("#trButton1").fadeIn();
-                    $("#trButton2").fadeIn();
-                    $("#trButton3").fadeIn();
-                    $("#trButton4").fadeIn();
+                    $("#trButton1").show();
+                    $("#trButton2").show();
+                    $("#trButton3").show();
+                    $("#trButton4").show();
 
                     chkButtonWarningMessageClick();
-                    chkButtonOpenLinkClick();
+                    ButtonOnClickProc();
                     chkSPToRunClick();
                     chkImageOnSummaryClick();
                 }
                 else {
-                    $("#trButton1").fadeOut();
-                    $("#trButton2").fadeOut();
-                    $("#trButton3").fadeOut();
-                    $("#trButton4").fadeOut();
+                    $("#trButton1").hide();
+                    $("#trButton2").hide();
+                    $("#trButton3").hide();
+                    $("#trButton4").hide();
                 }
 
                 if (ColumnTypeIn(strTypeV, 'checkbox')) {
-                    $("#trCheckbox1").fadeIn();
-                    $("#trCheckbox2").fadeIn();
-                    $("#trCheckbox3").fadeIn();
+                    $("#trCheckbox1").show();
+                    $("#trCheckbox2").show();
+                    $("#trCheckbox3").show();
 
                 }
                 else {
-                    $("#trCheckbox1").fadeOut();
-                    $("#trCheckbox2").fadeOut();
-                    $("#trCheckbox3").fadeOut();
+                    $("#trCheckbox1").hide();
+                    $("#trCheckbox2").hide();
+                    $("#trCheckbox3").hide();
 
                 }
 
 
                 if (ColumnTypeIn(strTypeV, 'location')) {
-                    $("#trLocation").fadeIn();
+                    $("#trLocation").show();
                     chkShowMapClick(false);
                 }
                 else {
-                    $("#trLocation").fadeOut();
+                    $("#trLocation").hide();
                 }
 
                 if (ColumnTypeIn(strTypeV, 'date_time')) {
-                    $("#trReminders").fadeIn();
-                    $("#trDateTimeType").fadeIn();
+                    $("#trReminders").show();
+                    $("#trDateTimeType").show();
                     ddlDateTimeTypeChange(false);
                 }
                 else {
-                    $("#trDateTimeType").fadeOut();
-                    $("#trReminders").fadeOut();
+                    $("#trDateTimeType").hide();
+                    $("#trReminders").hide();
                 }
                 if (ColumnTypeIn(strTypeV, 'text')) {
-                    $("#trTextType").fadeIn();
+                    $("#trTextType").show();
 
                     ddlTextTypeClick();
                 }
                 else {
-                    $("#trTextType").fadeOut();
+                    $("#trTextType").hide();
                 }
 
                
 
-
-
-
-
-
                 if (ColumnTypeIn(strTypeV, 'dropdown,listbox') == false) {
-                    $("#trDDTable").fadeOut();
-                    $("#trFilter").fadeOut();
-                    $("#trDDDisplayColumn").fadeOut();
-                    $("#trDDValues").fadeOut();
-                    $("#trDDType").fadeOut();
-                    $("#trListboxType").fadeOut();
+                    $("#trDDTable").hide();
+                    $("#trFilter").hide();
+                    $("#trDDDisplayColumn").hide();
+                    $("#trDDValues").hide();
+                    $("#trDDType").hide();
+                    $("#trListboxType").hide();
                 }
                 else {
                     if (ColumnTypeIn(strTypeV, 'listbox')) {
-                        $("#trListboxType").fadeIn();
+                        $("#trListboxType").show();
 
                         ddlListBoxTypeChange(false);
                     }
                     else {
-                        $("#trListboxType").fadeOut();
+                        $("#trListboxType").hide();
                     }
                     if (ColumnTypeIn(strTypeV, 'dropdown')) {
-                        $("#trDDType").fadeIn();
+                        $("#trDDType").show();
                         ddlDDTypeChange(false);
                     }
                     else {
-                        $("#trDDType").fadeOut();
+                        $("#trDDType").hide();
                     }
 
                 }
 
 
 
-                //$("#trDDTableLookup").fadeOut();
-                // $("#trTextDimension").fadeOut();
+                //$("#trDDTableLookup").hide();
+                // $("#trTextDimension").hide();
 
 
 
-                //  $("#lblSPDefaultValue").fadeOut();
+                //  $("#lblSPDefaultValue").hide();
 
 
 
 
 
-                //$("#tblColumnColour").fadeOut();
-                //$("#trFlatLine").fadeOut();
+                //$("#tblColumnColour").hide();
+                //$("#trFlatLine").hide();
 
                 if (ColumnTypeIn(strTypeV, 'image')) {
-                    $("#trImageHeightSummary").fadeIn();
-                    $("#trImageHeightDetail").fadeIn();
+                    $("#trImageHeightSummary").show();
+                    $("#trImageHeightDetail").show();
                 }
                 else {
-                    $("#trImageHeightSummary").fadeOut();
-                    $("#trImageHeightDetail").fadeOut();
+                    $("#trImageHeightSummary").hide();
+                    $("#trImageHeightDetail").hide();
                 }
                 if (ColumnTypeIn(strTypeV, 'radiobutton')) {
-                    $("#trRadioOptionType").fadeIn();
+                    $("#trRadioOptionType").show();
                     ddlOptionTypeChange(false);
                 }
                 else {
-                    $("#trRadioOptionType").fadeOut();
-                    $('#trOptionImageGrid').fadeOut();
+                    $("#trRadioOptionType").hide();
+                    $('#trOptionImageGrid').hide();
 
                 }
 
 
 
                 if (ColumnTypeIn(strTypeV, 'number,calculation') == false) {
-                    $("#trRecordCountTable").fadeOut();
-                    $("#trRecordCountClick").fadeOut();
-                    $("#trSlider").fadeOut();
-                    $("#trColumnToAvg").fadeOut();
-                    $("#trAvgNumValues").fadeOut();
-                    $("#trRound").fadeOut();
+                    $("#trRecordCountTable").hide();
+                    $("#trRecordCountClick").hide();
+                    $("#trSlider").hide();
+                    $("#trColumnToAvg").hide();
+                    $("#trAvgNumValues").hide();
+                    $("#trRound").hide();
 
-                    $("#trIgnoreSymbols").fadeOut();
-                    $("#trCheckUnlikelyValue").fadeOut();
+                    $("#trIgnoreSymbols").hide();
+                    $("#trCheckUnlikelyValue").hide();
                 }
 
                 if (ColumnTypeIn(strTypeV, 'calculation') == false) {
-                    $("#tblDateCal").fadeOut();
+                    $("#tblDateCal").hide();
                 }
 
                 if (ColumnTypeIn(strTypeV, 'number,calculation')) {
@@ -670,28 +664,28 @@
                     chkFlatLineClick(false)
                 }
                 if (ColumnTypeIn(strTypeV, 'staticcontent,button,file,image,calculation')) {
-                    $("#trDefaultValue").fadeOut();
+                    $("#trDefaultValue").hide();
                 }
                 else {
-                    $("#trDefaultValue").fadeIn();
+                    $("#trDefaultValue").show();
 
                 }
 
                 if (ColumnTypeIn(strTypeV, 'number')) {
-                    $("#trNumber1").fadeIn();
+                    $("#trNumber1").show();
                     ddlNumberTypeChange(false);
                 }
                 else {
-                    $("#trNumber1").fadeOut();
-                    $("#ctl00_HomeContentPlaceHolder_lblSymbol").fadeOut();
-                    $("#ctl00_HomeContentPlaceHolder_txtSymbol").fadeOut();
+                    $("#trNumber1").hide();
+                    $("#ctl00_HomeContentPlaceHolder_lblSymbol").hide();
+                    $("#ctl00_HomeContentPlaceHolder_txtSymbol").hide();
                 }
 
                 if (ColumnTypeIn(strTypeV, 'staticcontent,button,file,image')) {
-                    $("#tblColumnColour").fadeOut();
+                    $("#tblColumnColour").hide();
                 }
                 else {
-                    $("#tblColumnColour").fadeIn();
+                    $("#tblColumnColour").show();
                 }
                 var hlResetCalculations = document.getElementById("hlResetCalculations");
                 if (ColumnTypeIn(strTypeV, 'calculation') && hfColumnID.value!=-1) {
@@ -743,14 +737,14 @@
                     txtGraph.value = txtColumnName.value;
                 }
 
-                if (chkImport.checked == true) {
-                    if (hfIsImportPositional.value == '0') {
-                        txtNameOnImport.value = txtColumnName.value;
-                    }
-                }
-                if (chkExport.checked == true) {
-                    txtNameOnExport.value = txtColumnName.value;
-                }
+                //if (chkImport.checked == true) {
+                //    if (hfIsImportPositional.value == '0') {
+                //        txtNameOnImport.value = txtColumnName.value;
+                //    }
+                //}
+                //if (chkExport.checked == true) {
+                //    txtNameOnExport.value = txtColumnName.value;
+                //}
 
                 if (chkMobile.checked == true) {
                     txtMobile.value = txtColumnName.value;
@@ -762,36 +756,36 @@
             function chkSummaryPageClick() {
                 if (chkSummaryPage.checked == true) {
                     txtDisplayTextSummary.value = txtColumnName.value;
-                    $("#ctl00_HomeContentPlaceHolder_txtDisplayTextSummary").fadeIn();
-                    $("#ctl00_HomeContentPlaceHolder_lblSummaryPage").fadeIn();
+                    $("#ctl00_HomeContentPlaceHolder_txtDisplayTextSummary").show();
+                    $("#ctl00_HomeContentPlaceHolder_lblSummaryPage").show();
                 }
                 else {
-                    $("#ctl00_HomeContentPlaceHolder_txtDisplayTextSummary").fadeOut();
-                    $("#ctl00_HomeContentPlaceHolder_lblSummaryPage").fadeOut();
+                    $("#ctl00_HomeContentPlaceHolder_txtDisplayTextSummary").hide();
+                    $("#ctl00_HomeContentPlaceHolder_lblSummaryPage").hide();
                     txtDisplayTextSummary.value = '';
                 }
             }
 
             function chkDetailPageClick() {
                 if (chkDetailPage.checked == true) {
-                    $("#trDetailPage2").fadeIn();
+                    $("#trDetailPage2").show();
                     txtDisplayTextDetail.value = txtColumnName.value;
 
                     if (strTypeV == 'staticcontent') {
-                        $("#ctl00_HomeContentPlaceHolder_lblDetailPage").fadeOut();
-                        $("#ctl00_HomeContentPlaceHolder_txtDisplayTextDetail").fadeOut();
+                        $("#ctl00_HomeContentPlaceHolder_lblDetailPage").hide();
+                        $("#ctl00_HomeContentPlaceHolder_txtDisplayTextDetail").hide();
                     }
                     else {
-                        $("#ctl00_HomeContentPlaceHolder_lblDetailPage").fadeIn();
-                        $("#ctl00_HomeContentPlaceHolder_txtDisplayTextDetail").fadeIn();
+                        $("#ctl00_HomeContentPlaceHolder_lblDetailPage").show();
+                        $("#ctl00_HomeContentPlaceHolder_txtDisplayTextDetail").show();
                     }
 
                 }
                 else {
-                    $("#ctl00_HomeContentPlaceHolder_lblDetailPage").fadeOut();
-                    $("#ctl00_HomeContentPlaceHolder_txtDisplayTextDetail").fadeOut();
+                    $("#ctl00_HomeContentPlaceHolder_lblDetailPage").hide();
+                    $("#ctl00_HomeContentPlaceHolder_txtDisplayTextDetail").hide();
 
-                    $("#trDetailPage2").fadeOut();
+                    $("#trDetailPage2").hide();
 
                     txtDisplayTextDetail.value = '';
                 }
@@ -800,94 +794,94 @@
 
             function chkGraphClick() {
                 if (chkGraph.checked == true) {
-                    $("#ctl00_HomeContentPlaceHolder_lblGraph").fadeIn();
-                    $("#ctl00_HomeContentPlaceHolder_txtGraph").fadeIn();
+                    $("#ctl00_HomeContentPlaceHolder_lblGraph").show();
+                    $("#ctl00_HomeContentPlaceHolder_txtGraph").show();
 
                     txtGraph.value = txtColumnName.value;
 
                 }
                 else {
-                    $("#ctl00_HomeContentPlaceHolder_lblGraph").fadeOut();
-                    $("#ctl00_HomeContentPlaceHolder_txtGraph").fadeOut();
+                    $("#ctl00_HomeContentPlaceHolder_lblGraph").hide();
+                    $("#ctl00_HomeContentPlaceHolder_txtGraph").hide();
 
                     txtGraph.value = '';
                 }
             }
 
-            function chkImportClick() {
+            //function chkImportClick() {
 
-                if (chkImport.checked == true) {
+            //    if (chkImport.checked == true) {
 
-                    if (hfDateTimeColumn.value == 'yes') {
-                        $("#tblDateOptions").fadeIn();
-                        var opt = document.getElementById("ctl00_HomeContentPlaceHolder_optSingle");
-                        opt.checked = true;
-                        $("#trDateFormat").fadeIn();
+            //        if (hfDateTimeColumn.value == 'yes') {
+            //            $("#tblDateOptions").show();
+            //            var opt = document.getElementById("ctl00_HomeContentPlaceHolder_optSingle");
+            //            opt.checked = true;
+            //            $("#trDateFormat").show();
 
-                    }
-                    $("#ctl00_HomeContentPlaceHolder_lblImport").fadeIn();
-                    $("#ctl00_HomeContentPlaceHolder_txtNameOnImport").fadeIn();
+            //        }
+            //        $("#ctl00_HomeContentPlaceHolder_lblImport").show();
+            //        $("#ctl00_HomeContentPlaceHolder_txtNameOnImport").show();
 
-                    $("#ctl00_HomeContentPlaceHolder_lblConstant").fadeOut();
-                    $("#ctl00_HomeContentPlaceHolder_txtConstant").fadeOut();
+            //        $("#ctl00_HomeContentPlaceHolder_lblConstant").hide();
+            //        $("#ctl00_HomeContentPlaceHolder_txtConstant").hide();
 
-                    var txtD = document.getElementById("ctl00_HomeContentPlaceHolder_txtConstant");
+            //        var txtD = document.getElementById("ctl00_HomeContentPlaceHolder_txtConstant");
 
-                    if (hfIsImportPositional.value == '0') {
-                        txtNameOnImport.value = txtColumnName.value;
-                    }
-                    else {
-                        var hfPosMax = document.getElementById("ctl00_HomeContentPlaceHolder_hfMaxPosition");
-                        txtNameOnImport.value = hfPosMax.value;
+            //        if (hfIsImportPositional.value == '0') {
+            //            txtNameOnImport.value = txtColumnName.value;
+            //        }
+            //        else {
+            //            var hfPosMax = document.getElementById("ctl00_HomeContentPlaceHolder_hfMaxPosition");
+            //            txtNameOnImport.value = hfPosMax.value;
 
-                    }
+            //        }
 
-                }
-                else {
-                    $("#ctl00_HomeContentPlaceHolder_lblImport").fadeOut();
-                    $("#ctl00_HomeContentPlaceHolder_txtNameOnImport").fadeOut();
-                    txtNameOnImport.value = '';
-                    if (hfDateTimeColumn.value == 'yes') {
-                        $("#tblDateOptions").fadeOut();
-                        $("#trDateFormat").fadeOut();
-                        $("#trTimeSection").fadeOut();
+            //    }
+            //    else {
+            //        $("#ctl00_HomeContentPlaceHolder_lblImport").hide();
+            //        $("#ctl00_HomeContentPlaceHolder_txtNameOnImport").hide();
+            //        txtNameOnImport.value = '';
+            //        if (hfDateTimeColumn.value == 'yes') {
+            //            $("#tblDateOptions").hide();
+            //            $("#trDateFormat").hide();
+            //            $("#trTimeSection").hide();
 
-                        txtNameOnImport.value = '';
-                        txtNI = document.getElementById("ctl00_HomeContentPlaceHolder_txtNameOnImportTime");
-                        txtNI.value = '';
+            //            txtNameOnImport.value = '';
+            //            txtNI = document.getElementById("ctl00_HomeContentPlaceHolder_txtNameOnImportTime");
+            //            txtNI.value = '';
 
-                        var opt = document.getElementById("ctl00_HomeContentPlaceHolder_optSingle");
-                        opt.checked = true;
-                    }
+            //            var opt = document.getElementById("ctl00_HomeContentPlaceHolder_optSingle");
+            //            opt.checked = true;
+            //        }
 
 
-                }
-            }
+            //    }
+            //}
 
-            function chkExportClick() {
-                if (chkExport.checked == true) {
-                    $("#ctl00_HomeContentPlaceHolder_lblExport").fadeIn();
-                    $("#ctl00_HomeContentPlaceHolder_txtNameOnExport").fadeIn();
-                    txtNameOnExport.value = txtColumnName.value;
+            //function chkExportClick() {
+            //    if (chkExport.checked == true) {
+            //        $("#ctl00_HomeContentPlaceHolder_lblExport").show();
+            //        $("#ctl00_HomeContentPlaceHolder_txtNameOnExport").show();
+            //        txtNameOnExport.value = txtColumnName.value;
 
-                }
-                else {
-                    $("#ctl00_HomeContentPlaceHolder_lblExport").fadeOut();
-                    $("#ctl00_HomeContentPlaceHolder_txtNameOnExport").fadeOut();
-                    txtNameOnExport.value = '';
-                }
-            }
+            //    }
+            //    else {
+            //        $("#ctl00_HomeContentPlaceHolder_lblExport").hide();
+            //        $("#ctl00_HomeContentPlaceHolder_txtNameOnExport").hide();
+            //        txtNameOnExport.value = '';
+            //    }
+            //}
 
             function chkMobileClick() {
                 if (chkMobile.checked == true) {
-                    $("#ctl00_HomeContentPlaceHolder_lblMobile").fadeIn();
-                    $("#ctl00_HomeContentPlaceHolder_txtMobile").fadeIn();
+                    $("#ctl00_HomeContentPlaceHolder_lblMobile").show();
+                    $("#ctl00_HomeContentPlaceHolder_txtMobile").show();
                     txtMobile.value = txtColumnName.value;
 
                 }
                 else {
-                    $("#ctl00_HomeContentPlaceHolder_lblMobile").fadeOut();
-                    $("#ctl00_HomeContentPlaceHolder_txtMobile").fadeOut();
+                    $("#ctl00_HomeContentPlaceHolder_lblMobile").hide();
+                    $("#ctl00_HomeContentPlaceHolder_txtMobile").hide();
                     txtMobile.value = '';
                 }
             }
@@ -1013,11 +1007,11 @@
 
             function ShowMandatory(bShow) {
                 if (bShow) {
-                    $("#trMandatory").fadeIn();
+                    $("#trMandatory").show();
                 }
                 else {
                     $(ddlImportance).val('');
-                    $("#trMandatory").fadeOut();
+                    $("#trMandatory").hide();
 
                 }
 
@@ -1145,6 +1139,15 @@
                 }
 
             });
+
+            $("#chkControlValueChangeService").click(function () {
+                var chkControlValueChangeService = document.getElementById("chkControlValueChangeService");
+                if (chkControlValueChangeService.checked == true) {
+                    $("#hlControlValueChangeService").trigger("click");
+                }
+
+            });
+
             $("#chkFiltered").click(function () {
                 var chkFiltered = document.getElementById("chkFiltered");
                 if (chkFiltered.checked == true) {
@@ -1161,12 +1164,20 @@
             $("#chkButtonWarningMessage").click(function () {
                 chkButtonWarningMessageClick();
             });
-            $("#chkButtonOpenLink").click(function () {
-                chkButtonOpenLinkClick();
+
+            //$("#chkButtonOpenLink").click(function () {
+            //    ButtonOnClickProc();
+            //});
+
+            $('#ctl00_HomeContentPlaceHolder_ddlButtonOnClick').change(function (e) {
+                ButtonOnClickProc();
             });
+
             $("#chkSPToRun").click(function () {
                 chkSPToRunClick();
             });
+
+
 
             $("#ctl00_HomeContentPlaceHolder_chkSummaryPage").click(function () {
                 chkSummaryPageClick();
@@ -1178,12 +1189,12 @@
                 chkGraphClick();
             });
 
-            $("#ctl00_HomeContentPlaceHolder_chkImport").click(function () {
-                chkImportClick();
-            });
-            $("#ctl00_HomeContentPlaceHolder_chkExport").click(function () {
-                chkExportClick();
-            });
+            //$("#ctl00_HomeContentPlaceHolder_chkImport").click(function () {
+            //    chkImportClick();
+            //});
+            //$("#ctl00_HomeContentPlaceHolder_chkExport").click(function () {
+            //    chkExportClick();
+            //});
             $("#ctl00_HomeContentPlaceHolder_chkMobile").click(function () {
                 chkMobileClick();
             });
@@ -1261,8 +1272,8 @@
 
             function ddlOptionTypeChange(bEvent) {
                 var strOptionType = $('#ddlOptionType').val();
-                $('#trOptionImageGrid').fadeOut();
-                $('#trDDValues').fadeIn();
+                $('#trOptionImageGrid').hide();
+                $('#trDDValues').show();
                 if (strOptionType == 'values') {
                     $("#ctl00_HomeContentPlaceHolder_lblDropdownValuesCap").text('Values');
                     $("#ctl00_HomeContentPlaceHolder_lblDropdownValuesHelp").text('Enter the values – one on each line');
@@ -1272,8 +1283,8 @@
                     $("#ctl00_HomeContentPlaceHolder_lblDropdownValuesHelp").text('Enter value, comma(,) and text – one on each line');
                 }
                 else {
-                    $('#trOptionImageGrid').fadeIn();
-                    $('#trDDValues').fadeOut();
+                    $('#trOptionImageGrid').show();
+                    $('#trDDValues').hide();
                 }
             }
 
@@ -1283,30 +1294,30 @@
 
             function ddlListBoxTypeChange(bEvent) {
                 var strOptionType = $('#ddlListBoxType').val();
-                $("#divQuickAddLink").fadeOut();
+                $("#divQuickAddLink").hide();
                 if (strOptionType == 'values') {
-                    $("#trDDTable").fadeOut();
-                    $("#trDDTableLookup").fadeOut();
-                    $("#trDDDisplayColumn").fadeOut();
-                    $("#trDDValues").fadeIn();
+                    $("#trDDTable").hide();
+                    $("#trDDTableLookup").hide();
+                    $("#trDDDisplayColumn").hide();
+                    $("#trDDValues").show();
                     $("#ctl00_HomeContentPlaceHolder_lblDropdownValuesCap").text('Values');
                     $("#ctl00_HomeContentPlaceHolder_lblDropdownValuesHelp").text('Enter the values – one on each line');
 
                 }
                 else if (strOptionType == 'value_text') {
-                    $("#trDDTable").fadeOut();
-                    $("#trDDTableLookup").fadeOut();
-                    $("#trDDDisplayColumn").fadeOut();
-                    $("#trDDValues").fadeIn();
+                    $("#trDDTable").hide();
+                    $("#trDDTableLookup").hide();
+                    $("#trDDDisplayColumn").hide();
+                    $("#trDDValues").show();
                     $("#ctl00_HomeContentPlaceHolder_lblDropdownValuesCap").text('Value & Text');
                     $("#ctl00_HomeContentPlaceHolder_lblDropdownValuesHelp").text('Enter value, comma(,) and text – one on each line');
 
                 }
                 else {
-                    $("#trDDTable").fadeIn();
-                    $("#trDDTableLookup").fadeIn();
-                    $("#trDDDisplayColumn").fadeIn();
-                    $("#trDDValues").fadeOut();
+                    $("#trDDTable").show();
+                    $("#trDDTableLookup").show();
+                    $("#trDDDisplayColumn").show();
+                    $("#trDDValues").hide();
 
                 }
             }
@@ -1321,58 +1332,58 @@
                 strDDType = $('#ddlDDType').val();
 
                 if (strDDType == 'values') {
-                    $('#ctl00_HomeContentPlaceHolder_lnkCreateTable').fadeIn();
+                    $('#ctl00_HomeContentPlaceHolder_lnkCreateTable').show();
                 }
                 else {
-                    $('#ctl00_HomeContentPlaceHolder_lnkCreateTable').fadeOut();
+                    $('#ctl00_HomeContentPlaceHolder_lnkCreateTable').hide();
                 }
 
                 if (strDDType == 'ct' || strDDType == 'lt') {
-                    $('#trDDTable').fadeIn();
-                    $("#trDDTableLookup").fadeIn();
-                    $('#trDDDisplayColumn').fadeIn();
-                    $('#trDDValues').fadeOut();
-                    //$("#trDefaultValue").fadeOut();
+                    $('#trDDTable').show();
+                    $("#trDDTableLookup").show();
+                    $('#trDDDisplayColumn').show();
+                    $('#trDDValues').hide();
+                    //$("#trDefaultValue").hide();
                     var txtDefaultValue = document.getElementById("ctl00_HomeContentPlaceHolder_txtDefaultValue");
                     txtDefaultValue.value = '';
-                    $("#trTextDimension").fadeIn();
-                    $('#tdHeightLabel').fadeOut();
-                    $('#tdHeight').fadeOut();
+                    $("#trTextDimension").show();
+                    $('#tdHeightLabel').hide();
+                    $('#tdHeight').hide();
 
-                    $("#tdPredictiveAndFilter").fadeIn();
+                    $("#tdPredictiveAndFilter").show();
                     //var chkFilterValues = document.getElementById("chkFilterValues");
                     if (strDDType == 'lt') {
-                        $("#trFilter").fadeIn();
-                        $("#tdPredictiveAndFilter").fadeOut();
+                        $("#trFilter").show();
+                        $("#tdPredictiveAndFilter").hide();
                         $("#lblDisplayColumn").text('2nd Dropdown');
-                        $("#divQuickAddLink").fadeOut();
+                        $("#divQuickAddLink").hide();
                     }
                     else {
                         if (bEvent = false) {
                             ddDDDisplayColumnChange(false);
                         }
 
-                        $("#trFilter").fadeOut();
-                        $("#tdPredictiveAndFilter").fadeIn();
+                        $("#trFilter").hide();
+                        $("#tdPredictiveAndFilter").show();
                         $("#lblDisplayColumn").text('Display Field');
-                        $("#divQuickAddLink").fadeIn();
+                        $("#divQuickAddLink").show();
                         document.getElementById('hlFiltered').href = 'Filtered.aspx?hfFilterOperator=' + encodeURIComponent(document.getElementById('hfFilterOperator').value) + '&hfFilterParentColumnID=' + encodeURIComponent(document.getElementById('hfFilterParentColumnID').value) + "&hfFilterOtherColumnID=" + encodeURIComponent(document.getElementById("hfFilterOtherColumnID").value) + "&hfFilterValue=" + encodeURIComponent(document.getElementById("hfFilterValue").value) + "&ParentTableID=" + encodeURIComponent($('#ddlDDTable').val()) + "&Tableid=" + document.getElementById("ctl00_HomeContentPlaceHolder_hfTableID").value + "&Columnid=" + document.getElementById("ctl00_HomeContentPlaceHolder_hfColumnID").value;
 
                     }
                 }
                 if (strDDType == 'values' || strDDType == 'value_text') {
-                    $('#trDDValues').fadeIn();
-                    $('#trDDTable').fadeOut();
-                    $("#trDDTableLookup").fadeOut();
-                    $('#trDDDisplayColumn').fadeOut();
-                    $("#trDefaultValue").fadeIn();
+                    $('#trDDValues').show();
+                    $('#trDDTable').hide();
+                    $("#trDDTableLookup").hide();
+                    $('#trDDDisplayColumn').hide();
+                    $("#trDefaultValue").show();
 
-                    $("#trTextDimension").fadeIn();
-                    $('#tdHeightLabel').fadeOut();
-                    $('#tdHeight').fadeOut();
+                    $("#trTextDimension").show();
+                    $('#tdHeightLabel').hide();
+                    $('#tdHeight').hide();
 
-                    $('#trFilter').fadeOut();
-                    $("#tdPredictiveAndFilter").fadeOut();
+                    $('#trFilter').hide();
+                    $("#tdPredictiveAndFilter").hide();
 
                     if (strDDType == 'values') {
                         $("#ctl00_HomeContentPlaceHolder_lblDropdownValuesCap").text('Values');
@@ -1386,17 +1397,17 @@
 
 
                 //                if (strDDType == 'linked') {
-                //                    $('#trDDTable').fadeIn();
-                //                    $('#trDDDisplayColumn').fadeIn();
-                //                    $('#trDDValues').fadeOut();
-                //                    $("#trDefaultValue").fadeOut();
+                //                    $('#trDDTable').show();
+                //                    $('#trDDDisplayColumn').show();
+                //                    $('#trDDValues').hide();
+                //                    $("#trDefaultValue").hide();
                 //                    var txtDefaultValue = document.getElementById("ctl00_HomeContentPlaceHolder_txtDefaultValue");
                 //                    txtDefaultValue.value = '';
-                //                    $("#trTextDimension").fadeIn();
-                //                    $('#tdHeightLabel').fadeOut();
-                //                    $('#tdHeight').fadeOut();
-                //                    $('#trFilter').fadeIn();
-                //                    $("#tdPredictiveAndFilter").fadeIn();
+                //                    $("#trTextDimension").show();
+                //                    $('#tdHeightLabel').hide();
+                //                    $('#tdHeight').hide();
+                //                    $('#trFilter').show();
+                //                    $("#tdPredictiveAndFilter").show();
                 //                }
 
             }
@@ -1410,8 +1421,8 @@
                 var hlDDEdit = document.getElementById('hlDDEdit');
                 if (strDDTableID == '-1') {
                     if (strTypeV == 'dropdown') {
-                        $("#tdTableFilter").fadeOut();
-                        $("#divQuickAddLink").fadeOut();
+                        $("#tdTableFilter").hide();
+                        $("#divQuickAddLink").hide();
                     }
 
                     document.getElementById('hfDisplayColumnsFormula').value = 'email';
@@ -1422,8 +1433,8 @@
                 }
                 else {
                     if (strTypeV == 'dropdown') {
-                        $("#tdTableFilter").fadeIn();
-                        $("#divQuickAddLink").fadeIn();
+                        $("#tdTableFilter").show();
+                        $("#divQuickAddLink").show();
                     }
                     document.getElementById('hfDisplayColumnsFormula').value = '';
                     document.getElementById('hlDDEdit').href = '../Help/TableColumn.aspx?formula=' + encodeURIComponent(document.getElementById('hfDisplayColumnsFormula').value) + '&Tableid=' + $('#ddlDDTable').val();
@@ -1441,23 +1452,23 @@
             function ddlTextTypeClick() {
                 strTextType = $('#ddlTextType').val();
                 if (strTextType == "own") {
-                    $("#txtOwnRegEx").fadeIn();
-                    $("#hlRegEx").fadeIn();
+                    $("#txtOwnRegEx").show();
+                    $("#hlRegEx").show();
                 }
                 else {
-                    $("#txtOwnRegEx").fadeOut();
-                    $("#hlRegEx").fadeOut();
+                    $("#txtOwnRegEx").hide();
+                    $("#hlRegEx").hide();
                 }
 
-                if (strTextType == "readonly") {
+                //if (strTextType == "readonly") {
 
-                    $(ddlImportance).val('');
-                    $("#trMandatory").fadeOut();
-                }
-                else {
-                    $("#trMandatory").fadeIn();
+                //    $(ddlImportance).val('');
+                //    $("#trMandatory").hide();
+                //}
+                //else {
+                //    $("#trMandatory").show();
 
-                }
+                //}
             }
 
 
@@ -1473,12 +1484,12 @@
             });
             function ddlDateTimeTypeChange(bEvent) {
                 var strDateTimeTypeV = $('#ddlDateTimeType').val();
-                //$("#trDefaultValue").fadeIn();
+                //$("#trDefaultValue").show();
                 if (strDateTimeTypeV == 'datetime' || strDateTimeTypeV == 'date') {
-                    $("#trReminders").fadeIn();
+                    $("#trReminders").show();
                 }
                 else {
-                    $("#trReminders").fadeOut();
+                    $("#trReminders").hide();
                 }
             }
 
@@ -1499,29 +1510,29 @@
 
 
                 if (strDefaultValue == 'none') {
-                    $("#ctl00_HomeContentPlaceHolder_txtDefaultValue").fadeOut();
-                    $("#tdDefaultParent").fadeOut();
-                    $("#tdDefaultSyncData").fadeOut();
+                    $("#ctl00_HomeContentPlaceHolder_txtDefaultValue").hide();
+                    $("#tdDefaultParent").hide();
+                    $("#tdDefaultSyncData").hide();
                 }
                 if (strDefaultValue == 'value') {
-                    $("#ctl00_HomeContentPlaceHolder_txtDefaultValue").fadeIn();
-                    $("#tdDefaultParent").fadeOut();
-                    $("#tdDefaultSyncData").fadeOut();
+                    $("#ctl00_HomeContentPlaceHolder_txtDefaultValue").show();
+                    $("#tdDefaultParent").hide();
+                    $("#tdDefaultSyncData").hide();
                 }
                 if (strDefaultValue == 'parent') {
-                    $("#ctl00_HomeContentPlaceHolder_txtDefaultValue").fadeOut();
-                    $("#tdDefaultParent").fadeIn();
-                    $("#tdDefaultSyncData").fadeIn();
+                    $("#ctl00_HomeContentPlaceHolder_txtDefaultValue").hide();
+                    $("#tdDefaultParent").show();
+                    $("#tdDefaultSyncData").show();
                 }
 
                 if (strDefaultValue == 'login') {
-                    $("#ctl00_HomeContentPlaceHolder_txtDefaultValue").fadeOut();
-                    $("#tdDefaultParent").fadeOut();
-                    $("#tdDefaultSyncData").fadeOut();
+                    $("#ctl00_HomeContentPlaceHolder_txtDefaultValue").hide();
+                    $("#tdDefaultParent").hide();
+                    $("#tdDefaultSyncData").hide();
                 }
 
                 if (strTypeV == 'date_time') {
-                    $("#ctl00_HomeContentPlaceHolder_txtDefaultValue").fadeOut();
+                    $("#ctl00_HomeContentPlaceHolder_txtDefaultValue").hide();
                     $("#ctl00_HomeContentPlaceHolder_lblDefauleValue").text('Default');
                     $('#ddlDefaultValue option[value="value"]').text('To Today');
                 }
@@ -1548,102 +1559,104 @@
 
                 if (ColumnTypeIn(strNumberTypeV, '8')) {
                     if (hfColumnID.value != -1) {
-                        $("#hlResetIDs").fadeIn();
+                        $("#hlResetIDs").show();
                     }
                     else {
-                        $("#hlResetIDs").fadeOut();
+                        $("#hlResetIDs").hide();
                     }
                 }
                 else {
-                    $("#hlResetIDs").fadeOut();
+                    $("#hlResetIDs").hide();
                 }
 
                 if (ColumnTypeIn(strNumberTypeV, '7')) {
-                    $("#trSlider").fadeIn();
+                    $("#trSlider").show();
                     if (bEvent) {
                         //default
                     }
                 }
                 else {
-                    $("#trSlider").fadeOut();
+                    $("#trSlider").hide();
                 }
 
                 if (ColumnTypeIn(strNumberTypeV, '5')) {
-                    $("#trRecordCountTable").fadeIn();
-                    $("#trRecordCountClick").fadeIn();
+                    $("#trRecordCountTable").show();
+                    $("#trRecordCountClick").show();
                 }
                 else {
-                    $("#trRecordCountTable").fadeOut();
-                    $("#trRecordCountClick").fadeOut();
+                    $("#trRecordCountTable").hide();
+                    $("#trRecordCountClick").hide();
                 }
 
                 if (ColumnTypeIn(strNumberTypeV, '2')) {
-                    $("#ctl00_HomeContentPlaceHolder_lblConstant").fadeIn();
-                    $("#ctl00_HomeContentPlaceHolder_txtConstant").fadeIn();
+                    $("#ctl00_HomeContentPlaceHolder_lblConstant").show();
+                    $("#ctl00_HomeContentPlaceHolder_txtConstant").show();
                 }
                 else {
-                    $("#ctl00_HomeContentPlaceHolder_lblConstant").fadeOut();
-                    $("#ctl00_HomeContentPlaceHolder_txtConstant").fadeOut();
+                    $("#ctl00_HomeContentPlaceHolder_lblConstant").hide();
+                    $("#ctl00_HomeContentPlaceHolder_txtConstant").hide();
                     var txtConstant = document.getElementById("ctl00_HomeContentPlaceHolder_txtConstant");
                     txtConstant.value = '';
                 }
 
                 if (ColumnTypeIn(strNumberTypeV, '1,6,4')) {
-                    $("#trMandatory").fadeIn();
+                    $("#trMandatory").show();
                 }
                 else {
-                    $("#trMandatory").fadeOut();
+                    $("#trMandatory").hide();
                     $(ddlImportance).val('');
                 }
                 if (ColumnTypeIn(strNumberTypeV, '1,6,4')) {
-                    $("#trRound").fadeIn(); chkRoundClick(false);
-                    $("#trIgnoreSymbols").fadeIn();
-                    $("#trCheckUnlikelyValue").fadeIn();
-                    $("#trFlatLine").fadeIn(); chkFlatLineClick(false);
+                    $("#trRound").show(); chkRoundClick(false);
+                    $("#trIgnoreSymbols").show();
+                    $("#trCheckUnlikelyValue").show();
+                    $("#trFlatLine").show(); chkFlatLineClick(false);
                 }
                 else {
-                    $("#trRound").fadeOut(); chkRound.checked = false; chkRoundClick(false);
-                    $("#trIgnoreSymbols").fadeOut(); chkIgnoreSymbols.checked = false;
-                    $("#trCheckUnlikelyValue").fadeOut(); chkCheckUnlikelyValue.checked = false;
-                    $("#trFlatLine").fadeOut(); chkFlatLine.checked = false; chkFlatLineClick(false);
+                    $("#trRound").hide(); chkRound.checked = false; chkRoundClick(false);
+                    $("#trIgnoreSymbols").hide(); chkIgnoreSymbols.checked = false;
+                    $("#trCheckUnlikelyValue").hide(); chkCheckUnlikelyValue.checked = false;
+                    $("#trFlatLine").hide(); chkFlatLine.checked = false; chkFlatLineClick(false);
                 }
                 if (ColumnTypeIn(strNumberTypeV, '1,6,7')) {
-                    $("#trImportOption").fadeIn();
-                    $("#trDefaultValue").fadeIn();
+                    //$("#trImportOption").show();
+                    $("#trDefaultValue").show();
 
                 }
                 else {
-                    $("#trImportOption").fadeOut();
-                    chkImport.checked = false;
-                    $("#trDefaultValue").fadeOut();
+                    //$("#trImportOption").hide();
+                    //chkImport.checked = false;
+                    $("#trDefaultValue").hide();
                 }
 
 
                 if (ColumnTypeIn(strNumberTypeV, '1,4,5,6,7')) {
-                    $("#divchkCompareOperator").fadeIn();
+                    $("#divchkCompareOperator").show();
                 }
                 else {
                     var chkCompareOperator = document.getElementById("chkCompareOperator");
-                    $("#divchkCompareOperator").fadeIn(); chkCompareOperator.checked = false;
+                    $("#divchkCompareOperator").show(); chkCompareOperator.checked = false;
                 }
                 if (ColumnTypeIn(strNumberTypeV, '4')) {
-                    $("#trColumnToAvg").fadeIn();
-                    $("#trAvgNumValues").fadeIn();
+                    $("#trColumnToAvg").show();
+                    $("#trAvgNumValues").show();
                 }
                 else {
-                    $("#trColumnToAvg").fadeOut();
-                    $("#trAvgNumValues").fadeOut();
+                    $("#trColumnToAvg").hide();
+                    $("#trAvgNumValues").hide();
                 }
                 if (ColumnTypeIn(strNumberTypeV, '6')) {
-                    $("#ctl00_HomeContentPlaceHolder_lblSymbol").fadeIn();
-                    $("#ctl00_HomeContentPlaceHolder_txtSymbol").fadeIn();
+                    $("#ctl00_HomeContentPlaceHolder_lblSymbol").show();
+                    $("#ctl00_HomeContentPlaceHolder_txtSymbol").show();
                 }
                 else {
-                    $("#ctl00_HomeContentPlaceHolder_lblSymbol").fadeOut();
-                    $("#ctl00_HomeContentPlaceHolder_txtSymbol").fadeOut();
+                    $("#ctl00_HomeContentPlaceHolder_lblSymbol").hide();
+                    $("#ctl00_HomeContentPlaceHolder_txtSymbol").hide();
                 }
                 chkCompareOperatorClick();
-                chkImportClick();
+                //chkImportClick();
+
+
 
                 if (bEvent) { $("#ddlDefaultValue").val($("#ddlDefaultValue option:first").val()); }
                 ddlDefaultValueChange(false);
@@ -1658,16 +1671,16 @@
                 var chk = document.getElementById("ctl00_HomeContentPlaceHolder_chkRound");
                 var txt = document.getElementById("ctl00_HomeContentPlaceHolder_txtRoundNumber");
                 if (chk.checked == true) {
-                    $("#ctl00_HomeContentPlaceHolder_txtRoundNumber").fadeIn();
+                    $("#ctl00_HomeContentPlaceHolder_txtRoundNumber").show();
 
                     if (txt.value == '') { txt.value = '2'; }
 
 
                 }
                 else {
-                    $("#ctl00_HomeContentPlaceHolder_txtRoundNumber").fadeOut();
+                    $("#ctl00_HomeContentPlaceHolder_txtRoundNumber").hide();
                     txt.value = '';
-                    //$("#ctl00_HomeContentPlaceHolder_lblRoundNumber").fadeOut();
+                    //$("#ctl00_HomeContentPlaceHolder_lblRoundNumber").hide();
 
                 }
             }
@@ -1676,53 +1689,53 @@
                 chkRoundClick(true);
             });
 
-            $("#ctl00_HomeContentPlaceHolder_optSingle").click(function () {
-                var optSingle = document.getElementById("ctl00_HomeContentPlaceHolder_optSingle");
-                if (optSingle.checked == true) {
-                    $("#trTimeSection").fadeOut();
-                    if (hfIsImportPositional.value == "0") {
-                        $("#ctl00_HomeContentPlaceHolder_lblImport").text("Label");
-                        txtNameOn.value = "Date Time Recorded";
-                    }
-                    else {
-                        $("#ctl00_HomeContentPlaceHolder_lblImport").text("Position");
+            //$("#ctl00_HomeContentPlaceHolder_optSingle").click(function () {
+            //    var optSingle = document.getElementById("ctl00_HomeContentPlaceHolder_optSingle");
+            //    if (optSingle.checked == true) {
+            //        $("#trTimeSection").hide();
+            //        if (hfIsImportPositional.value == "0") {
+            //            $("#ctl00_HomeContentPlaceHolder_lblImport").text("Label");
+            //            txtNameOn.value = "Date Time Recorded";
+            //        }
+            //        else {
+            //            $("#ctl00_HomeContentPlaceHolder_lblImport").text("Position");
 
-                    }
-                }
+            //        }
+            //    }
 
-            });
+            //});
 
-            $("#ctl00_HomeContentPlaceHolder_optDouble").click(function () {
-                var optDouble = document.getElementById("ctl00_HomeContentPlaceHolder_optDouble");
-                if (optDouble.checked == true) {
-                    $("#trTimeSection").fadeIn();
-                    if (hfIsImportPositional.value == "0") {
-                        $("#ctl00_HomeContentPlaceHolder_lblImport").text("Date Label");
+            //$("#ctl00_HomeContentPlaceHolder_optDouble").click(function () {
+            //    var optDouble = document.getElementById("ctl00_HomeContentPlaceHolder_optDouble");
+            //    if (optDouble.checked == true) {
+            //        $("#trTimeSection").show();
+            //        if (hfIsImportPositional.value == "0") {
+            //            $("#ctl00_HomeContentPlaceHolder_lblImport").text("Date Label");
 
-                        txtNameOnImport.value = "Date Recorded";
-                        document.getElementById("ctl00_HomeContentPlaceHolder_txtNameOnImportTime").value = "Time Recorded";
+            //            txtNameOnImport.value = "Date Recorded";
+            //            document.getElementById("ctl00_HomeContentPlaceHolder_txtNameOnImportTime").value = "Time Recorded";
 
-                    }
-                    else {
-                        $("#ctl00_HomeContentPlaceHolder_lblImport").text("Date Position");
+            //        }
+            //        else {
+            //            $("#ctl00_HomeContentPlaceHolder_lblImport").text("Date Position");
 
 
-                    }
-                }
-            });
+            //        }
+            //    }
+            //});
 
             function chkFlatLineClick(bEvent) {
                 var chk = document.getElementById("chkFlatLine");
                 var txt = document.getElementById("txtFlatLine");
                 if (chk.checked == true) {
-                    $("#lblFlatlineNumber").fadeIn();
-                    $("#txtFlatLine").fadeIn();
+                    $("#lblFlatlineNumber").show();
+                    $("#txtFlatLine").show();
                     if (bEvent)
                         txt.value = '';
                 }
                 else {
-                    $("#lblFlatlineNumber").fadeOut();
-                    $("#txtFlatLine").fadeOut();
+                    $("#lblFlatlineNumber").hide();
+                    $("#txtFlatLine").hide();
                     txt.value = '';
                 }
             }
@@ -1734,10 +1747,10 @@
             function chkShowMapClick(bEvent) {
                 var chk = document.getElementById("chkShowMap");
                 if (chk.checked == true) {
-                    $("#tblMapDimension").fadeIn();
+                    $("#tblMapDimension").show();
                 }
                 else {
-                    $("#tblMapDimension").fadeOut();
+                    $("#tblMapDimension").hide();
                 }
             }
 
@@ -1749,28 +1762,28 @@
 
             if (hfShowExceedance != null) {
                 if (hfShowExceedance.value == 'no') {
-                    $("#trExceedance1").fadeOut();
-                    $("#trExceedance2").fadeOut();
+                    $("#trExceedance1").hide();
+                    $("#trExceedance2").hide();
                 }
             }
 
             var hfGOD = document.getElementById("hfGOD");
             if (hfGOD != null && hfColumnID.value != -1) {
                 if (hfGOD.value == 'yes') {
-                    $("#trResetValidation").fadeIn();
+                    $("#trResetValidation").show();
                 }
             }
 
             var hfHideFormula = document.getElementById("hfHideFormula");
             if (hfHideFormula != null) {
                 if (hfHideFormula.value == 'yes') {
-                    $(".formula").fadeOut();
+                    $(".formula").hide();
                 }
             }
             var hfHideConditions = document.getElementById("hfHideConditions");
             if (hfHideConditions != null) {
                 if (hfHideConditions.value == 'yes') {
-                    $(".conditions").fadeOut();
+                    $(".conditions").hide();
                 }
             }
             //if (hfShowWarningMinMax.value == 'no') {
@@ -1812,7 +1825,7 @@
                             </td>
                             <td align="left">
                                 <div style="width: 40px; height: 40px;">
-                                    <asp:UpdateProgress class="ajax-indicator" ID="UpdateProgress1" runat="server">
+                                    <%--<asp:UpdateProgress class="ajax-indicator" ID="UpdateProgress1" runat="server">
                                         <ProgressTemplate>
                                             <table style="width: 100%; text-align: center">
                                                 <tr>
@@ -1822,7 +1835,7 @@
                                                 </tr>
                                             </table>
                                         </ProgressTemplate>
-                                    </asp:UpdateProgress>
+                                    </asp:UpdateProgress>--%>
                                 </div>
                             </td>
                             <td style="padding-left: 100px;">
@@ -1907,8 +1920,8 @@
                     <div runat="server" id="divDetail">
                         <asp:HiddenField runat="server" ID="hfColumnID" Value="-1" />
                         <asp:HiddenField runat="server" ID="hfTableID" />
-                        <asp:HiddenField runat="server" ID="hfIsImportPositional" />
-                        <asp:HiddenField runat="server" ID="hfMaxPosition" />
+                        <%--<asp:HiddenField runat="server" ID="hfIsImportPositional" />--%>
+                        <%--<asp:HiddenField runat="server" ID="hfMaxPosition" />--%>
                         <asp:HiddenField runat="server" ID="hfShowWarningMinMax" Value="yes" ClientIDMode="Static" />
                         <asp:HiddenField runat="server" ID="hfShowExceedanceMinMax" Value="yes" ClientIDMode="Static" />
                         <asp:HiddenField runat="server" ID="hfShowValidMinMax" Value="yes" ClientIDMode="Static" />
@@ -2006,7 +2019,7 @@
                                                     <table>
                                                         <tr id="trSummaryPage1">
                                                             <td align="right">
-                                                                <asp:CheckBox ID="chkSummaryPage" runat="server" ToolTip="Available for selection on views" />
+                                                                <asp:CheckBox ID="chkSummaryPage" runat="server" ToolTip="Available for selection on views" Checked="true" />
                                                             </td>
                                                             <td align="left" colspan="2">
 
@@ -2122,7 +2135,7 @@
                                                             </td>
                                                             <td colspan="2"></td>
                                                         </tr>
-                                                        <tr id="trImportOption">
+                                                        <%--<tr id="trImportOption">
                                                             <td align="right" valign="middle">
                                                                 <asp:CheckBox ID="chkImport" runat="server" />
 
@@ -2185,8 +2198,8 @@
                                                                     </tr>
                                                                 </table>
                                                             </td>
-                                                        </tr>
-                                                        <tr id="trExportOption" clientidmode="Static">
+                                                        </tr>--%>
+                                                        <%--<tr id="trExportOption" clientidmode="Static">
                                                             <td align="right">
                                                                 <asp:CheckBox ID="chkExport" runat="server" />
                                                             </td>
@@ -2201,7 +2214,7 @@
                                                                 <asp:TextBox runat="server" ID="txtNameOnExport" CssClass="NormalTextBox" Width="250px"></asp:TextBox>
                                                             </td>
                                                             <td colspan="2"></td>
-                                                        </tr>
+                                                        </tr>--%>
                                                         <tr>
                                                             <td colspan="7">
                                                                 <!-- spacer to make it consistent -->
@@ -2223,6 +2236,27 @@
                                                             </td>
                                                             <td colspan="2"></td>
                                                         </tr>
+
+                                                        <tr>
+                                                            <td colspan="7">
+                                                                <table id="trDateFormat" style="display: none;" runat="server" clientidmode="Static">
+                                                                                <tr>
+                                                                                    <td align="right" style="width: 94px;">
+                                                                                        <asp:Label runat="server" ID="lblDateFormat" Text="Date Format" Font-Bold="true"></asp:Label>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <asp:DropDownList runat="server" ID="ddlDateFormat" CssClass="NormalTextBox">
+                                                                                            <asp:ListItem Text="DD/MM/YYYY" Value="DD/MM/YYYY" Selected="True"></asp:ListItem>
+                                                                                            <asp:ListItem Text="MM/DD/YYYY" Value="MM/DD/YYYY"></asp:ListItem>
+                                                                                            <asp:ListItem Text="YYYY-MM-DD" Value="YYYY-MM-DD"></asp:ListItem>
+                                                                                        </asp:DropDownList>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </table>
+                                                            </td>
+
+                                                        </tr>
+
                                                     </table>
                                                 </div>
                                                 <br />
@@ -2876,16 +2910,44 @@
                                                         </tr>
                                                         <tr id="trButton4" style="display: none;">
                                                             <td align="right" valign="top">
-                                                                <strong>Open Link</strong>
+                                                                <strong>On Click</strong>
                                                             </td>
                                                             <td valign="top" colspan="5">
                                                                 <table style="border-collapse: collapse; border-spacing: 0;">
                                                                     <tr>
-                                                                        <td valign="top">
-                                                                            <asp:CheckBox runat="server" ID="chkButtonOpenLink" ClientIDMode="Static" />
+                                                                        <td colspan="2">
+                                                                            <asp:DropDownList runat="server" ID="ddlButtonOnClick" CssClass="NormalTextBox">
+                                                                                <asp:ListItem Text="--Please Select--" Value="" Selected="True"></asp:ListItem>
+                                                                                <asp:ListItem Text="Stay on current page" Value="StayCurrent"></asp:ListItem>
+                                                                                <asp:ListItem Text="Go back to previous page" Value="Goback"></asp:ListItem>
+                                                                                <asp:ListItem Text="Add a child record" Value="AddChild"></asp:ListItem>
+                                                                                <asp:ListItem Text="Open link in current tab" Value="CurrentTab"></asp:ListItem>
+                                                                                <asp:ListItem Text="Open link in new tab" Value="NewTab"></asp:ListItem>
+                                                                            </asp:DropDownList>
                                                                         </td>
-                                                                        <td>
-                                                                            <asp:TextBox runat="server" ClientIDMode="Static" ID="txtButtonOpenLink" CssClass="NormalTextBox" Width="400px" ToolTip="Link full URL."></asp:TextBox>
+                                                                    </tr>
+                                                                    <tr  id="trButton4_Child" style="display: none;">
+                                                                        <td align="right">
+                                                                            <strong>Child Table</strong>
+                                                                        </td>
+                                                                        <td  style="padding-left:2px;">
+                                                                            <asp:DropDownList runat="server" ID="ddlButtonChild" DataTextField="TableName" DataValueField="TableID" CssClass="NormalTextBox"></asp:DropDownList>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr  id="trButton4_Link" style="display: none;">
+                                                                        <td align="right">
+                                                                            <strong>Link</strong>
+                                                                        </td>
+                                                                        <td  style="padding-left:2px;">
+                                                                            <asp:TextBox runat="server" ID="txtButtonLink" CssClass="NormalTextBox" Width="300"></asp:TextBox>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr  id="trButton4_Param" style="display: none;">
+                                                                        <td align="right">
+                                                                            <strong>Additional Parameters</strong>
+                                                                        </td>
+                                                                        <td style="padding-left:2px;">
+                                                                            <asp:TextBox runat="server" ID="txtButtonParamas" CssClass="NormalTextBox" Width="300"></asp:TextBox>
                                                                         </td>
                                                                     </tr>
                                                                 </table>
@@ -3021,7 +3083,7 @@
                                                                     <asp:ListItem Value="email" Text="Email address"></asp:ListItem>
                                                                     <asp:ListItem Value="link" Text="Website/link"></asp:ListItem>
                                                                     <asp:ListItem Value="isbn" Text="ISBN"></asp:ListItem>
-                                                                    <asp:ListItem Value="readonly" Text="Read Only (set elsewhere)"></asp:ListItem>
+                                                                    <%--<asp:ListItem Value="readonly" Text="Read Only (set elsewhere)"></asp:ListItem>--%>
                                                                     <asp:ListItem Value="own" Text="Regular Expression"></asp:ListItem>
                                                                     <asp:ListItem Value="mobile" Text="Mobile Number"></asp:ListItem>
                                                                 </asp:DropDownList>
@@ -3401,6 +3463,26 @@
                                                                 <%--<asp:Label runat="server" ID="lblShowTotal" Text="Show Field Total" Font-Bold="true"  Style="display: none;"></asp:Label>--%>
                                                             </td>
                                                         </tr>
+
+                                                         <tr >
+                                                             <td align="right">
+                                                                 
+                                                            </td>
+                                                            <td align="left">
+                                                                
+                                                                <asp:CheckBox runat="server" ID="chkReadOnly" Font-Bold="true" TextAlign="Right" Text="Read Only" />
+                                                            </td>
+
+                                                            <td align="left"></td>
+                                                            <td style="width: 10px;"></td>
+                                                            <td align="right">
+                                                               
+                                                            </td>
+                                                            <td>
+                                                               
+                                                            </td>
+                                                        </tr>
+
                                                         <tr clientidmode="Static" id="trTextDimension">
                                                             <td></td>
                                                             <td colspan="5">
@@ -3723,7 +3805,25 @@
                                                                         </td>
                                                                         <td align="left">
                                                                             <asp:HyperLink runat="server" NavigateUrl="~/Pages/Record/ColumnColourList.aspx" CssClass="colourlink"
-                                                                                ID="hlColumnColour" ClientIDMode="Static">Set colour by value</asp:HyperLink>
+                                                                                ID="hlColumnColour" ClientIDMode="Static">Set colour by value...</asp:HyperLink>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr id="trControlValueChangeService">
+                                                            <td></td>
+                                                            <td colspan="4">
+                                                                <table cellpadding="0" cellspacing="0">
+                                                                    <tr>
+                                                                        <td align="right">
+                                                                            <asp:CheckBox runat="server" ID="chkControlValueChangeService" Text="" TextAlign="Right" Font-Bold="true"
+                                                                                ClientIDMode="Static" />
+                                                                        </td>
+                                                                        <td align="left">
+                                                                            <asp:HyperLink runat="server" NavigateUrl="~/Pages/Help/ColumnService.aspx" CssClass="columnvaluechange"
+                                                                                ID="hlControlValueChangeService" ClientIDMode="Static">Value Change Service...</asp:HyperLink>
                                                                         </td>
                                                                     </tr>
                                                                 </table>

@@ -344,6 +344,10 @@ public partial class Pages_Export_ExportTemplateItem : SecurePage
         hlAddExportTemplateItem2.NavigateUrl = hlAddExportTemplateItem.NavigateUrl;
         DataTable dtExportTemplateItems = Common.DataTableFromText("SELECT * FROM ExportTemplateItem WHERE ExportTemplateID=" + iExportTemplateID.ToString() + " ORDER BY ColumnIndex");
 
+
+        if (_ExportTemplateItemPager != null)
+            ViewState[grdExportTemplateItem.ID + "PageIndex"] = _ExportTemplateItemPager.PageIndex;
+
         grdExportTemplateItem.DataSource = dtExportTemplateItems;
         iTN = dtExportTemplateItems.Rows.Count;
 
@@ -363,6 +367,11 @@ public partial class Pages_Export_ExportTemplateItem : SecurePage
             _ExportTemplateItemPager.AddURL = GetAddExportTemplateItemURL(iExportTemplateID);
             _ExportTemplateItemPager.HyperAdd_CSS = "popuplinkVT";
             _ExportTemplateItemPager.AddToolTip = "Add/Remove";
+            if (ViewState[grdExportTemplateItem.ID + "PageIndex"] != null)
+                _ExportTemplateItemPager.PageIndex = int.Parse(ViewState[grdExportTemplateItem.ID + "PageIndex"].ToString());
+
+            _ExportTemplateItemPager.PageSize = grdExportTemplateItem.PageSize;
+            _ExportTemplateItemPager.TotalRows = iTN;
         }
 
         if (iTN == 0)

@@ -233,12 +233,12 @@
                                                            
                                                             <td>
                                                                 <div runat="server" id="divCancle">
-                                                                    <asp:HyperLink runat="server" ID="hlBack" CssClass="btn"> <strong>&lt;&nbsp;Back</strong> </asp:HyperLink>
+                                                                    <asp:HyperLink runat="server" ID="hlBack" CssClass="btn show-ajax-indicator"> <strong>&lt;&nbsp;Back</strong> </asp:HyperLink>
                                                                 </div>
                                                             </td>
                                                              <td>
                                                                 <div runat="server" id="divSave" clientidmode="Static">
-                                                                    <asp:LinkButton runat="server" ID="lnkSave" CssClass="btn" OnClick="lnkSave_Click"> <strong>Next&nbsp;&gt;</strong> </asp:LinkButton>
+                                                                    <asp:LinkButton runat="server" ID="lnkSave" CssClass="btn show-ajax-indicator" OnClick="lnkSave_Click"> <strong>Next&nbsp;&gt;</strong> </asp:LinkButton>
                                                                 </div>
                                                             </td>
                                                         </tr>

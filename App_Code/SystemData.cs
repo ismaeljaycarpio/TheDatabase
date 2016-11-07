@@ -2059,9 +2059,88 @@ public class SystemData
 
     #endregion
 
+    #region UserSearch
+    public static int UserSearch_GetNewSCid(UserSearch p_UserSearch)
+    {
+        using (SqlConnection connection = new SqlConnection(DBGurus.strGlobalConnectionString))
+        {
+            using (SqlCommand command = new SqlCommand("UserSearch_GetNewSCid", connection))
+            {
+
+                command.CommandType = CommandType.StoredProcedure;
+                SqlParameter pRV = new SqlParameter("@nNewID", SqlDbType.Int);
+                pRV.Direction = ParameterDirection.Output;
+
+                command.Parameters.Add(pRV);
+
+                command.Parameters.Add(new SqlParameter("@nUserID", p_UserSearch.UserID));
+                command.Parameters.Add(new SqlParameter("@nViewID", p_UserSearch.ViewID));
+
+                connection.Open();
+                try
+                {
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                    connection.Dispose();
+                    return int.Parse(pRV.Value.ToString());
+                }
+                catch
+                {
+                    connection.Close();
+                    connection.Dispose();
+
+                }
+                return -1;
+            }
+        }
+    }
+
+
+    public static string Table_SPSearchGo(string sSPSearchGo,int? iUserID,int?iViewID,string strRawURL)
+    {
+        //Call the SPSearchGo - by Anton
+        return "ok or error";
+    }
+    public static string Table_SPSearchReset(string sSPSearchReset, int? iUserID, int? iViewID, string strRawURL)
+    {
+        //Call the SPSearchReset - by Anton
+        return "ok or error";
+    }
+    public static int UserSearch_InsertUpdate(UserSearch p_UserSearch)
+    {
+        using (SqlConnection connection = new SqlConnection(DBGurus.strGlobalConnectionString))
+        {
+            using (SqlCommand command = new SqlCommand("UserSearch_InsertUpdate", connection))
+            {
+
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add(new SqlParameter("@nUserID", p_UserSearch.UserID));
+                command.Parameters.Add(new SqlParameter("@nViewID", p_UserSearch.ViewID));
+                command.Parameters.Add(new SqlParameter("@sSearchXML", p_UserSearch.SearchXML));
+
+                int i = 1;
+                connection.Open();
+                try
+                {
+                    command.ExecuteNonQuery();
+                }
+                catch
+                {
+                    i = -1;
+                }
+
+                connection.Close();
+                connection.Dispose();
+
+                return i;
+            }
+        }
+    }
 
 
 
+    #endregion
     #region SearchCriteria
 
     public static int SearchCriteria_Insert(SearchCriteria p_SearchCriteria)

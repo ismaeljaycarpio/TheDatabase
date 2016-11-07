@@ -3,6 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
+     
     <title>TheDatabase.net - Your database on the web</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <%--<meta http-equiv="X-UA-Compatible" content="IE=10,chrome=1" />--%>
@@ -11,8 +12,8 @@
     <meta name="robots" content="index, follow" />
     <meta name="robots" content="all" />
     <meta name="revisit-after" content="7 days" />
-    <meta name="google" content="notranslate">
-    <meta http-equiv="Content-Language" content="en">
+    <meta name="google" content="notranslate" />
+    <meta http-equiv="Content-Language" content="en" />
 
     <link rel="shortcut icon" href="../Images/favicon.ico" />
     <link href="~/App_Themes/Default/StyleSheet.css?2" rel="stylesheet" type="text/css" />
@@ -41,66 +42,97 @@
     
 </head>
 <body>
-     <div id="loadingredirect" title="Click to hide!">    
+    <%-- <div id="loadingredirect" title="Click to hide!">    
         <img alt="loading..." src="../../Images/ajax.gif" />
-    </div>
-
-       <script type="text/javascript" src="<%=ResolveUrl("~/script/jquery.js")%>"></script>
+    </div>--%>
+ 
    
-        <script type="text/javascript" src="<%=ResolveUrl("~/JS/Common.js")%>"></script>
-        <script type="text/javascript" src="<%=ResolveUrl("~/JS/modernizr.custom.80028.js")%>"></script>
-        <link href="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.css")%>" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="<%=ResolveUrl("~/Script/jquery.js")%>"></script>
+    
+
+  <%--  <script type="text/javascript" src="<%=ResolveUrl("~/Script/jquery-migrate-1.4.1.min.js")%>"></script>--%>
+    
+    
+    
+    <script type="text/javascript" src="<%=ResolveUrl("~/JS/Common.js")%>"></script>
+    <script type="text/javascript" src="<%=ResolveUrl("~/JS/modernizr.custom.80028.js")%>"></script>
+
+    <link type="text/css" rel="stylesheet"  href="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.css")%>" />
         <script type="text/javascript" src="<%=ResolveUrl("~/fancybox/jquery.fancybox-1.3.4.pack.js")%>"></script>
+    <!-- Add fancyBox main JS and CSS files jquery-1.10.1.min.js-->
+   <%-- <script type="text/javascript" src="<%=ResolveUrl("~/fancybox2/source/jquery.fancybox.js?v=2.1.5")%>"></script>
+    <link rel="stylesheet" type="text/css" href="<%=ResolveUrl("~/fancybox2/source/jquery.fancybox.css?v=2.1.5")%>" media="screen" />--%>
 
-   
-        <script type="text/javascript" src="<%=ResolveUrl("~/swfobject.js")%>"></script>
+    <script type="text/javascript" src="<%=ResolveUrl("~/swfobject.js")%>"></script>
           <script type="text/javascript">
-              $(window).load(function () {
-                  $("#loadingredirect").fadeOut();
-              })
+              //$(window).load(function () {
+              //    $(".ajax-indicator-full").fadeOut();
+              //})
 
               $(document).ready(function () {
                   
                   function ShowLoadingContent() {
-                      $("#loadingredirect").fadeIn();
+                      $(".ajax-indicator-full").fadeIn();
                   }
 
-                  $("#loadingredirect")               
+                  $(".ajax-indicator-full")               
                   .click(
                     function () {
-                        $("#loadingredirect").fadeOut();
+                        $(".ajax-indicator-full").fadeOut();
                         //alert('test');
                     }
                   );
+
+                  $(".popuplinkVT")
+                .click(
+                  function () {
+                      $(".ajax-indicator-full").fadeOut();
+                      //alert('test');
+                  }
+                );
 
                   $(".dynamicmenuitem a")
                  .click(
                    function () {
                        if ($(this).attr("href").indexOf('lkLogout') > 0) {
-                           $("#loadingredirect").fadeOut();
+                           $(".ajax-indicator-full").fadeOut();
                        }
                        else if ($(this).attr("target")!=null && $(this).attr("target").indexOf('blank') > 0) {
-                           $("#loadingredirect").fadeOut();
+                           $(".ajax-indicator-full").fadeOut();
                        }
                        else
                        {
-                           $("#loadingredirect").fadeIn();
+                           $(".ajax-indicator-full").fadeIn();
                        }
                        
                        
                    }
                  );
 
+
+               // $(".show-ajax-indicator")
+               //.click(
+               //  function () {
+               //      $(".ajax-indicator-full").fadeIn();
+               //  }
+               //);
+                  $(".btn")
+                  .click(
+                    function () {
+                        $(".ajax-indicator-full").fadeIn();
+                    }
+                  );
+
                   $(".staticmenuitem a")
                     .click(
                       function () {
                          
                           if ($(this).attr("target")!=null && $(this).attr("target").indexOf('blank') > 0) {
-                              $("#loadingredirect").fadeOut();
+                              $(".ajax-indicator-full").fadeOut();
                           }
                           else
                           {
-                              $("#loadingredirect").fadeIn();
+                              $(".ajax-indicator-full").fadeIn();
                           }
                       }
                     );
@@ -109,10 +141,10 @@
                    .click(
                      function () {
                          if ($(this).attr("target")!=null && $(this).attr("target").indexOf('blank') > 0) {
-                             $("#loadingredirect").fadeOut();
+                             $(".ajax-indicator-full").fadeOut();
                          }
                          else {
-                             $("#loadingredirect").fadeIn();
+                             $(".ajax-indicator-full").fadeIn();
                          }
                      }
                    );
@@ -122,20 +154,20 @@
                     function () {
                         if (this.id.indexOf('EditHyperLink') > 0 || this.id.indexOf('viewHyperLink') > 0)
                         {
-                            $("#loadingredirect").fadeIn();
+                            $(".ajax-indicator-full").fadeIn();
                         }
                       
                     }
                   );
 
-                  
+                  //
                   $(".pagertable a")
                  .click(
                    function () {
-                       if (this.id.indexOf('HyperAdd') > 0 ) {
-                           $("#loadingredirect").fadeIn();
+                       if (this.id.indexOf('HyperAdd') > 0 && $(this).attr('class') != 'popuplinkVT') {
+                           $(".ajax-indicator-full").fadeIn();
                        }
-
+                       
                    }
                  );
 
@@ -144,7 +176,7 @@
                   function () {
                       if (this.id.indexOf('hlShowGraph') > 0 || this.id.indexOf('hlUpload') > 0
                           || this.id.indexOf('hlConfig') > 0) {
-                          $("#loadingredirect").fadeIn();
+                          $(".ajax-indicator-full").fadeIn();
                       }
 
                   }
@@ -154,7 +186,7 @@
                  .click(
                    function () {
                        if (this.id.indexOf('hlBack') > 0 ) {
-                           $("#loadingredirect").fadeIn();
+                           $(".ajax-indicator-full").fadeIn();
                        }
 
                    }
@@ -163,14 +195,14 @@
                   .click(
                     function () {
                         if (Page_IsValid) {
-                            $("#loadingredirect").fadeIn();
+                            $(".ajax-indicator-full").fadeIn();
                         }
                     }
                   );
-                  // $("#loadingredirect") 
+                  // $(".ajax-indicator-full") 
                  //.hover(
                  //  function () {
-                 //      $("#loadingredirect").fadeOut();
+                 //      $(".ajax-indicator-full").fadeOut();
                  //  }
                  //);
 
@@ -185,59 +217,29 @@
 
               });
               $(document).ready(function () {
-                  $("#loadingredirect").fadeOut();
+                  $(".ajax-indicator-full").fadeOut();
               });
         </script>
 
-     <%-- <script type="text/javascript" src="<%=ResolveUrl("~/script/jquery-1.11.2.min.js")%>"></script>
-     <script type="text/javascript" src="<%=ResolveUrl("~/script/jquery-ui-1.11.2/jquery-ui.min.js")%>"></script>--%>
-     <%-- <link href="<%=ResolveUrl("~/fancybox/V2/jquery.fancybox.css?v=2.1.5")%>" rel="stylesheet" media="screen"  type="text/css" /> 
-    <script type="text/javascript" src="<%=ResolveUrl("~/fancybox/V2/jquery.fancybox.pack.js?v=2.1.5")%>"></script>--%>
-    <%--<script language="javascript" type="text/javascript">
-        $(document).ready(function () {
-
-            function IsFlashSupported() {
-                try
-                {
-                    var hfFlashSupport = document.getElementById('<%= hfFlashSupport.ClientID %>');
-                    if (swfobject.hasFlashPlayerVersion('1')) {
-                        hfFlashSupport.value = 'yes';
-                    }
-                    else {
-                        hfFlashSupport.value = 'no';
-                    }
-                    //alert(hfFlashSupport.value);
-
-                    $.ajax({
-                        url: '<%=ResolveUrl("~/Pages/DocGen/REST/SectionREST.ashx")%>?type=FlashSupport&hfFlashSupport=' + hfFlashSupport.value,
-                        cache: false,
-                        success: function (content) {
-                           //
-                        },
-                        error: function (a, b, c) {
-                           //
-                        }
-                    });
-                }
-                catch(err)
-                {
-                    //
-                }             
-
-
-            }
-            //IsFlashSupported();
-            //setTimeout(function () { IsFlashSupported(); }, 1000);
-        });
-    </script>--%>
-     
-   
-    <form id="form1" runat="server" enctype="multipart/form-data">
+        <form id="form1" runat="server" enctype="multipart/form-data">
 
         <asp:ScriptManager ID="ScriptManager1" runat="server" EnablePageMethods="true" AsyncPostBackTimeout="36000">
         </asp:ScriptManager>
 
-
+<asp:UpdateProgress class="ajax-indicator-full" ID="upMaster" runat="server">
+    <ProgressTemplate>
+        <table style="width: 100%; height: 100%; text-align: center;">
+            <tr valign="middle">
+                <td>
+                    <p style="font-size:12px;">
+                        Please wait...
+                    </p>
+                    <asp:Image runat="server" AlternateText="Processing..." ImageUrl="~/Images/ajax.gif" />
+                </td>
+            </tr>
+        </table>
+    </ProgressTemplate>
+</asp:UpdateProgress>
 
         <input id="Hidden1" type="hidden" />
         <asp:HiddenField runat="server" ID="hfFlashSupport" Value="no" />
@@ -327,20 +329,7 @@
 
                                                                                         </ContentTemplate>
                                                                                     </asp:UpdatePanel>
-                                                                                    <%--<asp:UpdateProgress class="ajax-indicator-full" ID="UpdateProgress3" runat="server" AssociatedUpdatePanelID="upMasterUpdatePanel1">
-                                                                                        <ProgressTemplate>
-                                                                                            <table style="width: 100%; height: 100%; text-align: center;">
-                                                                                                <tr valign="middle">
-                                                                                                    <td>
-                                                                                                        <p style="font-weight: bold;">
-                                                                                                            Please wait...
-                                                                                                        </p>
-                                                                                                        <asp:Image ID="Image5" runat="server" AlternateText="Processing..." ImageUrl="~/Images/ajax.gif" />
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            </table>
-                                                                                        </ProgressTemplate>
-                                                                                    </asp:UpdateProgress>--%>
+                                                                                  
                                                                                 </td>
                                                                                 <td style="width: 40px;" runat="server" id="tdDocumnetsMenu1">&nbsp;&nbsp;
                                                                                 </td>

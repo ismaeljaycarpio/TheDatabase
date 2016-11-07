@@ -851,7 +851,7 @@ public class ViewManager
                 if (p_ViewItem.FilterField != null)
                     command.Parameters.Add(new SqlParameter("@bFilterField", p_ViewItem.FilterField));
 
-                if (p_ViewItem.Alignment != "")
+                if (!string.IsNullOrEmpty(p_ViewItem.Alignment))
                     command.Parameters.Add(new SqlParameter("@sAlignment", p_ViewItem.Alignment));
 
 
@@ -859,7 +859,7 @@ public class ViewManager
                     command.Parameters.Add(new SqlParameter("@nWidth", p_ViewItem.Width));
                 if (p_ViewItem.ShowTotal != null)
                     command.Parameters.Add(new SqlParameter("@bShowTotal", p_ViewItem.ShowTotal));
-                if (p_ViewItem.SummaryCellBackColor != "")
+                if (!string.IsNullOrEmpty(p_ViewItem.SummaryCellBackColor ))
                     command.Parameters.Add(new SqlParameter("@sSummaryCellBackColor", p_ViewItem.SummaryCellBackColor));
 
 
@@ -915,7 +915,7 @@ public class ViewManager
                 if (p_ViewItem.FilterField != null)
                     command.Parameters.Add(new SqlParameter("@bFilterField", p_ViewItem.FilterField));
 
-                if (p_ViewItem.Alignment != "")
+                if ( !string.IsNullOrEmpty( p_ViewItem.Alignment ))
                     command.Parameters.Add(new SqlParameter("@sAlignment", p_ViewItem.Alignment));
 
 
@@ -923,7 +923,7 @@ public class ViewManager
                     command.Parameters.Add(new SqlParameter("@nWidth", p_ViewItem.Width));
                 if (p_ViewItem.ShowTotal != null)
                     command.Parameters.Add(new SqlParameter("@bShowTotal", p_ViewItem.ShowTotal));
-                if (p_ViewItem.SummaryCellBackColor != "")
+                if (!string.IsNullOrEmpty(p_ViewItem.SummaryCellBackColor))
                     command.Parameters.Add(new SqlParameter("@sSummaryCellBackColor", p_ViewItem.SummaryCellBackColor));
 
                 int i = 1;

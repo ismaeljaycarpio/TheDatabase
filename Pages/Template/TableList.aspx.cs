@@ -196,7 +196,7 @@ public partial class Pages_Template_TableList : SecurePage
         try
         {
             int iTN = 0;
-           
+            //ViewState[gvTheGrid.ID + "PageIndex"] = (iStartIndex / gvTheGrid.PageSize) + 1;
             gvTheGrid.DataSource = RecordManager.ets_Table_Select(null, 
                 "",
                 null,
@@ -214,6 +214,8 @@ public partial class Pages_Template_TableList : SecurePage
             if (gvr != null)
             {
                 _gvPager = (Common_Pager)gvr.FindControl("Pager");
+                //if (ViewState[gvTheGrid.ID + "PageIndex"] != null)
+                //    _gvPager.PageIndex = int.Parse(ViewState[gvTheGrid.ID + "PageIndex"].ToString());
                 gvr.Visible = false;
                 
             }

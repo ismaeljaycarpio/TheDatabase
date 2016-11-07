@@ -477,7 +477,7 @@ public partial class Pages_Record_TableProperty : SecurePage
 
                 Table newTable = new Table(null,
                     txtTable.Text,                   
-                    null, null, false, true);
+                    null, null,  true);
                 newTable.AccountID = int.Parse(Session["AccountID"].ToString());
 
 
@@ -514,8 +514,8 @@ public partial class Pages_Record_TableProperty : SecurePage
                             iDisplayOrder = -1;
 
                         Column newColumn = new Column(null, iTableID,
-                       strAutoSystemName, iDisplayOrder + 1, strDisplayName, strDisplayName, "", "", null, "",
-                        "", null, null, "", "", false, strDisplayName, null, "", null, null, false, "", "", "");
+                       strAutoSystemName, iDisplayOrder + 1, strDisplayName, strDisplayName,  null, "",
+                        "", null, null, "", "", false, strDisplayName, "", null, null, false, "", "", "");
 
                         newColumn.ColumnType = strColumnType;
 
@@ -529,8 +529,8 @@ public partial class Pages_Record_TableProperty : SecurePage
                        + Environment.NewLine + "no";
 
 
-                                newColumn.NameOnImport = strDisplayName;
-                                newColumn.NameOnExport = strDisplayName;
+                                //newColumn.Name_OnImport = strDisplayName;
+                                //newColumn.NameOnExport = strDisplayName;
 
                                 break;
                             case "staticcontent":
@@ -542,8 +542,8 @@ public partial class Pages_Record_TableProperty : SecurePage
                                 break;
                             case "date_time":
                                 newColumn.ColumnType = "date";
-                                 newColumn.NameOnImport = strDisplayName;
-                                newColumn.NameOnExport = strDisplayName;
+                                // newColumn.Name_OnImport = strDisplayName;
+                                //newColumn.NameOnExport = strDisplayName;
 
                                 break;
                             case "dropdown":
@@ -551,19 +551,19 @@ public partial class Pages_Record_TableProperty : SecurePage
                                 newColumn.DropdownValues = "Item 1" + Environment.NewLine + "Item 2"
                       + Environment.NewLine + "Item 3";
 
-                                 newColumn.NameOnImport = strDisplayName;
-                                newColumn.NameOnExport = strDisplayName;
+                                // newColumn.Name_OnImport = strDisplayName;
+                                //newColumn.NameOnExport = strDisplayName;
 
                                 break;
                             case "file":
                                 //ok
                                  
-                                newColumn.NameOnExport = strDisplayName;
+                                //newColumn.NameOnExport = strDisplayName;
                                 break;
                             case "image":
                                 //ok
                                 
-                                newColumn.NameOnExport = strDisplayName;
+                                //newColumn.NameOnExport = strDisplayName;
                                 break;
                             case "listbox":
                                 newColumn.DropdownValues = "Item 1" + Environment.NewLine + "Item 2"
@@ -576,15 +576,15 @@ public partial class Pages_Record_TableProperty : SecurePage
                                 newColumn.TextHeight = 200;
                                 newColumn.TextWidth = 400;
 
-                                 newColumn.NameOnImport = strDisplayName;
-                                newColumn.NameOnExport = strDisplayName;
+                                // newColumn.Name_OnImport = strDisplayName;
+                                //newColumn.NameOnExport = strDisplayName;
 
                                 break;
                             case "number":
                                 newColumn.NumberType = 1;
 
-                                 newColumn.NameOnImport = strDisplayName;
-                                newColumn.NameOnExport = strDisplayName;
+                                // newColumn.Name_OnImport = strDisplayName;
+                                //newColumn.NameOnExport = strDisplayName;
 
                                 break;
                             case "radiobutton":
@@ -592,14 +592,14 @@ public partial class Pages_Record_TableProperty : SecurePage
                   + Environment.NewLine + "Option 3";
                                 newColumn.DropDownType = "values";
 
-                                 newColumn.NameOnImport = strDisplayName;
-                                newColumn.NameOnExport = strDisplayName;
+                                // newColumn.Name_OnImport = strDisplayName;
+                                //newColumn.NameOnExport = strDisplayName;
 
                                 break;
                             case "text":
                                 //
-                                 newColumn.NameOnImport = strDisplayName;
-                                newColumn.NameOnExport = strDisplayName;
+                                // newColumn.Name_OnImport = strDisplayName;
+                                //newColumn.NameOnExport = strDisplayName;
 
                                 break;
 

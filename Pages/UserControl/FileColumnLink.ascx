@@ -38,7 +38,13 @@
                             </div>
                         </ItemTemplate>
                     </asp:TemplateField>
-
+                      <asp:TemplateField HeaderText="Position" >
+                        <ItemTemplate>
+                            <div style="padding-left: 10px;">
+                                <asp:Label runat="server" ID="lblPositionOnImport" CssClass="NormalTextBox" Width="50px"></asp:Label>
+                            </div>
+                        </ItemTemplate>
+                    </asp:TemplateField>
                 </Columns>
                 <HeaderStyle CssClass="gridview_header" />
                 <RowStyle CssClass="gridview_row" />
