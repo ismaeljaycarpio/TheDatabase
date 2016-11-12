@@ -1760,13 +1760,22 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                      }
                      break;
-                 //case "CheckBox":
-                 //    CheckBox chkCheckBox = (CheckBox)sender;
-
-                 //    break;
-                 //case "RadioButtonList":
-                 //    RadioButtonList radioRadioButtonList = (RadioButtonList)sender;
-                 //    break;
+                 case "CheckBox":
+                     CheckBox chkCheckBox = (CheckBox)sender;
+                     if(chkCheckBox!=null)
+                     {
+                         if (chkCheckBox.Attributes["ColumnID"].ToString() != "")
+                             theColumn = RecordManager.ets_Column_Details(int.Parse(chkCheckBox.Attributes["ColumnID"].ToString()));
+                     }
+                     break;
+                 case "RadioButtonList":
+                     RadioButtonList radioRadioButtonList = (RadioButtonList)sender;
+                     if (radioRadioButtonList != null)
+                     {
+                         if (radioRadioButtonList.Attributes["ColumnID"].ToString() != "")
+                             theColumn = RecordManager.ets_Column_Details(int.Parse(radioRadioButtonList.Attributes["ColumnID"].ToString()));
+                     }
+                     break;
                 
              }
 
@@ -5231,6 +5240,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 {
                                     _txtValue[i].TextChanged += new EventHandler(CommonChangeEvent);
                                     _txtValue[i].AutoPostBack = true;
+                                    //_txtValue[i].CausesValidation = true;
                                     _txtValue[i].Attributes.Add("ColumnID", _dtColumnsDetail.Rows[i]["ColumnID"].ToString());
 
                                     //AsyncPostBackTrigger aAsyncPostBackTrigger = new AsyncPostBackTrigger();
@@ -5260,6 +5270,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                 {
                                     _ddlValue[i].SelectedIndexChanged += new EventHandler(CommonChangeEvent);
                                     _ddlValue[i].AutoPostBack = true;
+                                    //_ddlValue[i].CausesValidation = true;
                                     _ddlValue[i].Attributes.Add("ColumnID", _dtColumnsDetail.Rows[i]["ColumnID"].ToString());
                                     //AsyncPostBackTrigger aAsyncPostBackTrigger = new AsyncPostBackTrigger();
                                     //aAsyncPostBackTrigger.ControlID = _ddlValue[i].ID;
@@ -5375,8 +5386,12 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
                         if (!string.IsNullOrEmpty(theColumnChangeService.JavaScriptFunction) && strControlName != "")
                         {
+                            string strTriggerOnLoad = "";
 
-                            strEventHeader = strEventHeader = "$('#" + strControlName + @"')." + strEventName + "(function(){";
+                            if (strEventName == "change")
+                                strTriggerOnLoad = "$('#" + strControlName + @"').trigger('" + strEventName + @"'); ";
+
+                            strEventHeader = "$('#" + strControlName + @"')." + strEventName + "(function(){";
                             string strEventMehod = @"
                                       
                                                 $(document).ready(function () {
@@ -5391,6 +5406,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                             }
 
                                                     });
+                                                    "+strTriggerOnLoad+@"
                                                 }); 
                                         
 
@@ -8990,28 +9006,22 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                     string strVariableDeclare = "";
                                     if (strAllDriverValue.IndexOf("var strEachValue" + m.ToString()) == -1)//???
                                     {
-                                        strVariableDeclare = " var ";
+                                        strVariableDeclare = " var";
                                     }
                                     strEachDriverID = strEachDriverID + "_";
                                     strBeforeShowHideFunction = strBeforeShowHideFunction + "$('" + strTargetTRID + "').hide(); " + strValidatorF;
                                     string strDriverIDMain = strEachDriverID;
 
-
-
+                                    //GetOptValue('" + strDriverGroupID.Replace("#", "").Replace("_", "$") + @"');  
+                                    //string strRadioName =_strDynamictabPart.Replace("_", "$")+ strDriverGroupID.Replace("#", "");
                                     strAllDriverValue = strAllDriverValue + @"
-                                               " + strVariableDeclare + @" strEachValue" + m.ToString() + @" =GetOptValue('" + strDriverGroupID.Replace("#", "").Replace("_", "$") + @"');  
+                                               " + strVariableDeclare + @" strEachValue" + m.ToString() + @" =GetOptValue('" + strDriverGroupID.Replace("#", "") + @"');  
                                                 ";
 
                                     strAllLogic = strAllLogic + strEachPreJoinOperator + " (strEachValue" + m.ToString() + @" " + strEachHideOperator + @" '" + strEachHideColumnValue + "') ";
 
-                                    if(bAutoPostBack)
-                                    {
-                                        strAllDriverTrigger = strAllDriverTrigger + @"                                         
-                                                    ShowHideFunction" + _strDynamictabPart + i.ToString() + @"();
-                                                    ";
-                                    }
-                                    else
-                                    {
+                                    
+                                        
                                         for (int n = 0; n < _radioList[m].Items.Count; n++)
                                         {
                                             strEachDriverID = strDriverIDMain + n.ToString();
@@ -9020,12 +9030,11 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                     ShowHideFunction" + _strDynamictabPart + i.ToString() + @"();
                                                 }); ";
 
-                                            if (_radioList[m].SelectedIndex == n)
-                                            {
-                                                strAllDriverTrigger = strAllDriverTrigger + "$('" + strEachDriverID + "').trigger('change');";
-                                            }
                                         }
-                                    }
+                                        strAllDriverTrigger = strAllDriverTrigger + @"                                         
+                                                    ShowHideFunction" + _strDynamictabPart + i.ToString() + @"();
+                                                    ";
+                                    
                                     
                                 }
                                 else if (_chkValue[m] != null)
@@ -9112,7 +9121,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                      $('" + strDriverGroupID + @"').change(function (e) {
                                                               ShowHideFunction" + _strDynamictabPart + i.ToString() + @"();
                                                         });
-                                                        $('" + strDriverGroupID + @"').trigger('change');  
+                                                         ShowHideFunction" + _strDynamictabPart + i.ToString() + @"();
                                                 ";
 
                                         }
@@ -9230,7 +9239,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                      $('" + strDriverGroupID + @"').click(function (e) {
                                                               ShowHideFunction" + _strDynamictabPart + i.ToString() + @"();
                                                         });
-                                                        $('" + strDriverGroupID + @"').trigger('click');  
+                                                        ShowHideFunction" + _strDynamictabPart + i.ToString() + @"();
                                                 ";
                                     }
                                    
@@ -9259,7 +9268,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                      $('" + strDriverGroupID + @"').change(function (e) {
                                                               ShowHideFunction" + _strDynamictabPart + i.ToString() + @"();
                                                         });
-                                                        $('" + strDriverGroupID + @"').trigger('change');  
+                                                        ShowHideFunction" + _strDynamictabPart + i.ToString() + @"();
                                                 ";
                                     }
 
@@ -9333,7 +9342,7 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                                                  $('#" + _txtTime[m].ID + @"').change(function (e) {
                                                                           ShowHideFunction" + _strDynamictabPart + i.ToString() + @"();
                                                                     });
-                                                                    $('#" + _txtTime[m].ID + @"').trigger('change');  
+                                                                   ShowHideFunction" + _strDynamictabPart + i.ToString() + @"();
                                                             ";
                                                     }
 
@@ -9517,14 +9526,6 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
         string strCommonJS = @"  function ShowHideTables(divSelected, lnk) {
                                 try
                                 {
-//                                    if (divSelected == null)
-//                                        {
-//                                              divSelected = document.getElementById(divSelected); 
-//                                        }
-//                                        if (lnk == null)
-//                                        {
-//                                              lnk = document.getElementById(lnk); 
-//                                        }
                                     if (divSelected == null)
                                     {
                                         return;
@@ -9541,20 +9542,93 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
                                     //divSelected.style.display = 'block';
                                      if(divSelected.id=='" + pnlDetail.ID + @"')
                                     {
-                                        $('#divMainSaveEditAddetc').fadeIn();
-                                        $('#divChangeHistory').fadeIn();  $('#divHistory').fadeIn();
+                                        $('#divMainSaveEditAddetc').show();
+                                        $('#divChangeHistory').show();  $('#divHistory').show();
                                     }
                                     else
                                     {
-                                       $('#divMainSaveEditAddetc').fadeOut();
-                                        $('#divChangeHistory').fadeOut();$('#divHistory').fadeOut();
+                                       $('#divMainSaveEditAddetc').hide();
+                                        $('#divChangeHistory').hide();$('#divHistory').hide();
                                     }
 
                             }
                             catch(err)
                             {
                             }
-                        }";
+                        }
+
+
+
+ function setSelectedValue(selectObj, valueToSet) {
+            //setTimeout(setSelectedValue, 1000);
+            if (selectObj != null) {
+                alert(selectObj.options.length);
+                for (var i = 0; i < selectObj.options.length; i++) {
+                    if (selectObj.options[i].value == valueToSet) {
+                        selectObj.options[i].selected = true;
+                        return;
+                    }
+                }
+            }
+        }
+
+   function GetOptValue(optName) {
+        try
+        {
+           //alert(optName.toString());
+            //var vName='ctl00$HomeContentPlaceHolder$' + optName.toString();
+            var vName='ctl00$HomeContentPlaceHolder$' + optName.toString();
+          
+           
+                    var vAttName=$('#'+optName.toString()+'_0').attr('name');
+                    //alert(vAttName);
+                        if (vAttName !=null)
+                        {
+                            vName=vAttName;
+                        }
+                    
+                
+            var rates = document.getElementsByName(vName);
+ 
+            var rate_value;
+            for (var i = 0; i < rates.length; i++) {
+                if (rates[i].checked) {
+                    rate_value = rates[i].value;
+                }
+            }
+            return rate_value;
+        }
+        catch(err)
+        {
+                //alert(err);
+        }
+
+        }
+
+ function CheckMyText(sender, args) {
+            var compare = RegExp('^([0-1]?[0-9]|2[0-3]):([0-5][0-9])(:[0-5][0-9])?$');
+            args.IsValid = compare.test(args.Value);
+            return;
+        }
+
+
+        function abc() {
+            var b = document.getElementById('" + lnkSaveClose.ClientID +@"');
+            if (b && typeof (b.click) == 'undefined') {
+                b.click = function () {
+                    var result = true;
+                    if (b.onclick) result = b.onclick();
+                    if (typeof (result) == 'undefined' || result) {
+                        eval(b.getAttribute('href'));
+                    }
+                }
+            }
+
+        }
+
+
+
+";
         if(_bTableTabYes)
         {
 
@@ -9644,11 +9718,12 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
         if(!IsPostBack)
         {
+            PopulateDynamicControls(); 
             CreateValidWarningDataTable();
             ManageControlValueChangeService();
-            ManageShowWhen();
+           // ManageShowWhen();
             PopulateTable();
-            PopulateDynamicControls();           
+                     
 
                if (Request.QueryString["RecordID"] != null || _bCopyRecord == true)
                {
@@ -10006,6 +10081,10 @@ public partial class Record_Record_Detail : System.Web.UI.Page//SecurePage
 
       
         HistoryThings();
+        if(!IsPostBack)
+        {
+            ManageShowWhen();
+        }
         if (IsPostBack)
         {
             OtherJSCode();

@@ -75,18 +75,18 @@
                 //
             }
         }
-        function setSelectedValue(selectObj, valueToSet) {
-            //setTimeout(setSelectedValue, 1000);
-            if (selectObj != null) {
-                alert(selectObj.options.length);
-                for (var i = 0; i < selectObj.options.length; i++) {
-                    if (selectObj.options[i].value == valueToSet) {
-                        selectObj.options[i].selected = true;
-                        return;
-                    }
-                }
-            }
-        }
+        //function setSelectedValue(selectObj, valueToSet) {
+        //    //setTimeout(setSelectedValue, 1000);
+        //    if (selectObj != null) {
+        //        alert(selectObj.options.length);
+        //        for (var i = 0; i < selectObj.options.length; i++) {
+        //            if (selectObj.options[i].value == valueToSet) {
+        //                selectObj.options[i].selected = true;
+        //                return;
+        //            }
+        //        }
+        //    }
+        //}
 
 
     </script>
@@ -153,27 +153,27 @@
         //}
 
 
-        function ChangeTab(index) {
-            try {
-                $find("ctl00_HomeContentPlaceHolder_tabDetail").set_activeTabIndex(index);
-            }
-            catch (err) {
-                alert('There are no Tab for this now, please try at the time of edit this record.')
-            }
+        //function ChangeTab(index) {
+        //    try {
+        //        $find("ctl00_HomeContentPlaceHolder_tabDetail").set_activeTabIndex(index);
+        //    }
+        //    catch (err) {
+        //        alert('There are no Tab for this now, please try at the time of edit this record.')
+        //    }
 
-        }
+        //}
 
-        function GetOptValue(optName) {
-            var rates = document.getElementsByName(optName);
-            var rate_value;
-            for (var i = 0; i < rates.length; i++) {
-                if (rates[i].checked) {
-                    rate_value = rates[i].value;
-                }
-            }
-            return rate_value;
+        //function GetOptValue(optName) {
+        //    var rates = document.getElementsByName(optName);
+        //    var rate_value;
+        //    for (var i = 0; i < rates.length; i++) {
+        //        if (rates[i].checked) {
+        //            rate_value = rates[i].value;
+        //        }
+        //    }
+        //    return rate_value;
 
-        }
+        //}
 
         //        function HideHistory() {
         //            $("#divHistory").fadeOut();
@@ -181,42 +181,42 @@
         //            $("#lnkHideHistory").fadeOut();
 
         //        }
-        function ClientActiveTabChanged() {
-            if ($find("ctl00_HomeContentPlaceHolder_tabDetail").get_activeTabIndex() == 0) {
+        //function ClientActiveTabChanged() {
+        //    if ($find("ctl00_HomeContentPlaceHolder_tabDetail").get_activeTabIndex() == 0) {
 
-                $("#divMainSaveEditAddetc").fadeIn();
-                $("#divChangeHistory").fadeIn();
-            }
-            else {
+        //        $("#divMainSaveEditAddetc").fadeIn();
+        //        $("#divChangeHistory").fadeIn();
+        //    }
+        //    else {
 
-                $("#lnkHiddenSave").trigger('click');
-                $find("ctl00_HomeContentPlaceHolder_tabDetail").set_activeTabIndex(0);
-                //                $("#divMainSaveEditAddetc").fadeOut();
-            }
+        //        $("#lnkHiddenSave").trigger('click');
+        //        $find("ctl00_HomeContentPlaceHolder_tabDetail").set_activeTabIndex(0);
+        //        //                $("#divMainSaveEditAddetc").fadeOut();
+        //    }
 
-        }
+        //}
 
-        function ClientActiveTabChangedEdit() {
-            if ($find("ctl00_HomeContentPlaceHolder_tabDetail").get_activeTabIndex() == 0) {
+        //function ClientActiveTabChangedEdit() {
+        //    if ($find("ctl00_HomeContentPlaceHolder_tabDetail").get_activeTabIndex() == 0) {
 
-                $("#divMainSaveEditAddetc").fadeIn();
-                $("#divChangeHistory").fadeIn();
+        //        $("#divMainSaveEditAddetc").fadeIn();
+        //        $("#divChangeHistory").fadeIn();
 
-                //                if (document.getElementById("lnkShowHistory") != null) {
-                //                    if (document.getElementById("lnkShowHistory").style.display != 'none') {
-                //                        $("#divHistory").fadeOut();
-                //                    }
-                //                }
+        //        //                if (document.getElementById("lnkShowHistory") != null) {
+        //        //                    if (document.getElementById("lnkShowHistory").style.display != 'none') {
+        //        //                        $("#divHistory").fadeOut();
+        //        //                    }
+        //        //                }
 
 
-            }
-            else {
+        //    }
+        //    else {
 
-                $("#divMainSaveEditAddetc").fadeOut();
-                $("#divChangeHistory").fadeOut();
-            }
+        //        $("#divMainSaveEditAddetc").fadeOut();
+        //        $("#divChangeHistory").fadeOut();
+        //    }
 
-        }
+        //}
 
 
         //        function ShowHistory() {
@@ -226,13 +226,13 @@
 
         //        }
 
-        function CheckMyText(sender, args) {
-            var compare = RegExp("^([0-1]?[0-9]|2[0-3]):([0-5][0-9])(:[0-5][0-9])?$");
-            args.IsValid = compare.test(args.Value);
-            return;
-        }
+        //function CheckMyText(sender, args) {
+        //    var compare = RegExp("^([0-1]?[0-9]|2[0-3]):([0-5][0-9])(:[0-5][0-9])?$");
+        //    args.IsValid = compare.test(args.Value);
+        //    return;
+        //}
 
-        function abc() {
+    <%--    function abc() {
             var b = document.getElementById('<%= lnkSaveClose.ClientID %>');
             if (b && typeof (b.click) == 'undefined') {
                 b.click = function () {
@@ -244,18 +244,18 @@
                 }
             }
 
-        }
+        }--%>
 
-        function OpenAuditDetail(val, id) {
-
-
-            var left = (screen.width / 2) - (500 / 2);
-            var top = (screen.height / 2) - (500 / 2);
-
-            window.open("AuditDetail.aspx?UpdatedDate=" + encodeURIComponent(val) + "&RecordID=" + id, "List", "scrollbars=yes,resizable=yes,width=500,height=500,top=" + top + ",left=" + left);
+        //function OpenAuditDetail(val, id) {
 
 
-        }
+        //    var left = (screen.width / 2) - (500 / 2);
+        //    var top = (screen.height / 2) - (500 / 2);
+
+        //    window.open("AuditDetail.aspx?UpdatedDate=" + encodeURIComponent(val) + "&RecordID=" + id, "List", "scrollbars=yes,resizable=yes,width=500,height=500,top=" + top + ",left=" + left);
+
+
+        //}
 
 
     </script>
